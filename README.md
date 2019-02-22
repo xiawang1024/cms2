@@ -1,6 +1,4 @@
-<p align="center">
-  <img width="320" src="https://wpimg.wallstcn.com/ecc53a42-d79b-42e2-8852-5126b810a4c8.svg">
-</p>
+
 
 <p align="center">
   <a href="https://github.com/vuejs/vue">
@@ -9,34 +7,12 @@
   <a href="https://github.com/ElemeFE/element">
     <img src="https://img.shields.io/badge/element--ui-2.3.2-brightgreen.svg" alt="element-ui">
   </a>
-  <a href="https://travis-ci.org/PanJiaChen/vue-element-admin" rel="nofollow">
-    <img src="https://travis-ci.org/PanJiaChen/vue-element-admin.svg?branch=master" alt="Build Status">
-  </a>
-  <a href="https://github.com/PanJiaChen/vue-element-admin/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="license">
-  </a>
-  <a href="https://github.com/PanJiaChen/vue-element-admin/releases">
-    <img src="https://img.shields.io/github/release/PanJiaChen/vue-element-admin.svg" alt="GitHub release">
-  </a>
-  <a href="https://gitter.im/vue-element-admin/discuss">
-    <img src="https://badges.gitter.im/Join%20Chat.svg" alt="gitter">
-  </a>
-  <a href="https://panjiachen.gitee.io/vue-element-admin-site/zh/donate">
-    <img src="https://img.shields.io/badge/%24-donate-ff69b4.svg" alt="donate">
-  </a>
 </p>
 
 ## 简介
 
-[vue-element-admin](http://panjiachen.github.io/vue-element-admin) 是一个后台集成解决方案，它基于 [vue](https://github.com/vuejs/vue) 和 [element](https://github.com/ElemeFE/element)。它使用了最新的前端技术栈，内置了 i18 国际化解决方案，动态路由，权限验证，提炼了典型的业务模型，提供了丰富的功能组件，它可以帮助你快速搭建企业级中后台产品原型。相信不管你的需求是什么，本项目都能帮助到你。
-
-- [在线访问](http://panjiachen.github.io/vue-element-admin)
-
 - [使用文档](https://panjiachen.github.io/vue-element-admin-site/zh/)
 
-**注意：该项目使用 element-ui@2.3.0+ 版本，所以最低兼容 vue@2.5.0+**
-
-**从`v3.8.0`开始使用`webpack4`。所以若还想使用`webpack3`开发，请使用该分支[webpack3](https://github.com/PanJiaChen/vue-element-admin/tree/webpack3)**
 
 **该项目不支持低版本浏览器(如 ie)，有需求请自行添加 polyfill [详情](https://github.com/PanJiaChen/vue-element-admin/wiki#babel-polyfill)**
 
@@ -114,8 +90,3 @@ Modern browsers and Internet Explorer 10+.
 | --------- | --------- | --------- | --------- |
 | IE10, IE11, Edge| last 2 versions| last 2 versions| last 2 versions
 
-## License
-
-[MIT](https://github.com/PanJiaChen/vue-element-admin/blob/master/LICENSE)
-
-Copyright (c) 2017-present PanJiaChen
