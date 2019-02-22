@@ -1,17 +1,74 @@
-import request from '@/utils/request'
+import request from '@/utils/request.js'
+import Qs from 'qs'
 
-export function loginByUsername(username, password) {
-  const data = {
-    username,
-    password
+import { setAuth, getAuth } from '@/utils/auth.js'
+
+request.defaults.headers.contentType = 'application/x-www-form-urlencoded'
+/**
+ * 密码模式登陆获取auth token refreshToken
+ * @param {String} username
+ * @param {String} password
+ * @param {String} grant_type
+ * @param {String} client_id
+ * @param {String} client_secret
+ * @param {String} domain
+ * @param {String} authenticationType
+ */
+export const loginByUsername = async(
+  username,
+  password,
+  grant_type = 'password',
+  client_id = 'dev3rd',
+  client_secret = '123456',
+  domain = 'b',
+  authenticationType = 'password'
+) => {
+  const { data } = await request.post(
+    '/uua/oauth/token',
+    Qs.stringify({
+      username,
+      password,
+      grant_type,
+      client_id,
+      client_secret,
+      domain,
+      authenticationType
+    })
+  )
+  if (!getAuth()) {
+    setAuth(data)
   }
-  return request({
-    url: '/login/login',
-    method: 'post',
-    data
-  })
+  return Promise.resolve()
 }
 
+/**
+ * 刷新token 获取token
+ */
+export const refreshToken = (
+  refresh_token,
+  grant_type = 'refresh_token',
+  client_id = 'dev3rd',
+  client_secret = '123456'
+) =>
+  request.post(
+    '/uua/oauth/token',
+    Qs.stringify({
+      refresh_token,
+      grant_type,
+      client_id,
+      client_secret
+    })
+  )
+/**
+ * 获取用户信息
+ */
+export const getUserInfo = () => {
+  const token = getAuth()['access_token']
+  return request.post('/uua/oauth/check_token', Qs.stringify({ token }))
+}
+/**
+ * 退出
+ */
 export function logout() {
   return request({
     url: '/login/logout',
@@ -19,11 +76,9 @@ export function logout() {
   })
 }
 
-export function getUserInfo(token) {
-  return request({
-    url: '/user/info',
+export const getSource = () =>
+  request({
     method: 'get',
-    params: { token }
+    baseURL: '/source/',
+    url: 'resource-test/hi'
   })
-}
-
