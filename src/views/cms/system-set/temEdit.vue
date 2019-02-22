@@ -4,13 +4,7 @@
       <el-row :gutter="10">
         <el-col :xs="24" :sm="12" :md="6" :lg="6" :xl="6">
           <el-form-item label="所属栏目">
-            <el-cascader
-              :options="options"
-              v-model="templateForm.belongProgram"
-              change-on-select
-              placeholder="请选择所属栏目"
-              @change="selectProgram"
-            />
+            <ChannelSelect :channel-id="templateForm.channelId" @channelCascaderChange="channelCascaderChange"/>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="6" :lg="6" :xl="6">
@@ -89,12 +83,12 @@
 <script>
 import { fetchComponentList } from '@/api/component'
 import { fetchTemplate, createTemplate, updateTemplate } from '@/api/template'
+import ChannelSelect from '@/components/cms/ChannelSelect'
 export default {
   name: 'TemEdit',
+  components: { ChannelSelect },
   data() {
     return {
-      options: [
-      ],
       typeList: [
         {
           id: 1,
@@ -130,7 +124,7 @@ export default {
         templateId: '',
         templateName: '',
         templateType: '',
-        belongProgram: [],
+        channelId: '',
         templateFormat: '',
         enableFlag: true,
         templateDescription: '',
@@ -151,6 +145,9 @@ export default {
     this.fetchComponentList()
   },
   methods: {
+    channelCascaderChange(val) {
+      this.componentForm.channelId = val
+    },
     fetchComponentList() {
       var _this = this
       var componentObjTmp = {

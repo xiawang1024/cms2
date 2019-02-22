@@ -4,7 +4,7 @@ export function fetchList(query) {
   return request({
     url: '/dict/page',
     method: 'post',
-    params: query
+    data: query
   })
 }
 

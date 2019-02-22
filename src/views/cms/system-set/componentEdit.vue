@@ -5,13 +5,7 @@
         <el-input v-model="componentForm.componentName"/>
       </el-form-item>
       <el-form-item label="所属栏目">
-        <el-cascader
-          :options="options"
-          v-model="componentForm.belongProgram"
-          change-on-select
-          placeholder="请选择所属栏目"
-          @change="selectProgram"
-        />
+        <ChannelSelect :channel-id="componentForm.channelId" @channelCascaderChange="channelCascaderChange"/>
       </el-form-item>
       <el-form-item label="描述">
         <el-input :rows="2" v-model="componentForm.componentDescription" type="textarea"/>
@@ -53,11 +47,12 @@
 
 <script>
 import { fetchComponent, createComponent, updateComponent } from '@/api/component'
+import ChannelSelect from '@/components/cms/ChannelSelect'
 export default {
   name: 'ConponentEdit',
+  components: { ChannelSelect },
   data() {
     return {
-      options: [],
       typeList: [
         {
           id: 1,
@@ -92,7 +87,7 @@ export default {
       componentForm: {
         componentId: '',
         componentName: '',
-        belongProgram: [],
+        channelId: '',
         componentVariables: '',
         componentVariablesList: [],
         componentContent: '',
@@ -111,6 +106,9 @@ export default {
     this.getComponentInfo()
   },
   methods: {
+    channelCascaderChange(val) {
+      this.componentForm.channelId = val
+    },
     getComponentInfo() {
       var _this = this
       return new Promise((resolve, reject) => {

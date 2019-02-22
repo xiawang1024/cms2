@@ -2,14 +2,7 @@
   <div class="tem-manager-container">
     <el-row type="flex" class="tool-bar" justify="end">
       <el-col :span="6">
-        <el-select v-model="selectChannel" placeholder="请选择">
-          <el-option
-            v-for="channel in channelList"
-            :key="channel.channelId"
-            :label="channel.channelName"
-            :value="channel.channelId"
-          />
-        </el-select>
+        <ChannelSelect @channelCascaderChange="channelCascaderChange"/>
       </el-col>
       <el-col :span="5">
         <el-input
@@ -21,6 +14,7 @@
         />
       </el-col>
       <el-col :span="4">
+        <el-button type="primary" @click="fetchList">搜索</el-button>
         <el-button type="primary" @click="handleAdd">新增模板</el-button>
       </el-col>
     </el-row>
@@ -54,17 +48,13 @@
 
 <script>
 import { fetchList } from '@/api/template'
+import ChannelSelect from '@/components/cms/ChannelSelect'
 export default {
   name: 'TemFormSet',
+  components: { ChannelSelect },
   data() {
     return {
       temlateList: [
-      ],
-      channelList: [
-        {
-          channelId: '1083184060441956352',
-          channelName: '河南广播网'
-        }
       ],
       selectChannel: '1083184060441956352',
       searchTemplate: '',
@@ -77,6 +67,10 @@ export default {
     this.fetchList()
   },
   methods: {
+    channelCascaderChange(val) {
+      console.log(val)
+      this.selectChannel = val
+    },
     // 查询列表
     fetchList() {
       var _this = this

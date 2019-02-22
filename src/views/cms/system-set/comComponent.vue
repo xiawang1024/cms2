@@ -2,14 +2,7 @@
   <div class="com-component-container">
     <el-row type="flex" class="tool-bar" justify="end">
       <el-col :span="6">
-        <el-select v-model="selectChannel" placeholder="请选择">
-          <el-option
-            v-for="channel in channelList"
-            :key="channel.channelId"
-            :label="channel.channelName"
-            :value="channel.channelId"
-          />
-        </el-select>
+        <ChannelSelect @channelCascaderChange="channelCascaderChange"/>
       </el-col>
       <el-col :span="5">
         <el-input
@@ -21,6 +14,7 @@
         />
       </el-col>
       <el-col :span="4">
+        <el-button type="primary" @click="fetchList">搜索</el-button>
         <el-button type="primary" @click="handleAdd">新增组件</el-button>
       </el-col>
     </el-row>
@@ -56,33 +50,15 @@
 
 <script>
 import { fetchComponentList } from '@/api/component'
+import ChannelSelect from '@/components/cms/ChannelSelect'
 export default {
   name: 'ComComponentSet',
+  components: { ChannelSelect },
   data() {
     return {
       componentList: [
       ],
-      channelList: [
-        {
-          channelId: '1083184060441956352',
-          channelName: '河南广播网'
-        }
-      ],
-      typeList: [
-        {
-          id: 1,
-          name: '列表组件'
-        },
-        {
-          id: 2,
-          name: '公共组件'
-        },
-        {
-          id: 3,
-          name: '正文组件'
-        }
-      ],
-      selectChannel: '1083184060441956352',
+      selectChannel: '',
       searchComponent: '',
       pageNum: 1, // 分页当前页
       pageSize: 10,
@@ -93,6 +69,10 @@ export default {
     this.fetchList()
   },
   methods: {
+    channelCascaderChange(val) {
+      console.log(val)
+      this.selectChannel = val
+    },
     // 查询列表
     fetchList() {
       var _this = this
