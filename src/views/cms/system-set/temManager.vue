@@ -21,7 +21,7 @@
     <el-table :data="temlateList" style="width: 100%">
       <el-table-column prop="templateName" label="模板名称"/>
       <el-table-column prop="templateType" label="类别"/>
-      <el-table-column prop="belongChannel" label="所属栏目"/>
+      <el-table-column prop="channelName" label="所属栏目"/>
       <el-table-column prop="templateFormat" label="适用平台"/>
       <el-table-column prop="templateDescription" label="描述"/>
       <el-table-column prop="createTime" label="创建时间"/>

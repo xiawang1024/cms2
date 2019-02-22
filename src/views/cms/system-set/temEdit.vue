@@ -91,29 +91,29 @@ export default {
     return {
       typeList: [
         {
-          id: 1,
-          name: '列表模板'
+          id: 'LIST',
+          name: '列表组件'
         },
         {
-          id: 2,
-          name: '公共模板'
+          id: 'COMMON',
+          name: '公共组件'
         },
         {
-          id: 3,
-          name: '正文模板'
+          id: 'CONTENT',
+          name: '正文组件'
         }
       ],
       platList: [
         {
-          id: 1,
+          id: 'PC',
           name: '电脑页面'
         },
         {
-          id: 2,
+          id: 'JSON',
           name: 'JSON数据'
         },
         {
-          id: 3,
+          id: 'XML',
           name: 'XML数据'
         }
       ],
