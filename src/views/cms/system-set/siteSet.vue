@@ -1,48 +1,79 @@
 <template>
   <div class="site-set-container">
-    <el-table :data="siteList" style="width: 100%">
-      <el-table-column prop="name" label="名称"/>
-      <el-table-column prop="code" label="代码"/>
+    <el-table :data="dictObj.details" style="width: 100%">
+      <el-table-column prop="dictDetailName" label="名称"/>
+      <el-table-column prop="dictDetailCode" label="代码"/>
       <el-table-column label="值">
         <template slot-scope="scope">
-          <el-input v-model="scope.row.value"/>
+          <el-input v-model="scope.row.dictDetailValue"/>
         </template>
       </el-table-column>
     </el-table>
-    <el-button type="primary" class="btn-save">保存</el-button>
+    <el-button type="primary" class="btn-save" @click="handleSubmit()">保存</el-button>
   </div>
 </template>
 
 <script>
+import { fetchDictByDictName, updateDict } from '@/api/dict'
 export default {
   name: 'SiteSet',
   data() {
     return {
-      siteList: [
-        {
-          name: '网站名称',
-          code: 'site.name',
-          value: '河南广播网'
-        },
-        {
-          name: '生产服务器',
-          code: 'factory.domain',
-          value: 'http://admin.hndt.com'
-        },
-        {
-          name: '发布根目录',
-          code: 'publish.root',
-          value: '/home/pub/'
-        },
-        {
-          name: '发布域名',
-          code: 'site.domain',
-          value: 'http://www.hndt.com'
-        }
-      ]
+      dictObj: {
+        dictId: '',
+        dictName: '站点设置',
+        dictType: '',
+        dictRemark: '',
+        seqNo: '',
+        sysFlag: '',
+        createUser: '',
+        createTime: '',
+        createIp: '',
+        modifyUser: '',
+        modifyTime: '',
+        modifyIp: '',
+        clientLicenseId: '',
+        details: [
+        ]
+      }
     }
   },
-  methods: {}
+  created: function() {
+    this.fetchDict()
+  },
+  methods: {
+    // 查询对象
+    fetchDict() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        fetchDictByDictName(_this.dictObj.dictName)
+          .then((response) => {
+            _this.dictObj = response.data.result
+            if (_this.dictObj.details === null) {
+              _this.dictObj.details = []
+            }
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    // 保存对象，实际为更新
+    handleSubmit() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        updateDict(_this.dictObj)
+          .then((response) => {
+            _this.fetchDict()
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    }
+  }
 }
 </script>
 

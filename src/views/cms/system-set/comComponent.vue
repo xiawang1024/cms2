@@ -2,12 +2,12 @@
   <div class="com-component-container">
     <el-row type="flex" class="tool-bar" justify="end">
       <el-col :span="6">
-        <el-select v-model="selectProgram" placeholder="请选择">
+        <el-select v-model="selectChannel" placeholder="请选择">
           <el-option
-            v-for="program in programList"
-            :key="program.id"
-            :label="program.name"
-            :value="program.id"
+            v-for="channel in channelList"
+            :key="channel.channelId"
+            :label="channel.channelName"
+            :value="channel.channelId"
           />
         </el-select>
       </el-col>
@@ -25,10 +25,13 @@
       </el-col>
     </el-row>
     <el-table :data="componentList" style="width: 100%">
-      <el-table-column prop="name" label="组件名称"/>
-      <el-table-column prop="belongProgram" label="所属栏目"/>
-      <el-table-column prop="variable" label="变量数量"/>
-      <el-table-column prop="desc" label="描述"/>
+      <el-table-column prop="componentName" label="组件名称"/>
+      <el-table-column prop="componentVariables" label="变量数量">
+        <template slot-scope="scope">
+          {{ JSON.stringify(scope.row.componentVariablesList) }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="componentDescription" label="描述"/>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="prime" @click="handleAlter(scope.$index, scope.row)">编辑</el-button>
@@ -52,35 +55,17 @@
 </template>
 
 <script>
+import { fetchComponentList } from '@/api/component'
 export default {
   name: 'ComComponentSet',
   data() {
     return {
       componentList: [
-        {
-          id: '1',
-          name: '网站名称',
-          belongProgram: '所属栏目',
-          variable: 3,
-          desc: '描述'
-        }
       ],
-      programList: [
+      channelList: [
         {
-          id: 1,
-          name: '河南广播网'
-        },
-        {
-          id: 2,
-          name: '焦点网'
-        },
-        {
-          id: 3,
-          name: '电台动态'
-        },
-        {
-          id: 4,
-          name: '新闻资讯'
+          channelId: '1083184060441956352',
+          channelName: '河南广播网'
         }
       ],
       typeList: [
@@ -97,20 +82,42 @@ export default {
           name: '正文组件'
         }
       ],
-      selectProgram: 1,
+      selectChannel: '1083184060441956352',
       searchComponent: '',
       pageNum: 1, // 分页当前页
       pageSize: 10,
       totalCount: 0
     }
   },
+  created: function() {
+    this.fetchList()
+  },
   methods: {
+    // 查询列表
+    fetchList() {
+      var _this = this
+      var searchObjTmp = {
+        channelId: _this.selectChannel,
+        componentName: _this.searchComponent
+      }
+      return new Promise((resolve, reject) => {
+        fetchComponentList(searchObjTmp, _this.pageNum, _this.pageSize)
+          .then((response) => {
+            _this.componentList = response.data.result.content
+            _this.totalCount = response.data.result.total
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
     search() {
-      console.log('搜索' + this.selectProgram + '---' + this.searchComponent)
+      console.log('搜索' + this.selectChannel + '---' + this.searchComponent)
     },
     handleAdd() {
       this.$router.push({
-        path: '/systemSet/componentEdit',
+        path: '/cms/systemSet/componentEdit',
         query: {
           isAdd: true
         }
@@ -118,24 +125,24 @@ export default {
     },
     handleAlter(index, row) {
       this.$router.push({
-        path: '/systemSet/componentEdit',
+        path: '/cms/systemSet/componentEdit',
         query: {
           isAdd: false,
-          componentId: row.id
+          componentId: row.componentId
         }
       })
     },
     handleDelete(index, row) {
-      console.log('删除' + row.id)
+      console.log('删除' + row.componentId)
     },
     // 表格分页处理
     handleSizeChange(val) {
       this.pageSize = val
-      this.getTableData()
+      this.fetchList()
     },
     handleCurrentChange(val) {
       this.pageNum = val
-      this.getTableData()
+      this.fetchList()
     }
   }
 }

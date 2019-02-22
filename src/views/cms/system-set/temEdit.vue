@@ -1,12 +1,12 @@
 <template>
   <div class="tem-manager-container">
-    <el-form :model="temForm">
+    <el-form :model="templateForm">
       <el-row :gutter="10">
         <el-col :xs="24" :sm="12" :md="6" :lg="6" :xl="6">
           <el-form-item label="所属栏目">
             <el-cascader
               :options="options"
-              v-model="temForm.belongProgram"
+              v-model="templateForm.belongProgram"
               change-on-select
               placeholder="请选择所属栏目"
               @change="selectProgram"
@@ -15,7 +15,7 @@
         </el-col>
         <el-col :xs="24" :sm="12" :md="6" :lg="6" :xl="6">
           <el-form-item label="模板类别">
-            <el-select v-model="temForm.type" placeholder="请选择栏目类别">
+            <el-select v-model="templateForm.templateType" placeholder="请选择栏目类别">
               <el-option
                 v-for="type in typeList"
                 :key="type.id"
@@ -27,7 +27,7 @@
         </el-col>
         <el-col :xs="24" :sm="12" :md="6" :lg="6" :xl="6">
           <el-form-item label="适用平台">
-            <el-select v-model="temForm.fitPlat" placeholder="请选择适用平台">
+            <el-select v-model="templateForm.templateFormat" placeholder="请选择适用平台">
               <el-option
                 v-for="plat in platList"
                 :key="plat.id"
@@ -39,7 +39,7 @@
         </el-col>
         <el-col :xs="24" :sm="12" :md="6" :lg="6" :xl="6">
           <el-form-item label="是否有效">
-            <el-switch v-model="temForm.isEffective" active-color="#13ce66"/>
+            <el-switch v-model="templateForm.enableFlag" active-color="#13ce66"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -47,32 +47,32 @@
       <el-row :gutter="10">
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="6">
           <el-form-item label="模板名称">
-            <el-input v-model="temForm.name"/>
+            <el-input v-model="templateForm.templateName"/>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="6">
           <el-form-item label="文件名">
-            <el-input v-model="temForm.fileName"/>
+            <el-input v-model="templateForm.templateFilename"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-form-item label="描述">
-        <el-input :rows="2" v-model="temForm.desc" type="textarea"/>
+        <el-input :rows="2" v-model="templateForm.templateDescription" type="textarea"/>
       </el-form-item>
 
       <el-row :gutter="10">
         <el-col :xs="24" :sm="12" :md="16" :lg="16" :xl="16">
           <el-form-item label="模板内容">
-            <el-input :rows="15" v-model="temForm.desc" type="textarea" class="content-textara"/>
+            <el-input id="templateContentRef" ref="templateContentRef" :rows="15" v-model="templateForm.templateContent" type="textarea" class="content-textara"/>
           </el-form-item>
         </el-col>
         <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8">
           <el-form-item label="组件列表">
-            <el-card class="component-card">
-              <div v-for="component in componentList" :key="component.id" class="component-box">
-                <span class="component-lable">{{ component.lable }}</span>
-                <el-button type="text" style="float:right">使用</el-button>
-                <div class="component-desc">{{ component.desc }}</div>
+            <el-card class="template-card">
+              <div v-for="component in componentList" :key="component.componentId" class="template-box">
+                <span class="template-lable">{{ component.componentName }}</span>
+                <el-button type="text" style="float:right" @click="componentClick(component)">使用</el-button>
+                <div class="template-desc">{{ component.componentDescription }}</div>
               </div>
             </el-card>
           </el-form-item>
@@ -81,293 +81,19 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="handleAdd()">保 存</el-button>
+      <el-button type="primary" @click="handleSubmit()">保 存</el-button>
     </div>
   </div>
 </template>
 
 <script>
+import { fetchComponentList } from '@/api/component'
+import { fetchTemplate, createTemplate, updateTemplate } from '@/api/template'
 export default {
   name: 'TemEdit',
   data() {
     return {
       options: [
-        {
-          value: 'zhinan',
-          label: '指南',
-          children: [
-            {
-              value: 'shejiyuanze',
-              label: '设计原则',
-              children: [
-                {
-                  value: 'yizhi',
-                  label: '一致'
-                },
-                {
-                  value: 'fankui',
-                  label: '反馈'
-                },
-                {
-                  value: 'xiaolv',
-                  label: '效率'
-                },
-                {
-                  value: 'kekong',
-                  label: '可控'
-                }
-              ]
-            },
-            {
-              value: 'daohang',
-              label: '导航',
-              children: [
-                {
-                  value: 'cexiangdaohang',
-                  label: '侧向导航'
-                },
-                {
-                  value: 'dingbudaohang',
-                  label: '顶部导航'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          value: 'zujian',
-          label: '组件',
-          children: [
-            {
-              value: 'basic',
-              label: 'Basic',
-              children: [
-                {
-                  value: 'layout',
-                  label: 'Layout 布局'
-                },
-                {
-                  value: 'color',
-                  label: 'Color 色彩'
-                },
-                {
-                  value: 'typography',
-                  label: 'Typography 字体'
-                },
-                {
-                  value: 'icon',
-                  label: 'Icon 图标'
-                },
-                {
-                  value: 'button',
-                  label: 'Button 按钮'
-                }
-              ]
-            },
-            {
-              value: 'form',
-              label: 'Form',
-              children: [
-                {
-                  value: 'radio',
-                  label: 'Radio 单选框',
-                  children: [
-                    {
-                      value: 'radio',
-                      label: 'Radio 单选框'
-                    },
-                    {
-                      value: 'checkbox',
-                      label: 'Checkbox 多选框'
-                    }
-                  ]
-                },
-                {
-                  value: 'checkbox',
-                  label: 'Checkbox 多选框'
-                },
-                {
-                  value: 'input',
-                  label: 'Input 输入框'
-                },
-                {
-                  value: 'input-number',
-                  label: 'InputNumber 计数器'
-                },
-                {
-                  value: 'select',
-                  label: 'Select 选择器'
-                },
-                {
-                  value: 'cascader',
-                  label: 'Cascader 级联选择器'
-                },
-                {
-                  value: 'switch',
-                  label: 'Switch 开关'
-                },
-                {
-                  value: 'slider',
-                  label: 'Slider 滑块'
-                },
-                {
-                  value: 'time-picker',
-                  label: 'TimePicker 时间选择器'
-                },
-                {
-                  value: 'date-picker',
-                  label: 'DatePicker 日期选择器'
-                },
-                {
-                  value: 'datetime-picker',
-                  label: 'DateTimePicker 日期时间选择器'
-                },
-                {
-                  value: 'upload',
-                  label: 'Upload 上传'
-                },
-                {
-                  value: 'rate',
-                  label: 'Rate 评分'
-                },
-                {
-                  value: 'form',
-                  label: 'Form 表单'
-                }
-              ]
-            },
-            {
-              value: 'data',
-              label: 'Data',
-              children: [
-                {
-                  value: 'table',
-                  label: 'Table 表格'
-                },
-                {
-                  value: 'tag',
-                  label: 'Tag 标签'
-                },
-                {
-                  value: 'progress',
-                  label: 'Progress 进度条'
-                },
-                {
-                  value: 'tree',
-                  label: 'Tree 树形控件'
-                },
-                {
-                  value: 'pagination',
-                  label: 'Pagination 分页'
-                },
-                {
-                  value: 'badge',
-                  label: 'Badge 标记'
-                }
-              ]
-            },
-            {
-              value: 'notice',
-              label: 'Notice',
-              children: [
-                {
-                  value: 'alert',
-                  label: 'Alert 警告'
-                },
-                {
-                  value: 'loading',
-                  label: 'Loading 加载'
-                },
-                {
-                  value: 'message',
-                  label: 'Message 消息提示'
-                },
-                {
-                  value: 'message-box',
-                  label: 'MessageBox 弹框'
-                },
-                {
-                  value: 'notification',
-                  label: 'Notification 通知'
-                }
-              ]
-            },
-            {
-              value: 'navigation',
-              label: 'Navigation',
-              children: [
-                {
-                  value: 'menu',
-                  label: 'NavMenu 导航菜单'
-                },
-                {
-                  value: 'tabs',
-                  label: 'Tabs 标签页'
-                },
-                {
-                  value: 'breadcrumb',
-                  label: 'Breadcrumb 面包屑'
-                },
-                {
-                  value: 'dropdown',
-                  label: 'Dropdown 下拉菜单'
-                },
-                {
-                  value: 'steps',
-                  label: 'Steps 步骤条'
-                }
-              ]
-            },
-            {
-              value: 'others',
-              label: 'Others',
-              children: [
-                {
-                  value: 'dialog',
-                  label: 'Dialog 对话框'
-                },
-                {
-                  value: 'tooltip',
-                  label: 'Tooltip 文字提示'
-                },
-                {
-                  value: 'popover',
-                  label: 'Popover 弹出框'
-                },
-                {
-                  value: 'card',
-                  label: 'Card 卡片'
-                },
-                {
-                  value: 'carousel',
-                  label: 'Carousel 走马灯'
-                },
-                {
-                  value: 'collapse',
-                  label: 'Collapse 折叠面板'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          value: 'ziyuan',
-          label: '资源',
-          children: [
-            {
-              value: 'axure',
-              label: 'Axure Components'
-            },
-            {
-              value: 'sketch',
-              label: 'Sketch Templates'
-            },
-            {
-              value: 'jiaohu',
-              label: '组件交互文档'
-            }
-          ]
-        }
       ],
       typeList: [
         {
@@ -397,112 +123,135 @@ export default {
           name: 'XML数据'
         }
       ],
-      chooseComponent: '',
+      chooseTemplate: '',
       componentList: [
-        {
-          id: 1,
-          lable: '加载更多',
-          desc: '加载更多',
-          value: ''
-        },
-        {
-          id: 2,
-          lable: '改版正文页顶部导航2',
-          desc: '改版正文页顶部导航2',
-          value: ''
-        },
-        {
-          id: 3,
-          lable: '加载更多',
-          desc: '加载更多',
-          value: ''
-        },
-        {
-          id: 4,
-          lable: '改版正文页顶部导航2',
-          desc: '改版正文页顶部导航2',
-          value: ''
-        },
-        {
-          id: 5,
-          lable: '加载更多',
-          desc: '加载更多',
-          value: ''
-        },
-        {
-          id: 6,
-          lable: '改版正文页顶部导航2',
-          desc: '改版正文页顶部导航2',
-          value: ''
-        },
-        {
-          id: 7,
-          lable: '加载更多',
-          desc: '加载更多',
-          value: ''
-        },
-        {
-          id: 8,
-          lable: '改版正文页顶部导航2',
-          desc: '改版正文页顶部导航2',
-          value: ''
-        },
-        {
-          id: 9,
-          lable: '加载更多',
-          desc: '加载更多',
-          value: ''
-        },
-        {
-          id: 10,
-          lable: '改版正文页顶部导航2',
-          desc: '改版正文页顶部导航2',
-          value: ''
-        }
       ],
-      temForm: {
-        id: '',
-        name: '',
-        type: '',
+      templateForm: {
+        templateId: '',
+        templateName: '',
+        templateType: '',
         belongProgram: [],
-        fitPlat: '',
-        isEffective: true,
-        desc: '',
-        fileName: '',
-        temContent: ''
+        templateFormat: '',
+        enableFlag: true,
+        templateDescription: '',
+        templateFilename: '',
+        templateContent: ''
       }
     }
   },
+  mounted: function() {
+    // 初始化 主键 赋值
+    var isAddQuery = this.$route.query.isAdd
+    var templateIdQuery = this.$route.query.templateId
+    if (isAddQuery === false) {
+      this.chooseTemplateId = templateIdQuery
+      this.templateForm.templateId = templateIdQuery
+    }
+    this.getTemplateInfo()
+    this.fetchComponentList()
+  },
   methods: {
+    fetchComponentList() {
+      var _this = this
+      var componentObjTmp = {
+      }
+      return new Promise((resolve, reject) => {
+        fetchComponentList(componentObjTmp, 1, 100)
+          .then((response) => {
+            _this.componentList = response.data.result.content
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    getTemplateInfo() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        fetchTemplate(_this.chooseTemplateId)
+          .then((response) => {
+            _this.templateForm = response.data.result
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    // 组件使用按钮的焦点事件
+    componentClick(componentObj) {
+      var _this = this
+      _this.$refs.templateContentRef.focus()
+      _this.insertAtCursorForTemplateContentRef('<@' + componentObj.componentName + '/>')
+    },
+    async insertAtCursorForTemplateContentRef(myValue) {
+      const myField = document.querySelector('#templateContentRef')
+      if (myField.selectionStart || myField.selectionStart === 0) {
+        var startPos = myField.selectionStart
+        var endPos = myField.selectionEnd
+        this.templateForm.templateContent = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length)
+        await this.$nextTick() // 这句是重点, 圈起来
+        myField.focus()
+        myField.setSelectionRange(endPos + myValue.length, endPos + myValue.length)
+      } else {
+        this.templateForm.templateContent += myValue
+      }
+    },
     selectProgram() {
-      console.log(this.temForm.belongProgram)
+      console.log(this.templateForm.belongProgram)
     },
     search() {
       console.log('搜索' + this.selectWebSite + '---' + this.searchTem)
     },
-    beforeAdd() {
-      this.dialogTitle = '添加模板'
-      this.dialogVisible = true
-    },
-    handleAdd() {
+    handleSubmit() {
       console.log('添加')
+      var _this = this
+      if (_this.templateForm.templateId === undefined || _this.templateForm.templateId === '' || _this.templateForm.templateId === null) {
+        // create
+        return new Promise((resolve, reject) => {
+          createTemplate(_this.templateForm)
+            .then((response) => {
+              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+              _this.gotoListPage(_this)
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+            })
+        })
+      } else {
+        // update
+        return new Promise((resolve, reject) => {
+          updateTemplate(_this.templateForm)
+            .then((response) => {
+              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+              _this.gotoListPage(_this)
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+            })
+        })
+      }
     },
-    beforeAlter(index, row) {
-      this.temForm.id = row.id
-      this.temForm.name = row.name
-      this.temForm.type = row.type
-      this.temForm.belongProgram = row.belongProgram
-      this.temForm.fitPlat = row.fitPlat
-      this.temForm.desc = row.desc
-      this.temForm.createTime = row.createTime
-      this.dialogTitle = '修改模板'
-      this.dialogVisible = true
+    isActive(route) {
+      return route.path === this.$route.path
     },
-    handleAlter() {
-      console.log('修改')
-    },
-    handleDelete(index, row) {
-      console.log('删除' + row.plat)
+    gotoListPage(context) {
+      context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {
+        if (context.isActive(context.$route)) {
+          const latestView = visitedViews.slice(-1)[0]
+          if (latestView) {
+            context.$router.push(latestView)
+          } else {
+            context.$router.push('/')
+          }
+        }
+      })
+      context.$router.push({
+        path: '/cms/systemSet/temManager'
+      })
     }
   }
 }
@@ -527,13 +276,13 @@ export default {
   margin-bottom: 10px;
 }
 
-.component-card {
+.template-card {
   width: 100%;
   height: 320px;
   overflow-y: scroll;
 }
 
-.component-box {
+.template-box {
   margin-bottom: 5px;
   padding: 5px 10px;
   border-radius: 4px;
@@ -541,12 +290,12 @@ export default {
 
 }
 
-.component-lable {
+.template-lable {
   font-size: 110%;
   font-weight: 700;
 }
 
-.component-desc {
+.template-desc {
   color: hsl(0, 0%, 45%)
 }
 </style>

@@ -2,18 +2,18 @@
   <div class="tem-manager-container">
     <el-row type="flex" class="tool-bar" justify="end">
       <el-col :span="6">
-        <el-select v-model="selectProgram" placeholder="请选择">
+        <el-select v-model="selectChannel" placeholder="请选择">
           <el-option
-            v-for="program in programList"
-            :key="program.id"
-            :label="program.name"
-            :value="program.id"
+            v-for="channel in channelList"
+            :key="channel.channelId"
+            :label="channel.channelName"
+            :value="channel.channelId"
           />
         </el-select>
       </el-col>
       <el-col :span="5">
         <el-input
-          v-model="searchTem"
+          v-model="searchTemplate"
           placeholder="请输入内容"
           prefix-icon="el-icon-search"
           clearable
@@ -24,12 +24,12 @@
         <el-button type="primary" @click="handleAdd">新增模板</el-button>
       </el-col>
     </el-row>
-    <el-table :data="temList" style="width: 100%">
-      <el-table-column prop="name" label="模板名称"/>
-      <el-table-column prop="type" label="类别"/>
-      <el-table-column prop="belongProgram" label="所属栏目"/>
-      <el-table-column prop="fitPlat" label="适用平台"/>
-      <el-table-column prop="desc" label="描述"/>
+    <el-table :data="temlateList" style="width: 100%">
+      <el-table-column prop="templateName" label="模板名称"/>
+      <el-table-column prop="templateType" label="类别"/>
+      <el-table-column prop="belongChannel" label="所属栏目"/>
+      <el-table-column prop="templateFormat" label="适用平台"/>
+      <el-table-column prop="templateDescription" label="描述"/>
       <el-table-column prop="createTime" label="创建时间"/>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -38,117 +38,70 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      :current-page="pageNum"
+      :page-sizes="[10,30,60,100]"
+      :page-size="pageSize"
+      :total="totalCount"
+      background
+      layout="total, sizes, prev, pager, next, jumper"
+      style="float: right"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
 <script>
+import { fetchList } from '@/api/template'
 export default {
   name: 'TemFormSet',
   data() {
     return {
-      temList: [
+      temlateList: [
+      ],
+      channelList: [
         {
-          id: '1',
-          name: '网站名称',
-          type: '类别',
-          belongProgram: '所属栏目',
-          fitPlat: '适用平台',
-          desc: '描述',
-          createTime: '2018-01-02'
-        },
-        {
-          id: '2',
-          name: '网站名称',
-          type: '类别',
-          belongProgram: '所属栏目',
-          fitPlat: '适用平台',
-          desc: '描述',
-          createTime: '2018-01-02'
-        },
-        {
-          id: '3',
-          name: '网站名称',
-          type: '类别',
-          belongProgram: '所属栏目',
-          fitPlat: '适用平台',
-          desc: '描述',
-          createTime: '2018-01-02'
-        },
-        {
-          id: '4',
-          name: '网站名称',
-          type: '类别',
-          belongProgram: '所属栏目',
-          fitPlat: '适用平台',
-          desc: '描述',
-          createTime: '2018-01-02'
-        },
-        {
-          id: '5',
-          name: '网站名称',
-          type: '类别',
-          belongProgram: '所属栏目',
-          fitPlat: '适用平台',
-          desc: '描述',
-          createTime: '2018-01-02'
+          channelId: '1083184060441956352',
+          channelName: '河南广播网'
         }
       ],
-      programList: [
-        {
-          id: 1,
-          name: '河南广播网'
-        },
-        {
-          id: 2,
-          name: '焦点网'
-        },
-        {
-          id: 3,
-          name: '电台动态'
-        },
-        {
-          id: 4,
-          name: '新闻资讯'
-        }
-      ],
-      typeList: [
-        {
-          id: 1,
-          name: '列表模板'
-        },
-        {
-          id: 2,
-          name: '公共模板'
-        },
-        {
-          id: 3,
-          name: '正文模板'
-        }
-      ],
-      selectProgram: 1,
-      searchTem: '',
-      dialogVisible: false,
-      dialogTitle: '添加模板',
-      temForm: {
-        id: '',
-        name: '',
-        type: '',
-        belongProgram: '',
-        fitPlat: '',
-        isEffective: true,
-        desc: '',
-        fileName: '',
-        temContent: ''
-      }
+      selectChannel: '1083184060441956352',
+      searchTemplate: '',
+      pageNum: 1, // 分页当前页
+      pageSize: 10,
+      totalCount: 0
     }
   },
+  created: function() {
+    this.fetchList()
+  },
   methods: {
+    // 查询列表
+    fetchList() {
+      var _this = this
+      var searchObjTmp = {
+        channelId: _this.selectChannel,
+        templateName: _this.searchTemplate
+      }
+      return new Promise((resolve, reject) => {
+        fetchList(searchObjTmp, _this.pageNum, _this.pageSize)
+          .then((response) => {
+            _this.temlateList = response.data.result.content
+            _this.totalCount = response.data.result.total
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
     search() {
-      console.log('搜索' + this.selectProgram + '---' + this.searchTem)
+      console.log('搜索' + this.selectChannel + '---' + this.searchTemplate)
     },
     handleAdd() {
       this.$router.push({
-        path: '/systemSet/temEdit',
+        path: '/cms/systemSet/temEdit',
         query: {
           isAdd: true
         }
@@ -156,15 +109,24 @@ export default {
     },
     handleAlter(index, row) {
       this.$router.push({
-        path: '/systemSet/temEdit',
+        path: '/cms/systemSet/temEdit',
         query: {
           isAdd: false,
-          tem: row
+          templateId: row.templateId
         }
       })
     },
     handleDelete(index, row) {
       console.log('删除' + row.plat)
+    },
+    // 表格分页处理
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.fetchList()
+    },
+    handleCurrentChange(val) {
+      this.pageNum = val
+      this.fetchList()
     }
   }
 }
