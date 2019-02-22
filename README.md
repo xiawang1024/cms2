@@ -26,8 +26,6 @@
   </a>
 </p>
 
-简体中文 | [English](./README.EN.md)
-
 ## 简介
 
 [vue-element-admin](http://panjiachen.github.io/vue-element-admin) 是一个后台集成解决方案，它基于 [vue](https://github.com/vuejs/vue) 和 [element](https://github.com/ElemeFE/element)。它使用了最新的前端技术栈，内置了 i18 国际化解决方案，动态路由，权限验证，提炼了典型的业务模型，提供了丰富的功能组件，它可以帮助你快速搭建企业级中后台产品原型。相信不管你的需求是什么，本项目都能帮助到你。
@@ -35,24 +33,6 @@
 - [在线访问](http://panjiachen.github.io/vue-element-admin)
 
 - [使用文档](https://panjiachen.github.io/vue-element-admin-site/zh/)
-
-- [Gitter 讨论组](https://gitter.im/vue-element-admin/discuss)
-
-- [Wiki](https://github.com/PanJiaChen/vue-element-admin/wiki)
-
-- [Donate](https://panjiachen.github.io/vue-element-admin-site/zh/donate/)
-
-- [Gitee](https://panjiachen.gitee.io/vue-element-admin/) 国内用户可访问该地址在线预览
-
-- [国内访问文档](https://panjiachen.gitee.io/vue-element-admin-site/zh/) 方便没翻墙的用户查看文档
-
-**本项目的定位是后台集成方案，不适合当基础模板来开发。**
-
-- 模板建议使用: [vue-admin-template](https://github.com/PanJiaChen/vue-admin-template)
-- 桌面端: [electron-vue-admin](https://github.com/PanJiaChen/electron-vue-admin)
-- Typescript版: [vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template) (鸣谢: [@Armour](https://github.com/Armour))
-
-群主 **[圈子](https://jianshiapp.com/circles/1209)** 楼主会经常分享一些技术相关的东西，或者加入[qq 群](https://github.com/PanJiaChen/vue-element-admin/issues/602)
 
 **注意：该项目使用 element-ui@2.3.0+ 版本，所以最低兼容 vue@2.5.0+**
 
@@ -75,82 +55,6 @@
 - [手摸手，带你用合理的姿势使用 webpack4（上）](https://juejin.im/post/5b56909a518825195f499806)
 - [手摸手，带你用合理的姿势使用 webpack4（下）](https://juejin.im/post/5b5d6d6f6fb9a04fea58aabc)
 
-**如有问题请先看上述使用文档和文章，若不能满足，欢迎 issue 和 pr**
-
- <p align="center">
-  <img width="900" src="https://wpimg.wallstcn.com/a5894c1b-f6af-456e-82df-1151da0839bf.png">
-</p>
-
-## Sponsors
-Become a sponsor and get your logo on our README on GitHub with a link to your site. [[Become a sponsor]](https://www.patreon.com/panjiachen)
-
-<a href="https://flatlogic.com/admin-dashboards?from=vue-element-admin"><img width="150px" src="https://wpimg.wallstcn.com/9c0b719b-5551-4c1e-b776-63994632d94a.png" /></a><p>Admin Dashboard Templates made with Vue, React and Angular.</p>
-
-## 功能
-
-```
-- 登录 / 注销
-
-- 权限验证
-  - 页面权限
-  - 指令权限
-  - 二步登录
-
-- 多环境发布
-  - dev sit stage prod
-
-- 全局功能
-  - 国际化多语言
-  - 多种动态换肤
-  - 动态侧边栏（支持多级路由嵌套）
-  - 动态面包屑
-  - 快捷导航(标签页)
-  - Svg Sprite 图标
-  - 本地mock数据
-  - Screenfull全屏
-  - 自适应收缩侧边栏
-
-- 编辑器
-  - 富文本
-  - Markdown
-  - JSON 等多格式
-
-- Excel
-  - 导出excel
-  - 导出zip
-  - 导入excel
-  - 前端可视化excel
-
-- 表格
-  - 动态表格
-  - 拖拽表格
-  - 树形表格
-  - 内联编辑
-
-- 错误页面
-  - 401
-  - 404
-
-- 組件
-  - 头像上传
-  - 返回顶部
-  - 拖拽Dialog
-  - 拖拽Select
-  - 拖拽看板
-  - 列表拖拽
-  - SplitPane
-  - Dropzone
-  - Sticky
-  - CountTo
-
-- 综合实例
-- 错误日志
-- Dashboard
-- 引导页
-- ECharts 图表
-- Clipboard(剪贴复制)
-- Markdown2html
-```
 
 ## 开发
 
