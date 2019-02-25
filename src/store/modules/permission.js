@@ -49,6 +49,10 @@ const permission = {
   mutations: {
     SET_ROUTERS: (state, routers) => {
       state.addRouters = []
+      /**
+       * 动态路由刷新404bug
+       */
+      routers = routers.concat({ path: '*', redirect: '/404', hidden: true })
       state.addRouters = routers
       state.routers = constantRouterMap.concat(routers)
     }
