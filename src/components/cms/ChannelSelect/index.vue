@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { fetchChannelList } from '@/api/channel'
+import { fetchChannelList } from '@/api/cms/channel'
 export default {
   name: 'ChannelSelect',
   props: {

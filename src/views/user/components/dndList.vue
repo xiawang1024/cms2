@@ -19,7 +19,7 @@
 
 <script>
 import DndList from '@/components/user/DndList'
-import { fetchList } from '@/api/article'
+import { fetchList } from '@/api/cms/article'
 
 export default {
   name: 'DndListDemo',
