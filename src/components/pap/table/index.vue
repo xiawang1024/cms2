@@ -3,9 +3,6 @@
     <el-form :inline="true" size="mini" style="margin-top: 10px;">
       <el-form-item :label="`已选数据 [ ${multipleSelection.length} ]`">
         <el-button-group>
-          <el-button type="primary" size="mini" :disabled="multipleSelection.length === 0" @click="handleDownloadXlsx(multipleSelection)">
-            Excel
-          </el-button>
 	        <el-button type="primary" size="mini" :disabled="multipleSelection.length === 0" @click="handleShowSelectedTableData(multipleSelection)">
 		        Show
 	        </el-button>

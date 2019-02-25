@@ -85,7 +85,8 @@ export default {
     extendField: 'extendField',
     statistics: 'statistics',
     acqSource: 'acqSource',
-    department: 'Department'
+    department: 'Department',
+    user: 'User'
   },
   navbar: {
     logOut: 'Log Out',

@@ -17,13 +17,14 @@ import systemSet from './routers/cms/systemSet'
 import systemStatus from './routers/cms/systemStatus'
 import personAndAuthor from './routers/cms/personAndAuthor'
 import extensions from './routers/cms/extensions'
-const cmsRouterMap = [webSite, systemSet, systemStatus, personAndAuthor, extensions]
+import department from './routers/user/department'
+import user from './routers/user/user'
+const cmsRouterMap = [webSite, systemSet, systemStatus, personAndAuthor, extensions, department, user]
 
 /**
  * 用户中心系统路由
  */
 import userDemo from './routers/user/userDemo'
-import department from './routers/user/department'
 const userRouterMap = [userDemo, department]
 
 /**
