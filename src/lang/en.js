@@ -84,7 +84,8 @@ export default {
     cdnFresh: 'cdnFresh',
     extendField: 'extendField',
     statistics: 'statistics',
-    acqSource: 'acqSource'
+    acqSource: 'acqSource',
+    department: 'Department'
   },
   navbar: {
     logOut: 'Log Out',

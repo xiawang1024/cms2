@@ -23,7 +23,8 @@ const cmsRouterMap = [webSite, systemSet, systemStatus, personAndAuthor, extensi
  * 用户中心系统路由
  */
 import userDemo from './routers/user/userDemo'
-const userRouterMap = [userDemo]
+import department from './routers/user/department'
+const userRouterMap = [userDemo, department]
 
 /**
  * 路由map

@@ -1,3 +1,6 @@
 build/*.js
 config/*.js
 src/assets
+src/components/pap/*
+src/components/el-data-table/*
+src/components/el-form-render/*

@@ -89,7 +89,8 @@ export default {
     cdnFresh: 'CDN刷新',
     extendField: '扩展字段',
     statistics: '综合统计',
-    acqSource: '采集源配置'
+    acqSource: '采集源配置',
+    department: '部门管理'
   },
   navbar: {
     logOut: '退出登录',
