@@ -19,7 +19,8 @@ import personAndAuthor from './routers/cms/personAndAuthor'
 import extensions from './routers/cms/extensions'
 import department from './routers/user/department'
 import user from './routers/user/user'
-const cmsRouterMap = [webSite, systemSet, systemStatus, personAndAuthor, extensions, department, user]
+import role from './routers/user/role'
+const cmsRouterMap = [webSite, systemSet, systemStatus, personAndAuthor, extensions, department, user, role]
 
 /**
  * 用户中心系统路由

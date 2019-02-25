@@ -86,7 +86,8 @@ export default {
     statistics: 'statistics',
     acqSource: 'acqSource',
     department: 'Department',
-    user: 'User'
+    user: 'User',
+    role: 'Role'
   },
   navbar: {
     logOut: 'Log Out',
