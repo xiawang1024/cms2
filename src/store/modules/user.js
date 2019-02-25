@@ -1,5 +1,5 @@
 import { loginByUsername, logout, getUserInfo } from '@/api/login'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getAuth, setAuth, removeAuth } from '@/utils/auth'
 import router from '@/router'
 
 const user = {
@@ -7,7 +7,7 @@ const user = {
     user: '',
     status: '',
     code: '',
-    token: getToken(),
+    token: getAuth(),
     name: '',
     avatar: '',
     introduction: '',
@@ -61,7 +61,7 @@ const user = {
           .then((response) => {
             const data = response.data
             commit('SET_TOKEN', data.token)
-            setToken(response.data.token)
+            setAuth(response.data.token)
             resolve()
           })
           .catch((error) => {
@@ -105,7 +105,7 @@ const user = {
     //     commit('SET_CODE', code)
     //     loginByThirdparty(state.status, state.email, state.code).then(response => {
     //       commit('SET_TOKEN', response.data.token)
-    //       setToken(response.data.token)
+    //       setAuth(response.data.token)
     //       resolve()
     //     }).catch(error => {
     //       reject(error)
@@ -120,7 +120,7 @@ const user = {
           .then(() => {
             commit('SET_TOKEN', '')
             commit('SET_ROLES', [])
-            removeToken()
+            removeAuth()
             resolve()
           })
           .catch((error) => {
@@ -133,7 +133,7 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise((resolve) => {
         commit('SET_TOKEN', '')
-        removeToken()
+        removeAuth()
         resolve()
       })
     },
@@ -142,7 +142,7 @@ const user = {
     ChangeRoles({ commit, dispatch }, role) {
       return new Promise((resolve) => {
         commit('SET_TOKEN', role)
-        setToken(role)
+        setAuth(role)
         getUserInfo(role).then((response) => {
           const data = response.data
           commit('SET_ROLES', data.roles)
