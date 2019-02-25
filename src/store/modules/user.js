@@ -1,3 +1,7 @@
+/**
+ * 用户相关
+ */
+
 import { loginByUsername, logout, getUserInfo } from '@/api/login'
 import { getAuth, setAuth, removeAuth } from '@/utils/auth'
 import router from '@/router'

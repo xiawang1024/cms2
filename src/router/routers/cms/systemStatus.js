@@ -9,7 +9,7 @@ const systemStatus = {
   meta: {
     title: 'systemStatus',
     icon: 'systemStatus',
-    role: 'admin'
+    role: 'ROLE_TEST'
   },
   children: [
     {
@@ -19,7 +19,7 @@ const systemStatus = {
       path: 'logs',
       component: () => import(`@/${path}/logs`),
       name: 'logs',
-      meta: { title: 'logs', icon: 'logs', role: 'admin' }
+      meta: { title: 'logs', icon: 'logs', role: 'ROLE_TEST' }
     },
     {
       /**
@@ -29,7 +29,7 @@ const systemStatus = {
       component: () => import(`@/${path}/backTask`),
       name: 'backTask',
 
-      meta: { title: 'backTask', icon: 'backTask', role: 'admin' }
+      meta: { title: 'backTask', icon: 'backTask', role: 'ROLE_TEST' }
     }
   ]
 }

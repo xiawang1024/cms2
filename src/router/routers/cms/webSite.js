@@ -10,13 +10,13 @@ const webSite = {
   path: `/${cmsPath}/website`,
   component: Layout,
   redirect: `${cmsPath}/website/doc`,
-  meta: { title: 'webSite', icon: 'webSite', role: 'admin' },
+  meta: { title: 'webSite', icon: 'webSite', role: 'ROLE_TEST' },
   children: [
     {
       path: 'doc',
       component: () => import(`@/${path}/index`),
       name: 'webSite',
-      meta: { title: 'webSite', icon: 'webSite', role: 'admin' },
+      meta: { title: 'webSite', icon: 'webSite', role: 'ROLE_TEST' },
       hidden: true
     }
   ]
