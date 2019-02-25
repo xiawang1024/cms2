@@ -60,8 +60,10 @@ const user = {
         loginByUsername(username, userInfo.password)
           .then((response) => {
             const data = response.data
-            commit('SET_TOKEN', data.token)
-            setAuth(response.data.token)
+            console.log(data)
+            commit('SET_TOKEN', data.access_token)
+            setAuth(data)
+
             resolve()
           })
           .catch((error) => {
@@ -80,6 +82,8 @@ const user = {
               reject('error')
             }
             const data = response.data
+
+            data.roles = ['admin']
 
             if (data.roles && data.roles.length > 0) {
               // 验证返回的roles是否是一个非空数组

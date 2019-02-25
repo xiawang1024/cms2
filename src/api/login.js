@@ -1,7 +1,7 @@
 import request from '@/utils/request.js'
 import Qs from 'qs'
 
-import { setAuth, getAuth } from '@/utils/auth.js'
+import { getAuth } from '@/utils/auth.js'
 
 request.defaults.headers.contentType = 'application/x-www-form-urlencoded'
 /**
@@ -14,7 +14,7 @@ request.defaults.headers.contentType = 'application/x-www-form-urlencoded'
  * @param {String} domain
  * @param {String} authenticationType
  */
-export const loginByUsername = async(
+export const loginByUsername = (
   username,
   password,
   grant_type = 'password',
@@ -23,7 +23,7 @@ export const loginByUsername = async(
   domain = 'b',
   authenticationType = 'password'
 ) => {
-  const { data } = await request.post(
+  return request.post(
     '/uua/oauth/token',
     Qs.stringify({
       username,
@@ -35,10 +35,6 @@ export const loginByUsername = async(
       authenticationType
     })
   )
-  if (!getAuth()) {
-    setAuth(data)
-  }
-  return Promise.resolve()
 }
 
 /**
