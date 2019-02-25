@@ -9,7 +9,7 @@ const systemSet = {
   meta: {
     title: 'systemSet',
     icon: 'systemSet',
-    role: 'admin'
+    role: 'ROLE_TEST'
   },
   children: [
     {
@@ -22,7 +22,7 @@ const systemSet = {
       meta: {
         title: 'siteSet',
         icon: 'siteSet',
-        role: 'admin'
+        role: 'ROLE_TEST'
       }
     },
     {
@@ -32,7 +32,7 @@ const systemSet = {
       path: 'docSource',
       component: () => import(`@/${path}/docSource`),
       name: 'DocSource',
-      meta: { title: 'docSource', icon: 'docSource', role: 'admin' }
+      meta: { title: 'docSource', icon: 'docSource', role: 'ROLE_TEST' }
     },
     {
       /**
@@ -41,7 +41,7 @@ const systemSet = {
       path: 'platformSet',
       component: () => import(`@/${path}/platformSet`),
       name: 'platformSet',
-      meta: { title: 'platformSet', icon: 'platformSet', role: 'admin' }
+      meta: { title: 'platformSet', icon: 'platformSet', role: 'ROLE_TEST' }
     },
     {
       /**
@@ -50,7 +50,7 @@ const systemSet = {
       path: 'temManager',
       component: () => import(`@/${path}/temManager`),
       name: 'temManager',
-      meta: { title: 'temManager', icon: 'temManager', role: 'editor' }
+      meta: { title: 'temManager', icon: 'temManager', role: 'ROLE_TEST' }
     },
     {
       /**
@@ -59,7 +59,7 @@ const systemSet = {
       path: 'temEdit',
       component: () => import(`@/${path}/temEdit`),
       name: 'temEdit',
-      meta: { title: 'temEdit', icon: 'temEdit', role: 'editor' },
+      meta: { title: 'temEdit', icon: 'temEdit', role: 'ROLE_TEST' },
       hidden: true
     },
     {
@@ -69,7 +69,7 @@ const systemSet = {
       path: 'sourceManage',
       component: () => import(`@/${path}/sourceManage`),
       name: 'sourceManage',
-      meta: { title: 'sourceManage', icon: 'sourceManage', role: 'editor' }
+      meta: { title: 'sourceManage', icon: 'sourceManage', role: 'ROLE_TEST' }
     },
     {
       /**
@@ -78,7 +78,7 @@ const systemSet = {
       path: 'comComponent',
       component: () => import(`@/${path}/comComponent`),
       name: 'comComponent',
-      meta: { title: 'comComponent', icon: 'comComponent', role: 'editor' }
+      meta: { title: 'comComponent', icon: 'comComponent', role: 'ROLE_TEST' }
     },
     {
       /**
@@ -87,7 +87,7 @@ const systemSet = {
       path: 'componentEdit',
       component: () => import(`@/${path}/ComponentEdit`),
       name: 'componentEdit',
-      meta: { title: 'componentEdit', icon: 'componentEdit', role: 'editor' },
+      meta: { title: 'componentEdit', icon: 'componentEdit', role: 'ROLE_TEST' },
       hidden: true
     },
     {
@@ -97,7 +97,7 @@ const systemSet = {
       path: 'helpDoc',
       component: () => import(`@/${path}/helpDoc`),
       name: 'helpDoc',
-      meta: { title: 'helpDoc', icon: 'helpDoc', role: 'editor' }
+      meta: { title: 'helpDoc', icon: 'helpDoc', role: 'ROLE_TEST' }
     },
     {
       /**
@@ -106,7 +106,7 @@ const systemSet = {
       path: 'helpDocEdit',
       component: () => import(`@/${path}/helpDocEdit`),
       name: 'helpDocEdit',
-      meta: { title: 'helpDocEdit', icon: 'helpDocEdit', role: 'editor' },
+      meta: { title: 'helpDocEdit', icon: 'helpDocEdit', role: 'ROLE_TEST' },
       hidden: true
     }
   ]

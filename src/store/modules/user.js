@@ -1,18 +1,18 @@
+/**
+ * 用户相关
+ */
+
 import { loginByUsername, logout, getUserInfo } from '@/api/login'
 import { getAuth, setAuth, removeAuth } from '@/utils/auth'
 import router from '@/router'
 
 const user = {
   state: {
-    user: '',
-    status: '',
-    code: '',
     token: getAuth(),
     name: '',
-    avatar: '',
-    introduction: '',
-    roles: [],
-    sysList: [],
+    avatar: 'http://www.hndt.com/podcast/976/1131/res/EEghUGNE.jpg?1511506999379',
+    authorities: [],
+    sysList: ['0'],
     sysType: '0',
     setting: {
       articlePlatform: []
@@ -20,29 +20,23 @@ const user = {
   },
 
   mutations: {
-    SET_CODE: (state, code) => {
-      state.code = code
-    },
     SET_TOKEN: (state, token) => {
       state.token = token
     },
-    SET_INTRODUCTION: (state, introduction) => {
-      state.introduction = introduction
-    },
+
     SET_SETTING: (state, setting) => {
       state.setting = setting
     },
-    SET_STATUS: (state, status) => {
-      state.status = status
-    },
+
     SET_NAME: (state, name) => {
       state.name = name
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
+
+    SET_AUTHORITIES: (state, authorities) => {
+      state.authorities = authorities
     },
     SET_SYS_LIST: (state, sysList) => {
       state.sysList = sysList
@@ -77,25 +71,21 @@ const user = {
       return new Promise((resolve, reject) => {
         getUserInfo(state.token)
           .then((response) => {
-            if (!response.data) {
-              // 由于mockjs 不支持自定义状态码只能这样hack
-              reject('error')
-            }
             const data = response.data
 
-            data.roles = ['admin']
+            if (data.client_authorities && data.client_authorities.length > 0) {
+              // 验证返回的authorities是否是一个非空数组
 
-            if (data.roles && data.roles.length > 0) {
-              // 验证返回的roles是否是一个非空数组
-              commit('SET_ROLES', data.roles)
+              commit('SET_AUTHORITIES', data.client_authorities)
             } else {
-              reject('getInfo: roles must be a non-null array !')
+              reject('getInfo: authorities must be a non-null array !')
             }
-            commit('SET_SYS_LIST', data.sysList)
+            /**
+             * 子系统列表
+             */
+            // commit('SET_SYS_LIST', data.sysList)
             commit('SET_NAME', data.name)
-            commit('SET_AVATAR', data.avatar)
-            commit('SET_INTRODUCTION', data.introduction)
-            resolve(response)
+            resolve(data)
           })
           .catch((error) => {
             reject(error)
@@ -103,27 +93,14 @@ const user = {
       })
     },
 
-    // 第三方验证登录
-    // LoginByThirdparty({ commit, state }, code) {
-    //   return new Promise((resolve, reject) => {
-    //     commit('SET_CODE', code)
-    //     loginByThirdparty(state.status, state.email, state.code).then(response => {
-    //       commit('SET_TOKEN', response.data.token)
-    //       setAuth(response.data.token)
-    //       resolve()
-    //     }).catch(error => {
-    //       reject(error)
-    //     })
-    //   })
-    // },
-
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
         logout(state.token)
           .then(() => {
             commit('SET_TOKEN', '')
-            commit('SET_ROLES', [])
+
+            commit('SET_AUTHORITIES', [])
             removeAuth()
             resolve()
           })
@@ -137,32 +114,37 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise((resolve) => {
         commit('SET_TOKEN', '')
+
+        commit('SET_AUTHORITIES', [])
         removeAuth()
         resolve()
       })
     },
 
     // 动态修改权限
-    ChangeRoles({ commit, dispatch }, role) {
+    ChangeRoles({ commit, dispatch }, authority) {
       return new Promise((resolve) => {
-        commit('SET_TOKEN', role)
-        setAuth(role)
-        getUserInfo(role).then((response) => {
+        commit('SET_TOKEN', authority)
+        setAuth(authority)
+        getUserInfo(authority).then((response) => {
           const data = response.data
-          commit('SET_ROLES', data.roles)
+
+          commit('SET_AUTHORITIES', data.authorities)
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
           dispatch('GenerateRoutes', data) // 动态修改权限后 重绘侧边菜单
           resolve()
         })
       })
     },
+    /**
+     * 选择子系统，动态修改路由
+     */
     selectSysType({ commit, dispatch, getters, state }, sysType) {
       commit('SET_SYS_TYPE', sysType)
       router.push({ path: '/' })
       dispatch('delAllViews') // 清除tagViews
-      dispatch('GenerateRoutes', { roles: getters.roles }).then(() => {
+      dispatch('GenerateRoutes', { authorities: getters.authorities }).then(() => {
         /**
          * 更新动态路由
          */
