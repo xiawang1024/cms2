@@ -55,8 +55,8 @@ export default {
         // 多页选中数据回显，分页记录保存选中的数据
         rowKeys: 'permissionId',
         colomn: [
-          { prop: 'permissionCode', label: '操作编码'},
-          { prop: 'permissionName', label: '操作名称'},
+          { prop: 'permissionCode', label: '权限编码'},
+          { prop: 'permissionName', label: '权限名称'},
           { prop: 'httpUrl', label: '请求链接'},
           { prop: 'httpMethod', label: '请求协议'}
         ],
@@ -143,7 +143,7 @@ export default {
         })
       })
     },
-    // 监听表格选中值变化, 并复制到当前组件中，便于手续也操作.
+    // 监听表格选中值变化, 并复制到当前组件中，便于手续也权限.
     multipleSelectionEmit (val) {
       this.multipleSelection = val
       // 这里根据表格选中值的数据条数进行判断，将按钮中的数据进行动态维护
@@ -187,7 +187,7 @@ export default {
         return new Promise((resolve, reject) => {
           // 开始请求
           PermissionUpdate(data).then(async res => {
-            _this.dialogSubmitClickCallback('操作更新', res, _this)
+            _this.dialogSubmitClickCallback('权限更新', res, _this)
             // 结束
             resolve()
           }).catch(err => {
@@ -198,7 +198,7 @@ export default {
         return new Promise((resolve, reject) => {
           // 开始请求
           PermissionCreate(data).then(async res => {
-            _this.dialogSubmitClickCallback('操作新增', res, _this)
+            _this.dialogSubmitClickCallback('权限新增', res, _this)
             // 结束
             resolve()
           }).catch(err => {
