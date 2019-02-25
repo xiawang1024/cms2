@@ -93,7 +93,8 @@ export default {
     department: '部门管理',
     user: '用户管理',
     role: '角色管理',
-    operation: '平台操作管理'
+    operation: '平台操作管理',
+    application: '平台应用管理'
   },
   navbar: {
     logOut: '退出登录',

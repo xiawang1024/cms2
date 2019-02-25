@@ -88,7 +88,8 @@ export default {
     department: 'Department',
     user: 'User',
     role: 'Role',
-    operation: 'Operation'
+    operation: 'Operation',
+    application: 'Application'
   },
   navbar: {
     logOut: 'Log Out',
