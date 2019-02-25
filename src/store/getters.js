@@ -11,6 +11,7 @@ const getters = {
   introduction: (state) => state.user.introduction,
   status: (state) => state.user.status,
   roles: (state) => state.user.roles,
+  authorities: (state) => state.user.authorities,
   sysList: (state) => state.user.sysList,
   sysType: (state) => state.user.sysType,
   setting: (state) => state.user.setting,

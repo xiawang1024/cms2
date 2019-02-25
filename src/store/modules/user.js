@@ -4,15 +4,12 @@ import router from '@/router'
 
 const user = {
   state: {
-    user: '',
-    status: '',
-    code: '',
     token: getAuth(),
     name: '',
     avatar: 'http://www.hndt.com/podcast/976/1131/res/EEghUGNE.jpg?1511506999379',
-    introduction: '',
+    authorities: [],
     roles: [],
-    sysList: [],
+    sysList: ['0'],
     sysType: '0',
     setting: {
       articlePlatform: []
@@ -20,21 +17,14 @@ const user = {
   },
 
   mutations: {
-    SET_CODE: (state, code) => {
-      state.code = code
-    },
     SET_TOKEN: (state, token) => {
       state.token = token
     },
-    SET_INTRODUCTION: (state, introduction) => {
-      state.introduction = introduction
-    },
+
     SET_SETTING: (state, setting) => {
       state.setting = setting
     },
-    SET_STATUS: (state, status) => {
-      state.status = status
-    },
+
     SET_NAME: (state, name) => {
       state.name = name
     },
@@ -43,6 +33,9 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_AUTHORITIES: (state, authorities) => {
+      state.authorities = authorities
     },
     SET_SYS_LIST: (state, sysList) => {
       state.sysList = sysList
@@ -82,6 +75,7 @@ const user = {
             if (data.client_authorities && data.client_authorities.length > 0) {
               // 验证返回的roles是否是一个非空数组
               commit('SET_ROLES', data.client_authorities)
+              commit('SET_AUTHORITIES', data.client_authorities)
             } else {
               reject('getInfo: roles must be a non-null array !')
             }
@@ -105,6 +99,7 @@ const user = {
           .then(() => {
             commit('SET_TOKEN', '')
             commit('SET_ROLES', [])
+            commit('SET_AUTHORITIES', [])
             removeAuth()
             resolve()
           })
@@ -119,6 +114,7 @@ const user = {
       return new Promise((resolve) => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
+        commit('SET_AUTHORITIES', [])
         removeAuth()
         resolve()
       })
@@ -132,14 +128,17 @@ const user = {
         getUserInfo(role).then((response) => {
           const data = response.data
           commit('SET_ROLES', data.roles)
+          commit('SET_AUTHORITIES', data.roles)
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
           dispatch('GenerateRoutes', data) // 动态修改权限后 重绘侧边菜单
           resolve()
         })
       })
     },
+    /**
+     * 选择子系统，动态修改路由
+     */
     selectSysType({ commit, dispatch, getters, state }, sysType) {
       commit('SET_SYS_TYPE', sysType)
       router.push({ path: '/' })
