@@ -70,7 +70,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['name', 'avatar', 'roles'])
+    ...mapGetters(['name', 'avatar', 'authorities'])
   }
 }
 </script>

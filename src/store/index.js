@@ -7,7 +7,7 @@ import tagsView from './modules/tagsView'
 import user from './modules/user'
 import getters from './getters'
 
-import webSite from './modules/webSite'
+import cms from './modules/cms'
 
 Vue.use(Vuex)
 
@@ -18,7 +18,7 @@ const store = new Vuex.Store({
     permission,
     tagsView,
     user,
-    webSite
+    cms
   },
   getters
 })

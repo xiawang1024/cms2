@@ -11,12 +11,12 @@ function filterSysRouter(sysType) {
 }
 /**
  * 通过meta.role判断是否与当前用户权限匹配
- * @param roles
+ * @param authorities
  * @param route
  */
-function hasPermission(roles, route) {
+function hasPermission(authorities, route) {
   if (route.meta && route.meta.role) {
-    return roles.includes(route.meta.role)
+    return authorities.includes(route.meta.role)
   } else {
     return true
   }
@@ -25,15 +25,15 @@ function hasPermission(roles, route) {
 /**
  * 递归过滤异步路由表，返回符合用户角色权限的路由表
  * @param routes asyncRouterMap
- * @param roles
+ * @param authorities
  */
-function filterAsyncRouter(routes, roles) {
+function filterAsyncRouter(routes, authorities) {
   const res = []
   routes.forEach((route) => {
     const tmp = { ...route }
-    if (hasPermission(roles, tmp)) {
+    if (hasPermission(authorities, tmp)) {
       if (tmp.children) {
-        tmp.children = filterAsyncRouter(tmp.children, roles)
+        tmp.children = filterAsyncRouter(tmp.children, authorities)
       }
       res.push(tmp)
     }
@@ -56,11 +56,11 @@ const permission = {
   actions: {
     GenerateRoutes({ commit, getters }, data) {
       return new Promise((resolve) => {
-        const { roles } = data
+        const { authorities } = data
         let asyncSysRouterMap = null
         console.log(getters.sysType)
         asyncSysRouterMap = filterSysRouter(getters.sysType)
-        const accessedRouters = filterAsyncRouter(asyncSysRouterMap, roles)
+        const accessedRouters = filterAsyncRouter(asyncSysRouterMap, authorities)
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })
