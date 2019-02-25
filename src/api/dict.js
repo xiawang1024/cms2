@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/dict/page',
+    url: '/cms/dict/page',
     method: 'post',
     data: query
   })
@@ -10,21 +10,21 @@ export function fetchList(query) {
 
 export function fetchDict(id) {
   return request({
-    url: '/dict/' + id,
+    url: '/cms/dict/' + id,
     method: 'get'
   })
 }
 
 export function fetchDictByDictName(dictName) {
   return request({
-    url: '/dict/findbydictname?dictName=' + dictName,
+    url: '/cms/dict/findbydictname?dictName=' + dictName,
     method: 'get'
   })
 }
 
 export function createDict(data) {
   return request({
-    url: '/dict',
+    url: '/cms/dict',
     method: 'post',
     data
   })
@@ -32,7 +32,7 @@ export function createDict(data) {
 
 export function updateDict(data) {
   return request({
-    url: '/dict',
+    url: '/cms/dict',
     method: 'put',
     data
   })

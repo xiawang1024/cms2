@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchList(queryObj, pageNo, pageSize) {
   return request({
-    url: '/template/page?pageNo=' + pageNo + '&pageSize=' + pageSize,
+    url: '/cms/template/page?pageNo=' + pageNo + '&pageSize=' + pageSize,
     method: 'post',
     data: queryObj
   })
@@ -10,14 +10,14 @@ export function fetchList(queryObj, pageNo, pageSize) {
 
 export function fetchTemplate(id) {
   return request({
-    url: '/template/' + id,
+    url: '/cms/template/' + id,
     method: 'get'
   })
 }
 
 export function createTemplate(data) {
   return request({
-    url: '/template',
+    url: '/cms/template',
     method: 'post',
     data
   })
@@ -25,7 +25,7 @@ export function createTemplate(data) {
 
 export function updateTemplate(data) {
   return request({
-    url: '/template',
+    url: '/cms/template',
     method: 'put',
     data
   })

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchComponentList(queryObj, pageNo, pageSize) {
   return request({
-    url: '/component/page?pageNo=' + pageNo + '&pageSize=' + pageSize,
+    url: '/cms/component/page?pageNo=' + pageNo + '&pageSize=' + pageSize,
     method: 'post',
     data: queryObj
   })
@@ -10,14 +10,14 @@ export function fetchComponentList(queryObj, pageNo, pageSize) {
 
 export function fetchComponent(id) {
   return request({
-    url: '/component/' + id,
+    url: '/cms/component/' + id,
     method: 'get'
   })
 }
 
 export function createComponent(data) {
   return request({
-    url: '/component',
+    url: '/cms/component',
     method: 'post',
     data
   })
@@ -25,7 +25,7 @@ export function createComponent(data) {
 
 export function updateComponent(data) {
   return request({
-    url: '/component',
+    url: '/cms/component',
     method: 'put',
     data
   })
