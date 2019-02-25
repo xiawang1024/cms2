@@ -81,8 +81,8 @@
 </template>
 
 <script>
-import { fetchComponentList } from '@/api/component'
-import { fetchTemplate, createTemplate, updateTemplate } from '@/api/template'
+import { fetchComponentList } from '@/api/cms/component'
+import { fetchTemplate, createTemplate, updateTemplate } from '@/api/cms/template'
 import ChannelSelect from '@/components/cms/ChannelSelect'
 export default {
   name: 'TemEdit',

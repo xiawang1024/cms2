@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { fetchDictByDictName, updateDict } from '@/api/dict'
+import { fetchDictByDictName, updateDict } from '@/api/cms/dict'
 export default {
   name: 'SiteSet',
   data() {

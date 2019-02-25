@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { fetchComponentList } from '@/api/component'
+import { fetchComponentList } from '@/api/cms/component'
 import ChannelSelect from '@/components/cms/ChannelSelect'
 export default {
   name: 'ComComponentSet',

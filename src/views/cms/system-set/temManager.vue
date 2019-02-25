@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/template'
+import { fetchList } from '@/api/cms/template'
 import ChannelSelect from '@/components/cms/ChannelSelect'
 export default {
   name: 'TemFormSet',

@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { fetchDictByDictName, createDict, updateDict } from '@/api/dict'
+import { fetchDictByDictName, createDict, updateDict } from '@/api/cms/dict'
 export default {
   name: 'DocSource',
   data() {

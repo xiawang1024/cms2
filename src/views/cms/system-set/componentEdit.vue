@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { fetchComponent, createComponent, updateComponent } from '@/api/component'
+import { fetchComponent, createComponent, updateComponent } from '@/api/cms/component'
 import ChannelSelect from '@/components/cms/ChannelSelect'
 export default {
   name: 'ConponentEdit',
