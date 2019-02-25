@@ -14,10 +14,7 @@
         :image="avatar"
         class="panThumb"
       />
-      <mallki
-        class-name="mallki-text"
-        text="vue-element-admin"
-      />
+
       <div
         style="padding-top:35px;"
         class="progress-item"
@@ -47,10 +44,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import PanThumb from '@/components/public/PanThumb'
-import Mallki from '@/components/TextHoverEffect/Mallki'
 
 export default {
-  components: { PanThumb, Mallki },
+  components: { PanThumb },
 
   filters: {
     statusFilter(status) {
