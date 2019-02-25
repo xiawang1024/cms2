@@ -3,7 +3,7 @@ import store from './store'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-import { getToken } from '@/utils/auth' // getToken from cookie
+import { getAuth } from '@/utils/auth' // getAuth from cookie
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -13,12 +13,14 @@ function hasPermission(roles, permissionRole) {
   return roles.includes(permissionRole)
 }
 
+/**
+ * 路由白名单
+ */
 const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 
 router.beforeEach((to, from, next) => {
-  console.log(to)
   NProgress.start() // start progress bar
-  if (getToken()) {
+  if (getAuth()) {
     // determine if there has token
     /* has token*/
     if (to.path === '/login') {
