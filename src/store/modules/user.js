@@ -74,7 +74,7 @@ const user = {
 
             if (data.client_authorities && data.client_authorities.length > 0) {
               // 验证返回的roles是否是一个非空数组
-              commit('SET_ROLES', data.client_authorities)
+              // commit('SET_ROLES', data.client_authorities)
               commit('SET_AUTHORITIES', data.client_authorities)
             } else {
               reject('getInfo: roles must be a non-null array !')

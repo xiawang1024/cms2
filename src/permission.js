@@ -27,7 +27,7 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
-      if (store.getters.roles.length === 0) {
+      if (store.getters.authorities.length === 0) {
         // 判断当前用户是否已拉取完user_info信息
         store
           .dispatch('GetUserInfo')
@@ -50,7 +50,7 @@ router.beforeEach((to, from, next) => {
       } else {
         // 没有动态改变权限的需求可直接next() 删除下方权限判断 ↓
         console.log(to.meta.role)
-        if (hasPermission(store.getters.roles, to.meta.role)) {
+        if (hasPermission(store.getters.authorities, to.meta.role)) {
           next()
         } else {
           next({ path: '/401', replace: true, query: { noGoBack: true }})
