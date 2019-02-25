@@ -8,9 +8,9 @@ import { getAuth } from '@/utils/auth' // getAuth from cookie
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 // permission judge function
-function hasPermission(roles, permissionRole) {
+function hasPermission(authorities, permissionRole) {
   if (!permissionRole) return true
-  return roles.includes(permissionRole)
+  return authorities.includes(permissionRole)
 }
 
 /**
@@ -33,10 +33,10 @@ router.beforeEach((to, from, next) => {
           .dispatch('GetUserInfo')
           .then((res) => {
             // 拉取user_info
-            const authorities = res.client_authorities // note: roles must be a array! such as: ['editor','develop']
+            const authorities = res.client_authorities // note: authorities must be a array! such as: ['editor','develop']
 
             store.dispatch('GenerateRoutes', { authorities }).then(() => {
-              // 根据roles权限生成可访问的路由表
+              // 根据authorities权限生成可访问的路由表
               router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
               next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
             })

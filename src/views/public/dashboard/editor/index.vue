@@ -6,7 +6,7 @@
         style="float: left"
       > Your roles:
         <span
-          v-for="item in roles"
+          v-for="item in authorities"
           :key="item"
           class="pan-info-roles"
         >{{ item }}</span>
@@ -39,7 +39,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['name', 'avatar', 'roles'])
+    ...mapGetters(['name', 'avatar', 'authorities'])
   }
 }
 </script>

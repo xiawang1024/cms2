@@ -8,7 +8,6 @@ const user = {
     name: '',
     avatar: 'http://www.hndt.com/podcast/976/1131/res/EEghUGNE.jpg?1511506999379',
     authorities: [],
-    roles: [],
     sysList: ['0'],
     sysType: '0',
     setting: {
@@ -31,9 +30,7 @@ const user = {
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
-    },
+
     SET_AUTHORITIES: (state, authorities) => {
       state.authorities = authorities
     },
@@ -73,11 +70,11 @@ const user = {
             const data = response.data
 
             if (data.client_authorities && data.client_authorities.length > 0) {
-              // 验证返回的roles是否是一个非空数组
-              // commit('SET_ROLES', data.client_authorities)
+              // 验证返回的authorities是否是一个非空数组
+
               commit('SET_AUTHORITIES', data.client_authorities)
             } else {
-              reject('getInfo: roles must be a non-null array !')
+              reject('getInfo: authorities must be a non-null array !')
             }
             /**
              * 子系统列表
@@ -98,7 +95,7 @@ const user = {
         logout(state.token)
           .then(() => {
             commit('SET_TOKEN', '')
-            commit('SET_ROLES', [])
+
             commit('SET_AUTHORITIES', [])
             removeAuth()
             resolve()
@@ -113,7 +110,7 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise((resolve) => {
         commit('SET_TOKEN', '')
-        commit('SET_ROLES', [])
+
         commit('SET_AUTHORITIES', [])
         removeAuth()
         resolve()
@@ -121,14 +118,14 @@ const user = {
     },
 
     // 动态修改权限
-    ChangeRoles({ commit, dispatch }, role) {
+    ChangeRoles({ commit, dispatch }, authority) {
       return new Promise((resolve) => {
-        commit('SET_TOKEN', role)
-        setAuth(role)
-        getUserInfo(role).then((response) => {
+        commit('SET_TOKEN', authority)
+        setAuth(authority)
+        getUserInfo(authority).then((response) => {
           const data = response.data
-          commit('SET_ROLES', data.roles)
-          commit('SET_AUTHORITIES', data.roles)
+
+          commit('SET_AUTHORITIES', data.authorities)
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
           dispatch('GenerateRoutes', data) // 动态修改权限后 重绘侧边菜单
@@ -143,7 +140,7 @@ const user = {
       commit('SET_SYS_TYPE', sysType)
       router.push({ path: '/' })
       dispatch('delAllViews') // 清除tagViews
-      dispatch('GenerateRoutes', { roles: getters.roles }).then(() => {
+      dispatch('GenerateRoutes', { authorities: getters.authorities }).then(() => {
         /**
          * 更新动态路由
          */
