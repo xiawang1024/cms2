@@ -9,7 +9,7 @@ const user = {
     code: '',
     token: getAuth(),
     name: '',
-    avatar: '',
+    avatar: 'http://www.hndt.com/podcast/976/1131/res/EEghUGNE.jpg?1511506999379',
     introduction: '',
     roles: [],
     sysList: [],
@@ -77,45 +77,26 @@ const user = {
       return new Promise((resolve, reject) => {
         getUserInfo(state.token)
           .then((response) => {
-            if (!response.data) {
-              // 由于mockjs 不支持自定义状态码只能这样hack
-              reject('error')
-            }
             const data = response.data
 
-            data.roles = ['admin']
-
-            if (data.roles && data.roles.length > 0) {
+            if (data.client_authorities && data.client_authorities.length > 0) {
               // 验证返回的roles是否是一个非空数组
-              commit('SET_ROLES', data.roles)
+              commit('SET_ROLES', data.client_authorities)
             } else {
               reject('getInfo: roles must be a non-null array !')
             }
-            commit('SET_SYS_LIST', data.sysList)
+            /**
+             * 子系统列表
+             */
+            // commit('SET_SYS_LIST', data.sysList)
             commit('SET_NAME', data.name)
-            commit('SET_AVATAR', data.avatar)
-            commit('SET_INTRODUCTION', data.introduction)
-            resolve(response)
+            resolve(data)
           })
           .catch((error) => {
             reject(error)
           })
       })
     },
-
-    // 第三方验证登录
-    // LoginByThirdparty({ commit, state }, code) {
-    //   return new Promise((resolve, reject) => {
-    //     commit('SET_CODE', code)
-    //     loginByThirdparty(state.status, state.email, state.code).then(response => {
-    //       commit('SET_TOKEN', response.data.token)
-    //       setAuth(response.data.token)
-    //       resolve()
-    //     }).catch(error => {
-    //       reject(error)
-    //     })
-    //   })
-    // },
 
     // 登出
     LogOut({ commit, state }) {
@@ -137,6 +118,7 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise((resolve) => {
         commit('SET_TOKEN', '')
+        commit('SET_ROLES', [])
         removeAuth()
         resolve()
       })

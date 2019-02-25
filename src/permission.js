@@ -33,7 +33,7 @@ router.beforeEach((to, from, next) => {
           .dispatch('GetUserInfo')
           .then((res) => {
             // 拉取user_info
-            const roles = res.data.roles // note: roles must be a array! such as: ['editor','develop']
+            const roles = res.client_authorities // note: roles must be a array! such as: ['editor','develop']
 
             store.dispatch('GenerateRoutes', { roles }).then(() => {
               // 根据roles权限生成可访问的路由表
