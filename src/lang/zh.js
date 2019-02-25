@@ -92,7 +92,8 @@ export default {
     acqSource: '采集源配置',
     department: '部门管理',
     user: '用户管理',
-    role: '角色管理'
+    role: '角色管理',
+    operation: '平台操作管理'
   },
   navbar: {
     logOut: '退出登录',
