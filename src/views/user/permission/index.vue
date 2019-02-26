@@ -84,6 +84,9 @@ export default {
 
       // 搜索框
       searchForm: [
+        {$id: 'permissionName', $type: 'input', $label: '权限名称', $default: '',
+          $el: { placeholder: '请输入', style: 'width: 200px' }
+        }
       ],
 
       // 弹出框表单
