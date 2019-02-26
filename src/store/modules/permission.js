@@ -62,7 +62,7 @@ const permission = {
       return new Promise((resolve) => {
         const { authorities } = data
         let asyncSysRouterMap = null
-        console.log(getters.sysType)
+
         asyncSysRouterMap = filterSysRouter(getters.sysType)
         const accessedRouters = filterAsyncRouter(asyncSysRouterMap, authorities)
         commit('SET_ROUTERS', accessedRouters)
