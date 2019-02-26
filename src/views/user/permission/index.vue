@@ -14,6 +14,11 @@
     <!-- 向子组件内部传递dialogSubmitClickEmit 数据，数据对应的值，需要进行额外的监听，数据会返还回来  -->
     <pap-dialog ref="permission-dialog-ref" :dialog-submit-click-emit="dialogSubmitClickEmit" :content-form="dialogForm" @dialogSubmitClick="dialogSubmitClick">
       <span slot="customerFormItem">
+        <el-form-item label="所属应用">
+          <el-select v-model="dialogApplication" :remote-method="searchApplicationInfo" filterable remote reserve-keyword placeholder="请选择所属应用">
+            <el-option v-for="item in applicationDataList" :key="item.sysApplicationId" :label="item.sysApplicationName" :value="item.sysApplicationId"/>
+          </el-select>
+        </el-form-item>
         <el-form-item label="请求协议">
           <el-select v-model="dialogHttpMethod" :remote-method="searchOperationInfo" filterable remote reserve-keyword placeholder="请选择请求协议">
             <el-option v-for="item in operationDataList" :key="item.sysOperationId" :label="item.sysOperationName" :value="item.sysOperationId"/>
@@ -31,6 +36,7 @@ import PapDialog from '@/components/pap/dialog/index'
 import ButtonGroup from '@/components/pap/button-group/index'
 import { PermissionCreate, PermissionList, PermissionUpdate } from '@/api/user/permission'
 import { OperationList } from '@/api/user/operation'
+import { ApplicationList } from '@/api/user/application'
 
 export default {
   name: 'SysPermission',
@@ -99,15 +105,18 @@ export default {
       ],
 	    // 弹窗自定义一个下拉框属性
 	    dialogHttpMethod: '',
+      dialogApplication: '',
       dialogSubmitClickEmit: 'dialogSubmitClick',
 	    // operation data list
 	    operationDataList: [],
+      applicationDataList: [],
       filename: ''
       /* eslint-disable */
     }
   },
   mounted: function () {
     this.getOperationInfo()
+    this.getApplicationInfo()
   },
   methods: {
     getOperationInfo () {
@@ -121,6 +130,24 @@ export default {
         // 开始请求
         OperationList(searchFormObj, 1, 10).then(async res => {
           _this.operationDataList = res.data.result.content
+          // 结束
+          resolve()
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    },
+    getApplicationInfo () {
+      this.searchApplicationInfo('')
+    },
+    searchApplicationInfo (queryName) {
+      var _this = this
+      var searchFormObj = {}
+      searchFormObj.sysApplicationName = queryName
+      return new Promise((resolve, reject) => {
+        // 开始请求
+        ApplicationList(searchFormObj, 1, 10).then(async res => {
+          _this.applicationDataList = res.data.result.content
           // 结束
           resolve()
         }).catch(err => {
@@ -177,12 +204,14 @@ export default {
           remark: ''
         })
 	      _this.dialogHttpMethod = '';
+        _this.dialogApplication = '';
       })
     },
     dialogSubmitClick (data) {
       var _this = this
 			console.log(data)
 	    data.httpMethod = _this.dialogHttpMethod
+      data.sysApplicationId = _this.dialogApplication
       if (data.permissionId !== undefined && data.permissionId !== '') {
         return new Promise((resolve, reject) => {
           // 开始请求
@@ -232,6 +261,7 @@ export default {
       _this.$nextTick(function () {
         _this.$refs["permission-dialog-ref"].$refs.formRender.updateForm(selObj)
 	      _this.dialogHttpMethod = selObj.httpMethod
+        _this.dialogApplication = selObj.sysApplicationId
       })
     },
     handleSizeChange (val) {
