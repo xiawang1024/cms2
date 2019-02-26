@@ -80,7 +80,7 @@ export default {
         colomn: [
           { prop: 'userCode', label: '用户编码'},
           { prop: 'userName', label: '用户名'},
-          { prop: 'disableFlag', label: '状态', formatter: row => (row.disableFlag === 'NO' ? '启用' : '禁用')}
+          { prop: 'enableFlag', label: '状态', formatter: row => (row.enableFlag === 1 ? '启用' : '禁用')}
         ],
         tableData: [
         ],

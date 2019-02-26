@@ -70,12 +70,21 @@ export default {
         },
         {$id: 'organizationName', $type: 'input', $label: '租户名称', $default: '',
           $el: { placeholder: '请输入', style: 'width: 200px' }
+        },
+        {$id: 'organizationType', $type: 'input', $label: '系统类型', $default: 'CUSTOMER', $enableWhen: { null: 'null' },
+          $el: { placeholder: '请输入', style: 'width: 200px' }
         }
       ],
 
       // 弹出框表单
       dialogForm: [
         {$id: 'organizationId', $type: 'input', $label: '租户编号', $default: '', $enableWhen: { null: 'null' },
+          $el: { placeholder: '请输入', style: 'width: 200px' }
+        },
+        {$id: 'organizationType', $type: 'input', $label: '系统类型', $default: 'CUSTOMER', $enableWhen: { null: 'null' },
+          $el: { placeholder: '请输入', style: 'width: 200px' }
+        },
+        {$id: 'enableFlag', $type: 'input', $label: '可用状态', $default: '0', $enableWhen: { null: 'null' },
           $el: { placeholder: '请输入', style: 'width: 200px' }
         },
         {$id: 'organizationCode', $type: 'input', $label: '租户编码', $default: '',
