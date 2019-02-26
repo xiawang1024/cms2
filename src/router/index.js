@@ -17,6 +17,7 @@ import systemSet from './routers/cms/systemSet'
 import systemStatus from './routers/cms/systemStatus'
 import personAndAuthor from './routers/cms/personAndAuthor'
 import extensions from './routers/cms/extensions'
+import organization from './routers/user/organization'
 import department from './routers/user/department'
 import user from './routers/user/user'
 import role from './routers/user/role'
@@ -24,7 +25,7 @@ import permission from './routers/user/permission'
 import permissiongroup from './routers/user/permissiongroup'
 import operation from './routers/user/operation'
 import application from './routers/user/application'
-const cmsRouterMap = [webSite, systemSet, systemStatus, personAndAuthor, extensions, department, user, role, permission, permissiongroup, operation, application]
+const cmsRouterMap = [webSite, systemSet, systemStatus, personAndAuthor, extensions, organization, department, user, role, permission, permissiongroup, operation, application]
 
 /**
  * 用户中心系统路由

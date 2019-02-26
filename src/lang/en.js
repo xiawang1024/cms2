@@ -90,7 +90,8 @@ export default {
     role: 'Role',
     operation: 'Operation',
     application: 'Application',
-    permissiongroup: 'PermissionGroup'
+    permissiongroup: 'PermissionGroup',
+    organization: 'OrganizationGroup'
   },
   navbar: {
     logOut: 'Log Out',
