@@ -50,6 +50,8 @@ export default {
         colomn: [
           { prop: 'organizationCode', label: '租户编码'},
           { prop: 'organizationName', label: '租户名称'},
+          { prop: 'organizationManager', label: '租户管理者'},
+          { prop: 'remark', label: '备注'},
           { prop: 'enableFlag', label: '状态', formatter: row => (row.enableFlag === 1 ? '启用' : '禁用')}
         ],
         tableData: [
@@ -80,6 +82,12 @@ export default {
           $el: { placeholder: '请输入', style: 'width: 200px' }
         },
         {$id: 'organizationName', $type: 'input', $label: '租户名称', $default: '',
+          $el: { placeholder: '请输入', style: 'width: 200px' }
+        },
+        {$id: 'organizationManager', $type: 'input', $label: '租户管理者', $default: '',
+          $el: { placeholder: '请输入', style: 'width: 200px' }
+        },
+        {$id: 'remark', $type: 'input', $label: '备注', $default: '',
           $el: { placeholder: '请输入', style: 'width: 200px' }
         }
       ],
@@ -138,11 +146,11 @@ export default {
       _this.$refs["organization-dialog-ref"].baseDialogVisible = true
       _this.$nextTick(function () {
         _this.$refs["organization-dialog-ref"].$refs.formRender.updateForm({
-          sysOrganizationId: '',
-          sysOrganizationCode: '',
-          sysOrganizationName: '',
-          sysOrganizationUrl: '',
-          httpMethod: ''
+          organizationId: '',
+          organizationCode: '',
+          organizationName: '',
+          organizationManager: '',
+          remark: ''
         })
       })
     },
