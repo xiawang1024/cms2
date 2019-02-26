@@ -36,7 +36,6 @@ export const isTokenExpired = () => {
    * 过期时间前10分钟内刷新token
    * true 过期， false 未过期
    */
-
   if (currentTime - diffTime > expireTime) {
     return true
   } else {
@@ -48,7 +47,7 @@ export const isTokenExpired = () => {
  * @param {*} config
  */
 export const isNotGetTokenApi = (config) => {
-  if (config.url.indexOf('/uua/oauth') === -1) {
+  if (config.url.indexOf('/uua/oauth/token') === -1) {
     return true
   } else {
     return false
