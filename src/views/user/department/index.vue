@@ -31,12 +31,12 @@
     <!-- 用户分配管理 弹窗组件 -->
     <el-dialog :visible.sync="dialogUserManagerVisible" :before-close="handleClose" title="用户分配管理">
       <div style="height: 700px;">
-        <!--<user ref="dialogUserRef" :button-array-props="dialogUserManagerButtonArrayProps" :import-button-flag="dialogUserManagerImportButtonFlag">-->
-        <!--<h1 slot="fotter-slot" style="float: right;">-->
-        <!--<el-button @click="dialogUserManagerVisible = false">取 消</el-button>-->
-        <!--<el-button type="primary" @click="dialogUserManagerSubmit">确 定</el-button>-->
-        <!--</h1>-->
-        <!--</user>-->
+        <user ref="dialogUserRef" :button-array-props="dialogUserManagerButtonArrayProps" :import-button-flag="dialogUserManagerImportButtonFlag">
+          <h1 slot="fotter-slot" style="float: right;">
+            <el-button @click="dialogUserManagerVisible = false">取 消</el-button>
+            <el-button type="primary" @click="dialogUserManagerSubmit">确 定</el-button>
+          </h1>
+        </user>
       </div>
     </el-dialog>
   </div>
@@ -45,15 +45,17 @@
 <script>
 import PapSearch from '@/components/pap/search/index'
 import ButtonGroup from '@/components/pap/button-group/index'
-import { DepartmentList, DepartmentCreate, DepartmentUpdate, DepartmentDelete, DepartmentUserRelSave, DepartmentUserRelUserInfoByOrgId } from '@/api/user/department'
+import { DepartmentList, DepartmentCreate, DepartmentUpdate, DepartmentDelete, DepartmentUserRelSave, DepartmentUserRelUserInfoByDepId } from '@/api/user/department'
 import ElFormRenderer from '@/components/el-form-renderer'
+import User from '@/views/user/user'
 
 export default {
   name: 'UserDepartment',
   components: {
     PapSearch,
     ButtonGroup,
-    ElFormRenderer
+    ElFormRenderer,
+    User
   },
   data() {
     return {
@@ -178,7 +180,7 @@ export default {
       // 在 DOM 更新之后处理，确保能够找到内部组件，这里需要将默认选中的值优先进行清空。
       _this.$nextTick(function () {
         // 查询出来组织机构下属的用户信息
-        DepartmentUserRelUserInfoByOrgId(_this.dialogUserManagerDepartmentId).then(async res => {
+        DepartmentUserRelUserInfoByDepId(_this.dialogUserManagerDepartmentId).then(async res => {
           console.log(res)
           _this.$refs.dialogUserRef.$refs["user-table"].$refs["pap-base-table"].clearSelection()
           var userArray = res.data.result
@@ -257,7 +259,7 @@ export default {
       }
       var obj = {
         departmentId: _this.dialogUserManagerDepartmentId,
-        details: details
+        userIdDetails: details
       }
       return new Promise((resolve, reject) => {
         DepartmentUserRelSave(obj).then(async res => {
