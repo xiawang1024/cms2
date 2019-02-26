@@ -43,13 +43,14 @@ request.interceptors.request.use(
     /**
      * 判断是否已登录
      */
+
     if (auth && isNotGetTokenApi(config)) {
       config.headers.Authorization = `${auth.token_type} ${auth.access_token}`
 
       /**
        * 判断 token 是否将要过期
        */
-      console.log(isTokenExpired())
+
       if (isTokenExpired()) {
         /**
          * 判断是否正在刷新token
@@ -62,7 +63,7 @@ request.interceptors.request.use(
           /**
            * 发起刷新token的请求
            */
-          console.log(getRefreshToken())
+
           refreshToken(getRefreshToken())
             .then((res) => {
               /**
@@ -109,6 +110,7 @@ request.interceptors.request.use(
       /**
        * 未登录直接返回配置信息
        */
+      console.log('nologin')
       return config
     }
   },

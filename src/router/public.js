@@ -45,7 +45,6 @@ const constantRouterMap = [
         meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
       }
     ]
-  },
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]
 export default constantRouterMap
