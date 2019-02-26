@@ -102,8 +102,8 @@ export default {
     if (isAddQuery === false) {
       this.chooseComponentId = componentIdQuery
       this.componentForm.componentId = componentIdQuery
+      this.getComponentInfo()
     }
-    this.getComponentInfo()
   },
   methods: {
     channelCascaderChange(val) {

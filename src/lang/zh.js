@@ -94,7 +94,8 @@ export default {
     user: '用户管理',
     role: '角色管理',
     operation: '平台操作管理',
-    application: '平台应用管理'
+    application: '平台应用管理',
+    permissiongroup: '权限组管理'
   },
   navbar: {
     logOut: '退出登录',

@@ -137,7 +137,15 @@ export default {
         // 开始请求
         DepartmentDelete(data).then(async res => {
           console.log(res)
-          _this.getList()
+          if (res.data.code === 0) {
+            _this.getList()
+          } else {
+            const h = this.$createElement;
+            this.$notify({
+              title: '部门删除',
+              message: h('i', {style: 'color: teal'}, res.data.msg)
+            })
+          }
           // 结束
           resolve()
         }).catch(err => {

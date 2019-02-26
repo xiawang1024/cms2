@@ -85,7 +85,7 @@ const systemSet = {
        * 公共组件添加与修改
        */
       path: 'componentEdit',
-      component: () => import(`@/${path}/ComponentEdit`),
+      component: () => import(`@/${path}/componentEdit`),
       name: 'componentEdit',
       meta: { title: 'componentEdit', icon: 'componentEdit', role: 'ROLE_TEST' },
       hidden: true

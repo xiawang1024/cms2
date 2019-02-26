@@ -9,13 +9,13 @@ console.log(path)
 const department = {
   path: `/${userPath}/department`,
   component: Layout,
-  meta: { title: 'department', icon: 'webSite', role: 'admin' },
+  meta: { title: 'department', icon: 'webSite', permission: 'admin' },
   children: [
     {
       path: '',
       component: () => import(`@/${path}/index`),
       name: 'department',
-      meta: { title: 'department', icon: 'webSite', role: 'admin' },
+      meta: { title: 'department', icon: 'webSite', permission: 'admin' },
       hidden: true
     }
   ]

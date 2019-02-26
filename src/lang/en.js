@@ -89,7 +89,8 @@ export default {
     user: 'User',
     role: 'Role',
     operation: 'Operation',
-    application: 'Application'
+    application: 'Application',
+    permissiongroup: 'PermissionGroup'
   },
   navbar: {
     logOut: 'Log Out',

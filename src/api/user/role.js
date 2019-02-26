@@ -73,7 +73,7 @@ export function RoleShow(data) {
  */
 export function RolePerissionRelSave(data) {
   return request({
-    url: '/userb/roleuserrel/saverels',
+    url: '/userb/rolepermissionrel/rels',
     method: 'POST',
     data
   })
@@ -86,7 +86,7 @@ export function RolePerissionRelSave(data) {
  */
 export function RolePermissionRelPermissionByRoleId(roleId) {
   return request({
-    url: '/userb/roleuserrel/selectuserIdsbyroleId?roleId=' + roleId,
+    url: '/userb/rolepermissionrel/permissiongroupinfobyroleid/' + roleId,
     method: 'GET'
   })
 }
