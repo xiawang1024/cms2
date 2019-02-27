@@ -81,6 +81,21 @@ export default {
 
 <style lang='scss' scoped>
 .components-container {
-  margin: 30px;
+  position: relative;
+  height: calc(100vh - 124px);
+  margin: 12px 10px;
+}
+.pane-wrap {
+  margin-top: 12px;
+}
+.left-container {
+  /* background-color: #f38181; */
+  height: 100%;
+  /* overflow: hidden; */
+}
+
+.right-container {
+  // background-color: #fce38a;
+  height: 100%;
 }
 </style>

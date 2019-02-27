@@ -1,7 +1,10 @@
 <template>
   <div class="doc-head">
     <div class="left">
-      <el-dropdown size="mini">
+      <el-dropdown
+        size="mini"
+        @command="handleCommand"
+      >
         <el-button
           type="success"
           size="mini"
@@ -12,6 +15,7 @@
           <el-dropdown-item
             v-for="item of currentDoc"
             :key="item.id"
+            :command="item.id"
           >{{ item.label }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -33,6 +37,7 @@
         type="primary"
         size="mini"
         icon="el-icon-plus"
+        @click="createDocument"
       >新建文档</el-button>
     </div>
     <div class="right">
@@ -104,8 +109,12 @@ import {
   typeOptions,
   statusOptions
 } from './mockData.js'
+// import choosedDialog from './choosedDialog.vue'
 export default {
   name: 'DocHead',
+  // components: {
+  //   choosedDialog
+  // },
   data() {
     return {
       currentDoc,
@@ -116,12 +125,23 @@ export default {
       fromSelected: '',
       typeSelected: '',
       statusSelected: '',
-      inputSelected: ''
+      inputSelected: '',
+      centerDialogVisible: false
     }
   },
   methods: {
-    handleClick() {
-      alert('button click')
+    chooseHandel(item) {
+      console.log(123)
+    },
+    handleCommand(command) {
+      console.log(command)
+      // this.centerDialogVisible = true
+      // this.$refs.choosedDialog
+      // console.log(this.$refs)
+    },
+    createDocument() {
+      const select = { id: '1', label: '新建文档' }
+      this.$store.dispatch('setContextMenu', select)
     }
   }
 }

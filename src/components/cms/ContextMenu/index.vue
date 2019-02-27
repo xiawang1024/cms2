@@ -117,6 +117,7 @@ export default {
       menu.style.top = this.top
     },
     handleSelect(key, keyPath) {
+      console.log(123)
       const selectMenu = this.menuList.filter(item => item.id === key)
       this.$store.dispatch('setContextMenu', selectMenu[0])
     }
