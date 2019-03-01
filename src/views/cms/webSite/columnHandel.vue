@@ -25,8 +25,8 @@
           :lg="12"
           :xl="10"
         >
-          <el-form-item label="前一栏目:">
-            <el-select
+          <el-form-item label="位置排序:">
+            <!-- <el-select
               v-model="basicInformation.preColumn"
               placeholder="请选择前一栏目"
             >
@@ -36,7 +36,11 @@
                 :label="preColumn.name"
                 :value="preColumn.id"
               />
-            </el-select>
+            </el-select> -->
+            <el-input
+              v-model="basicInformation.seqNo"
+              style="width:auto"
+            />
           </el-form-item>
         </el-col>
         <el-col
@@ -48,7 +52,7 @@
         >
           <el-form-item label="访问域名:">
             <el-input
-              v-model="basicInformation.domain"
+              v-model="basicInformation.domainName"
               style="width:auto"
             />
           </el-form-item>
@@ -62,7 +66,7 @@
         >
           <el-form-item label="存放位置:">
             <el-input
-              v-model="basicInformation.location"
+              v-model="basicInformation.domainPath"
               class="location"
               style="width:auto"
             >
@@ -82,7 +86,7 @@
         >
           <el-form-item label="创建人员:">
             <el-input
-              v-model="basicInformation.creator"
+              v-model="basicInformation.createUser"
               style="width:auto"
               disabled
             />
@@ -97,10 +101,12 @@
         >
           <el-form-item label="正常显示:">
             <el-switch
-              v-model="basicInformation.display"
+              v-model="basicInformation.hiddenFlag"
               active-color="#13ce66"
               active-text="正常"
               inactive-text="隐藏"
+              active-value="0"
+              inactive-value="1"
             />
           </el-form-item>
         </el-col>
@@ -114,7 +120,7 @@
           <el-form-item label="其他数据:">
             <el-input
               :rows="3"
-              v-model="basicInformation.otherData"
+              v-model="basicInformation.extra"
               style="max-width:400px;"
               type="textarea"
             />
@@ -143,15 +149,15 @@
         >
           <el-form-item label="栏目名称:">
             <el-input
-              v-model="basicInformation.name"
+              v-model="basicInformation.channelName"
               style="width:auto"
             />
           </el-form-item>
         </el-col>
         <el-col
           :xs="24"
-          :sm="24"
-          :md="24"
+          :sm="12"
+          :md="12"
           :lg="12"
           :xl="10"
         >
@@ -167,10 +173,10 @@
                 :value="type.id"
               />
             </el-select>
-            <el-input
+            <!-- <el-input
               v-model="basicInformation.type"
               style="width:auto"
-            />
+            /> -->
           </el-form-item>
         </el-col>
         <el-col
@@ -207,7 +213,7 @@
           <el-form-item label="关键字:">
             <el-input
               :rows="3"
-              v-model="basicInformation.keyWords"
+              v-model="basicInformation.keywordName"
               style="max-width:400px;"
               type="textarea"
             />
@@ -233,6 +239,7 @@
       <el-button
         size="small"
         type="warning"
+        @click="save"
       >保存</el-button>
     </el-form>
   </div>
@@ -240,6 +247,8 @@
 
 <script>
 const Upload = _ => import('@/components/cms/Upload/upload')
+import { addColumn, columnInfor, editColumn } from '@/api/cms/columnManage'
+import { fetchComponentList } from '@/api/cms/component'
 export default {
   name: 'ColumnHandel',
   components: { Upload },
@@ -254,15 +263,15 @@ export default {
   data() {
     return {
       basicInformation: {
-        parentColumn: '河南广播网',
+        seqNo: '',
         preColumn: '',
-        domain: '',
-        location: '',
-        creator: '',
-        display: '',
-        otherData: '',
+        domainName: '',
+        domainPath: '',
+        createUser: '',
+        hiddenFlag: '',
+        extra: '',
         manager: '',
-        name: '',
+        channelName: '',
         type: '',
         icon: {
           url: '',
@@ -270,9 +279,8 @@ export default {
           scaleWidth: '',
           scaleHeight: ''
         },
-        keyWords: '',
-        desc: '',
-        modules: ''
+        keywordName: '',
+        desc: ''
       },
       preColumnList: [
         {
@@ -308,6 +316,18 @@ export default {
         {
           id: 4,
           name: '综艺'
+        },
+        {
+          id: 5,
+          name: '曲艺'
+        },
+        {
+          id: 6,
+          name: '品牌栏目'
+        },
+        {
+          id: 7,
+          name: '其他'
         }
       ],
       routeQuery: {}
@@ -315,13 +335,105 @@ export default {
   },
   mounted() {
     this.routeQuery = this.$route.query
+    if ((!this.routeQuery.isAdd || this.routeQuery.isAdd === 'false') && this.routeQuery.channelId) {
+      this.getColumnInfor()
+    }
+    this.fetchComponentList()
   },
-  methods: {}
+  methods: {
+    fetchComponentList() {
+      var _this = this
+      var componentObjTmp = {
+      }
+      return new Promise((resolve, reject) => {
+        fetchComponentList(componentObjTmp, 1, 100)
+          .then((response) => {
+            _this.componentList = response.data.result.content
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    getColumnInfor() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        columnInfor(_this.routeQuery.channelId)
+          .then((response) => {
+            // _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+            // _this.gotoListPage(_this)
+            _this.basicInformation = Object.assign({}, response.data.result)
+            _this.basicInformation.icon = {
+              url: '',
+              isScale: false,
+              scaleWidth: '',
+              scaleHeight: ''
+            }
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    save() {
+      var _this = this
+      if (_this.routeQuery.isAdd) {
+        return new Promise((resolve, reject) => {
+          addColumn(_this.basicInformation)
+            .then((response) => {
+              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+              _this.gotoListPage(_this)
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+            })
+        })
+      } else {
+        return new Promise((resolve, reject) => {
+          _this.basicInformation = Object.assign(_this.basicInformation, { channelId: _this.routeQuery.channelId })
+          editColumn(_this.basicInformation)
+            .then((response) => {
+              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+              _this.gotoListPage(_this)
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+            })
+        })
+      }
+    },
+    gotoListPage(context) {
+      context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {
+        if (context.isActive(context.$route)) {
+          const latestView = visitedViews.slice(-1)[0]
+          if (latestView) {
+            context.$router.push(latestView)
+          } else {
+            context.$router.push('/')
+          }
+        }
+      })
+      context.$router.push({
+        path: '/cms/website/column'
+      })
+    }
+  }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .colunm-add-edit {
   margin: 30px;
+  .el-form {
+    .el-select {
+      .el-input {
+        width: 185px !important;
+      }
+    }
+  }
 }
 </style>
