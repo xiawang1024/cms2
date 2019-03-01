@@ -10,7 +10,7 @@
       <el-table-column prop="parentChannelId" label="是否根节点"/>
       <el-table-column label="设置" width="300">
         <template slot-scope="scope">
-          <el-button type="text" @click="columnTemplate">栏目模板</el-button>
+          <el-button type="text" @click="columnTemplate(scope.row)">栏目模板</el-button>
           <el-button type="text" @click="extendsWord">扩展字段</el-button>
           <el-button type="text" @click="tagSetting">标签设置</el-button>
           <el-button type="text" @click="waterSetting">水印设置</el-button>
@@ -107,9 +107,13 @@ export default {
         }
       })
     },
-    columnTemplate() {
+    columnTemplate(row) {
       this.$router.push({
-        path: '/cms/website/columnTemplate'
+        path: '/cms/website/columnTemplate',
+        query: {
+          channelId: row.channelId,
+          parentChannelId: row.parentChannelId
+        }
       })
     },
     extendsWord() {

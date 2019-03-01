@@ -46,7 +46,7 @@
       <el-table-column fixed="right" label="操作" width="130">
         <template slot-scope="scope">
           <el-button type="text" size="small">置顶</el-button>
-          <el-button type="text" size="small">编辑</el-button>
+          <el-button type="text" size="small" @click="editDoc">编辑</el-button>
           <el-button type="text" size="small" @click="handleClickDel(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
@@ -105,6 +105,10 @@ export default {
      */
     openWindow(link) {
       window.location.href = link
+    },
+    editDoc() {
+      const select = { id: '1', label: '新建文档' }
+      this.$store.dispatch('setContextMenu', select)
     }
   }
 }

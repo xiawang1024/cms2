@@ -6,6 +6,7 @@
         <el-option v-for="type in types" :key="type.id" :label="type.name" :value="type.id"/>
       </el-select>
       <div class="tool-bar pull-right">
+        <el-button type="warning" @click="goBack">返回</el-button>
         <el-button type="warning" @click="handleSave">保存</el-button>
         <el-button type="warning" @click="handleSaveAddRelease">保存并发布</el-button>
       </div>
@@ -49,7 +50,13 @@ export default {
   },
   methods: {
     handleSave() {},
-    handleSaveAddRelease() {}
+    handleSaveAddRelease() {},
+    goBack() {
+      this.$store.dispatch('setContextMenu', {
+        id: '0',
+        label: ''
+      })
+    }
   }
 }
 </script>
