@@ -38,8 +38,6 @@ export default {
       const current = ComponentMap.filter((item, index) => {
         return item.type === type
       })
-      console.log(current, 123)
-      console.log(Object.keys(current[0])[1])
       this.currentComponent = Object.keys(current[0])[1]
     }
   }
