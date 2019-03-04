@@ -65,6 +65,7 @@ export default {
     },
     // TODO:右键点击
     handleNodeContextmenu(event, object, node, element) {
+      console.log(event, object, node, element)
       const { clientWidth, clientHeight, nodeName } = event.target
       if (nodeName.toLowerCase() === 'span') {
         if (this.objectID !== object.id) {
@@ -74,7 +75,7 @@ export default {
         } else {
           this.menuVisible = !this.menuVisible
         }
-        document.addEventListener('click', e => {
+        document.addEventListener('click', () => {
           this.menuVisible = false
         })
         this.menuLeft = `${event.clientX + clientWidth / 2}px`

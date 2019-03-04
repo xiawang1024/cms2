@@ -131,7 +131,7 @@ export default {
   },
   methods: {
     chooseHandel(item) {
-      console.log(123)
+      console.log(item)
     },
     handleCommand(command) {
       console.log(command)

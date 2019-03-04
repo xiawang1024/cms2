@@ -1,6 +1,6 @@
 <template>
   <div class="colunm-add-edit">
-    <el-form :model="basicInformation">
+    <!-- <el-form :model="basicInformation">
       <el-row :gutter="30" >
         <el-col
           v-if="!routeQuery.isFather"
@@ -26,17 +26,6 @@
           :xl="10"
         >
           <el-form-item label="位置排序:">
-            <!-- <el-select
-              v-model="basicInformation.preColumn"
-              placeholder="请选择前一栏目"
-            >
-              <el-option
-                v-for="preColumn in preColumnList"
-                :key="preColumn.id"
-                :label="preColumn.name"
-                :value="preColumn.id"
-              />
-            </el-select> -->
             <el-input
               v-model="basicInformation.seqNo"
               style="width:auto"
@@ -173,10 +162,6 @@
                 :value="type.id"
               />
             </el-select>
-            <!-- <el-input
-              v-model="basicInformation.type"
-              style="width:auto"
-            /> -->
           </el-form-item>
         </el-col>
         <el-col
@@ -241,7 +226,8 @@
         type="warning"
         @click="save"
       >保存</el-button>
-    </el-form>
+    </el-form> -->
+    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave"/>
   </div>
 </template>
 
@@ -262,6 +248,109 @@ export default {
   },
   data() {
     return {
+      formSettings: [
+        {
+          items: [
+            {
+              label: '父级栏目',
+              name: 'parentChannelId',
+              type: 'text',
+              valueType: 'string'
+            },
+            {
+              label: '位置排序',
+              name: 'seqNo',
+              type: 'text'
+            },
+            {
+              label: '访问域名',
+              name: 'domainName',
+              type: 'text'
+            },{
+              label:'存放位置',
+              name: 'domainPath',
+              type:'text'
+            },{
+              label: '创建人员',
+              name: 'createUser',
+              type: 'text',
+              valueType: 'string'
+            },{
+              label: '正常显示',
+              name: 'hiddenFlag',
+              activeValue: 0,
+              inactiveValue: 1,
+              activeColor: '#13ce66',
+              value: 1,
+              type: 'switch'
+            },{
+              label: '其他数据',
+              name: 'extra',
+              type: 'textarea'
+            },{
+              label:'管理人员',
+              name: 'managerUser',
+              type:'text'
+            },{
+              label:'栏目名称',
+              name:'channelName',
+              type:'text'
+            },
+            {
+              label: '栏目类型',
+              name: 'type',
+              type: 'select',
+              options: [
+                {
+                  value: 1,
+                  label: '新闻'
+                },
+                {
+                  value: 2,
+                  label: '音乐'
+                },
+                {
+                  value: 3,
+                  label: '文学'
+                },
+                {
+                  value: 4,
+                  label: '综艺'
+                },
+                {
+                  value: 5,
+                  label: '曲艺'
+                },
+                {
+                  value: 6,
+                  label: '品牌栏目'
+                },
+                {
+                  value: 7,
+                  label: '其他'
+                }
+              ]
+            },
+          //   {
+          //     label: '栏目图标',
+          //     name: 'iconUrl',
+          //     type: 'img',
+          //     limit: 1,
+          //     tip: '建议图片大小：1080*1642，图片大小不超过100K'
+          //  },
+           {
+              label:'关键字',
+              name:'keywordName',
+              type:'text'
+           },{
+              label:'栏目描述',
+              name:'descriptionRemark',
+              type:'textarea'
+            }
+          ]
+        }
+      ],
+      formData: {},
       basicInformation: {
         seqNo: '',
         preColumn: '',
@@ -363,13 +452,14 @@ export default {
           .then((response) => {
             // _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
             // _this.gotoListPage(_this)
-            _this.basicInformation = Object.assign({}, response.data.result)
-            _this.basicInformation.icon = {
-              url: '',
-              isScale: false,
-              scaleWidth: '',
-              scaleHeight: ''
-            }
+            // _this.basicInformation = Object.assign({}, response.data.result)
+            // _this.basicInformation.icon = {
+            //   url: '',
+            //   isScale: false,
+            //   scaleWidth: '',
+            //   scaleHeight: ''
+            // }
+            _this.formData = response.data.result
             resolve()
           })
           .catch((error) => {
@@ -377,11 +467,12 @@ export default {
           })
       })
     },
-    save() {
+    submitSave(formData) {
+      console.log(formData)
       var _this = this
       if (_this.routeQuery.isAdd) {
         return new Promise((resolve, reject) => {
-          addColumn(_this.basicInformation)
+          addColumn(formData)
             .then((response) => {
               _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
               _this.gotoListPage(_this)
@@ -393,8 +484,8 @@ export default {
         })
       } else {
         return new Promise((resolve, reject) => {
-          _this.basicInformation = Object.assign(_this.basicInformation, { channelId: _this.routeQuery.channelId })
-          editColumn(_this.basicInformation)
+          formData.channelId = _this.routeQuery.channelId
+          editColumn(formData)
             .then((response) => {
               _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
               _this.gotoListPage(_this)

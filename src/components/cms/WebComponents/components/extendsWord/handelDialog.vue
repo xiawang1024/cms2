@@ -3,7 +3,7 @@
     :visible.sync="dialogVisible"
     :before-close="handleClose"
     :title="params.type === 'add' ? '添加字段' : '编辑字段'"
-    width="50%">
+    width="500px">
     <el-form :model="extendFieldForm" label-position="top">
       <el-form-item label="名称">
         <el-input v-model="extendFieldForm.name"/>
@@ -17,6 +17,7 @@
         <el-switch v-model="extendFieldForm.required" active-color="#13ce66"/>
       </el-form-item>
     </el-form>
+    <!-- <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave"/> -->
     <span slot="footer" class="dialog-footer">
       <el-button @click="$emit('update:dialogVisible', false)">取 消</el-button>
       <el-button type="primary" @click="$emit('update:dialogVisible', false)">确 定</el-button>
@@ -39,6 +40,43 @@ export default {
   },
   data() {
     return {
+      formSettings: [
+        {
+          items: [
+            {
+              label: '桩硬件地址',
+              name: 'hardAddress',
+              type: 'text',
+              required: true,
+              valueType: 'string'
+            },
+            {
+              label: '所属充电站',
+              name: 'stationId',
+              required: true,
+              visible: false,
+              type: 'slot'
+            },
+            {
+              label: '充电桩类型',
+              required: true,
+              name: 'equipmentModelId',
+              type: 'select',
+              options: []
+            },{
+              label:'状态',
+              required: true,
+              name: 'enabled',
+              type:'switch',
+              value:true
+            },{
+              label:'充电桩描述',
+              name:'description',
+              type:'textarea'
+            }
+          ]
+        }
+      ],
       fieldList: [
         {
           id: 1,

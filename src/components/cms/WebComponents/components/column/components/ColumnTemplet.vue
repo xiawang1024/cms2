@@ -196,7 +196,9 @@ export default {
     }
   },
   methods: {
-    handleAdd(index, row) {}
+    handleAdd(index, row) {
+      console.log(index, row)
+    }
   }
 }
 </script>
