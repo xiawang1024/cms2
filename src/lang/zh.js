@@ -103,7 +103,8 @@ export default {
     operation: '平台操作管理',
     application: '平台应用管理',
     permissiongroup: '权限组管理',
-    organization: '租户管理'
+    organization: '租户管理',
+    columnTypeSet: '栏目类型设置'
   },
   navbar: {
     logOut: '退出登录',

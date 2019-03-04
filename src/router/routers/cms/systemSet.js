@@ -45,6 +45,15 @@ const systemSet = {
     },
     {
       /**
+       * 栏目类型设置
+       */
+      path: 'columnTypeSet',
+      component: () => import(`@/${path}/columnTypeSet`),
+      name: 'columnTypeSet',
+      meta: { title: 'columnTypeSet', icon: 'docSource', role: 'ROLE_TEST' }
+    },
+    {
+      /**
        * 模板管理
        */
       path: 'temManager',

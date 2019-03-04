@@ -91,7 +91,8 @@ export default {
     operation: 'Operation',
     application: 'Application',
     permissiongroup: 'PermissionGroup',
-    organization: 'OrganizationGroup'
+    organization: 'OrganizationGroup',
+    columnTypeSet: 'ColumnTypeSet'
   },
   navbar: {
     logOut: 'Log Out',
