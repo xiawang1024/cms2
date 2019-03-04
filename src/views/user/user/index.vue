@@ -43,7 +43,8 @@ import PapSearch from '@/components/pap/search/index'
 import PapTable from '@/components/pap/table/index'
 import ButtonGroup from '@/components/pap/button-group/index'
 import ElFormRenderer from '@/components/el-form-renderer'
-import { UserList, UserCreate, UserUpdate, UserRoleRelSave, UserRoleRelUserInfoByOrgId } from '@/api/user/user'
+import { UserList, UserCreate, UserUpdate, UserRoleRelSave, UserRoleRelRoleInfoByUserId } from '@/api/user/user'
+import Role from '@/views/user/role'
 
 export default {
   name: 'SysuserUser',
@@ -51,7 +52,8 @@ export default {
     PapSearch,
     PapTable,
     ButtonGroup,
-    ElFormRenderer
+    ElFormRenderer,
+    Role
   },
   props: {
     // 允许当前组件被当做子组件依赖，传递过来明确的按钮组数据
@@ -78,7 +80,7 @@ export default {
         colomn: [
           { prop: 'userCode', label: '用户编码'},
           { prop: 'userName', label: '用户名'},
-          { prop: 'disableFlag', label: '状态', formatter: row => (row.disableFlag === 'NO' ? '启用' : '禁用')}
+          { prop: 'enableFlag', label: '状态', formatter: row => (row.enableFlag === 1 ? '启用' : '禁用')}
         ],
         tableData: [
         ],
@@ -267,10 +269,16 @@ export default {
         _this.$refs.dialogRoleRef.getList()
         // 查询出来用户下属的角色信息
         return new Promise((resolve, reject) => {
-          UserRoleRelUserInfoByOrgId(_this.dialogRoleManagerUserId).then(async res => {
+          UserRoleRelRoleInfoByUserId(_this.dialogRoleManagerUserId).then(async res => {
             console.log(res)
             _this.$refs.dialogRoleRef.$refs.tree.setCheckedKeys([])
-            _this.$refs.dialogRoleRef.$refs.tree.setCheckedKeys(res.data.result.content)
+            if (res.data.result !== null && res.data.result.length > 0) {
+              var keys = []
+              res.data.result.forEach((item, index)=>{
+                keys.push(item.roleId)
+              })
+              _this.$refs.dialogRoleRef.$refs.tree.setCheckedKeys(keys)
+            }
           }).catch(err => {
             console.log('err: ', err)
             reject(err)
@@ -283,13 +291,13 @@ export default {
       var roleArrays = _this.$refs.dialogRoleRef.$refs.tree.getCheckedKeys()
       var obj = {
         userId: _this.dialogRoleManagerUserId,
-        roleIds: roleArrays
+        roleIdDetails: roleArrays
       }
       return new Promise((resolve, reject) => {
         UserRoleRelSave(obj).then(async res => {
           console.log(res)
           const h = this.$createElement;
-          if (res.data.code == '200') {
+          if (res.data.code == 0) {
             this.$notify({
               title: '用户角色绑定',
               message: h('i', {style: 'color: teal'}, "用户角色成功!")
@@ -301,6 +309,7 @@ export default {
               message: h('i', {style: 'color: teal'}, res.data.data)
             })
           }
+          _this.$refs["user-table"].$refs["pap-base-table"].clearSelection()
           // 结束
           resolve()
         }).catch(err => {

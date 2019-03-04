@@ -74,20 +74,20 @@ export function UserShow(data) {
  */
 export function UserRoleRelSave(data) {
   return request({
-    url: '/userb/userrolerel/saverels',
+    url: '/userb/userrolerel/rels',
     method: 'POST',
     data
   })
 }
 
 /**
- *  UserUserRelUserInfoByOrgId 组织机构下属用户信息关联关系保存
+ *  UserRoleRelRoleInfoByUserId 组织机构下属用户信息关联关系查询
  * @param userId  组织机构编号
  * @constructor
  */
-export function UserRoleRelUserInfoByOrgId(userId) {
+export function UserRoleRelRoleInfoByUserId(userId) {
   return request({
-    url: '/userb/userrolerel/selectuserIdsbyroleId?userId=' + userId,
+    url: '/userb/userrolerel/roleinfobyuserid/' + userId,
     method: 'GET'
   })
 }

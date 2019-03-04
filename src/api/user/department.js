@@ -67,26 +67,26 @@ export function DepartmentShow(data) {
 }
 
 /**
- *  DepartmentUserRelSave 组织机构下属用户信息关联关系保存
- * @param data  对象，组织机构与用户集合关联关系
+ *  DepartmentUserRelSave 部门下属用户信息关联关系保存
+ * @param data  对象，部门与用户集合关联关系
  * @constructor
  */
 export function DepartmentUserRelSave(data) {
   return request({
-    url: '/userb/departmentuserrel/saverels',
+    url: '/userb/departmentuserrel/rels',
     method: 'POST',
     data
   })
 }
 
 /**
- *  DepartmentUserRelUserInfoByOrgId 组织机构下属用户信息关联关系保存
- * @param departmentId  组织机构编号
+ *  DepartmentUserRelUserInfoByOrgId 部门下属用户信息关联关系查询
+ * @param departmentId  部门编号
  * @constructor
  */
-export function DepartmentUserRelUserInfoByOrgId(departmentId) {
+export function DepartmentUserRelUserInfoByDepId(departmentId) {
   return request({
-    url: '/userb/departmentuserrel/selectuserIdsbydepartmentId?departmentId=' + departmentId,
+    url: '/userb/departmentuserrel/userinfobydepartmentid/' + departmentId,
     method: 'GET'
   })
 }

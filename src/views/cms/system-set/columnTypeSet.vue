@@ -1,71 +1,60 @@
 <template>
-  <div class="site-set-container">
+  <div class="columnType-container">
     <div class="tool-bar">
       <el-button type="primary" @click="handleAddDialog()">新增</el-button>
     </div>
     <el-table :data="dictObj.details" style="width: 100%">
-      <el-table-column prop="dictDetailName" label="名称"/>
-      <el-table-column label="代码">
+      <el-table-column prop="dictDetailName" label="栏目类型名称"/>
+      <el-table-column prop="dictDetailValue" label="栏目类型值"/>
+      <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-input v-model="scope.row.dictDetailCode"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="值">
-        <template slot-scope="scope">
-          <el-input v-model="scope.row.dictDetailValue"/>
+          <el-button type="prime" @click="beforeAlter(scope.$index, scope.row)">修改</el-button>
+          <el-button type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <el-dialog :visible.sync="addSiteSetVisible" title="添加站点设置">
-      <el-form :model="siteSetForm">
-        <el-form-item label="设置名称">
-          <el-input v-model="siteSetForm.dictDetailName"/>
+    <el-dialog :visible.sync="addColumnTypeVisible" title="添加栏目类型">
+      <el-form :model="columnTypeForm">
+        <el-form-item label="栏目类型名称">
+          <el-input v-model="columnTypeForm.dictDetailName"/>
         </el-form-item>
-        <el-form-item label="代码">
-          <el-input v-model="siteSetForm.dictDetailCode"/>
-        </el-form-item>
-        <el-form-item label="值">
-          <el-input v-model="siteSetForm.dictDetailValue"/>
+        <el-form-item label="栏目类型值">
+          <el-input v-model="columnTypeForm.dictDetailValue"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addSiteSetVisible = false">取 消</el-button>
+        <el-button @click="addColumnTypeVisible = false">取 消</el-button>
         <el-button type="primary" @click="handleAdd()">确 定</el-button>
       </div>
     </el-dialog>
 
-    <el-dialog :visible.sync="alterSiteSetVisible" title="修改站点设置">
-      <el-form :model="siteSetForm">
-        <el-form-item label="设置名称">
-          <el-input :disabled="true" v-model="siteSetForm.dictDetailName"/>
+    <el-dialog :visible.sync="alterColumnTypeVisible" title="修改栏目类型">
+      <el-form :model="columnTypeForm">
+        <el-form-item label="栏目类型名称">
+          <el-input :disabled="true" v-model="columnTypeForm.dictDetailName"/>
         </el-form-item>
-        <el-form-item label="代码">
-          <el-input v-model="siteSetForm.dictDetailCode"/>
-        </el-form-item>
-        <el-form-item label="设置路径">
-          <el-input v-model="siteSetForm.dictDetailValue"/>
+        <el-form-item label="栏目类型值">
+          <el-input v-model="columnTypeForm.dictDetailValue"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="alterSiteSetVisible = false">取 消</el-button>
+        <el-button @click="alterColumnTypeVisible = false">取 消</el-button>
         <el-button type="primary" @click="handleAlter()">确 定</el-button>
       </div>
     </el-dialog>
-
-    <el-button type="primary" class="btn-save" @click="handleSubmit()">保存</el-button>
   </div>
 </template>
 
 <script>
 import { fetchDictByDictName, createDict, updateDict } from '@/api/cms/dict'
 export default {
-  name: 'SiteSet',
+  name: 'ColumnType',
   data() {
     return {
       dictObj: {
         dictId: '',
-        dictName: '站点设置',
+        dictName: '栏目类型',
         dictType: '',
         dictRemark: '',
         seqNo: '',
@@ -80,9 +69,9 @@ export default {
         details: [
         ]
       },
-      addSiteSetVisible: false,
-      alterSiteSetVisible: false,
-      siteSetForm: {
+      addColumnTypeVisible: false,
+      alterColumnTypeVisible: false,
+      columnTypeForm: {
         dictDetailId: '',
         dictDetailName: '',
         dictDetailValue: ''
@@ -94,28 +83,28 @@ export default {
   },
   methods: {
     handleAddDialog() {
-      this.siteSetForm.dictDetailId = ''
-      this.siteSetForm.dictDetailName = ''
-      this.siteSetForm.dictDetailValue = ''
-      this.addSiteSetVisible = true
+      this.columnTypeForm.dictDetailId = ''
+      this.columnTypeForm.dictDetailName = ''
+      this.columnTypeForm.dictDetailValue = ''
+      this.addColumnTypeVisible = true
     },
     handleAdd() {
       console.log('新增')
       this.handleDialogObjToList()
-      this.addSiteSetVisible = false
+      this.addColumnTypeVisible = false
       // 新增保存
       this.handleSubmit()
     },
     beforeAlter(index, row) {
-      this.siteSetForm.dictDetailId = row.dictDetailId
-      this.siteSetForm.dictDetailName = row.dictDetailName
-      this.siteSetForm.dictDetailValue = row.dictDetailValue
-      this.alterSiteSetVisible = true
+      this.columnTypeForm.dictDetailId = row.dictDetailId
+      this.columnTypeForm.dictDetailName = row.dictDetailName
+      this.columnTypeForm.dictDetailValue = row.dictDetailValue
+      this.alterColumnTypeVisible = true
     },
     handleAlter() {
       console.log('修改')
       this.handleDialogObjToList()
-      this.alterSiteSetVisible = false
+      this.alterColumnTypeVisible = false
       // 修改保存
       this.handleSubmit()
     },
@@ -130,15 +119,15 @@ export default {
       var _this = this
       var currentOpeIdx = -1
       _this.dictObj.details.forEach(function(v, k) {
-        if (v.dictDetailName === _this.siteSetForm.dictDetailName) {
+        if (v.dictDetailName === _this.columnTypeForm.dictDetailName) {
           currentOpeIdx = k
         }
       })
       if (currentOpeIdx === -1) {
-        _this.dictObj.details.push(Object.assign({}, _this.siteSetForm))
+        _this.dictObj.details.push(Object.assign({}, _this.columnTypeForm))
       } else {
-        _this.dictObj.details[currentOpeIdx].dictDetailName = _this.siteSetForm.dictDetailName
-        _this.dictObj.details[currentOpeIdx].dictDetailValue = _this.siteSetForm.dictDetailValue
+        _this.dictObj.details[currentOpeIdx].dictDetailName = _this.columnTypeForm.dictDetailName
+        _this.dictObj.details[currentOpeIdx].dictDetailValue = _this.columnTypeForm.dictDetailValue
       }
     },
     // 查询对象
@@ -162,7 +151,7 @@ export default {
     handleSubmit() {
       var _this = this
       if (_this.dictObj.dictId === '' || _this.dictObj.dictId === null) {
-        _this.dictObj.dictName = '站点设置'
+        _this.dictObj.dictName = '栏目类型'
         return new Promise((resolve, reject) => {
           createDict(_this.dictObj)
             .then((response) => {
@@ -191,16 +180,16 @@ export default {
 </script>
 
 <style scoped>
-  .el-button + .el-button {
-    margin-top: 5px;
-    margin-left: 0px;
-  }
+.el-button + .el-button {
+  margin-top: 5px;
+  margin-left: 0px;
+}
 
-  .siteSet-container {
-    margin: 30px;
-  }
+.columnType-container {
+  margin: 30px;
+}
 
-  .tool-bar {
-    text-align: right;
-  }
+.tool-bar {
+  text-align: right;
+}
 </style>

@@ -46,6 +46,13 @@ export default {
     PapDialog,
     ButtonGroup
   },
+  props: {
+    // 允许当前组件被当做子组件依赖，传递过来明确的按钮组数据
+    buttonArrayProps: {
+      type: Array,
+      default: () => []
+    }
+  },
   data() {
     return {
       /* eslint-disable */
@@ -77,6 +84,9 @@ export default {
 
       // 搜索框
       searchForm: [
+        {$id: 'permissionName', $type: 'input', $label: '权限名称', $default: '',
+          $el: { placeholder: '请输入', style: 'width: 200px' }
+        }
       ],
 
       // 弹出框表单
@@ -112,6 +122,16 @@ export default {
       applicationDataList: [],
       filename: ''
       /* eslint-disable */
+    }
+  },
+  watch: {
+    buttonArrayProps: {
+      handler (val) {
+        if (val !== undefined && val.length > 0) {
+          this.buttonArray = val
+        }
+      },
+      immediate: true
     }
   },
   mounted: function () {

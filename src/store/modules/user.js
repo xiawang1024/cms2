@@ -12,7 +12,7 @@ const user = {
     name: '',
     avatar: 'http://www.hndt.com/podcast/976/1131/res/EEghUGNE.jpg?1511506999379',
     authorities: [],
-    sysList: ['0','1'],
+    sysList: ['0', '1'],
     sysType: '0',
     setting: {
       articlePlatform: []

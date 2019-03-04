@@ -4,7 +4,7 @@
     <el-collapse v-model="searchcollapseActiveNames" v-if="searchCollapseShowFlag">
       <el-collapse-item title="" name="true">
         <template slot="title">
-          {{breadcrumbs}}<p style="margin-right: 10px;"></p>
+          <p style="margin-right: 10px;"></p>
           <el-tooltip v-if="searchTooltipFlag" class="item" effect="dark" content="点击打开搜索功能" placement="top-end">
             <i class="header-icon el-icon-search"></i>
           </el-tooltip>
@@ -70,7 +70,6 @@ export default {
     ElFormRenderer
   },
   created () {
-    this.getBreadcrumb()
   },
   watch: {
     content: {
@@ -109,18 +108,6 @@ export default {
   },
   methods: {
     generateTitle, // generateTitle by vue-i18n
-    getBreadcrumb () {
-      var _this = this
-      let matched = this.$route.matched.filter(item => item.name)
-      const first = matched[0]
-      if (first && first.name.trim().toLocaleLowerCase() !== 'Dashboard'.toLocaleLowerCase()) {
-        matched = [{ path: '/index', name: '首页', meta: { title: '首页' } }].concat(matched)
-      }
-      this.levelList = matched
-      for (let i = 0; i < matched.length; i++) {
-        this.breadcrumbs = this.breadcrumbs + this.generateTitle(matched[i].meta.title) + '/'
-      }
-    },
     refreshCollapseActive () {
       if (this.searchCollapseOpenFlag === true) {
         this.searchcollapseActiveNames = ['true']
