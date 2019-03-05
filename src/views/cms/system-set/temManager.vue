@@ -56,7 +56,7 @@ export default {
     return {
       temlateList: [
       ],
-      selectChannel: '1083184060441956352',
+      selectChannel: '',
       searchTemplate: '',
       pageNum: 1, // 分页当前页
       pageSize: 10,
