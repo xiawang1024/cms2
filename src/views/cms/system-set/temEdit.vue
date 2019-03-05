@@ -33,7 +33,7 @@
         </el-col>
         <el-col :xs="24" :sm="12" :md="6" :lg="6" :xl="6">
           <el-form-item label="是否有效">
-            <el-switch v-model="templateForm.enableFlag" active-color="#13ce66"/>
+            <el-switch active-value="1" inactive-value="0" v-model="templateForm.enableFlag" active-color="#13ce66"/>
           </el-form-item>
         </el-col>
       </el-row>
@@ -146,7 +146,7 @@ export default {
   },
   methods: {
     channelCascaderChange(val) {
-      this.componentForm.channelId = val
+      this.templateForm.channelId = val
     },
     fetchComponentList() {
       var _this = this
