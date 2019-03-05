@@ -1,7 +1,7 @@
 <template>
   <div class="extends-word">
     <div class="extends-word-add">
-      <el-button type="primary" @click="handelWord('add')">创建扩展字段</el-button>
+      <el-button type="primary" @click="handelWord('add')" size="small">创建扩展字段</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%">
       <el-table-column prop="id" label="字段名称"/>

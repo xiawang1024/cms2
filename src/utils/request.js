@@ -6,7 +6,7 @@ import { refreshToken } from '@/api/login'
 
 const request = axios.create({
   baseURL: 'http://172.20.5.4:53010',
-  timeout: 30000
+  timeout: 5000
 })
 
 /**

@@ -9,7 +9,7 @@
       :show-file-list="false"
       :before-upload="beforeImageUpload"
       :disabled="uploadLoading"
-      action="unquire"
+      action="http://172.20.5.4:55030/basefile/upload?fileRefId=jkhjkhjkhj"
       accept="image/jpeg, image/jpg, image/png"
     >
       <el-button

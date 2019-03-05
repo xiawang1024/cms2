@@ -110,22 +110,22 @@
              -->
             <template v-else-if="item.type=='img'">
               <el-upload :class="{'has-text-input': item.hasTextInput}" :action="upURL" :file-list="formModel[item.name]" :multiple="item.multiple" :data="getUploadParam(item.data)" :name="'file'" :limit="item.limit" :before-upload="beforeUploadCallbacks[item.name]" :on-success="uploadCallbacks[item.name]" :on-preview="handlePreviewImg" :on-remove="removeCallbacks[item.name]" class="upload-img" :on-exceed="handelUploadExceed" :on-error="handleUploadError" list-type="picture" accept="image/*">
-                <el-button :disabled="isUploading || !upToken" size="small" type="primary">点击上传</el-button>
+                <el-button :disabled="isUploading" size="small" type="primary">点击上传</el-button>
                 <div slot="tip" class="upload-tip-container">
-                  <div v-if="item.tip && typeof item.tip === 'string'" class="el-upload__tip">
+                  <!-- <div v-if="item.tip && typeof item.tip === 'string'" class="el-upload__tip">
                     {{ item.tip }}
                     <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
-                  </div>
-                  <div v-else-if="item.tip && item.tip.length" class="el-upload__tip">
+                  </div> -->
+                  <!-- <div v-else-if="item.tip && item.tip.length" class="el-upload__tip">
                     <ul style="line-height: 1.3;">
                       <li v-for="(tipItem, tipIndex) in item.tip" :key="tipIndex">{{ tipItem }}</li>
                       <li v-if="item.limit">最多上传{{ item.limit }}张({{ formModel[item.name].length }}/{{ item.limit }})</li>
                     </ul>
-                  </div>
+                  </div> -->
                   <!-- 图片描述输入框 -->
-                  <div v-if="item.hasTextInput && imgUploadText[item.name].length" class="upload-text-container">
+                  <!-- <div v-if="item.hasTextInput && imgUploadText[item.name].length" class="upload-text-container">
                     <el-input v-for="(uploadTextItem, uploadTextIndex) in imgUploadText[item.name]" :key="uploadTextIndex" v-model="imgUploadText[item.name][uploadTextIndex]" placeholder="输入图片描述"/>
-                  </div>
+                  </div> -->
                 </div>
               </el-upload>
             </template>
@@ -216,7 +216,7 @@
 // import citySelect from '@/components/city-select'
 // import websiteSelect from '@/components/website-select'
 import Viewer from 'viewerjs'
-import { UP_URL, DOWN_URL } from '@/config/base-url'
+import { DOWN_URL } from '@/config/base-url'
 import { hashCode } from '@/utils/common.js'
 export default {
   name: 'VForm',
@@ -302,7 +302,7 @@ export default {
       uploadCallbacks: {},
       removeCallbacks: {},
       beforeUploadCallbacks: {},
-      upURL: UP_URL,
+      upURL: 'http://172.20.5.4:55030/basefile/upload?fileRefId=jkhjkhjkhj',
       upToken: null,
       isUploading: false,
       provinceList: [
@@ -345,9 +345,11 @@ export default {
   },
   watch: {
     formSettings() {
+      console.log('formSetting')
       this.updateForm()
     },
     formData() {
+      console.log('formData')
       this.updateForm()
     }
   },
@@ -360,41 +362,41 @@ export default {
           .map(item => this.flatFormSettings[item])
           .some(item => item.type == 'img' || item.type == 'file')
       ) {
-        this.getUpToken()
+        // this.getUpToken()
       }
     }, 100)
   },
 
   methods: {
     // 获取上传七牛的token
-    getUpToken() {
-      this.$service
-        .getUpToken()
-        .then(res => {
-          this.upToken = res.data.data.token
-          this.formSettings.forEach(setting => {
-            setting.items
-              .filter(item => item.type == 'img' || item.type == 'file')
-              .forEach(file => {
-                file.data = file.data || {}
-                file.data.token = this.upToken
-              })
-          })
-        })
-        .catch(() => {
-          this.$message({
-            message: '获取上传token失败，将无法上传文件，请重新加载页面',
-            type: 'warning'
-          })
-        })
-    },
+    // getUpToken() {
+    //   this.$service
+    //     .getUpToken()
+    //     .then(res => {
+    //       this.upToken = res.data.data.token
+    //       this.formSettings.forEach(setting => {
+    //         setting.items
+    //           .filter(item => item.type == 'img' || item.type == 'file')
+    //           .forEach(file => {
+    //             file.data = file.data || {}
+    //             file.data.token = this.upToken
+    //           })
+    //       })
+    //     })
+    //     .catch(() => {
+    //       this.$message({
+    //         message: '获取上传token失败，将无法上传文件，请重新加载页面',
+    //         type: 'warning'
+    //       })
+    //     })
+    // },
     // 将数据格式化为上传七牛的参数
     getUploadParam(data) {
       if (!data || typeof data !== 'object') {
         data = {}
       }
-      data.token = this.upToken
-      data.key = Date.now()
+      // data.token = this.upToken
+      // data.key = Date.now()
       return data
     },
     // 上传文件超出数量限制回调
@@ -798,7 +800,7 @@ export default {
   .form-section {
     margin-bottom: 30px;
     overflow: hidden;
-    // border-bottom: 1px solid $color-border;
+    border-bottom: 1px solid #e8e8e8;
     padding-bottom: 20px;
     h3 {
       margin-bottom: 20px;
