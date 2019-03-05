@@ -11,9 +11,9 @@
       <el-table-column label="设置" width="300">
         <template slot-scope="scope">
           <el-button type="text" @click="columnTemplate(scope.row)">栏目模板</el-button>
-          <el-button type="text" @click="extendsWord">扩展字段</el-button>
-          <el-button type="text" @click="tagSetting">标签设置</el-button>
-          <el-button type="text" @click="waterSetting">水印设置</el-button>
+          <el-button type="text" @click="extendsWord(scope.row)">扩展字段</el-button>
+          <el-button type="text" @click="tagSetting(scope.row)">标签设置</el-button>
+          <el-button type="text" @click="waterSetting(scope.row)">水印设置</el-button>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="200">
@@ -116,19 +116,28 @@ export default {
         }
       })
     },
-    extendsWord() {
+    extendsWord(row) {
       this.$router.push({
-        path: '/cms/website/extendsWord'
+        path: '/cms/website/extendsWord',
+        query: {
+          channelId: row.channelId
+        }
       })
     },
-    tagSetting() {
+    tagSetting(row) {
       this.$router.push({
-        path: '/cms/website/tagSetting'
+        path: '/cms/website/tagSetting',
+        query: {
+          channelId: row.channelId
+        }
       })
     },
-    waterSetting() {
+    waterSetting(row) {
       this.$router.push({
-        path: '/cms/website/waterSetting'
+        path: '/cms/website/waterSetting',
+        query: {
+          channelId: row.channelId
+        }
       })
     },
     columnDel(row) {
