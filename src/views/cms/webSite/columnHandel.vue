@@ -227,7 +227,7 @@
         @click="save"
       >保存</el-button>
     </el-form> -->
-    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave"/>
+    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" :btn-loading = "isLoading"/>
   </div>
 </template>
 
@@ -351,26 +351,26 @@ export default {
         }
       ],
       formData: {},
-      basicInformation: {
-        seqNo: '',
-        preColumn: '',
-        domainName: '',
-        domainPath: '',
-        createUser: '',
-        hiddenFlag: '',
-        extra: '',
-        manager: '',
-        channelName: '',
-        type: '',
-        icon: {
-          url: '',
-          isScale: false,
-          scaleWidth: '',
-          scaleHeight: ''
-        },
-        keywordName: '',
-        desc: ''
-      },
+      // basicInformation: {
+      //   seqNo: '',
+      //   preColumn: '',
+      //   domainName: '',
+      //   domainPath: '',
+      //   createUser: '',
+      //   hiddenFlag: '',
+      //   extra: '',
+      //   manager: '',
+      //   channelName: '',
+      //   type: '',
+      //   icon: {
+      //     url: '',
+      //     isScale: false,
+      //     scaleWidth: '',
+      //     scaleHeight: ''
+      //   },
+      //   keywordName: '',
+      //   desc: ''
+      // },
       preColumnList: [
         {
           id: 1,
@@ -419,12 +419,15 @@ export default {
           name: '其他'
         }
       ],
-      routeQuery: {}
+      routeQuery: {},
+      isEdit: false,
+      isLoading: false
     }
   },
   mounted() {
     this.routeQuery = this.$route.query
-    if ((!this.routeQuery.isAdd || this.routeQuery.isAdd === 'false') && this.routeQuery.channelId) {
+    this.isEdit = Boolean((!this.routeQuery.isAdd || this.routeQuery.isAdd === 'false') && this.routeQuery.channelId)
+    if (this.isEdit) {
       this.getColumnInfor()
     }
     this.fetchComponentList()
@@ -468,31 +471,38 @@ export default {
       })
     },
     submitSave(formData) {
-      console.log(formData)
+      this.isLoading = true
       var _this = this
-      if (_this.routeQuery.isAdd) {
+      if (!this.isEdit) {
+        console.log('add')
         return new Promise((resolve, reject) => {
           addColumn(formData)
             .then((response) => {
               _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
               _this.gotoListPage(_this)
               resolve()
+              _this.isLoading = false
             })
             .catch((error) => {
+              _this.isLoading = false
               reject(error)
             })
         })
       } else {
+        console.log('edit')
         return new Promise((resolve, reject) => {
           formData.channelId = _this.routeQuery.channelId
+          formData.managerUser = ''
           editColumn(formData)
             .then((response) => {
               _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
               _this.gotoListPage(_this)
+              _this.isLoading = false
               resolve()
             })
             .catch((error) => {
               reject(error)
+              _this.isLoading = false
             })
         })
       }
