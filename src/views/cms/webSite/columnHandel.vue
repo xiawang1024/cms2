@@ -6,7 +6,7 @@
 
 <script>
 // const Upload = _ => import('@/components/cms/Upload/upload')
-import { addColumn, columnInfor, editColumn } from '@/api/cms/columnManage'
+import { columnInfor } from '@/api/cms/columnManage'
 import { fetchDictByDictName } from '@/api/cms/dict'
 import { fetchComponentList } from '@/api/cms/component'
 export default {
@@ -29,26 +29,30 @@ export default {
               label: '父级栏目',
               name: 'parentChannelId',
               type: 'text',
-              valueType: 'string'
+              valueType: 'string',
+              placeholder: '请选择'
             },
             {
               label: '位置排序',
               name: 'seqNo',
-              type: 'text'
+              type: 'text',
+              placeholder: '请输入排序'
             },
             {
               label: '访问域名',
               name: 'domainName',
-              type: 'text'
+              type: 'text',
+              placeholder: '请输入访问域名'
             },{
               label:'存放位置',
               name: 'domainPath',
-              type:'text'
+              type:'text',
+              placeholder: '请输入存放位置'
             },{
               label: '创建人员',
               name: 'createUser',
               type: 'text',
-              valueType: 'string'
+              placeholder: '请输入创建人员'
             },{
               label: '正常显示',
               name: 'hiddenFlag',
@@ -60,37 +64,43 @@ export default {
             },{
               label: '其他数据',
               name: 'extra',
-              type: 'textarea'
+              type: 'textarea',
+              placeholder: '请输入其他数据'
             },{
               label:'管理人员',
               name: 'managerUser',
-              type:'text'
+              type:'text',
+              placeholder: '请输入管理员'
             },{
               label:'栏目名称',
               name:'channelName',
-              type:'text'
+              type:'text',
+              placeholder: '请输入栏目名称'
             },
             {
               label: '栏目类型',
               name: 'categoryId',
               type: 'select',
-              options: []
+              options: [],
+              placeholder: '请选择'
             },
             {
               label: '栏目图标',
               name: 'iconUrl',
               type: 'img',
-              limit: 1,
+              limit: 2,
               tip: '建议图片大小：1080*1642，图片大小不超过100K'
            },
            {
               label:'关键字',
               name:'keywordName',
-              type:'text'
+              type:'text',
+              placeholder: '请输入关键字'
            },{
               label:'栏目描述',
               name:'descriptionRemark',
-              type:'textarea'
+              type:'textarea',
+               placeholder: '请输入栏目描述'
             }
           ]
         }
@@ -117,10 +127,6 @@ export default {
       return new Promise((resolve, reject) => {
         fetchDictByDictName('栏目类型')
           .then((response) => {
-            // _this.dictObj = response.data.result
-            // if (_this.dictObj.details === null) {
-            //   _this.dictObj.details = []
-            // }
             if (response.data.result.details && response.data.result.details.length) {
               _this.formSettings[0].items[9].options = response.data.result.details.map((ele) => {
                 return {
@@ -157,6 +163,7 @@ export default {
         columnInfor(_this.routeQuery.channelId)
           .then((response) => {
             _this.formData = response.data.result
+            _this.formData.iconUrl =  _this.formData.iconUrl ? _this.formData.iconUrl.split(',') : []
             resolve()
           })
           .catch((error) => {
@@ -167,38 +174,41 @@ export default {
     submitSave(formData) {
       this.isLoading = true
       var _this = this
-      if (!this.isEdit) {
-        console.log('add')
-        return new Promise((resolve, reject) => {
-          addColumn(formData)
-            .then((response) => {
-              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-              _this.gotoListPage(_this)
-              resolve()
-              _this.isLoading = false
-            })
-            .catch((error) => {
-              _this.isLoading = false
-              reject(error)
-            })
-        })
-      } else {
-        console.log('edit')
-        return new Promise((resolve, reject) => {
-          formData.channelId = _this.routeQuery.channelId
-          editColumn(formData)
-            .then((response) => {
-              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-              _this.gotoListPage(_this)
-              _this.isLoading = false
-              resolve()
-            })
-            .catch((error) => {
-              reject(error)
-              _this.isLoading = false
-            })
-        })
-      }
+      console.log(formData, 'formData')
+      console.log(formData.iconUrl.length)
+      formData.iconUrl = formData.iconUrl.length ? formData.iconUrl.join(',') : ''
+      console.log(formData, 'formData')
+      console.log(_this)
+      // if (!this.isEdit) {
+      //   return new Promise((resolve, reject) => {
+      //     addColumn(formData)
+      //       .then((response) => {
+      //         _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+      //         _this.gotoListPage(_this)
+      //         resolve()
+      //         _this.isLoading = false
+      //       })
+      //       .catch((error) => {
+      //         _this.isLoading = false
+      //         reject(error)
+      //       })
+      //   })
+      // } else {
+      //   return new Promise((resolve, reject) => {
+      //     formData.channelId = _this.routeQuery.channelId
+      //     editColumn(formData)
+      //       .then((response) => {
+      //         _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+      //         _this.gotoListPage(_this)
+      //         _this.isLoading = false
+      //         resolve()
+      //       })
+      //       .catch((error) => {
+      //         reject(error)
+      //         _this.isLoading = false
+      //       })
+      //   })
+      // }
     },
     gotoListPage(context) {
       context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {

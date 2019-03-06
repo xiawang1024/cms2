@@ -1,7 +1,7 @@
 <template>
   <div class="column-manage">
     <div class="tool-bar">
-      <el-button type="primary" @click="columnAddEdit(true, 'father')">添加</el-button>
+      <el-button type="primary" @click="columnAddEdit(true, 'father')" size="small">添加</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%">
       <el-table-column prop="channelName" label="栏目名称"/>

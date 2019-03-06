@@ -14,8 +14,8 @@ if (process.env.VUE_APP_ENV) {
 }
 // 七牛上传地址七牛上传地址
 export const UP_URL = 'http://upload.qiniup.com/'
-// 七牛下载地址
-export const DOWN_URL = 'http://static1.1byongche.com/'
+// 图片下载地址
+export const DOWN_URL = 'http://172.20.5.4:55030'
 
 // 第二基准路径
 export const serviceUser = '/service-user/' // 用户

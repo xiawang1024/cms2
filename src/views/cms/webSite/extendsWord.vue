@@ -3,22 +3,34 @@
     <div class="extends-word-add">
       <el-button type="primary" @click="handelWord('add')" size="small">创建扩展字段</el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="id" label="字段名称"/>
-      <el-table-column prop="name" label="字段类型"/>
-      <el-table-column prop="name" label="是否必填"/>
-      <el-table-column label="操作" width="100">
+    <el-table :data="extFieldsList" style="width: 100%">
+      <el-table-column prop="label" label="字段名称" min-width="180"/>
+      <el-table-column prop="type" label="字段类型" min-width="120">
         <template slot-scope="scope">
-          <el-button type="text" @click="handelWord('edit', scope.row.id)">编辑</el-button>
+          <span v-if="scope.row.type === '1'">字符串</span>
+          <span v-if="scope.row.type === '2'">时间</span>
+          <span v-if="scope.row.type === '3'">数字</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="required" label="是否必填" min-width="120">
+        <template slot-scope="scope">
+          <span v-if="scope.row.required === false">否</span>
+          <span v-if="scope.row.required === true">是</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="120">
+        <template slot-scope="scope">
+          <el-button type="text" @click="handelWord('edit', scope.row)">编辑</el-button>
           <el-button type="text" @click="wordDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <handel-dialog :dialog-visible.sync="dialogVisible" :params="params"/>
+    <handel-dialog :dialog-visible.sync="dialogVisible" :params="params" @submitSuccess="submitSuccess"/>
   </div>
 </template>
 <script>
 import handelDialog from '@/components/cms/WebComponents/components/extendsWord/handelDialog'
+import { columnInfor, deleteExtendsWord } from '@/api/cms/columnManage'
 export default {
   name: 'ExtendsWord',
   components: {
@@ -26,30 +38,45 @@ export default {
   },
   data() {
     return {
-      tableData: [{
-        id: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        id: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        id: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        id: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
+      extFieldsList: [],
       dialogVisible: false,
-      params: {}
+      params: {},
+      routeQuery: {}
     }
   },
+  mounted() {
+    this.routeQuery = this.$route.query
+    this.params.channelId = this.$route.query.channelId
+    this.getColumnInfor()
+  },
   methods: {
-    wordHande(row) {
-      console.log(row)
+    getColumnInfor() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        columnInfor(_this.routeQuery.channelId)
+          .then((response) => {
+            _this.extFieldsList = response.data.result.extFieldsList
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    createExtends() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        columnInfor(_this.routeQuery.channelId)
+          .then((response) => {
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    submitSuccess() {
+      this.getColumnInfor()
     },
     wordDelete(row) {
       this.$confirm('是否删除该字段?', '提示', {
@@ -57,12 +84,27 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        this.deleteEstends({extFieldId: row.extFieldId })
       }).catch(() => {
       })
     },
-    handelWord(type, id) {
+    deleteEstends(data) {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        deleteExtendsWord(_this.routeQuery.channelId, data)
+          .then((response) => {
+            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+            _this.getColumnInfor()
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    handelWord(type, row) {
       this.params.type = type
-      this.params.id = id
+      this.params.extFieldInfor = row
       this.dialogVisible = true
     }
   }

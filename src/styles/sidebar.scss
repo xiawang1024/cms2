@@ -123,10 +123,10 @@
   .sidebar-container .el-submenu .el-menu-item {
     transition: transform .3s;
     min-width: 180px !important;
-    background-color: $subMenuBg !important;
+    // background-color: $subMenuBg !important;
 
     &:hover {
-      background-color: $menuHover !important;
+      // background-color: $menuHover !important;
     }
   }
 

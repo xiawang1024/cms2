@@ -52,3 +52,27 @@ export function columnList(queryObj, pageNo, pageSize) {
     data: queryObj
   })
 }
+// 扩展字段创建
+export function createExtendsWord(channelId, data) {
+  return request({
+    url: '/cms/channel/extfield/' +  channelId,
+    method: 'post',
+    data
+  })
+}
+// 扩展字段修改
+export function editExtendsWord(channelId, data) {
+  return request({
+    url: '/cms/channel/extfield/' +  channelId,
+    method: 'put',
+    data
+  })
+}
+// 扩展字段删除
+export function deleteExtendsWord(channelId, data) {
+  return request({
+    url: '/cms/channel/extfield/' +  channelId,
+    method: 'delete',
+    data
+  })
+}

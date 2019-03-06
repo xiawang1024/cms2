@@ -12,7 +12,10 @@
                 style="width: 100%">
                 <el-table-column prop="address" label="地址">
                   <template slot-scope="scope">
-                    <div>{{ scope.row.templateName }}</div>
+                    <div> 
+                      <span class="title-color">{{ scope.row.templateName }}</span> 
+                      <span class="fz-12">{{ scope.row.managerId }}</span>
+                    </div>
                     <div>{{ scope.row.templateDescription }}</div>
                   </template>
                 </el-table-column>
@@ -20,7 +23,7 @@
                   label="地址"
                   width="50">
                   <template slot-scope="scope">
-                    <i class="el-icon-error" @click="removeColumn(scope.$index, tableData)"/>
+                    <i class="el-icon-error" @click="removeColumn(scope.$index, tableData, scope.row)"/>
                   </template>
                 </el-table-column>
               </el-table>
@@ -38,17 +41,18 @@
               </el-radio-group>
             </div>
             <el-table
-              :data="temlateList"
+              :data="templateList"
               style="width: 100%">
-              <el-table-column prop="templateName" label="名称" width="180"/>
-              <el-table-column prop="templateType" label="平台/类别" width="120"/>
-              <el-table-column prop="channelName" label="所属栏目"/>
+              <el-table-column prop="templateName" label="名称" min-width="120"/>
+              <el-table-column prop="templateFormat" label="平台/类别" width="100"/>
+              <el-table-column prop="channelName" label="所属栏目" min-width="120"/>
               <el-table-column prop="createTime" label="创建时间" width="180"/>
               <el-table-column
                 label=""
-                width="50">
+                width="70">
                 <template slot-scope="scope">
-                  <el-button type="text" @click="addTemplate(scope.row)">添加</el-button>
+                  <div v-if="scope.row.isChoosed">已选择</div>
+                  <el-button type="text" @click="addTemplate(scope.row)" v-else>添加</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -69,12 +73,13 @@
       </el-row>
     </div>
     <div>
-      <el-button type="primary" size="small" class="save-btn">保存</el-button>
+      <el-button type="primary" size="small" class="save-btn" @click="submitSave" :loading="isLoading">保存</el-button>
     </div>
   </div>
 </template>
 <script>
 import { fetchList } from '@/api/cms/template'
+import { columnInfor, editColumn } from '@/api/cms/columnManage'
 export default {
   name: 'ColumnTemplate',
   data() {
@@ -83,9 +88,11 @@ export default {
       columnType: 'own',
       pageNum: 1,
       pageSize: 10,
-      temlateList: [],
+      templateList: [],
       totalCount: 0,
-      channelId: ''
+      channelId: '',
+      isLoading: false,
+      columnData: {}
     }
   },
   watch: {
@@ -109,15 +116,38 @@ export default {
   mounted() {
     this.channelId = this.$route.query.channelId
     this.fetchList()
+    this.getColumnInfor()
   },
   methods: {
-    removeColumn(index, rows) {
+    getColumnInfor() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        columnInfor(_this.$route.query.channelId)
+          .then((response) => {
+            _this.columnData = response.data.result
+            // _this.tagRule = response.data.result.tagRule ? response.data.result.tagRule :  _this.tagRule
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    removeColumn(index, rows, row) {
       this.$confirm('确认删除吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        rows.splice(index, 1);
+        rows.splice(index, 1)
+        this.templateList.map((ele) => {
+          if(ele.templateId === row.templateId) {
+            ele.isChoosed = false
+          }
+        })
+        this.$nextTick(() => {
+          this.templateList = this.templateList.slice(0)
+        })
       }).catch(() => {
       })
     },
@@ -130,8 +160,15 @@ export default {
       return new Promise((resolve, reject) => {
         fetchList(searchObjTmp, _this.pageNum, _this.pageSize)
           .then((response) => {
-            _this.temlateList = response.data.result.content
+            _this.templateList = response.data.result.content
             _this.totalCount = response.data.result.total
+            for(let i=0; i< _this.templateList.length; i++) {
+              for(let j=0; j< _this.tableData.length; j++) {
+                if( _this.tableData[j].templateId === _this.templateList[i].templateId) {
+                  _this.templateList[i].isChoosed = true
+                }
+              }
+            }
             resolve()
           })
           .catch((error) => {
@@ -148,8 +185,54 @@ export default {
       this.fetchList()
     },
     addTemplate(row) {
-      console.log(row)
       this.tableData.push(row)
+      this.templateList.map((ele) => {
+        if(ele.templateId === row.templateId) {
+          ele.isChoosed = true
+        }
+      })
+      this.$nextTick(() => {
+        this.templateList = this.templateList.slice(0)
+      })
+    },
+    submitSave() {
+      let templateIds = []
+      if(this.tableData.length) {
+        this.tableData.forEach((ele) => {
+          templateIds.push(ele.templateId)
+        })
+      }
+      this.isLoading = true
+      var _this = this
+      return new Promise((resolve, reject) => {
+        _this.columnData.templateIds = templateIds.length ? templateIds.join(',') : ''
+        editColumn(_this.columnData)
+          .then((response) => {
+            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+            _this.gotoListPage(_this)
+            _this.isLoading = false
+            resolve()
+          })
+          .catch((error) => {
+            _this.isLoading = false
+            reject(error)
+          })
+      })
+    },
+    gotoListPage(context) {
+      context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {
+        if (context.isActive(context.$route)) {
+          const latestView = visitedViews.slice(-1)[0]
+          if (latestView) {
+            context.$router.push(latestView)
+          } else {
+            context.$router.push('/')
+          }
+        }
+      })
+      context.$router.push({
+        path: '/cms/website/column'
+      })
     }
   }
 }
@@ -161,11 +244,16 @@ export default {
   padding-bottom:20px;
   .used-template {
      padding-right: 10px;
-    //  border-bottom: 1px solid  #fff;
     .used-template-title {
       margin-bottom: 22px;
     }
     .el-table {
+      .title-color {
+        color: #409EFF;
+      }
+      .fz-12{
+        font-size: 12px;
+      }
     }
     .el-icon-error {
       cursor: pointer;
