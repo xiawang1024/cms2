@@ -147,7 +147,7 @@ export default {
                 url: _this.formData.stampSetting.url
               }]
             } else {
-              _this.formData.iconUrl = []
+              _this.formData.url = []
             }
             resolve()
           })

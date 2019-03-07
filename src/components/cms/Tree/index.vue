@@ -27,12 +27,19 @@
 
 <script>
 import ContextMenu from '@/components/cms/ContextMenu/index.vue'
-
-import TreeData from './mockData.js'
+// import TreeData from './mockData.js'
 export default {
   name: 'WebTree',
   components: {
     ContextMenu
+  },
+  props: {
+    treeData: {
+      default: () => {
+        []
+      },
+      type: Array
+    }
   },
   data() {
     return {
@@ -41,7 +48,7 @@ export default {
       menuVisible: false,
       menuLeft: '0px',
       menuTop: '0px',
-      treeData: TreeData,
+      // treeData: TreeData,
       objectID: null,
       defaultProps: {
         children: 'children',
@@ -60,12 +67,11 @@ export default {
       console.log(object, node, element)
       this.menuVisible = false
       this.webSitTags = []
-
       this.generateTags(node, 'left')
     },
     // TODO:右键点击
     handleNodeContextmenu(event, object, node, element) {
-      console.log(event, object, node, element)
+      console.log(event, object, node, element, 'right')
       const { clientWidth, clientHeight, nodeName } = event.target
       if (nodeName.toLowerCase() === 'span') {
         if (this.objectID !== object.id) {

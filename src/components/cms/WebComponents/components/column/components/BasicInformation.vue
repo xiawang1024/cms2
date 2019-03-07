@@ -1,244 +1,43 @@
 <template>
-  <div class="basic-information-container">
-    <el-form :model="basicInformation">
-      <el-row :gutter="30">
-        <el-col
-          :xs="24"
-          :sm="12"
-          :md="12"
-          :lg="12"
-          :xl="12"
-        >
-          <el-form-item label="父级栏目:">
-            <el-input
-              v-model="basicInformation.parentColumn"
-              style="width:auto"
-              disabled
-            />
-          </el-form-item>
-        </el-col>
-        <el-col
-          :xs="24"
-          :sm="12"
-          :md="12"
-          :lg="12"
-          :xl="12"
-        >
-          <el-form-item label="前一栏目:">
-            <el-select
-              v-model="basicInformation.preColumn"
-              placeholder="请选择前一栏目"
-            >
-              <el-option
-                v-for="preColumn in preColumnList"
-                :key="preColumn.id"
-                :label="preColumn.name"
-                :value="preColumn.id"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col
-          :xs="24"
-          :sm="12"
-          :md="12"
-          :lg="12"
-          :xl="12"
-        >
-          <el-form-item label="访问域名:">
-            <el-input
-              v-model="basicInformation.domain"
-              style="width:auto"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col
-          :xs="24"
-          :sm="12"
-          :md="12"
-          :lg="12"
-          :xl="12"
-        >
-          <el-form-item label="存放位置:">
-            <el-input
-              v-model="basicInformation.location"
-              class="location"
-              style="width:auto"
-            >
-              <span
-                slot="prefix"
-                style="font-size:10px;user-select:none"
-              >目录:</span>
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col
-          :xs="24"
-          :sm="12"
-          :md="12"
-          :lg="12"
-          :xl="12"
-        >
-          <el-form-item label="创建人员:">
-            <el-input
-              v-model="basicInformation.creator"
-              style="width:auto"
-              disabled
-            />
-          </el-form-item>
-        </el-col>
-        <el-col
-          :xs="24"
-          :sm="12"
-          :md="12"
-          :lg="12"
-          :xl="12"
-        >
-          <el-form-item label="正常显示:">
-            <el-switch
-              v-model="basicInformation.display"
-              active-color="#13ce66"
-              active-text="正常"
-              inactive-text="隐藏"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col
-          :xs="24"
-          :sm="12"
-          :md="12"
-          :lg="12"
-          :xl="12"
-        >
-          <el-form-item label="其他数据:">
-            <el-input
-              :rows="3"
-              v-model="basicInformation.otherData"
-              style="max-width:400px;"
-              type="textarea"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col
-          :xs="24"
-          :sm="12"
-          :md="12"
-          :lg="12"
-          :xl="12"
-        >
-          <el-form-item label="管理人员:">
-            <el-input
-              v-model="basicInformation.manager"
-              style="width:auto"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col
-          :xs="24"
-          :sm="12"
-          :md="12"
-          :lg="12"
-          :xl="12"
-        >
-          <el-form-item label="栏目名称:">
-            <el-input
-              v-model="basicInformation.name"
-              style="width:auto"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col
-          :xs="24"
-          :sm="12"
-          :md="12"
-          :lg="12"
-          :xl="12"
-        >
-          <el-form-item label="栏目类型:">
-            <el-select
-              v-model="basicInformation.type"
-              placeholder="请选择栏目类型"
-            >
-              <el-option
-                v-for="type in typeList"
-                :key="type.id"
-                :label="type.name"
-                :value="type.id"
-              />
-            </el-select>
-            <el-input
-              v-model="basicInformation.type"
-              style="width:auto"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col
-          :xs="24"
-          :sm="12"
-          :md="12"
-          :lg="12"
-          :xl="12"
-        >
-          <el-form-item label="栏目图标:">
-            <upload />
-            <el-checkbox v-model="basicInformation.icon.isScale">是否缩放</el-checkbox>
-            <el-input
-              v-if="basicInformation.icon.isScale"
-              v-model="basicInformation.icon.scaleWidth"
-              style="width:auto"
-              placeholder="宽"
-            />
-            <el-input
-              v-if="basicInformation.icon.isScale"
-              v-model="basicInformation.icon.scaleHeight"
-              style="width:auto"
-              placeholder="高"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col
-          :xs="24"
-          :sm="12"
-          :md="12"
-          :lg="12"
-          :xl="12"
-        >
-          <el-form-item label="关键字:">
-            <el-input
-              :rows="3"
-              v-model="basicInformation.keyWords"
-              style="max-width:400px;"
-              type="textarea"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col
-          :xs="24"
-          :sm="12"
-          :md="12"
-          :lg="12"
-          :xl="12"
-        >
-          <el-form-item label="栏目描述:">
-            <el-input
-              :rows="3"
-              v-model="basicInformation.desc"
-              style="max-width:400px;"
-              type="textarea"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-button
-        size="small"
-        type="warning"
-      >保存</el-button>
-    </el-form>
+  <div class="colunm-add-edit">
+    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" :btn-loading = "isLoading">
+      <template slot="isScale">
+        <div>
+          <el-checkbox v-model="imageSetting.isScaleChecked">是否缩放</el-checkbox>
+          <el-input
+            v-if="imageSetting.isScaleChecked"
+            v-model="imageSetting.width"
+            style="width:10em"
+            type="number"
+            maxlength="3"
+            step="10"
+            max="100"
+            min="0"
+          >
+            <template slot="prepend">宽</template>
+          </el-input>
+          <el-input
+            v-if="imageSetting.isScaleChecked"
+            v-model="imageSetting.height"
+            style="width:10em"
+            type="number"
+            maxlength="3"
+            step="10"
+            max="100"
+            min="0"
+          >
+            <template slot="prepend">高</template>
+          </el-input>
+        </div>
+      </template>
+    </v-form>
   </div>
 </template>
 
 <script>
 const Upload = _ => import('@/components/cms/Upload/upload')
+import { columnInfor, editColumn } from '@/api/cms/columnManage'
+import { fetchDictByDictName } from '@/api/cms/dict'
 export default {
   name: 'BasicInformation',
   components: { Upload },
@@ -248,6 +47,14 @@ export default {
       default: function() {
         return {}
       }
+    },
+    activeName: {
+      type: String,
+      default: ''
+    },
+    channelId: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -308,10 +115,187 @@ export default {
           id: 4,
           name: '综艺'
         }
-      ]
+      ],
+      formSettings: [
+        {
+          items: [
+            {
+              label: '父级栏目',
+              name: 'parentChannelId',
+              type: 'text',
+              valueType: 'string',
+              placeholder: '请选择',
+              disabled: true
+            },
+            {
+              label: '位置排序',
+              name: 'seqNo',
+              type: 'text',
+              placeholder: '请输入排序'
+            },
+            {
+              label: '访问域名',
+              name: 'domainName',
+              type: 'text',
+              placeholder: '请输入访问域名'
+            },{
+              label:'存放位置',
+              name: 'domainPath',
+              type:'text',
+              placeholder: '请输入存放位置'
+            },{
+              label: '创建人员',
+              name: 'createUser',
+              type: 'text',
+              placeholder: '请输入创建人员',
+              disabled: true
+            },{
+              label: '正常显示',
+              name: 'hiddenFlag',
+              activeValue: 0,
+              inactiveValue: 1,
+              activeColor: '#13ce66',
+              value: 1,
+              type: 'switch'
+            },{
+              label: '其他数据',
+              name: 'extra',
+              type: 'textarea',
+              placeholder: '请输入其他数据'
+            },{
+              label:'管理人员',
+              name: 'managerUser',
+              type:'text',
+              placeholder: '请输入管理员'
+            },{
+              label:'栏目名称',
+              name:'channelName',
+              type:'text',
+              placeholder: '请输入栏目名称'
+            },
+            {
+              label: '栏目类型',
+              name: 'categoryId',
+              type: 'select',
+              options: [],
+              placeholder: '请选择'
+            },
+            {
+              label: '栏目图标',
+              name: 'iconUrl',
+              type: 'img',
+              limit: 1,
+              tip: '建议图片大小：1080*1642，图片大小不超过100K'
+           },
+           {
+              label: '',
+              name: 'isScale',
+              type: 'slot'
+           },
+           {
+              label:'关键字',
+              name:'keywordName',
+              type:'text',
+              placeholder: '请输入关键字'
+           },{
+              label:'栏目描述',
+              name:'descriptionRemark',
+              type:'textarea',
+               placeholder: '请输入栏目描述'
+            }
+          ]
+        }
+      ],
+      formData: {},
+      isLoading: false,
+      imageSetting: {
+        isScaleChecked: false,
+        height: '',
+        width: ''
+      }
     }
   },
-  methods: {}
+  watch: {
+    activeName(val) {
+      if(val === 'information') {
+        this.getColumns()
+        this.getColumnInfor()
+      }
+    }
+  },
+  mounted() {
+  },
+  created() {
+    this.getColumns()
+    this.getColumnInfor()
+  },
+  methods: {
+    // 查询栏目类型
+    getColumns() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        fetchDictByDictName('栏目类型')
+          .then((response) => {
+            if (response.data.result.details && response.data.result.details.length) {
+              _this.formSettings[0].items[9].options = response.data.result.details.map((ele) => {
+                return {
+                  label: ele.dictDetailValue,
+                  value: ele.dictDetailValue
+                }
+              })
+            }
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    getColumnInfor() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        columnInfor(_this.channelId)
+          .then((response) => {
+            _this.formData = response.data.result
+            if(_this.formData.iconUrl) {
+              _this.formData.iconUrl = [{
+                url: _this.formData.iconUrl
+              }]
+            } else {
+              _this.formData.iconUrl = []
+            }
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    submitSave(formData) {
+      this.isLoading = true
+      var _this = this
+      let iconUrlArray = []
+      if(formData.iconUrl.length) {
+        formData.iconUrl.forEach(ele => {
+          iconUrlArray.push(ele.url)
+        })
+      }
+      formData.iconUrl = iconUrlArray.length ? iconUrlArray.join(',') : ''
+      return new Promise((resolve, reject) => {
+        formData.channelId = _this.channelId
+        editColumn(formData)
+          .then((response) => {
+            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+            _this.isLoading = false
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+            _this.isLoading = false
+          })
+      })
+    }
+  }
 }
 </script>
 

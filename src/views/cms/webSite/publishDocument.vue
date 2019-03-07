@@ -15,7 +15,7 @@
             wrap-class="scrollbar-wrapper"
             style="height:100%;"
           >
-            <tree />
+            <tree :tree-data = "tableData"/>
           </el-scrollbar>
         </div>
       </template>
@@ -26,8 +26,9 @@
             style="height:100%;"
           >
             <WebComponents :component-type="contextMenu.id" />
-            {{ contextMenu }}
           </el-scrollbar>
+          {{ contextMenu }}
+          123456
         </div>
       </template>
     </split-pane>
@@ -39,16 +40,26 @@ import WebSiteTag from '@/components/cms/WebSiteTag'
 import splitPane from 'vue-splitpane'
 import Tree from '@/components/cms/Tree'
 import WebComponents from '@/components/cms/WebComponents'
-
 import { mapGetters } from 'vuex'
-
+import { columnList } from '@/api/cms/columnManage'
+import mixins from '@/components/cms/mixins'
 export default {
   name: 'WebSiteWrap',
   components: { WebSiteTag, splitPane, Tree, WebComponents },
+  mixins: [mixins],
   data() {
     return {
-      componentType: '1'
+      componentType: '1',
+      pageNum: 1,
+      pageSize: 1000,
+      tableData: []
     }
+  },
+  computed: {
+    ...mapGetters(['contextMenu', 'choosedColumn'])
+  },
+  mounted() {
+    this.columnList()
   },
   // TODO:webSiteViewType
   beforeRouteEnter(to, from, next) {
@@ -68,13 +79,24 @@ export default {
     }
     next()
   },
-  computed: {
-    ...mapGetters(['contextMenu'])
-  },
   methods: {
     resize() {
       console.log('resize')
-    }
+    },
+    columnList() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        columnList({}, _this.pageNum, _this.pageSize)
+          .then((response) => {
+            _this.tableData = _this.toTree(response.data.result.content)
+            console.log(_this.tableData, 'data')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
   }
 }
 </script>
