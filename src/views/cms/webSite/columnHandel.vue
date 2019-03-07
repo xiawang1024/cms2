@@ -1,12 +1,42 @@
 <template>
   <div class="colunm-add-edit">
-    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" :btn-loading = "isLoading"/>
+    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" :btn-loading = "isLoading">
+      <template slot="isScale">
+        <div>
+          <el-checkbox v-model="imageSetting.isScaleChecked">是否缩放</el-checkbox>
+          <el-input
+            v-if="imageSetting.isScaleChecked"
+            v-model="imageSetting.width"
+            style="width:10em"
+            type="number"
+            maxlength="3"
+            step="10"
+            max="100"
+            min="0"
+          >
+            <template slot="prepend">宽</template>
+          </el-input>
+          <el-input
+            v-if="imageSetting.isScaleChecked"
+            v-model="imageSetting.height"
+            style="width:10em"
+            type="number"
+            maxlength="3"
+            step="10"
+            max="100"
+            min="0"
+          >
+            <template slot="prepend">高</template>
+          </el-input>
+        </div>
+      </template>
+    </v-form>
   </div>
 </template>
 
 <script>
 // const Upload = _ => import('@/components/cms/Upload/upload')
-import { columnInfor } from '@/api/cms/columnManage'
+import { columnInfor, addColumn, editColumn } from '@/api/cms/columnManage'
 import { fetchDictByDictName } from '@/api/cms/dict'
 import { fetchComponentList } from '@/api/cms/component'
 export default {
@@ -30,7 +60,8 @@ export default {
               name: 'parentChannelId',
               type: 'text',
               valueType: 'string',
-              placeholder: '请选择'
+              placeholder: '请选择',
+              disabled: true
             },
             {
               label: '位置排序',
@@ -52,7 +83,8 @@ export default {
               label: '创建人员',
               name: 'createUser',
               type: 'text',
-              placeholder: '请输入创建人员'
+              placeholder: '请输入创建人员',
+              disabled: true
             },{
               label: '正常显示',
               name: 'hiddenFlag',
@@ -88,8 +120,13 @@ export default {
               label: '栏目图标',
               name: 'iconUrl',
               type: 'img',
-              limit: 2,
+              limit: 1,
               tip: '建议图片大小：1080*1642，图片大小不超过100K'
+           },
+           {
+              label: '',
+              name: 'isScale',
+              type: 'slot'
            },
            {
               label:'关键字',
@@ -108,7 +145,12 @@ export default {
       formData: {},
       routeQuery: {},
       isEdit: false,
-      isLoading: false
+      isLoading: false,
+      imageSetting: {
+        isScaleChecked: false,
+        height: '',
+        width: ''
+      }
     }
   },
   mounted() {
@@ -163,7 +205,13 @@ export default {
         columnInfor(_this.routeQuery.channelId)
           .then((response) => {
             _this.formData = response.data.result
-            _this.formData.iconUrl =  _this.formData.iconUrl ? _this.formData.iconUrl.split(',') : []
+            if(_this.formData.iconUrl) {
+              _this.formData.iconUrl = [{
+                url: _this.formData.iconUrl
+              }]
+            } else {
+              _this.formData.iconUrl = []
+            }
             resolve()
           })
           .catch((error) => {
@@ -174,41 +222,43 @@ export default {
     submitSave(formData) {
       this.isLoading = true
       var _this = this
-      console.log(formData, 'formData')
-      console.log(formData.iconUrl.length)
-      formData.iconUrl = formData.iconUrl.length ? formData.iconUrl.join(',') : ''
-      console.log(formData, 'formData')
-      console.log(_this)
-      // if (!this.isEdit) {
-      //   return new Promise((resolve, reject) => {
-      //     addColumn(formData)
-      //       .then((response) => {
-      //         _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-      //         _this.gotoListPage(_this)
-      //         resolve()
-      //         _this.isLoading = false
-      //       })
-      //       .catch((error) => {
-      //         _this.isLoading = false
-      //         reject(error)
-      //       })
-      //   })
-      // } else {
-      //   return new Promise((resolve, reject) => {
-      //     formData.channelId = _this.routeQuery.channelId
-      //     editColumn(formData)
-      //       .then((response) => {
-      //         _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-      //         _this.gotoListPage(_this)
-      //         _this.isLoading = false
-      //         resolve()
-      //       })
-      //       .catch((error) => {
-      //         reject(error)
-      //         _this.isLoading = false
-      //       })
-      //   })
-      // }
+      let iconUrlArray = []
+      if(formData.iconUrl.length) {
+        formData.iconUrl.forEach(ele => {
+          iconUrlArray.push(ele.url)
+        })
+      }
+      formData.iconUrl = iconUrlArray.length ? iconUrlArray.join(',') : ''
+      if (!this.isEdit) {
+        return new Promise((resolve, reject) => {
+          addColumn(formData)
+            .then((response) => {
+              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+              _this.gotoListPage(_this)
+              resolve()
+              _this.isLoading = false
+            })
+            .catch((error) => {
+              _this.isLoading = false
+              reject(error)
+            })
+        })
+      } else {
+        return new Promise((resolve, reject) => {
+          formData.channelId = _this.routeQuery.channelId
+          editColumn(formData)
+            .then((response) => {
+              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+              _this.gotoListPage(_this)
+              _this.isLoading = false
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+              _this.isLoading = false
+            })
+        })
+      }
     },
     gotoListPage(context) {
       context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {
@@ -229,7 +279,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .colunm-add-edit {
   margin: 30px;
   .el-form {
@@ -237,6 +287,9 @@ export default {
       .el-input {
         width: 185px !important;
       }
+    }
+    .el-input-group__prepend {
+      padding: 0 10px;
     }
   }
 }

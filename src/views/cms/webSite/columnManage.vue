@@ -1,13 +1,26 @@
 <template>
   <div class="column-manage">
+    <div class="el-card__header">
+      <v-search :search-settings="searchSettings" @search="searchItem"/>
+    </div>
     <div class="tool-bar">
       <el-button type="primary" @click="columnAddEdit(true, 'father')" size="small">添加</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="channelName" label="栏目名称"/>
-      <el-table-column prop="hiddenFlag" label="状态"/>
+      <el-table-column prop="channelName" label="栏目名称" min-width="200"/>
+      <el-table-column prop="hiddenFlag" label="状态">
+        <template slot-scope="scope">
+          <span v-if="scope.row.hiddenFlag == 1">隐藏</span>
+          <span v-else>显示</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="seqNo" label="排序"/>
-      <el-table-column prop="parentChannelId" label="是否根节点"/>
+      <el-table-column prop="parentChannelId" label="是否根节点" width="100">
+        <template slot-scope="scope">
+          <span v-if="scope.row.parentChannelId == '-1'">是</span>
+          <span v-else>否</span>
+        </template>
+      </el-table-column>
       <el-table-column label="设置" width="300">
         <template slot-scope="scope">
           <el-button type="text" @click="columnTemplate(scope.row)">栏目模板</el-button>
@@ -49,17 +62,46 @@ export default {
       tableData: [],
       pageNum: 1,
       pageSize: 10,
-      totalCount: 0
+      totalCount: 0,
+      searchSettings: [{
+        label: '栏目名称',
+        name: 'channelName',
+        placeholder: '请输入栏目名称',
+        visible: true,
+        type: 'text'
+      }, {
+        label: '状态',
+        name: 'hiddenFlag',
+        placeholder: '请选择',
+        visible: true,
+        type: 'select',
+        options: [
+          {
+            label: '显示',
+            value: 0          
+          },
+          {
+            label: '隐藏',
+            value: 1          
+          }
+        ]
+      }],
+      searchData: {}
     }
   },
   mounted() {
     this.columnList()
   },
   methods: {
+    searchItem(searchData) {
+      this.searchData = searchData
+      this.pageNum = 1
+      this.columnList()
+    },
     columnList() {
       var _this = this
       return new Promise((resolve, reject) => {
-        columnList({}, _this.pageNum, _this.pageSize)
+        columnList(_this.searchData, _this.pageNum, _this.pageSize)
           .then((response) => {
             _this.tableData = response.data.result.content
             _this.totalCount = response.data.result.total
@@ -158,10 +200,11 @@ export default {
 .column-manage {
   margin:30px;
   .tool-bar {
-    text-align: right;
+    margin-top:22px;
   }
   .pagination {
     margin-top:20px;
+    margin-bottom:20px;
   }
 }
 </style>

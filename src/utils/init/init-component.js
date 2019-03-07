@@ -9,7 +9,7 @@ import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
 
 // 引入自定义全局组件
 // import vPage from '@/components/page/'
-// import vSearch from '@/components/search'
+import vSearch from '@/common/search'
 import vForm from '@/common/form'
 // import formGenerator from '@/components/formGenerator'
 
@@ -20,7 +20,7 @@ export function initComponent(Vue) {
   Vue.use(ELEMENT)
   Vue.component(CollapseTransition.name, CollapseTransition)
   // Vue.use(vPage)
-  // Vue.use(vSearch)
+  Vue.use(vSearch)
   Vue.use(vForm)
   // Vue.component('formGenerator', formGenerator)
 
