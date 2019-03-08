@@ -138,6 +138,10 @@ export default {
       // this.centerDialogVisible = true
       // this.$refs.choosedDialog
       // console.log(this.$refs)
+      if(command == 2) {
+        const select = { id: '1', label: '新建文档' }
+        this.$store.dispatch('setContextMenu', select)
+      }
     },
     createDocument() {
       const select = { id: '1', label: '新建文档' }
