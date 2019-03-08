@@ -1,6 +1,6 @@
 <template>
   <div class="colunm-add-edit">
-    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" :btn-loading = "isLoading">
+    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" :show-return="showReturn" :btn-loading = "isLoading" @onReturn = "onReturn">
       <template slot="isScale">
         <div>
           <el-checkbox v-model="imageSetting.isScaleChecked">是否缩放</el-checkbox>
@@ -42,12 +42,6 @@ export default {
   name: 'BasicInformation',
   components: { Upload },
   props: {
-    data: {
-      type: Object,
-      default: function() {
-        return {}
-      }
-    },
     activeName: {
       type: String,
       default: ''
@@ -212,7 +206,8 @@ export default {
         isScaleChecked: false,
         height: '',
         width: ''
-      }
+      },
+      showReturn: true
     }
   },
   watch: {
@@ -293,6 +288,12 @@ export default {
             reject(error)
             _this.isLoading = false
           })
+      })
+    },
+    onReturn() {
+      this.$store.dispatch('setContextMenu', {
+        id: '0',
+        label: ''
       })
     }
   }

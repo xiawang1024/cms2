@@ -16,6 +16,8 @@
       :filter-node-method="filterNode"
       @node-click="handleNodeClick"
       @node-contextmenu="handleNodeContextmenu"
+      :default-checked-keys = "defaultChecked"
+      node-key="id"
     />
     <context-menu
       :visible="menuVisible"
@@ -53,13 +55,26 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'label'
-      }
+      },
+      defaultChecked: []
     }
   },
   watch: {
     filterText(val) {
       this.$refs.websitTree.filter(val)
+    },
+    treeData(val) {
+      if (val.length) {
+        console.log('setKey')
+        // this.defaultChecked = [val[0].id]
+        // this.$refs.websitTree.setCheckedNodes([{
+        //   id: val[0].id,
+        //   label: val[0].label
+        // }])
+      }
     }
+  },
+  mounted() {
   },
   methods: {
     // TODO:左键点击

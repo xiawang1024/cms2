@@ -1,20 +1,21 @@
 <template>
   <div class="basicContent-wrap">
     <div class="tool-bar clearfix">
-      <span style="color:#454545;font-weight:600;margin-right:10px">文档类型:</span>
-      <el-select v-model="selectType" placeholder="请选择">
-        <el-option v-for="type in types" :key="type.id" :label="type.name" :value="type.id"/>
-      </el-select>
-      <div class="tool-bar pull-right">
-        <el-button type="warning" @click="goBack">返回</el-button>
-        <el-button type="warning" @click="handleSave">保存</el-button>
-        <el-button type="warning" @click="handleSaveAddRelease">保存并发布</el-button>
-      </div>
+      <el-form ref="form" :model="typeForm" label-width="80px">
+        <el-form-item label="文档类型">
+          <el-radio-group v-model="typeForm.type" size="small" @change="typeChange">
+            <el-radio-button label="1">图文</el-radio-button>
+            <el-radio-button label="2">图集</el-radio-button>
+            <el-radio-button label="3">拼条</el-radio-button>
+            <el-radio-button label="4">转载</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
     </div>
-    <imageText v-if="selectType == 1"/>
-    <images v-if="selectType == 2"/>
-    <splicing v-if="selectType == 3"/>
-    <reproduce v-if="selectType == 4"/>
+    <imageText v-if="typeForm.type == 1"/>
+    <images v-if="typeForm.type == 2"/>
+    <splicing v-if="typeForm.type == 3"/>
+    <reproduce v-if="typeForm.type == 4"/>
   </div>
 </template>
 <script>
@@ -27,25 +28,9 @@ export default {
   components: { imageText, images, splicing, reproduce },
   data() {
     return {
-      types: [
-        {
-          id: 1,
-          name: '图文'
-        },
-        {
-          id: 2,
-          name: '图集'
-        },
-        {
-          id: 3,
-          name: '拼条'
-        },
-        {
-          id: 4,
-          name: '转载'
-        }
-      ],
-      selectType: 1
+      typeForm: {
+        type: '1'
+      }
     }
   },
   methods: {
@@ -56,19 +41,26 @@ export default {
         id: '0',
         label: ''
       })
+    },
+    typeChange(val) {
+      console.log(val)
     }
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss" >
 .basicContent-wrap {
   margin: 0;
+  .tool-bar{
+    label {
+      font-weight: normal;
+    }
+  }
 }
 
 .pull-right {
   float: right;
 }
-
 .clearfix:before,
 .clearfix:after {
   display: table;

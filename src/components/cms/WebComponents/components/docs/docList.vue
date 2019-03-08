@@ -11,8 +11,8 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"/>
-      <el-table-column fixed prop="id" label="ID/序号" width="100"/>
-      <el-table-column fixed prop="title" label="标题" min-width="160" show-overflow-tooltip/>
+      <el-table-column fixed prop="articleId" label="ID/序号" width="100"/>
+      <el-table-column fixed prop="articleTitle" label="标题" min-width="160" show-overflow-tooltip/>
       <el-table-column label="查看" width="60">
         <template slot-scope="scope">
           <i class="el-icon-view" style="cursor:pointer" @click="openWindow(scope.row.outLink)"/>
@@ -24,8 +24,8 @@
           <i class="el-icon-view" style="cursor:pointer" @click="openWindow(scope.row.preview)"/>
         </template>
       </el-table-column>
-      <el-table-column prop="docType" label="类型" width="100"/>
-      <el-table-column prop="status" label="状态" width="100"/>
+      <el-table-column prop="articleType" label="类型" width="100"/>
+      <el-table-column prop="articleStatus" label="状态" width="100"/>
       <el-table-column prop="mark" label="标记" width="100"/>
       <el-table-column
         prop="createTime"
@@ -55,15 +55,20 @@
 </template>
 
 <script>
-import { DocList } from './mockData.js'
 export default {
+  props: {
+    tableData: {
+      type: Array,
+      default: ()=> {
+        []
+      }
+    }
+  },
   data() {
     return {
-      tableData: DocList,
       multipleSelection: []
     }
   },
-
   methods: {
     toggleSelection(rows) {
       if (rows) {

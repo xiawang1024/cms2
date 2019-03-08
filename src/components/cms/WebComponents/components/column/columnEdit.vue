@@ -5,7 +5,7 @@
         <BasicInformation :active-name = "activeName" :channel-id = "treeTags[treeTags.length - 1].id"/>
       </el-tab-pane>
       <el-tab-pane label="设置栏目模板" name="templet">
-        <ColumnTemplet :active-name = "activeName" :channel-id = "treeTags[treeTags.length - 1].id"/>
+        <ColumnTemplet :active-name = "activeName" :channel-array = "treeTags"/>
       </el-tab-pane>
       <el-tab-pane label="拓展字段" name="field">
         <ExtendField :active-name = "activeName" :channel-id = "treeTags[treeTags.length - 1].id"/>

@@ -11,12 +11,14 @@
         <RelatedDocuments/>
       </el-tab-pane>
     </el-tabs>
+    {{ treeTags }}
   </div>
 </template>
 <script>
 import PicturesAndAccessories from './picturesAndAccessories'
 import BasicContent from './basicContent'
 import RelatedDocuments from './relatedDocuments'
+import { mapGetters } from 'vuex'
 export default {
   name: 'DocsWrap',
   components: {
@@ -28,7 +30,10 @@ export default {
     return {
       activeName: 'basicContent'
     }
-  }
+  },
+  computed: {
+    ...mapGetters(['treeTags'])
+  },
 }
 </script>
 <style lang="scss" scoped>

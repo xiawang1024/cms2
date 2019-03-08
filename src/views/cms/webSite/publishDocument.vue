@@ -89,7 +89,6 @@ export default {
         columnList({}, _this.pageNum, _this.pageSize)
           .then((response) => {
             _this.tableData = _this.toTree(response.data.result.content)
-            console.log(_this.tableData, 'data')
             resolve()
           })
           .catch((error) => {

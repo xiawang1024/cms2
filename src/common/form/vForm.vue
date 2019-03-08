@@ -166,6 +166,7 @@
       <el-form-item v-if="showButton">
         <el-button :loading="btnLoading" class="save-btn" type="primary" @click="onSave">{{ submitName }}</el-button>
         <el-button v-if="showCancel" class="cancel-btn" @click="onCancel">取消</el-button>
+        <el-button v-if="showReturn" class="cancel-btn" @click="onReturn">返回</el-button>
       </el-form-item>
       <slot name="bottom-slot"/>
     </el-form>
@@ -260,6 +261,10 @@ export default {
     submitName: {
       type: String,
       default: '保存'
+    },
+    showReturn: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -660,9 +665,7 @@ export default {
     },
     // 获取表单数据
     getFormData() {
-      console.log(this.formModel, '663')
       let data = Object.assign({}, this.formModel)
-      console.log(data, '665')
       if (this.flatFormSettings) {
         Object.keys(this.flatFormSettings).forEach(item => {
           let formItem = this.flatFormSettings[item]
@@ -689,7 +692,6 @@ export default {
           }
         })
       }
-      console.log(data, '691')
       return data
     },
     // 点击保存按钮回调
@@ -705,6 +707,10 @@ export default {
             this.$el.querySelector('.el-form-item.is-error').scrollIntoView()
           })
         })
+    },
+    // 点击返回
+    onReturn() {
+      this.$emit('onReturn')
     },
     // 修改某一项的值
     setData(name, value) {

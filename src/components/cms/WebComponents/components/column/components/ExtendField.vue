@@ -1,7 +1,8 @@
 <template>
-  <div class="extends-word">
+  <div class="extends-word-document">
     <div class="extends-word-add">
       <el-button type="primary" @click="handelWord('add')" size="small">创建扩展字段</el-button>
+      <el-button @click="onReturn" size="small">返回</el-button>
     </div>
     <el-table :data="extFieldsList" style="width: 100%">
       <el-table-column prop="label" label="字段名称" min-width="180"/>
@@ -80,18 +81,6 @@ export default {
           })
       })
     },
-    createExtends() {
-      var _this = this
-      return new Promise((resolve, reject) => {
-        columnInfor(_this.routeQuery.channelId)
-          .then((response) => {
-            resolve()
-          })
-          .catch((error) => {
-            reject(error)
-          })
-      })
-    },
     submitSuccess() {
       this.getColumnInfor()
     },
@@ -123,15 +112,22 @@ export default {
       this.params.type = type
       this.params.extFieldInfor = row
       this.dialogVisible = true
+    },
+    // 返回
+    onReturn() {
+      this.$store.dispatch('setContextMenu', {
+        id: '0',
+        label: ''
+      })
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-  .extends-word {
-    margin: 30px;
+  .extends-word-document {
+    margin: 20px;
     .extends-word-add {
-      text-align: right;
+      // text-align: right;
     }
   }
 </style>

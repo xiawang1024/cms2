@@ -3,8 +3,8 @@
     <el-pagination
       :current-page="currentPage"
       :page-sizes="[10, 20, 30, 40]"
-      :page-size="10"
-      :total="400"
+      :page-size="pageSize"
+      :total="total"
       layout="total, sizes, prev, pager, next, jumper"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -14,17 +14,26 @@
 <script>
 export default {
   name: 'DocFoot',
+  props: {
+    total: {
+    type: Number,
+    default: 0
+    }
+  },
   data() {
     return {
-      currentPage: 1
+      currentPage: 1,
+      pageSize: 10
     }
   },
   methods: {
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+      this.pageSize = val
+      this.$emit('sizeChange', val)
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.currentPage = val
+      this.$emit('pageChange', val)
     }
   }
 }
