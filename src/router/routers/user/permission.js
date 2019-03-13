@@ -8,13 +8,13 @@ console.log(path)
 const permission = {
   path: `/${userPath}/permission`,
   component: Layout,
-  meta: { title: 'permission', icon: 'webSite', permission: 'admin' },
+  meta: { title: 'permission', icon: 'webSite', role: 'platform:permission' },
   children: [
     {
       path: '',
       component: () => import(`@/${path}/index`),
       name: 'permission',
-      meta: { title: 'permission', icon: 'webSite', permission: 'admin' },
+      meta: { title: 'permission', icon: 'webSite', role: 'platform:permission' },
       hidden: true
     }
   ]

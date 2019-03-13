@@ -73,10 +73,10 @@ const user = {
           .then((response) => {
             const data = response.data
 
-            if (data.client_authorities && data.client_authorities.length > 0) {
+            if (data.user_authorities.permissionCodeList && data.user_authorities.permissionCodeList.length > 0) {
               // 验证返回的authorities是否是一个非空数组
 
-              commit('SET_AUTHORITIES', data.client_authorities)
+              commit('SET_AUTHORITIES', data.user_authorities.permissionCodeList)
             } else {
               reject('getInfo: authorities must be a non-null array !')
             }

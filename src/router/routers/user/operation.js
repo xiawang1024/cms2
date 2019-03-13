@@ -8,13 +8,13 @@ console.log(path)
 const operation = {
   path: `/${userPath}/operation`,
   component: Layout,
-  meta: { title: 'operation', icon: 'webSite', permission: 'admin' },
+  meta: { title: 'operation', icon: 'webSite', role: 'platform:operation' },
   children: [
     {
       path: '',
       component: () => import(`@/${path}/index`),
       name: 'operation',
-      meta: { title: 'operation', icon: 'webSite', permission: 'admin' },
+      meta: { title: 'operation', icon: 'webSite', role: 'platform:operation' },
       hidden: true
     }
   ]
