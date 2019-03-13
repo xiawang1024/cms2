@@ -4,6 +4,7 @@
     <doc-list :table-data="tableData"/>
     <DocFoot :total="totalCount" @sizeChange = "sizeChange" @pageChange="pageChange"/>
     {{ treeTags }}
+    {{ contextMenu }}
   </div>
 </template>
 <script>
@@ -30,13 +31,22 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['treeTags'])
+    ...mapGetters(['treeTags', 'contextMenu'])
   },
   watch: {
     treeTags(val) {
+      console.log(val, 'treeTags')
       if(val) {
         this.channelId = val[val.length - 1].id
         this.documentList(val)
+      }
+    }
+  },
+  created() {
+    if(this.contextMenu.id == '0') {
+      if(this.treeTags && this.treeTags.length) {
+        this.channelId = this.treeTags[this.treeTags.length - 1].id
+        this.documentList()
       }
     }
   },

@@ -3,23 +3,23 @@
     <el-row :gutter="10">
       <el-col :xs="12" :sm="12" :md="14" :lg="14" :xl="14">
         <el-form ref="docContentForm" :model="docContentForm" :rules="rules" label-width="80px" class="docContentForm">
-          <el-form-item label="文档标题" prop="textTitle">
-            <el-input v-model="docContentForm.textTitle"/>
+          <el-form-item label="文档标题" prop="articleTitle">
+            <el-input v-model="docContentForm.articleTitle"/>
           </el-form-item>
-          <el-form-item label="首页标题" prop="indexTitle">
-            <el-input v-model="docContentForm.indexTitle"/>
+          <el-form-item label="首页标题" prop="contentTitle">
+            <el-input v-model="docContentForm.contentTitle"/>
           </el-form-item>
-          <el-form-item label="" prop="indexTitle">
+          <el-form-item label="">
             <div class="grid-content bg-purple">
-              <Tinymce ref="editor" :height="400" v-model="docContentForm.content"/>
+              <Tinymce ref="editor" :height="400" v-model="docContentForm.contentBody"/>
             </div>
           </el-form-item>
         </el-form>
         <div class="btn-list">
-          <el-button type = "primary" size="small" @click = "save">预览</el-button>
-          <el-button type = "primary" size="small" @click = "save">存草稿</el-button>
-          <el-button type = "primary" size="small" @click = "save">保存并关闭</el-button>
-          <el-button type = "primary" size="small" @click = "save">保存并发布</el-button>
+          <el-button type = "primary" size="small" @click = "goBack">返回</el-button>
+          <el-button type = "primary" size="small" @click = "save('docContentForm')">存草稿</el-button>
+          <!-- <el-button type = "primary" size="small" @click = "save">保存并关闭</el-button>
+          <el-button type = "primary" size="small" @click = "save">保存并发布</el-button> -->
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :md="10" :lg="10" :xl="10" class="document-right">
@@ -39,11 +39,20 @@
               <span>其他属性</span>
             </div>
             <div>
-              <v-form ref="otherForm" :form-settings="otherSettings" :form-data="formData" label-width="80px" :show-button = "showButton"/>
+              <v-form ref="otherForm" :form-settings="otherSettings" :form-data="formData" label-width="80px" :show-button = "showButton">
+                <template slot="set">
+                  <div class="set">
+                    <el-checkbox>置顶</el-checkbox>
+                    <el-checkbox>隐身</el-checkbox>
+                    <span class = "extractCode">提取码</span>
+                    <el-input/>
+                  </div>
+                </template>
+              </v-form>
             </div>
           </el-card>
         </div>
-        <div class="file-attribute">
+        <!-- <div class="file-attribute">
           <el-card class="box-card">
             <div slot="header" class="clearfix">
               <span>图片和附件</span>
@@ -53,61 +62,86 @@
               <el-button type="text" size="small">上传其他文件</el-button>
             </div>
           </el-card>
-        </div>
+        </div> -->
       </el-col>
     </el-row>
   </div>
 </template>
 <script>
 import Tinymce from '@/components/Tinymce'
+import { createDocument, editDocument } from '@/api/cms/article'
+import { mapGetters } from 'vuex'
 export default {
   name: 'ImageText',
   components: { Tinymce },
+  props: {
+    extendsList: {
+      default: ()=> {
+        return []
+      },
+      type: Array
+    },
+    channelId: {
+      default: '',
+      type: String
+    },
+    docInfor: {
+      default: ()=> {
+        return {}
+      },
+      type: Object
+    }
+  },
   data() {
     return {
       docContentForm: {
-        textTitle: '',
-        indexTitle: '',
-        content: ''
+        articleTitle: '',
+        contentTitle: '',
+        contentBody: ''
       },
       rules: {
-        textTitle: [
+        articleTitle: [
           { required: true, message: '请输入文档标题', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 0, max: 17, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
-        indexTitle: [
+        contentTitle: [
           { required: true, message: '请输入首页标题', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 0, max: 17, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
       },
       formData: {},
+      set: {
+        topFlag: 0,
+        hiddenFlag: 0,
+        extractCode: ''
+      },
       isLoading: false,
       baseSettings: [
         {
           items: [
             {
               label: '关键词',
-              name: 'keyWord',
+              name: 'seoKeywords',
               type: 'text',
               valueType: 'string',
               placeholder: '请输入关键词'
             },
             {
               label: '来源',
-              name: 'source',
+              name: 'articleOrigin',
               type: 'text',
               placeholder: '请输入来源'
             },
             {
               label: '作者',
-              name: 'author',
+              name: 'articleAuthor',
               type: 'text',
               valueType: 'string',
               placeholder: '请输入作者'
             },
             {
               label: '摘要',
-              name: 'digest',
+              name: 'seoDescription',
               type: 'textarea',
               placeholder: '请输入摘要'
             }
@@ -133,45 +167,111 @@ export default {
                 }]
             },
             {
+              label: '点击量',
+              name: 'clickNum',
+              type: 'number',
+              placeholder: '请输入点击量'
+            },
+            {
+              label: '创建时间',
+              name: 'createTime',
+              type: 'date'
+            },
+            {
               label: '设置',
               name: 'set',
-              type: 'checkbox',
-              options: [{
-                label: '置顶',
-                value: '1'
-                }, {
-                  label: '隐身',
-                  value: '2'
-                }]
+              type: 'slot',
             },
             {
-              label: '直播地址',
-              name: 'author',
-              type: 'text',
-              valueType: 'string',
-              placeholder: '请输入直播地址'
+              label: '排序号',
+              name: 'seqNo',
+              type: 'number'
             },
-            {
-              label: '在线人数',
-              name: 'digest',
-              type: 'text',
-              placeholder: '请输入在线人数'
-            },
-            {
-              label: '定时功能',
-              name: 'ding',
-              type: 'text',
-              placeholder: '请输入在线人数'
-            }
           ]
         }
       ],
       showButton: false
     }
   },
+  computed: {
+    ...mapGetters(['contextMenu'])
+  },
+  watch: {
+    extendsList(val) {
+      this.otherSettings[0].items = this.otherSettings[0].items.concat(val)
+      console.log('val')
+    },
+    docInfor(val) {
+      this.formData = val
+      this.docContentForm = {
+        articleTitle: val.articleTitle,
+        contentTitle: val.contentTitle,
+        contentBody: val.contentBody
+      }
+    }
+  },
+  mounted() {
+    this.docContentForm = {
+      articleTitle: '',
+      contentTitle: '',
+      contentBody: ''
+    }
+    console.log(this.extendsList, 'extendsList')
+    this.otherSettings[0].items = this.otherSettings[0].items.concat(this.extendsList)
+  },
   methods: {
-    save() {
-      console.log(this.$refs.baseForm.formModel)
+    goBack() {
+      this.$store.dispatch('setContextMenu', {
+        id: '0',
+        label: ''
+      })
+    },
+    createDoc(formData) {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        createDocument(formData)
+          .then((response) => {
+            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+            resolve()
+            _this.isLoading = false
+          })
+          .catch((error) => {
+            _this.isLoading = false
+            reject(error)
+          })
+      })
+    },
+    editDoc(formData) {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        editDocument(formData)
+          .then((response) => {
+            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+            resolve()
+            _this.isLoading = false
+          })
+          .catch((error) => {
+            _this.isLoading = false
+            reject(error)
+          })
+      })
+    },
+    save(formName) {
+      let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.docContentForm)
+      resoultObj.channelId = this.channelId
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          if(this.contextMenu.docId) {
+            resoultObj.articleId = this.contextMenu.docId
+            this.editDoc(resoultObj)
+          } else {
+            this.createDoc(resoultObj)
+          }
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      })
     }
   }
 }
@@ -212,6 +312,18 @@ export default {
     }
     .other-attribute {
       margin-bottom: 10px;
+      .set {
+        .extractCode {
+          margin-left: 10px;
+          margin-right: 10px;
+        }
+        .el-input {
+          width:100px
+        }
+        .el-checkbox {
+          margin-right: 10px;
+        }
+      }
     }
     .file-attribute {
       .btn {

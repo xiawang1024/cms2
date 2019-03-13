@@ -32,6 +32,7 @@ const webSite = {
       commit('SET_TREE_TAGS', tags)
     },
     setContextMenu: ({ commit }, menu) => {
+      console.log('setContet')
       commit('SET_CONTEXT_MENU', menu)
     }
   }

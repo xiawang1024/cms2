@@ -15,11 +15,12 @@ import vForm from '@/common/form'
 
 // 引入本地化存储接口
 // import localforage from 'localforage'
-
+// 引入上传文件组件
+import upLoader from '@/common/uploader'
 export function initComponent(Vue) {
   Vue.use(ELEMENT)
   Vue.component(CollapseTransition.name, CollapseTransition)
-  // Vue.use(vPage)
+  Vue.use(upLoader)
   Vue.use(vSearch)
   Vue.use(vForm)
   // Vue.component('formGenerator', formGenerator)

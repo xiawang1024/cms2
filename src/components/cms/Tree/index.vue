@@ -79,14 +79,12 @@ export default {
   methods: {
     // TODO:左键点击
     handleNodeClick(object, node, element) {
-      console.log(object, node, element)
       this.menuVisible = false
       this.webSitTags = []
       this.generateTags(node, 'left')
     },
     // TODO:右键点击
     handleNodeContextmenu(event, object, node, element) {
-      console.log(event, object, node, element, 'right')
       const { clientWidth, clientHeight, nodeName } = event.target
       if (nodeName.toLowerCase() === 'span') {
         if (this.objectID !== object.id) {

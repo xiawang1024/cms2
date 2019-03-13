@@ -32,6 +32,13 @@ export function deleteDocument(data) {
     data: data
   })
 }
+// 获取文章详情
+export function documentInfor(id) {
+  return request({
+    url: '/cms/article/' + id,
+    method: 'get'
+  })
+}
 // 之前
 export function fetchList(query) {
   return request({
