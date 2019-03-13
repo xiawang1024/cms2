@@ -8,13 +8,13 @@ console.log(path)
 const application = {
   path: `/${userPath}/application`,
   component: Layout,
-  meta: { title: 'application', icon: 'webSite', permission: 'admin' },
+  meta: { title: 'application', icon: 'webSite', role: 'platform:application' },
   children: [
     {
       path: '',
       component: () => import(`@/${path}/index`),
       name: 'application',
-      meta: { title: 'application', icon: 'webSite', permission: 'admin' },
+      meta: { title: 'application', icon: 'webSite', role: 'platform:application' },
       hidden: true
     }
   ]
