@@ -10,7 +10,7 @@ const webSite = {
   path: `/${cmsPath}/website`,
   component: Layout,
   // redirect: `${cmsPath}/website/doc`,
-  meta: { title: 'webSite', icon: 'webSite', role: 'ROLE_TEST' },
+  meta: { title: 'webSite', icon: 'webSite', role: 'cms' },
   name: 'website',
   children: [
     /**
@@ -20,7 +20,7 @@ const webSite = {
     //   path: 'doc',
     //   component: () => import(`@/${path}/index`),
     //   name: 'webSite',
-    //   meta: { title: 'webSite', icon: 'webSite', role: 'ROLE_TEST' },
+    //   meta: { title: 'webSite', icon: 'webSite', role: 'cms' },
     //   hidden: true
     // },
     {
@@ -30,7 +30,7 @@ const webSite = {
       path: 'document',
       component: () => import(`@/${path}/publishDocument`),
       name: 'PublishDocument',
-      meta: { title: 'publishDocument', icon: 'docSource', role: 'ROLE_TEST' }
+      meta: { title: 'publishDocument', icon: 'docSource', role: 'cms' }
     },
     {
       /**
@@ -39,7 +39,7 @@ const webSite = {
       path: 'column',
       component: () => import(`@/${path}/columnManage`),
       name: 'ColumnManage',
-      meta: { title: 'columnManage', icon: 'docSource', role: 'ROLE_TEST' }
+      meta: { title: 'columnManage', icon: 'docSource', role: 'cms' }
     },
     {
       /**
@@ -48,7 +48,7 @@ const webSite = {
       path: 'columnHandel',
       component: () => import(`@/${path}/columnHandel`),
       name: 'columnHandel',
-      meta: { title: 'columnHandel', icon: 'temEdit', role: 'ROLE_TEST' },
+      meta: { title: 'columnHandel', icon: 'temEdit', role: 'cms' },
       hidden: true
     },
     {
@@ -58,7 +58,7 @@ const webSite = {
       path: 'columnTemplate',
       component: () => import(`@/${path}/columnTemplate`),
       name: 'ColumnTemplate',
-      meta: { title: 'columnTemplate', icon: 'docSource', role: 'ROLE_TEST' },
+      meta: { title: 'columnTemplate', icon: 'docSource', role: 'cms' },
       hidden: true
     },
     {
@@ -68,7 +68,7 @@ const webSite = {
       path: 'extendsWord',
       component: () => import(`@/${path}/extendsWord`),
       name: 'ExtendsWord',
-      meta: { title: 'extendsWord', icon: 'temEdit', role: 'ROLE_TEST' },
+      meta: { title: 'extendsWord', icon: 'temEdit', role: 'cms' },
       hidden: true
     },
     {
@@ -78,7 +78,7 @@ const webSite = {
       path: 'tagSetting',
       component: () => import(`@/${path}/tagSetting`),
       name: 'TagSetting',
-      meta: { title: 'tagSetting', icon: 'docSource', role: 'ROLE_TEST' },
+      meta: { title: 'tagSetting', icon: 'docSource', role: 'cms' },
       hidden: true
     },
     {
@@ -88,7 +88,7 @@ const webSite = {
       path: 'waterSetting',
       component: () => import(`@/${path}/waterSetting`),
       name: 'WaterSetting',
-      meta: { title: 'waterSetting', icon: 'temEdit', role: 'ROLE_TEST' },
+      meta: { title: 'waterSetting', icon: 'temEdit', role: 'cms' },
       hidden: true
     }
   ]

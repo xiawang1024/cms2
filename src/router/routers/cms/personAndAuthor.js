@@ -9,7 +9,7 @@ const personAndAuthor = {
   meta: {
     title: 'personAndAuthor',
     icon: 'personAndAuthor',
-    role: 'ROLE_TEST'
+    role: 'cms'
   },
   children: [
     {
@@ -19,7 +19,7 @@ const personAndAuthor = {
       path: 'permissionGroup',
       component: () => import(`@/${path}/permissionGroup`),
       name: 'permissionGroup',
-      meta: { title: 'permissionGroup', icon: 'permissionGroup', role: 'ROLE_TEST' }
+      meta: { title: 'permissionGroup', icon: 'permissionGroup', role: 'cms' }
     },
     {
       /**
@@ -28,7 +28,7 @@ const personAndAuthor = {
       path: 'permissionGroupEdit',
       component: () => import(`@/${path}/permissionGroupEdit`),
       name: 'permissionGroupEdit',
-      meta: { title: 'permissionGroupEdit', icon: 'permissionGroupEdit', role: 'ROLE_TEST' },
+      meta: { title: 'permissionGroupEdit', icon: 'permissionGroupEdit', role: 'cms' },
       hidden: true
     },
     {
@@ -38,7 +38,7 @@ const personAndAuthor = {
       path: 'character',
       component: () => import(`@/${path}/character`),
       name: 'character',
-      meta: { title: 'character', icon: 'character', role: 'ROLE_TEST' }
+      meta: { title: 'character', icon: 'character', role: 'cms' }
     },
     {
       /**
@@ -47,7 +47,7 @@ const personAndAuthor = {
       path: 'characterEdit',
       component: () => import(`@/${path}/characterEdit`),
       name: 'characterEdit',
-      meta: { title: 'characterEdit', icon: 'characterEdit', role: 'ROLE_TEST' },
+      meta: { title: 'characterEdit', icon: 'characterEdit', role: 'cms' },
       hidden: true
     },
     {
@@ -57,7 +57,7 @@ const personAndAuthor = {
       path: 'personRole',
       component: () => import(`@/${path}/personRole`),
       name: 'personRole',
-      meta: { title: 'personRole', icon: 'personRole', role: 'ROLE_TEST' }
+      meta: { title: 'personRole', icon: 'personRole', role: 'cms' }
     },
     {
       /**
@@ -66,7 +66,7 @@ const personAndAuthor = {
       path: 'personRoleDistribute',
       component: () => import(`@/${path}/personRoleDistribute`),
       name: 'personRoleDistribute',
-      meta: { title: 'personRoleDistribute', icon: 'personRoleDistribute', role: 'ROLE_TEST' },
+      meta: { title: 'personRoleDistribute', icon: 'personRoleDistribute', role: 'cms' },
       hidden: true
     },
     {
@@ -76,7 +76,7 @@ const personAndAuthor = {
       path: 'systemFunc',
       component: () => import(`@/${path}/systemFunc`),
       name: 'systemFunc',
-      meta: { title: 'systemFunc', icon: 'systemFunc', role: 'ROLE_TEST' }
+      meta: { title: 'systemFunc', icon: 'systemFunc', role: 'cms' }
     }
   ]
 }
