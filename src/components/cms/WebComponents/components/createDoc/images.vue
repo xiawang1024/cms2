@@ -1,6 +1,6 @@
 <template>
   <div class="images">
-    <v-form ref="baseForm" :form-settings="formSettings" :form-data="formData" label-width="80px" :show-button="false" @save = "submitSave">
+    <v-form ref="form" :form-settings="formSettings" :form-data="formData" label-width="80px" :show-button="false">
       <template slot="set">
         <div class="set">
           <el-checkbox>置顶</el-checkbox>
@@ -11,14 +11,35 @@
       </template>
     </v-form>
     <div>
-      <el-button type="primary" size="small">保存</el-button>
-      <el-button type="primary" size="small">返回</el-button>
+      <el-button type = "primary" size="small" @click = "goBack">预览</el-button>
+      <el-button type = "primary" size="small" @click = "save('docContentForm', '0')">存草稿</el-button>
+      <el-button type = "primary" size="small" @click = "save('docContentForm', '1')">保存并关闭</el-button>
     </div>
   </div>
 </template>
 <script>
+import { createDocument, editDocument } from '@/api/cms/article'
+import { mapGetters } from 'vuex'
 export default {
   name: 'Images',
+  props: {
+    extendsList: {
+      default: ()=> {
+        return []
+      },
+      type: Array
+    },
+    channelId: {
+      default: '',
+      type: String
+    },
+    docInfor: {
+      default: ()=> {
+        return {}
+      },
+      type: Object
+    }
+  },
   data() {
     return {
       formSettings: [
@@ -111,63 +132,69 @@ export default {
       isLoading: false
     }
   },
+  computed: {
+    ...mapGetters(['contextMenu'])
+  },
+  mounted() {
+    this.formData =  this.docInfor
+    this.formSettings[0].items = this.formSettings[0].items.concat(this.extendsList)
+  },
   methods: {
-    submitSave(data) {
-      console.log(data, 'data')
+    goBack() {
+      this.$store.dispatch('setContextMenu', {
+        id: '0',
+        label: ''
+      })
     },
-    // goBack() {
-    //   this.$store.dispatch('setContextMenu', {
-    //     id: '0',
-    //     label: ''
-    //   })
-    // },
-    // createDoc(formData) {
-    //   var _this = this
-    //   return new Promise((resolve, reject) => {
-    //     createDocument(formData)
-    //       .then((response) => {
-    //         _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-    //         resolve()
-    //         _this.isLoading = false
-    //       })
-    //       .catch((error) => {
-    //         _this.isLoading = false
-    //         reject(error)
-    //       })
-    //   })
-    // },
-    // editDoc(formData) {
-    //   var _this = this
-    //   return new Promise((resolve, reject) => {
-    //     editDocument(formData)
-    //       .then((response) => {
-    //         _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-    //         resolve()
-    //         _this.isLoading = false
-    //       })
-    //       .catch((error) => {
-    //         _this.isLoading = false
-    //         reject(error)
-    //       })
-    //   })
-    // },
-    // save(formName) {
-    //   let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.docContentForm)
-    //   resoultObj.channelId = this.channelId
-    //   this.$refs[formName].validate((valid) => {
-    //     if (valid) {
-    //       if(this.contextMenu.docId) {
-    //         resoultObj.articleId = this.contextMenu.docId
-    //         this.editDoc(resoultObj)
-    //       } else {
-    //         this.createDoc(resoultObj)
-    //       }
-    //     } else {
-    //       console.log('error submit!!');
-    //       return false;
-    //     }
-    //   })
-    // }
+    createDoc(formData) {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        createDocument(formData)
+          .then((response) => {
+            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+            this.goBack()
+            resolve()
+            _this.isLoading = false
+          })
+          .catch((error) => {
+            _this.isLoading = false
+            reject(error)
+          })
+      })
+    },
+    editDoc(formData) {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        editDocument(formData)
+          .then((response) => {
+            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+            this.goBack()
+            resolve()
+            _this.isLoading = false
+          })
+          .catch((error) => {
+            _this.isLoading = false
+            reject(error)
+          })
+      })
+    },
+    save(formName, publishType) {
+      this.$refs.form.getDataAsync().then(data => {
+        if (!data) {
+          return
+        }
+        let resoultObj = this.$refs.form.formModel
+        // let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.docContentForm)
+        resoultObj.channelId = this.channelId
+        resoultObj.articleStatus = publishType
+        if(this.contextMenu.docId) {
+          resoultObj.articleId = this.contextMenu.docId
+          this.editDoc(resoultObj)
+        } else {
+          this.createDoc(resoultObj)
+        }
+      })
+    }
   }
 }
 </script>

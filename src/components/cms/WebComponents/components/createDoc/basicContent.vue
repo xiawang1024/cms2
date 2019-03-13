@@ -14,9 +14,9 @@
       </el-form>
     </div>
     <imageText :extends-list="extendsList" :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 0"/>
-    <images v-if="typeForm.articleType == 1"/>
-    <splicing v-if="typeForm.articleType == 2"/>
-    <reproduce v-if="typeForm.articleType == 3"/>
+    <images :extends-list="extendsList" :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 1"/>
+    <splicing :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 2"/>
+    <reproduce :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 3"/>
   </div>
 </template>
 <script>

@@ -186,10 +186,12 @@ export default {
         documentInfor(id)
           .then((response) => {
             _this.docInformation = response.data.result
-            _this.fileList = response.data.result.contentImagesList
+            // _this.fileList = response.data.result.contentImagesList
+            console.log( _this.fileList)
+            this.$refs.uploader.fileList = response.data.result.contentImagesList
             // console.log(_this.$refs.uploader.fileList, 'fileListInfor')
             // console.log(new File([], '1111'))
-            // _this.$refs.uploader.fileList.push(new File([], '1111'))
+            _this.$refs.uploader.fileList.push(new File([response.data.result.contentImagesList], '1111'))
             // console.log(_this.$refs.uploader.initFileFn, 'initFileFn')
             // _this.$emit('docInfor', _this.docInfor)
             resolve()
@@ -219,19 +221,17 @@ export default {
         })
         if(res.length) {
            this.formData = res[0]
-           console.log(this.formData)
         }
       }else {
         this.formData = {}
       }
-      // this.formIndex = 'form.' + fileDate.index
-      // console.log(this.formIndex)
     },
     typeChange() {
     },
     complete () {
       this.fileList = this.$refs.uploader.fileList
-      console.log(typeof this.$refs.uploader.file , 'uploaderFile')
+      console.log(this.fileList, 'list')
+      // console.log(typeof this.$refs.uploader.file , 'uploaderFile')
       if(this.fileList.length) {
         this.fileList.forEach((ele) => {
           ele.url = DOWN_URL +  ele.cmsPath.result.filePath

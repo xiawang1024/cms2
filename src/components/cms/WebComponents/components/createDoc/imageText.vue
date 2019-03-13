@@ -16,8 +16,10 @@
           </el-form-item>
         </el-form>
         <div class="btn-list">
-          <el-button type = "primary" size="small" @click = "goBack">返回</el-button>
-          <el-button type = "primary" size="small" @click = "save('docContentForm')">存草稿</el-button>
+          <el-button type = "primary" size="small" @click = "goBack">预览</el-button>
+          <el-button type = "primary" size="small" @click = "save('docContentForm', '0')">存草稿</el-button>
+          <el-button type = "primary" size="small" @click = "save('docContentForm', '1')">保存并关闭</el-button>
+          <!-- <el-button type = "primary" size="small" @click = "save('docContentForm')">保存并发布</el-button> -->
           <!-- <el-button type = "primary" size="small" @click = "save">保存并关闭</el-button>
           <el-button type = "primary" size="small" @click = "save">保存并发布</el-button> -->
         </div>
@@ -212,12 +214,12 @@ export default {
   },
   mounted() {
     this.docContentForm = {
-      articleTitle: '',
-      contentTitle: '',
-      contentBody: ''
+      articleTitle: this.docInfor.articleTitle,
+      contentTitle: this.docInfor.contentTitle,
+      contentBody: this.docInfor.contentBody
     }
-    console.log(this.extendsList, 'extendsList')
     this.otherSettings[0].items = this.otherSettings[0].items.concat(this.extendsList)
+    this.formData =  this.docInfor
   },
   methods: {
     goBack() {
@@ -232,6 +234,7 @@ export default {
         createDocument(formData)
           .then((response) => {
             _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+            this.goBack()
             resolve()
             _this.isLoading = false
           })
@@ -247,6 +250,7 @@ export default {
         editDocument(formData)
           .then((response) => {
             _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+            this.goBack()
             resolve()
             _this.isLoading = false
           })
@@ -256,9 +260,10 @@ export default {
           })
       })
     },
-    save(formName) {
+    save(formName, publishType) {
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.docContentForm)
       resoultObj.channelId = this.channelId
+      resoultObj.articleStatus = publishType
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if(this.contextMenu.docId) {
