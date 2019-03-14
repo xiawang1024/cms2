@@ -54,17 +54,6 @@
             </div>
           </el-card>
         </div>
-        <!-- <div class="file-attribute">
-          <el-card class="box-card">
-            <div slot="header" class="clearfix">
-              <span>图片和附件</span>
-            </div>
-            <div class="btn">
-              <el-button type="text" size="small">上传图片或附件</el-button>
-              <el-button type="text" size="small">上传其他文件</el-button>
-            </div>
-          </el-card>
-        </div> -->
       </el-col>
     </el-row>
   </div>
@@ -212,38 +201,52 @@ export default {
   watch: {
     extendsList(val) {
       this.otherSettings[0].items = this.otherSettings[0].items.concat(val)
-      console.log('val')
     },
     docInfor(val) {
-      this.formData = val
+      // this.formData = val
       this.docContentForm = {
         articleTitle: val.articleTitle,
         contentTitle: val.contentTitle,
         contentBody: val.contentBody
       }
+      this.adddocSet = {
+        extractCode: val.extractCode,
+        hiddenFlag: val.hiddenFlag,
+        topFlag: val.topFlag
+      }
     }
   },
   mounted() {
-    this.docContentForm = {
-      articleTitle: this.docInfor.articleTitle,
-      contentTitle: this.docInfor.contentTitle,
-      contentBody: this.docInfor.contentBody
-    }
-    this.otherSettings[0].items[0].options = this.tagList
-    // console.log( this.otherSettings[0].items[0])
-    this.otherSettings[0].items = this.otherSettings[0].items.concat(this.extendsList)
-    this.formData = this.docInfor
-    console.log(this.formData, '236')
-    // this.formData.tagIds = ['a', 'c']
-    let showTags = []
-    console.log(this.docInfor, '229')
-    if(this.docInfor.tagIdsList) {
-      this.docInfor.tagIdsList.forEach((ele) => {
-        showTags.push(ele.tagId)
-      })
-    }
-    this.formData.tagIds = showTags
-    this.set.extractCode = this.formData.extractCode
+    // this.docContentForm = {
+    //   articleTitle: this.docInfor.articleTitle,
+    //   contentTitle: this.docInfor.contentTitle,
+    //   contentBody: this.docInfor.contentBody
+    // }
+    // this.otherSettings[0].items[0].options = this.tagList
+    // this.otherSettings[0].items = this.otherSettings[0].items.concat(this.extendsList)
+    // this.formData = this.docInfor
+    // let showTags = []
+    // if(this.docInfor.tagIdsList) {
+    //   this.docInfor.tagIdsList.forEach((ele) => {
+    //     showTags.push(ele.tagId)
+    //   })
+    // }
+    // this.$nextTick(() => {
+    //   this.formData.tagIds = showTags
+    // })
+    // this.adddocSet = {
+    //   extractCode: this.docInfor.extractCode,
+    //   hiddenFlag: this.docInfor.hiddenFlag,
+    //   topFlag: this.docInfor.topFlag
+    // }
+    console.log(this.docInfor)
+    console.log('mounted')
+  },
+  created() {
+    console.log(this.docInfor, 'computed')
+    // this.adddocSet.extractCode = this.formData.extractCode
+    // this.adddocSet.hiddenFlag = this.formData.hiddenFlag
+    // this.adddocSet.topFlag = this.formData.topFlag
   },
   methods: {
     goBack() {
@@ -285,6 +288,7 @@ export default {
       })
     },
     save(formName, publishType) {
+      console.log(this.$refs.otherForm)
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       resoultObj.channelId = this.channelId
       resoultObj.articleStatus = publishType
