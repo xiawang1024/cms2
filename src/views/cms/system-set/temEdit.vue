@@ -91,30 +91,26 @@ export default {
     return {
       typeList: [
         {
-          id: 'LIST',
+          id: 'list',
           name: '列表组件'
         },
         {
-          id: 'COMMON',
-          name: '公共组件'
+          id: 'index',
+          name: '首页组件'
         },
         {
-          id: 'CONTENT',
+          id: 'content',
           name: '正文组件'
         }
       ],
       platList: [
         {
-          id: 'PC',
+          id: 'pc',
           name: '电脑页面'
         },
         {
-          id: 'JSON',
-          name: 'JSON数据'
-        },
-        {
-          id: 'XML',
-          name: 'XML数据'
+          id: 'mobile',
+          name: '手机页面'
         }
       ],
       chooseTemplate: '',
