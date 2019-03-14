@@ -66,12 +66,12 @@ export default {
   name: 'ImageText',
   components: { Tinymce },
   props: {
-    // extendsList: {
-    //   default: ()=> {
-    //     return []
-    //   },
-    //   type: Array
-    // },
+    extendsList: {
+      default: ()=> {
+        return []
+      },
+      type: Array
+    },
     tagList: {
       default: ()=> {
         return []
@@ -156,48 +156,6 @@ export default {
           ]
         }
       ],
-      // otherSettings: [
-      //   {
-      //     items: [
-      //       {
-      //         label: '标签',
-      //         name: 'tagIds',
-      //         type: 'checkbox',
-      //         options: [{
-      //           label: '预告',
-      //           value: '1'
-      //           }, {
-      //             label: '直播',
-      //             value: '2'
-      //           }, {
-      //             label: '回看',
-      //             value: '3'
-      //           }]
-      //       },
-      //       {
-      //         label: '点击量',
-      //         name: 'clickNum',
-      //         type: 'number',
-      //         placeholder: '请输入点击量'
-      //       },
-      //       {
-      //         label: '创建时间',
-      //         name: 'createTime',
-      //         type: 'date'
-      //       },
-      //       {
-      //         label: '设置',
-      //         name: 'set',
-      //         type: 'slot',
-      //       },
-      //       {
-      //         label: '排序号',
-      //         name: 'seqNo',
-      //         type: 'number'
-      //       },
-      //     ]
-      //   }
-      // ],
       showButton: false
     }
   },
@@ -205,12 +163,7 @@ export default {
     ...mapGetters(['contextMenu'])
   },
   watch: {
-    // extendsList(val) {
-    //   this.otherSettings[0].items = this.otherSettings[0].items.concat(val)
-    // },
     docInfor(val) {
-      // this.formData = val
-      console.log(val, val)
       this.docContentForm = {
         articleTitle: val.articleTitle,
         contentTitle: val.contentTitle,
@@ -294,10 +247,20 @@ export default {
     },
     save(formName, publishType) {
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
-      console.log(resoultObj)
+      // 获取扩展字段的值
+      let extendsFields = []
+      if(this.extendsList.length) {
+        extendsFields = this.extendsList.map((ele) => {
+          return {
+            label: ele.label,
+            fieldValue: resoultObj[ele.label]
+          }
+        })
+      }
+      resoultObj.extFieldsList = extendsFields
       resoultObj.channelId = this.channelId
       resoultObj.articleStatus = publishType
-      // resoultObj.tagIdsList = resoultObj.tagIds
+      // 标签字段处理
       let chooseTags = []
       resoultObj.tagIds.forEach((ele) => {
         this.tagList.forEach((son) => {
@@ -321,7 +284,6 @@ export default {
             this.createDoc(resoultObj)
           }
         } else {
-          console.log('error submit!!');
           return false;
         }
       })

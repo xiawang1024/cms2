@@ -121,6 +121,7 @@ export default {
         const nodeVal = {}
         nodeVal.id = node.data.id
         nodeVal.label = node.data.label
+        nodeVal.channelCode = node.data.channelCode
         this.webSitTags.push(nodeVal)
       } else {
         const webSiteTags = this.webSitTags

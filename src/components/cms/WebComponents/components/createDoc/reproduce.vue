@@ -1,12 +1,12 @@
 <template>
   <div class="reproduce-wrap">
-    <v-form ref="form" :form-settings="formSettings" :form-data="formData" label-width="80px" :show-button="false">
+    <v-form ref="form" :form-settings="reproduceSetting" :form-data="formData" label-width="80px" :show-button="false">
       <template slot="set">
         <div class="set">
-          <el-checkbox>置顶</el-checkbox>
-          <el-checkbox>隐身</el-checkbox>
+          <el-checkbox true-label="1" false-label="0" v-model="adddocSet.topFlag">置顶</el-checkbox>
+          <el-checkbox true-label="1" false-label="0" v-model="adddocSet.hiddenFlag">隐身</el-checkbox>
           <span class = "extractCode">提取码</span>
-          <el-input/>
+          <el-input v-model="adddocSet.extractCode"/>
         </div>
       </template>
     </v-form>
@@ -22,59 +22,37 @@ import { mapGetters } from 'vuex'
 import { createDocument, editDocument } from '@/api/cms/article'
 export default {
   name: 'Reproduce',
+  props: {
+    channelId: {
+      default: '',
+      type: String
+    },
+    docInfor: {
+      default: ()=> {
+        return {}
+      },
+      type: Object
+    },
+    tagList: {
+      default: ()=> {
+        return []
+      },
+      type: Array
+    },
+    reproduceSetting: {
+      default: ()=> {
+        return []
+      },
+      type: Array
+    }
+  },
   data() {
     return {
-      formSettings: [
-        {
-          items: [
-            {
-              label: '正文标题',
-              name: 'articleTitle',
-              type: 'text',
-              placeholder: '请输入正文标题',
-              required: true
-            },
-            {
-              label: '首页标题',
-              name: 'contentTitle',
-              type: 'text',
-              placeholder: '请输入首页标题',
-              required: true
-            },
-            {
-              label:'转载地址',
-              name: 'url',
-              type:'text',
-              placeholder: '请输入转载地址'
-            },{
-              label: '标签',
-              name: 'tag',
-              type: 'checkbox',
-              options: [{
-                label: '预告',
-                value: '1'
-                }, {
-                  label: '直播',
-                  value: '2'
-                }, {
-                  label: '回看',
-                  value: '3'
-              }]
-            },
-            {
-              label: '设置',
-              name: 'set',
-              type: 'slot'
-            },
-            {
-              label: '排序号',
-              name: 'seqNo',
-              type: 'number',
-              value: 0
-           }
-          ]
-        }
-      ],
+      adddocSet: {
+        extractCode: '',
+        hiddenFlag: '0',
+        topFlag: '1'
+      },
       formData: {},
       isLoading: false
     }
@@ -82,9 +60,39 @@ export default {
   computed: {
     ...mapGetters(['contextMenu'])
   },
+  watch: {
+    docInfor(val) {
+      this.adddocSet = {
+        extractCode: val.extractCode,
+        hiddenFlag: val.hiddenFlag + '',
+        topFlag: val.topFlag + ''
+      }
+      this.formData = val
+      let showTags = []
+      if(val.tagIdsList) {
+        val.tagIdsList.forEach((ele) => {
+          showTags.push(ele.tagId)
+        })
+      }
+      this.formData.tagIds = showTags
+    }
+  },
   mounted() {
     this.formData =  this.docInfor
     // this.formSettings[0].items = this.formSettings[0].items.concat(this.extendsList)
+    this.formData =  this.docInfor
+    let showTags = []
+    if(this.docInfor.tagIdsList) {
+      this.docInfor.tagIdsList.forEach((ele) => {
+        showTags.push(ele.tagId)
+      })
+    }
+    this.formData.tagIds = showTags
+    this.adddocSet = {
+      extractCode: this.docInfor.extractCode,
+      hiddenFlag: this.docInfor.hiddenFlag + '',
+      topFlag: this.docInfor.topFlag + ''
+    }
   },
   methods: {
     goBack() {

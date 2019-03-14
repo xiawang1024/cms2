@@ -3,10 +3,10 @@
     <v-form ref="form" :form-settings="formSettings" :form-data="formData" label-width="80px" :show-button="false" @save = "submitSave">
       <template slot="set">
         <div class="set">
-          <el-checkbox>置顶</el-checkbox>
-          <el-checkbox>隐身</el-checkbox>
+          <el-checkbox true-label="1" false-label="0" v-model="adddocSet.topFlag">置顶</el-checkbox>
+          <el-checkbox true-label="1" false-label="0" v-model="adddocSet.hiddenFlag">隐身</el-checkbox>
           <span class = "extractCode">提取码</span>
-          <el-input/>
+          <el-input v-model="adddocSet.extractCode"/>
         </div>
       </template>
       <template slot="preview">
@@ -27,8 +27,25 @@ import { mapGetters } from 'vuex'
 import { createDocument, editDocument } from '@/api/cms/article'
 export default {
   name: 'Splicing',
+  props: {
+    channelId: {
+      default: '',
+      type: String
+    },
+    docInfor: {
+      default: ()=> {
+        return {}
+      },
+      type: Object
+    }
+  },
   data() {
     return {
+      adddocSet: {
+        extractCode: '',
+        hiddenFlag: '0',
+        topFlag: '1'
+      },
       formSettings: [
         {
           items: [
@@ -69,8 +86,23 @@ export default {
   computed: {
     ...mapGetters(['contextMenu'])
   },
+  watch: {
+    docInfor(val) {
+      this.adddocSet = {
+        extractCode: val.extractCode,
+        hiddenFlag: val.hiddenFlag + '',
+        topFlag: val.topFlag + ''
+      }
+      this.formData = val
+    }
+  },
   mounted() {
     this.formData =  this.docInfor
+    this.adddocSet = {
+      extractCode: this.docInfor.extractCode,
+      hiddenFlag: this.docInfor.hiddenFlag + '',
+      topFlag: this.docInfor.topFlag + ''
+    }
   },
   methods: {
     submitSave(data) {
@@ -114,15 +146,14 @@ export default {
           })
       })
     },
-    save(formName, publishType) {
+    save(formName) {
       this.$refs.form.getDataAsync().then(data => {
         if (!data) {
           return
         }
-        let resoultObj = this.$refs.form.formModel
-        // let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.docContentForm)
+        let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
         resoultObj.channelId = this.channelId
-        resoultObj.articleStatus = publishType
+        resoultObj.articleStatus = '2'
         if(this.contextMenu.docId) {
           resoultObj.articleId = this.contextMenu.docId
           this.editDoc(resoultObj)

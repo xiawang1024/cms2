@@ -1,12 +1,12 @@
 <template>
   <div class="images">
-    <v-form ref="form" :form-settings="formSettings" :form-data="formData" label-width="80px" :show-button="false">
+    <v-form ref="form" :form-settings="imagesSetting" :form-data="formData" label-width="80px" :show-button="false">
       <template slot="set">
         <div class="set">
-          <el-checkbox>置顶</el-checkbox>
-          <el-checkbox>隐身</el-checkbox>
+          <el-checkbox true-label="1" false-label="0" v-model="adddocSet.topFlag">置顶</el-checkbox>
+          <el-checkbox true-label="1" false-label="0" v-model="adddocSet.hiddenFlag">隐身</el-checkbox>
           <span class = "extractCode">提取码</span>
-          <el-input/>
+          <el-input v-model="adddocSet.extractCode"/>
         </div>
       </template>
     </v-form>
@@ -38,10 +38,27 @@ export default {
         return {}
       },
       type: Object
+    },
+    tagList: {
+      default: ()=> {
+        return []
+      },
+      type: Array
+    },
+    imagesSetting: {
+      default: ()=> {
+        return []
+      },
+      type: Array
     }
   },
   data() {
     return {
+      adddocSet: {
+        extractCode: '',
+        hiddenFlag: '0',
+        topFlag: '1'
+      },
       formSettings: [
         {
           items: [
@@ -89,16 +106,7 @@ export default {
               label: '标签',
               name: 'tag',
               type: 'checkbox',
-              options: [{
-                label: '预告',
-                value: '1'
-                }, {
-                  label: '直播',
-                  value: '2'
-                }, {
-                  label: '回看',
-                  value: '3'
-                }]
+              options: []
             },{
               label:'点击量',
               name: 'clickNum',
@@ -135,9 +143,37 @@ export default {
   computed: {
     ...mapGetters(['contextMenu'])
   },
+  watch: {
+    docInfor(val) {
+      this.adddocSet = {
+        extractCode: val.extractCode,
+        hiddenFlag: val.hiddenFlag + '',
+        topFlag: val.topFlag + ''
+      }
+      this.formData = val
+      let showTags = []
+      if(val.tagIdsList) {
+        val.tagIdsList.forEach((ele) => {
+          showTags.push(ele.tagId)
+        })
+      }
+      this.formData.tagIds = showTags
+    }
+  },
   mounted() {
     this.formData =  this.docInfor
-    this.formSettings[0].items = this.formSettings[0].items.concat(this.extendsList)
+    let showTags = []
+    if(this.docInfor.tagIdsList) {
+      this.docInfor.tagIdsList.forEach((ele) => {
+        showTags.push(ele.tagId)
+      })
+    }
+    this.formData.tagIds = showTags
+    this.adddocSet = {
+      extractCode: this.docInfor.extractCode,
+      hiddenFlag: this.docInfor.hiddenFlag + '',
+      topFlag: this.docInfor.topFlag + ''
+    }
   },
   methods: {
     goBack() {
@@ -178,15 +214,29 @@ export default {
           })
       })
     },
-    save(formName, publishType) {
+    save(formName) {
       this.$refs.form.getDataAsync().then(data => {
         if (!data) {
           return
         }
-        let resoultObj = this.$refs.form.formModel
-        // let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.docContentForm)
+        let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
         resoultObj.channelId = this.channelId
-        resoultObj.articleStatus = publishType
+        resoultObj.articleStatus = '1'
+        // 标签字段处理
+        let chooseTags = []
+        resoultObj.tagIds.forEach((ele) => {
+          this.tagList.forEach((son) => {
+            if(ele == son.value) {
+              chooseTags.push({
+                tagId: son.value,
+                tagName: son.label
+              })
+            }
+          })
+        })
+        resoultObj.tagIdsList = chooseTags
+        delete resoultObj.set
+        delete resoultObj.tagIds
         delete resoultObj.btn
         if(this.contextMenu.docId) {
           resoultObj.articleId = this.contextMenu.docId

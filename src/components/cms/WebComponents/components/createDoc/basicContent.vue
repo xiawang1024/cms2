@@ -13,10 +13,10 @@
         </el-form-item>
       </el-form>
     </div>
-    <imageText :other-settings="otherSettings" :tag-list = "tagList" :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 0"/>
-    <images :extends-list="extendsList" :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 1"/>
-    <splicing :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 2"/>
-    <reproduce :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 3"/>
+    <imageText :extends-list="extendsList" :other-settings="otherSettings" :tag-list="tagList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 0"/>
+    <images :extends-list="extendsList" :images-setting="imagesSeting" :tag-list="tagList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 1"/>
+    <splicing :channel-id = "channelId" :doc-infor="docInfor" :tag-list = "tagList" v-if="typeForm.articleType == 2"/>
+    <reproduce :channel-id = "channelId" :doc-infor="docInfor" :reproduce-setting="reproduceSetting" :tag-list = "tagList" v-if="typeForm.articleType == 3"/>
   </div>
 </template>
 <script>
@@ -72,6 +72,125 @@ export default {
           ]
         }
       ],
+      imagesSeting: [
+        {
+          items: [
+            {
+              label: '正文标题',
+              name: 'articleTitle',
+              type: 'text',
+              placeholder: '请输入正文标题',
+              required: true
+            },
+            {
+              label: '首页标题',
+              name: 'contentTitle',
+              type: 'text',
+              placeholder: '请输入首页标题',
+              required: true
+            },
+            {
+              label: '文档来源',
+              name: 'articleOrigin',
+              type: 'select',
+              placeholder: '请选择',
+              options: [
+                {
+                  label: '1',
+                  value: '123'
+                }
+              ]
+            },{
+              label:'文档作者',
+              name: 'articleAuthor',
+              type:'text',
+              placeholder: '请输入文档作者'
+            },{
+              label: '关键字',
+              name: 'seoKeywords',
+              type: 'text',
+              placeholder: '请输入关键字',
+            },{
+              label: '摘要',
+              name: 'seoDescription',
+              type: 'textarea',
+              placeholder: '请输入摘要'
+            },{
+              label: '标签',
+              name: 'tagIds',
+              type: 'checkbox',
+              options: []
+            },{
+              label:'点击量',
+              name: 'clickNum',
+              type:'number',
+              placeholder: '请输入点击量'
+            },{
+              label:'创建时间',
+              name:'createTime',
+              type:'date',
+              placeholder: '请选择'
+            },
+            {
+              label: '设置',
+              name: 'set',
+              type: 'slot',
+            },
+            {
+              label: '排序号',
+              name: 'seqNo',
+              type: 'number'
+            },
+            {
+              label: '',
+              name: 'btn',
+              type: 'slot'
+            },
+          ]
+        }
+      ],
+      reproduceSetting: [
+        {
+          items: [
+            {
+              label: '正文标题',
+              name: 'articleTitle',
+              type: 'text',
+              placeholder: '请输入正文标题',
+              required: true
+            },
+            {
+              label: '首页标题',
+              name: 'contentTitle',
+              type: 'text',
+              placeholder: '请输入首页标题',
+              required: true
+            },
+            {
+              label:'转载地址',
+              name: 'url',
+              type:'text',
+              placeholder: '请输入转载地址'
+            },{
+              label: '标签',
+              name: 'tagIds',
+              type: 'checkbox',
+              options: []
+            },
+            {
+              label: '设置',
+              name: 'set',
+              type: 'slot'
+            },
+            {
+              label: '排序号',
+              name: 'seqNo',
+              type: 'number',
+              value: 0
+           }
+          ]
+        }
+      ]
     }
   },
   computed: {
@@ -82,11 +201,6 @@ export default {
     this.getColumnInfor(this.treeTags[this.treeTags.length - 1].id)
     this.channelId = this.treeTags[this.treeTags.length - 1].id
   },
-  // mounted() {
-  //   if(this.contextMenu.docId) {
-  //     this.getDocumentInfor(this.contextMenu.docId)
-  //   }
-  // },
   methods: {
     handleSave() {},
     handleSaveAddRelease() {},
@@ -137,6 +251,8 @@ export default {
               })
             }
             _this.otherSettings[0].items[0].options = _this.tagList
+            _this.imagesSeting[0].items[6].options = _this.tagList
+            _this.reproduceSetting[0].items[3].options = _this.tagList
             _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList)
             if(_this.contextMenu.docId) {
               _this.getDocumentInfor(_this.contextMenu.docId)
@@ -155,6 +271,12 @@ export default {
           .then((response) => {
             _this.docInfor = response.data.result
             _this.$emit('docInfor', _this.docInfor)
+            if(_this.docInfor.extFieldsList && _this.docInfor.extFieldsList.length) {
+              _this.docInfor.extFieldsList.forEach((ele) => {
+                _this.docInfor[ele.label] = ele.fieldValue
+              })
+            }
+            console.log(_this.$refs.images, 'refs')
             resolve()
           })
           .catch((error) => {
