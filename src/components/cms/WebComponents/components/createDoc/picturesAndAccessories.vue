@@ -191,7 +191,7 @@ export default {
             this.$refs.uploader.fileList = response.data.result.contentImagesList
             // console.log(_this.$refs.uploader.fileList, 'fileListInfor')
             // console.log(new File([], '1111'))
-            _this.$refs.uploader.fileList.push(new File([response.data.result.contentImagesList], '1111'))
+            // _this.$refs.uploader.fileList.push(new File([response.data.result.contentImagesList], '1111'))
             // console.log(_this.$refs.uploader.initFileFn, 'initFileFn')
             // _this.$emit('docInfor', _this.docInfor)
             resolve()

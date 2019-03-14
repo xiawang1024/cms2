@@ -187,6 +187,7 @@ export default {
         // let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.docContentForm)
         resoultObj.channelId = this.channelId
         resoultObj.articleStatus = publishType
+        delete resoultObj.btn
         if(this.contextMenu.docId) {
           resoultObj.articleId = this.contextMenu.docId
           this.editDoc(resoultObj)

@@ -44,10 +44,10 @@
               <v-form ref="otherForm" :form-settings="otherSettings" :form-data="formData" label-width="80px" :show-button = "showButton">
                 <template slot="set">
                   <div class="set">
-                    <el-checkbox>置顶</el-checkbox>
-                    <el-checkbox>隐身</el-checkbox>
+                    <el-checkbox true-label="1" false-label="0" v-model="adddocSet.topFlag">置顶</el-checkbox>
+                    <el-checkbox true-label="1" false-label="0" v-model="adddocSet.hiddenFlag">隐身</el-checkbox>
                     <span class = "extractCode">提取码</span>
-                    <el-input/>
+                    <el-input v-model="adddocSet.extractCode"/>
                   </div>
                 </template>
               </v-form>
@@ -83,6 +83,12 @@ export default {
       },
       type: Array
     },
+    tagList: {
+      default: ()=> {
+        return []
+      },
+      type: Array
+    },
     channelId: {
       default: '',
       type: String
@@ -100,6 +106,11 @@ export default {
         articleTitle: '',
         contentTitle: '',
         contentBody: ''
+      },
+      adddocSet: {
+        extractCode: '',
+        hiddenFlag: '0',
+        topFlag: '1'
       },
       rules: {
         articleTitle: [
@@ -155,7 +166,7 @@ export default {
           items: [
             {
               label: '标签',
-              name: 'tag',
+              name: 'tagIds',
               type: 'checkbox',
               options: [{
                 label: '预告',
@@ -218,8 +229,21 @@ export default {
       contentTitle: this.docInfor.contentTitle,
       contentBody: this.docInfor.contentBody
     }
+    this.otherSettings[0].items[0].options = this.tagList
+    // console.log( this.otherSettings[0].items[0])
     this.otherSettings[0].items = this.otherSettings[0].items.concat(this.extendsList)
-    this.formData =  this.docInfor
+    this.formData = this.docInfor
+    console.log(this.formData, '236')
+    // this.formData.tagIds = ['a', 'c']
+    let showTags = []
+    console.log(this.docInfor, '229')
+    if(this.docInfor.tagIdsList) {
+      this.docInfor.tagIdsList.forEach((ele) => {
+        showTags.push(ele.tagId)
+      })
+    }
+    this.formData.tagIds = showTags
+    this.set.extractCode = this.formData.extractCode
   },
   methods: {
     goBack() {
@@ -261,9 +285,27 @@ export default {
       })
     },
     save(formName, publishType) {
-      let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.docContentForm)
+      let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       resoultObj.channelId = this.channelId
       resoultObj.articleStatus = publishType
+      // resoultObj.tagIdsList = resoultObj.tagIds
+      let chooseTags = []
+      resoultObj.tagIds.forEach((ele) => {
+        this.tagList.forEach((son) => {
+          if(ele == son.value) {
+            chooseTags.push({
+              tagId: son.value,
+              tagName: son.label
+            })
+          }
+        })
+      })
+      resoultObj.tagIdsList = chooseTags
+      console.log(chooseTags)
+      // resoultObj.tagIdsList
+      delete resoultObj.set
+      delete resoultObj.tagIds
+      console.log(resoultObj)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if(this.contextMenu.docId) {
