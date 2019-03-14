@@ -64,6 +64,12 @@ export default {
               disabled: true
             },
             {
+              label: '栏目编码',
+              name: 'channelCode',
+              type: 'text',
+              placeholder: '请输入排序'
+            },
+            {
               label: '位置排序',
               name: 'seqNo',
               type: 'text',

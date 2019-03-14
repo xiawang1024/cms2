@@ -8,6 +8,7 @@
     </div>
     <el-table :data="tableData" style="width: 100%">
       <el-table-column prop="channelName" label="栏目名称" min-width="200"/>
+      <el-table-column prop="channelCode" label="栏目编码" min-width="200"/>
       <el-table-column prop="hiddenFlag" label="状态">
         <template slot-scope="scope">
           <span v-if="scope.row.hiddenFlag == 1">隐藏</span>
