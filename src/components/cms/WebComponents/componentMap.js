@@ -116,14 +116,14 @@ export const ComponentMap = [
      * 评论管理
      */
     type: '16',
-    ColumnModel: () => import('./components/commentManage/index')
+    ColumnManage: () => import('./components/commentManage/index')
   },
   {
     /**
      * 浏览统计
      */
     type: '17',
-    ColumnModel: () => import('./components/viewSum/index')
+    ViewSum: () => import('./components/viewSum/index')
   }
 ]
 
