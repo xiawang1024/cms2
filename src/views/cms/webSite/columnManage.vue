@@ -33,7 +33,7 @@
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button type="text" @click="columnAddEdit(false, '', scope.row.channelId)">编辑</el-button>
-          <el-button type="text" @click="columnDel(scope.row)">删除</el-button>
+          <el-button type="text" v-if="checkAuth('cms:channel:delete')" @click="columnDel(scope.row)">删除</el-button>
           <el-button type="text" @click="columnAddEdit(true, 'child')">添加</el-button>
         </template>
       </el-table-column>
@@ -94,6 +94,13 @@ export default {
     this.columnList()
   },
   methods: {
+    checkAuth (authKey) {
+      if (this.$store.getters.authorities.indexOf(authKey) === -1) {
+        return false
+      } else {
+        return true
+      }
+    },
     searchItem(searchData) {
       this.searchData = searchData
       this.pageNum = 1
