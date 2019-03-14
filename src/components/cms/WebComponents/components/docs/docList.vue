@@ -47,7 +47,7 @@
         <template slot-scope="scope">
           <el-button type="text" size="small">置顶</el-button>
           <el-button type="text" size="small" @click="editDoc(scope.row.articleId)">编辑</el-button>
-          <el-button type="text" size="small" @click="handleClickDel(scope.row.articleId)">删除</el-button>
+          <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click="handleClickDel(scope.row.articleId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -70,6 +70,13 @@ export default {
     }
   },
   methods: {
+    checkAuth (authKey) {
+      if (this.$store.getters.authorities.indexOf(authKey) === -1) {
+        return false
+      } else {
+        return true
+      }
+    },
     toggleSelection(rows) {
       if (rows) {
         rows.forEach(row => {
