@@ -36,7 +36,7 @@ export default {
       var topChannel = {
       }
       return new Promise((resolve, reject) => {
-        fetchChannelList(topChannel, 1, 1000)
+        fetchChannelList(topChannel, 1, 100)
           .then((response) => {
             _this.refreshCascaderValue(response.data.result.content)
             _this.channelOptions = _this.toTree(response.data.result.content)
