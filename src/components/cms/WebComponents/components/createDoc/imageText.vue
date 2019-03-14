@@ -16,8 +16,10 @@
           </el-form-item>
         </el-form>
         <div class="btn-list">
-          <el-button type = "primary" size="small" @click = "goBack">返回</el-button>
-          <el-button type = "primary" size="small" @click = "save('docContentForm')">存草稿</el-button>
+          <el-button type = "primary" size="small" @click = "goBack">预览</el-button>
+          <el-button type = "primary" size="small" @click = "save('docContentForm', '0')">存草稿</el-button>
+          <el-button type = "primary" size="small" @click = "save('docContentForm', '1')">保存并关闭</el-button>
+          <!-- <el-button type = "primary" size="small" @click = "save('docContentForm')">保存并发布</el-button> -->
           <!-- <el-button type = "primary" size="small" @click = "save">保存并关闭</el-button>
           <el-button type = "primary" size="small" @click = "save">保存并发布</el-button> -->
         </div>
@@ -42,10 +44,10 @@
               <v-form ref="otherForm" :form-settings="otherSettings" :form-data="formData" label-width="80px" :show-button = "showButton">
                 <template slot="set">
                   <div class="set">
-                    <el-checkbox>置顶</el-checkbox>
-                    <el-checkbox>隐身</el-checkbox>
+                    <el-checkbox true-label="1" false-label="0" v-model="adddocSet.topFlag">置顶</el-checkbox>
+                    <el-checkbox true-label="1" false-label="0" v-model="adddocSet.hiddenFlag">隐身</el-checkbox>
                     <span class = "extractCode">提取码</span>
-                    <el-input/>
+                    <el-input v-model="adddocSet.extractCode"/>
                   </div>
                 </template>
               </v-form>
@@ -81,6 +83,12 @@ export default {
       },
       type: Array
     },
+    tagList: {
+      default: ()=> {
+        return []
+      },
+      type: Array
+    },
     channelId: {
       default: '',
       type: String
@@ -98,6 +106,11 @@ export default {
         articleTitle: '',
         contentTitle: '',
         contentBody: ''
+      },
+      adddocSet: {
+        extractCode: '',
+        hiddenFlag: '0',
+        topFlag: '1'
       },
       rules: {
         articleTitle: [
@@ -153,7 +166,7 @@ export default {
           items: [
             {
               label: '标签',
-              name: 'tag',
+              name: 'tagIds',
               type: 'checkbox',
               options: [{
                 label: '预告',
@@ -212,12 +225,25 @@ export default {
   },
   mounted() {
     this.docContentForm = {
-      articleTitle: '',
-      contentTitle: '',
-      contentBody: ''
+      articleTitle: this.docInfor.articleTitle,
+      contentTitle: this.docInfor.contentTitle,
+      contentBody: this.docInfor.contentBody
     }
-    console.log(this.extendsList, 'extendsList')
+    this.otherSettings[0].items[0].options = this.tagList
+    // console.log( this.otherSettings[0].items[0])
     this.otherSettings[0].items = this.otherSettings[0].items.concat(this.extendsList)
+    this.formData = this.docInfor
+    console.log(this.formData, '236')
+    // this.formData.tagIds = ['a', 'c']
+    let showTags = []
+    console.log(this.docInfor, '229')
+    if(this.docInfor.tagIdsList) {
+      this.docInfor.tagIdsList.forEach((ele) => {
+        showTags.push(ele.tagId)
+      })
+    }
+    this.formData.tagIds = showTags
+    this.set.extractCode = this.formData.extractCode
   },
   methods: {
     goBack() {
@@ -232,6 +258,7 @@ export default {
         createDocument(formData)
           .then((response) => {
             _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+            this.goBack()
             resolve()
             _this.isLoading = false
           })
@@ -247,6 +274,7 @@ export default {
         editDocument(formData)
           .then((response) => {
             _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+            this.goBack()
             resolve()
             _this.isLoading = false
           })
@@ -256,9 +284,28 @@ export default {
           })
       })
     },
-    save(formName) {
-      let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.docContentForm)
+    save(formName, publishType) {
+      let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       resoultObj.channelId = this.channelId
+      resoultObj.articleStatus = publishType
+      // resoultObj.tagIdsList = resoultObj.tagIds
+      let chooseTags = []
+      resoultObj.tagIds.forEach((ele) => {
+        this.tagList.forEach((son) => {
+          if(ele == son.value) {
+            chooseTags.push({
+              tagId: son.value,
+              tagName: son.label
+            })
+          }
+        })
+      })
+      resoultObj.tagIdsList = chooseTags
+      console.log(chooseTags)
+      // resoultObj.tagIdsList
+      delete resoultObj.set
+      delete resoultObj.tagIds
+      console.log(resoultObj)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if(this.contextMenu.docId) {

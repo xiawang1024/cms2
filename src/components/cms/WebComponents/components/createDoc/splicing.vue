@@ -1,6 +1,6 @@
 <template>
   <div class="splicing-wrap">
-    <v-form ref="vForm" :form-settings="formSettings" :form-data="formData" label-width="80px" :btn-loading = "isLoading" @save = "submitSave">
+    <v-form ref="form" :form-settings="formSettings" :form-data="formData" label-width="80px" :show-button="false" @save = "submitSave">
       <template slot="set">
         <div class="set">
           <el-checkbox>置顶</el-checkbox>
@@ -15,9 +15,16 @@
         </div>
       </template>
     </v-form>
+    <div>
+      <el-button type = "primary" size="small" @click = "goBack">预览</el-button>
+      <el-button type = "primary" size="small" @click = "save('docContentForm', '0')">存草稿</el-button>
+      <el-button type = "primary" size="small" @click = "save('docContentForm', '1')">保存并关闭</el-button>
+    </div>
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
+import { createDocument, editDocument } from '@/api/cms/article'
 export default {
   name: 'Splicing',
   data() {
@@ -59,9 +66,70 @@ export default {
       isLoading: false
     }
   },
+  computed: {
+    ...mapGetters(['contextMenu'])
+  },
+  mounted() {
+    this.formData =  this.docInfor
+  },
   methods: {
     submitSave(data) {
       console.log(data, 'data')
+    },
+   goBack() {
+      this.$store.dispatch('setContextMenu', {
+        id: '0',
+        label: ''
+      })
+    },
+    createDoc(formData) {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        createDocument(formData)
+          .then((response) => {
+            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+            this.goBack()
+            resolve()
+            _this.isLoading = false
+          })
+          .catch((error) => {
+            _this.isLoading = false
+            reject(error)
+          })
+      })
+    },
+    editDoc(formData) {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        editDocument(formData)
+          .then((response) => {
+            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+            this.goBack()
+            resolve()
+            _this.isLoading = false
+          })
+          .catch((error) => {
+            _this.isLoading = false
+            reject(error)
+          })
+      })
+    },
+    save(formName, publishType) {
+      this.$refs.form.getDataAsync().then(data => {
+        if (!data) {
+          return
+        }
+        let resoultObj = this.$refs.form.formModel
+        // let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.docContentForm)
+        resoultObj.channelId = this.channelId
+        resoultObj.articleStatus = publishType
+        if(this.contextMenu.docId) {
+          resoultObj.articleId = this.contextMenu.docId
+          this.editDoc(resoultObj)
+        } else {
+          this.createDoc(resoultObj)
+        }
+      })
     }
   }
 }

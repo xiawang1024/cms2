@@ -13,10 +13,10 @@
         </el-form-item>
       </el-form>
     </div>
-    <imageText :extends-list="extendsList" :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 0"/>
-    <images v-if="typeForm.articleType == 1"/>
-    <splicing v-if="typeForm.articleType == 2"/>
-    <reproduce v-if="typeForm.articleType == 3"/>
+    <imageText :extends-list="extendsList" :tag-list = "tagList" :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 0"/>
+    <images :extends-list="extendsList" :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 1"/>
+    <splicing :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 2"/>
+    <reproduce :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 3"/>
   </div>
 </template>
 <script>
@@ -90,6 +90,16 @@ export default {
                   name: ele.label,
                   type: _this.datachange(ele.type),
                   placeholder: '请输入'
+                }
+              })
+            }
+            if(response.data.result.tagRule) {
+              Object.keys(response.data.result.tagRule).forEach((ele) => {
+                if(response.data.result.tagRule[ele]) {
+                  this.tagList.push({
+                    label: response.data.result.tagRule[ele],
+                    value: ele
+                  })
                 }
               })
             }
