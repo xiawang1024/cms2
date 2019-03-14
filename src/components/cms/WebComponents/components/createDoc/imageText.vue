@@ -66,12 +66,12 @@ export default {
   name: 'ImageText',
   components: { Tinymce },
   props: {
-    extendsList: {
-      default: ()=> {
-        return []
-      },
-      type: Array
-    },
+    // extendsList: {
+    //   default: ()=> {
+    //     return []
+    //   },
+    //   type: Array
+    // },
     tagList: {
       default: ()=> {
         return []
@@ -87,6 +87,12 @@ export default {
         return {}
       },
       type: Object
+    },
+    otherSettings: {
+      default: ()=> {
+        return []
+      },
+      type: Array
     }
   },
   data() {
@@ -150,48 +156,48 @@ export default {
           ]
         }
       ],
-      otherSettings: [
-        {
-          items: [
-            {
-              label: '标签',
-              name: 'tagIds',
-              type: 'checkbox',
-              options: [{
-                label: '预告',
-                value: '1'
-                }, {
-                  label: '直播',
-                  value: '2'
-                }, {
-                  label: '回看',
-                  value: '3'
-                }]
-            },
-            {
-              label: '点击量',
-              name: 'clickNum',
-              type: 'number',
-              placeholder: '请输入点击量'
-            },
-            {
-              label: '创建时间',
-              name: 'createTime',
-              type: 'date'
-            },
-            {
-              label: '设置',
-              name: 'set',
-              type: 'slot',
-            },
-            {
-              label: '排序号',
-              name: 'seqNo',
-              type: 'number'
-            },
-          ]
-        }
-      ],
+      // otherSettings: [
+      //   {
+      //     items: [
+      //       {
+      //         label: '标签',
+      //         name: 'tagIds',
+      //         type: 'checkbox',
+      //         options: [{
+      //           label: '预告',
+      //           value: '1'
+      //           }, {
+      //             label: '直播',
+      //             value: '2'
+      //           }, {
+      //             label: '回看',
+      //             value: '3'
+      //           }]
+      //       },
+      //       {
+      //         label: '点击量',
+      //         name: 'clickNum',
+      //         type: 'number',
+      //         placeholder: '请输入点击量'
+      //       },
+      //       {
+      //         label: '创建时间',
+      //         name: 'createTime',
+      //         type: 'date'
+      //       },
+      //       {
+      //         label: '设置',
+      //         name: 'set',
+      //         type: 'slot',
+      //       },
+      //       {
+      //         label: '排序号',
+      //         name: 'seqNo',
+      //         type: 'number'
+      //       },
+      //     ]
+      //   }
+      // ],
       showButton: false
     }
   },
@@ -199,11 +205,12 @@ export default {
     ...mapGetters(['contextMenu'])
   },
   watch: {
-    extendsList(val) {
-      this.otherSettings[0].items = this.otherSettings[0].items.concat(val)
-    },
+    // extendsList(val) {
+    //   this.otherSettings[0].items = this.otherSettings[0].items.concat(val)
+    // },
     docInfor(val) {
       // this.formData = val
+      console.log(val, val)
       this.docContentForm = {
         articleTitle: val.articleTitle,
         contentTitle: val.contentTitle,
@@ -211,42 +218,40 @@ export default {
       }
       this.adddocSet = {
         extractCode: val.extractCode,
-        hiddenFlag: val.hiddenFlag,
-        topFlag: val.topFlag
+        hiddenFlag: val.hiddenFlag + '',
+        topFlag: val.topFlag + ''
       }
+      this.formData = val
+      let showTags = []
+      if(val.tagIdsList) {
+        val.tagIdsList.forEach((ele) => {
+          showTags.push(ele.tagId)
+        })
+      }
+      this.formData.tagIds = showTags
     }
   },
   mounted() {
-    // this.docContentForm = {
-    //   articleTitle: this.docInfor.articleTitle,
-    //   contentTitle: this.docInfor.contentTitle,
-    //   contentBody: this.docInfor.contentBody
-    // }
-    // this.otherSettings[0].items[0].options = this.tagList
-    // this.otherSettings[0].items = this.otherSettings[0].items.concat(this.extendsList)
-    // this.formData = this.docInfor
-    // let showTags = []
-    // if(this.docInfor.tagIdsList) {
-    //   this.docInfor.tagIdsList.forEach((ele) => {
-    //     showTags.push(ele.tagId)
-    //   })
-    // }
-    // this.$nextTick(() => {
-    //   this.formData.tagIds = showTags
-    // })
-    // this.adddocSet = {
-    //   extractCode: this.docInfor.extractCode,
-    //   hiddenFlag: this.docInfor.hiddenFlag,
-    //   topFlag: this.docInfor.topFlag
-    // }
-    console.log(this.docInfor)
-    console.log('mounted')
+    this.docContentForm = {
+      articleTitle: this.docInfor.articleTitle,
+      contentTitle: this.docInfor.contentTitle,
+      contentBody: this.docInfor.contentBody
+    }
+    this.formData = this.docInfor
+    let showTags = []
+    if(this.docInfor.tagIdsList) {
+      this.docInfor.tagIdsList.forEach((ele) => {
+        showTags.push(ele.tagId)
+      })
+    }
+    this.formData.tagIds = showTags
+    this.adddocSet = {
+      extractCode: this.docInfor.extractCode,
+      hiddenFlag: this.docInfor.hiddenFlag + '',
+      topFlag: this.docInfor.topFlag + ''
+    }
   },
   created() {
-    console.log(this.docInfor, 'computed')
-    // this.adddocSet.extractCode = this.formData.extractCode
-    // this.adddocSet.hiddenFlag = this.formData.hiddenFlag
-    // this.adddocSet.topFlag = this.formData.topFlag
   },
   methods: {
     goBack() {
@@ -288,8 +293,8 @@ export default {
       })
     },
     save(formName, publishType) {
-      console.log(this.$refs.otherForm)
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
+      console.log(resoultObj)
       resoultObj.channelId = this.channelId
       resoultObj.articleStatus = publishType
       // resoultObj.tagIdsList = resoultObj.tagIds
@@ -305,11 +310,8 @@ export default {
         })
       })
       resoultObj.tagIdsList = chooseTags
-      console.log(chooseTags)
-      // resoultObj.tagIdsList
       delete resoultObj.set
       delete resoultObj.tagIds
-      console.log(resoultObj)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if(this.contextMenu.docId) {

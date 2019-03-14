@@ -2,7 +2,7 @@
   <div class="docs-wrap">
     <el-tabs v-model="activeName" type="card">
       <el-tab-pane label="基本内容" name="basicContent">
-        <BasicContent @docInfor="docInfor"/>
+        <BasicContent @docInfor="docInfor" :active-name="activeName"/>
       </el-tab-pane>
       <el-tab-pane label="图片和附件" name="picturesAndAccessories">
         <PicturesAndAccessories :doc-information="docInformation" :active-name="activeName"/>

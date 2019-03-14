@@ -13,7 +13,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <imageText :extends-list="extendsList" :tag-list = "tagList" :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 0"/>
+    <imageText :other-settings="otherSettings" :tag-list = "tagList" :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 0"/>
     <images :extends-list="extendsList" :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 1"/>
     <splicing :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 2"/>
     <reproduce :channel-id = "channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 3"/>
@@ -38,7 +38,40 @@ export default {
       extendsList: [],
       tagList: [],
       channelId: '',
-      docInfor: {}
+      docInfor: {},
+      otherSettings: [
+        {
+          items: [
+            {
+              label: '标签',
+              name: 'tagIds',
+              type: 'checkbox',
+              options: []
+            },
+            {
+              label: '点击量',
+              name: 'clickNum',
+              type: 'number',
+              placeholder: '请输入点击量'
+            },
+            {
+              label: '创建时间',
+              name: 'createTime',
+              type: 'date'
+            },
+            {
+              label: '设置',
+              name: 'set',
+              type: 'slot',
+            },
+            {
+              label: '排序号',
+              name: 'seqNo',
+              type: 'number'
+            },
+          ]
+        }
+      ],
     }
   },
   computed: {
@@ -49,11 +82,11 @@ export default {
     this.getColumnInfor(this.treeTags[this.treeTags.length - 1].id)
     this.channelId = this.treeTags[this.treeTags.length - 1].id
   },
-  mounted() {
-    if(this.contextMenu.docId) {
-      this.getDocumentInfor(this.contextMenu.docId)
-    }
-  },
+  // mounted() {
+  //   if(this.contextMenu.docId) {
+  //     this.getDocumentInfor(this.contextMenu.docId)
+  //   }
+  // },
   methods: {
     handleSave() {},
     handleSaveAddRelease() {},
@@ -96,12 +129,17 @@ export default {
             if(response.data.result.tagRule) {
               Object.keys(response.data.result.tagRule).forEach((ele) => {
                 if(response.data.result.tagRule[ele]) {
-                  this.tagList.push({
+                  _this.tagList.push({
                     label: response.data.result.tagRule[ele],
                     value: ele
                   })
                 }
               })
+            }
+            _this.otherSettings[0].items[0].options = _this.tagList
+            _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList)
+            if(_this.contextMenu.docId) {
+              _this.getDocumentInfor(_this.contextMenu.docId)
             }
             resolve()
           })

@@ -103,6 +103,27 @@ export const ComponentMap = [
      */
     type: '14',
     RecycleBin: () => import('./components/recycleBin/index')
+  },
+  {
+    /**
+     * 栏目模板
+     */
+    type: '15',
+    ColumnModel: () => import('./components/columnModel/index')
+  },
+  {
+    /**
+     * 评论管理
+     */
+    type: '16',
+    ColumnModel: () => import('./components/commentManage/index')
+  },
+  {
+    /**
+     * 浏览统计
+     */
+    type: '17',
+    ColumnModel: () => import('./components/viewSum/index')
   }
 ]
 

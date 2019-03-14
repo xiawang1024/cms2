@@ -19,7 +19,7 @@
           >{{ item.label }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-dropdown size="mini">
+      <el-dropdown size="mini" @command="handleColumn">
         <el-button
           type="primary"
           size="mini"
@@ -30,6 +30,7 @@
           <el-dropdown-item
             v-for="item of currentColumn"
             :key="item.id"
+            :command="item.id"
           >{{ item.label }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -133,11 +134,41 @@ export default {
     chooseHandel(item) {
       console.log(item)
     },
+    handleColumn(command) {
+      // if(command == 3) {
+      //   const select = { id: '4', label: '修改栏目' }
+      //   this.$store.dispatch('setContextMenu', select)
+      // }
+      switch(command) {
+        case '3':
+          this.$store.dispatch('setContextMenu', {id: '4', label: '修改栏目'})
+          break;
+        case '4':
+          this.$store.dispatch('setContextMenu', {id: '11', label: '栏目图片'})
+          break
+        case '5':
+          this.$store.dispatch('setContextMenu', {id: '12', label: '文档列表'})
+          break
+        case '6':
+          this.$store.dispatch('setContextMenu', {id: '13', label: '内容片段'})
+          break
+        case '7':
+          this.$store.dispatch('setContextMenu', {id: '15', label: '模板'})
+          break
+        case '8':
+          this.$store.dispatch('setContextMenu', {id: '16', label: '评论管理'})
+          break
+        case '9':
+          this.$store.dispatch('setContextMenu', {id: '14', label: '废件箱'})
+          break
+        case '10':
+          this.$store.dispatch('setContextMenu', {id: '17', label: '发稿和浏览统计'})
+          break 
+        default: 
+          break
+      }
+    },
     handleCommand(command) {
-      console.log(command)
-      // this.centerDialogVisible = true
-      // this.$refs.choosedDialog
-      // console.log(this.$refs)
       if(command == 2) {
         const select = { id: '1', label: '新建文档' }
         this.$store.dispatch('setContextMenu', select)

@@ -39,6 +39,7 @@ export default {
         return item.type === type
       })
       this.currentComponent = Object.keys(current[0])[1]
+      console.log(this.currentComponent, 'currentComponent')
     }
   }
 }
