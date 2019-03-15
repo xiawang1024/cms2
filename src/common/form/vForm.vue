@@ -126,8 +126,10 @@
                   <div v-if="item.hasTextInput && imgUploadText[item.name].length" class="upload-text-container">
                     <div class="imageHandel" v-for="(uploadTextItem, uploadTextIndex) in imgUploadText[item.name]" :key="uploadTextIndex">
                       <div class="handelBtn">
-                        <span>设为封面</span>
-                        <span>添加水印</span>
+                        <!-- <span>设为封面</span>
+                        <span>添加水印</span> -->
+                        <el-button type="text" style="margin-left: 10px" @click="setCover(imgUploadText[item.name])">设置封面</el-button>
+                        <el-button type="text">添加水印</el-button>
                       </div>
                     </div>
                     <!-- <el-input v-for="(uploadTextItem, uploadTextIndex) in imgUploadText[item.name]" :key="uploadTextIndex" v-model="imgUploadText[item.name][uploadTextIndex]" placeholder="输入图片描述"/> -->
@@ -137,8 +139,26 @@
             </template>
             <!-- 文件上传 -->
             <template v-else-if="item.type=='file'">
-              <el-upload :action="upURL" :file-list="formModel[item.name]" :multiple="item.multiple" :data="getUploadParam(item.data)" :name="'file'" :limit="item.limit" :before-upload="beforeUploadCallbacks[item.name]" :on-success="uploadCallbacks[item.name]" :on-preview="handlePreviewFile" :on-remove="removeCallbacks[item.name]" :on-exceed="handelUploadExceed" :on-error="handleUploadError" :disabled="item.disabled" class="upload-file">
-                <el-button :disabled="isUploading || !upToken" size="small" type="primary">点击上传</el-button>
+              <el-upload :action="upURL" :file-list="formModel[item.name]" :multiple="item.multiple" :name="'file'" :limit="item.limit" :before-upload="beforeUploadCallbacks[item.name]" :on-success="uploadCallbacks[item.name]" :on-preview="handlePreviewFile" :on-remove="removeCallbacks[item.name]" :on-exceed="handelUploadExceed" :on-error="handleUploadError" :disabled="item.disabled" class="upload-file">
+                <el-button :disabled="isUploading" size="small" type="primary">点击上传</el-button>
+                <div v-if="item.tip" slot="tip" class="el-upload__tip">{{ item.tip }}
+                  <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
+                </div>
+              </el-upload>
+            </template>
+            <!-- 音频上传 -->
+            <template v-else-if="item.type=='audio'">
+              <el-upload :action="upURL" :file-list="formModel[item.name]" :multiple="item.multiple" :name="'file'" :limit="item.limit" :before-upload="beforeUploadCallbacks[item.name]" :on-success="uploadCallbacks[item.name]" :on-preview="handlePreviewFile" :on-remove="removeCallbacks[item.name]" :on-exceed="handelUploadExceed" :on-error="handleUploadError" :disabled="item.disabled" class="upload-file" accept="audio/*">
+                <el-button :disabled="isUploading" size="small" type="primary">点击上传</el-button>
+                <div v-if="item.tip" slot="tip" class="el-upload__tip">{{ item.tip }}
+                  <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
+                </div>
+              </el-upload>
+            </template>
+            <!-- 视频上传 -->
+            <template v-else-if="item.type=='video'">
+              <el-upload :action="upURL" :file-list="formModel[item.name]" :multiple="item.multiple" :name="'file'" :limit="item.limit" :before-upload="beforeUploadCallbacks[item.name]" :on-success="uploadCallbacks[item.name]" :on-preview="handlePreviewFile" :on-remove="removeCallbacks[item.name]" :on-exceed="handelUploadExceed" :on-error="handleUploadError" :disabled="item.disabled" class="upload-file" accept="video/*">
+                <el-button :disabled="isUploading" size="small" type="primary">点击上传</el-button>
                 <div v-if="item.tip" slot="tip" class="el-upload__tip">{{ item.tip }}
                   <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
                 </div>
@@ -374,7 +394,7 @@ export default {
         this.flatFormSettings &&
         Object.keys(this.flatFormSettings)
           .map(item => this.flatFormSettings[item])
-          .some(item => item.type == 'img' || item.type == 'file')
+          .some(item => item.type == 'img' || item.type == 'file' || item.type == 'audio' || item.type == 'video')
       ) {
         // this.getUpToken()
       }
@@ -558,7 +578,7 @@ export default {
                 }
               } else if (item.type == 'cascader') {
                 tmpModel[item.name] = []
-              } else if (item.type == 'img' || item.type == 'file') {
+              } else if (item.type == 'img' || item.type == 'file' || item.type == 'audio' || item.type == 'video') {
                 tmpModel[item.name] = []
               } else if (item.type == 'slot') {
                 tmpModel[item.name] = item.value || ''
@@ -572,12 +592,14 @@ export default {
               }
             }
 
-            if (item.type == 'img' || item.type == 'file') {
+            if (item.type == 'img' || item.type == 'file' || item.type == 'audio' || item.type == 'video') {
               tmpUploadCallback[item.name] = (response, file, fileList) => {
                 this.handleUploadFile(item.name, response, file, fileList)
               }
               tmpRemoveCallback[item.name] = (file, fileList) => {
                 this.handleRemoveFile(item.name, file, fileList)
+                console.log('remove')
+                this.$emit('removeFile')
               }
               tmpBeforeUploadCallback[item.name] = file => {
                 return this.handleBeforeUploadFile(item.name, file, item)
@@ -609,12 +631,16 @@ export default {
     },
     // 点击预览上传的文件
     handlePreviewFile(file) {
-      let downloadLink = document.createElement('a')
-      downloadLink.download = file.name
-      downloadLink.href = file.url
-      downloadLink.style.display = 'none'
-      document.body.appendChild(downloadLink)
-      downloadLink.click()
+      if (this.showPreview) {
+       let downloadLink = document.createElement('a')
+        downloadLink.download = file.name
+        downloadLink.href = file.url
+        downloadLink.style.display = 'none'
+        document.body.appendChild(downloadLink)
+        downloadLink.click()
+      } else {
+        this.$emit('fileDetail', file)
+      }
     },
     // 移除上传文件回调
     handleRemoveFile(name, file, fileList) {
@@ -630,11 +656,16 @@ export default {
     },
     // 上传文件成功回调
     handleUploadFile(name, response, file, fileList) {
+      console.log(file, 'file')
       this.formModel[name].push({
         name: response.result.fileName,
-        url: DOWN_URL + response.result.filePath
+        url: DOWN_URL + response.result.filePath,
+        size: file.size,
+        createTime: file.raw.lastModified,
+        width: '',
+        height: '',
+        coverBool: false
       }) // [{name: xx, url: xx}]
-      console.log(this.formModel[name], 'url')
       this.isUploading = false
       if (this.imgUploadText && this.imgUploadText[name]) {
         this.imgUploadText[name].push('')
@@ -802,6 +833,10 @@ export default {
         throw new Error('没有找到该表单项')
       }
       item.options = options
+    },
+    // 设置封面
+    setCover(val) {
+      console.log(val)
     }
   }
 }
@@ -840,7 +875,7 @@ export default {
     margin-bottom: 30px;
     overflow: hidden;
     border-bottom: 1px solid #e8e8e8;
-    padding-bottom: 20px;
+    // padding-bottom: 20px;
     h3 {
       margin-bottom: 20px;
       font-size: 16px;

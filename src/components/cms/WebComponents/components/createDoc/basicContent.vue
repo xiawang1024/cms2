@@ -230,7 +230,7 @@ export default {
       return new Promise((resolve, reject) => {
         columnInfor(id)
           .then((response) => {
-            if(response.data.result.extFieldsList.length) {
+            if(response.data.result.extFieldsList) {
               _this.extendsList = response.data.result.extFieldsList.map((ele) => {
                 return {
                   label: ele.label,

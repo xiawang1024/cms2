@@ -170,9 +170,9 @@ export default {
     }
     this.formData.tagIds = showTags
     this.adddocSet = {
-      extractCode: this.docInfor.extractCode,
-      hiddenFlag: this.docInfor.hiddenFlag + '',
-      topFlag: this.docInfor.topFlag + ''
+      extractCode: this.docInfor.extractCode ? this.docInfor.extractCode : 0,
+      hiddenFlag: this.docInfor.hiddenFlag ? this.docInfor.hiddenFlag + '' : '0',
+      topFlag: this.docInfor.topFlag ? this.docInfor.topFlag + '' : '0'
     }
   },
   methods: {
@@ -238,6 +238,11 @@ export default {
         delete resoultObj.set
         delete resoultObj.tagIds
         delete resoultObj.btn
+        if (resoultObj.contentBody) {
+          console.log('')
+        } else {
+          resoultObj.contentBody = ''
+        }
         if(this.contextMenu.docId) {
           resoultObj.articleId = this.contextMenu.docId
           this.editDoc(resoultObj)

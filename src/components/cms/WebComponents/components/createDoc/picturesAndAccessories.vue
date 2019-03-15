@@ -16,18 +16,27 @@
               <uploader :options="options" :file-status-text="statusText" class="uploader-example" ref="uploader" @file-complete="fileComplete" @complete="complete" @fileSuccess="fileSuccess" @fileInfor = "fileInfor" @fileRemoved ="fileRemoved"/>
             </el-form-item>
           </el-form> -->
-          <v-form ref="vForm" :form-settings="uploadSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail"/>
+          <v-form ref="imageForm" :form-settings="imageSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail" @removeFile="removeFile"/>
+          <!-- <v-form ref="videoForm" :form-settings="videoSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail"/> -->
         </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="10" :xl="10" :offset="2">
-          <div v-if="filedetail.url">
-            <v-form ref="vForm" :form-settings="imageSettings" :form-data="formData" label-width="80px" :show-button = "showButton">
+        <el-col :xs="24" :sm="12" :md="12" :lg="10" :xl="10" :offset="1">
+          <div v-if="rightCardShow">
+            <v-form ref="vForm" :form-settings="fileSettings" :form-data="singleData" label-width="80px" :show-button = "showButton">
               <template slot="information">
                 <div class="file-infor">
-                  <div class="file-img">
+                  <div class="file-img" v-if="fileType == '0'">
                     <img :src="filedetail.url" alt="">
+                  </div>
+                  <div class="file-video" v-if="fileType == '2'">
+                    <video :src="filedetail.url" controls="controls" height="200px"/>
+                  </div>
+                  <div class="file-video" v-if="fileType == '1'">
+                    <video :src="filedetail.url" controls="controls" height="100px"/>
                   </div>
                   <div class="desc">
                     <div>{{ filedetail.name }}</div>
+                    <div v-if="filedetail.createTime">{{ parseInt(filedetail.createTime)|timeFilter }}</div>
+                    <div v-if="filedetail.size">{{ Math.floor(filedetail.size / 1024) }} kb</div>
                   </div>
                 </div>
               </template>
@@ -62,8 +71,8 @@
                 </div>
               </template> -->
               <template slot="btn">
-                <el-button size="small">关闭</el-button>
-                <el-button type="primary" size="small" @click ="fileParams">保存</el-button>
+                <el-button size="small" @click="colseSet">关闭</el-button>
+                <el-button type="primary" size="small" @click ="setFile">保存</el-button>
               </template>
             </v-form>
           </div>
@@ -71,22 +80,19 @@
       </el-row>
     </div>
     <div class="upload-btn">
-      <el-button type = "primary" size="small" @click = "goBack">返回</el-button>
+      <el-button type = "primary" size="small" @click = "goBack">预览</el-button>
       <el-button type = "primary" size="small" @click = "save">存草稿</el-button>
+      <el-button type = "primary" size="small" @click = "save">保存并关闭</el-button>
     </div>
   </div>
 </template>
 
 <script>
-import { DOWN_URL } from '@/config/base-url'
+// import { DOWN_URL } from '@/config/base-url'
 import { mapGetters } from 'vuex'
 import { createDocument, editDocument, documentInfor } from '@/api/cms/article'
 export default {
   props: {
-    // docInformation:{
-    //   default: {},
-    //   type: Object
-    // },
     activeName: {
       default: '',
       type: String
@@ -95,39 +101,49 @@ export default {
   data () {
     return {
       showPreview: false,
-      options: {
-        target: 'http://172.20.5.4:55030/basefile/upload?fileRefId=jkhjkhjkhj', // '//jsonplaceholder.typicode.com/posts/',
-        testChunks: false,
-        chunkSize: 1024*1024*1024
-      },
-      attrs: {
-        accept: 'image/*'
-      },
-      statusText: {
-        success: '成功了',
-        error: '出错了',
-        uploading: '上传中',
-        paused: '暂停中',
-        waiting: '等待中'
-      },
       fileType: '0',
       form: {
         name: ''
       },
       showButton: false,
       formData: {},
-      uploadSettings: [{
+      imageSettings: [{
         items: [
           {
-            label: '附件详情',
-            name: 'information',
+            label: '图片',
+            name: 'contentImagesList',
             type: 'img',
             required: false,
-            hasTextInput: true
-          }
+            // hasTextInput: true,
+            hidden: false
+          },
+          {
+            label: '音频',
+            name: 'contentAudioList',
+            type: 'audio',
+            required: false,
+            // hasTextInput: true,
+            hidden: true
+          },
+          {
+            label: '视频',
+            name: 'contentVideosList',
+            type: 'video',
+            required: false,
+            // hasTextInput: true,
+            hidden: true
+          },
+          {
+            label: '其他',
+            name: 'articleAttachmentsList',
+            type: 'file',
+            required: false,
+            // hasTextInput: true,
+            hidden: true
+          },
         ]
       }],
-      imageSettings: [{
+      fileSettings: [{
         items: [
           {
             label: '附件详情',
@@ -136,13 +152,18 @@ export default {
           },
           {
             label: '标题',
-            name: 'name',
+            name: 'width',
             type: 'text'
           },
           {
             label: '描述',
-            name: 'des',
+            name: 'height',
             type: 'textarea',
+          },
+          {
+            label: '设为封面',
+            name: 'coverBool',
+            type: 'switch'
           },
           // {
           //   label: '自定义',
@@ -156,23 +177,18 @@ export default {
           },
         ]
       }],
-      fileInformation: {
-        url: '',
-        name: '',
-        size: '',
-        cmsPath: {
-          result: {
-            filePath: ''
-          }
-        }
-      },
       index: '',
-      formIndex: '',
-      fileList: [],
       // 文件参数设置列表
       contentImagesList: [],
       docInformation: {},
-      filedetail: {}
+      // 文件详情
+      filedetail: {
+      },
+      // 图片参数列表
+      imageparamsList: [],
+      // 文件标题信息
+      singleData: {},
+      rightCardShow: false
     }
   },
   computed: {
@@ -188,13 +204,23 @@ export default {
     }
   },
   mounted () {
-    this.$nextTick(() => {
-      window.uploader = this.$refs.uploader.uploader
-    })
   },
   methods: {
+    // 关闭
+    colseSet() {
+      this.rightCardShow = false
+    },
+    // 删除图片
+    removeFile() {
+      this.rightCardShow = false
+    },
+    // 点击图片获取详情
     fileDetail(val) {
+      this.rightCardShow = true
+      this.singleData = {}
       this.filedetail = val
+      this.singleData = val
+      console.log(val)
     },
     getDocumentInfor(id) {
       var _this = this
@@ -202,14 +228,12 @@ export default {
         documentInfor(id)
           .then((response) => {
             _this.docInformation = response.data.result
-            // _this.fileList = response.data.result.contentImagesList
-            console.log( _this.fileList)
-            this.$refs.uploader.fileList = response.data.result.contentImagesList
-            // console.log(_this.$refs.uploader.fileList, 'fileListInfor')
-            // console.log(new File([], '1111'))
-            // _this.$refs.uploader.fileList.push(new File([response.data.result.contentImagesList], '1111'))
-            // console.log(_this.$refs.uploader.initFileFn, 'initFileFn')
-            // _this.$emit('docInfor', _this.docInfor)
+            _this.formData =  response.data.result
+            _this.formData.contentVideosList =  _this.formData.contentVideosList ?  _this.formData.contentVideosList : []
+            _this.formData.contentImagesList =  _this.formData.contentImagesList ?  _this.formData.contentImagesList : []
+            _this.formData.contentAudioList =  _this.formData.contentAudioList ?  _this.formData.contentAudioList : []
+            _this.formData.articleAttachmentsList =  _this.formData.articleAttachmentsList ?  _this.formData.articleAttachmentsList : []
+            // _this.formData.articleAttachmentsList =  _this.formData.articleAttachmentsList ?  _this.formData.articleAttachmentsList : []
             resolve()
           })
           .catch((error) => {
@@ -218,48 +242,44 @@ export default {
       })
     },
     // 保存图片参数
-    fileParams() {
-      this.contentImagesList[this.index] = {
-        category: 0,
-        name: this.$refs.vForm.formModel.name,
-        url: this.fileInformation.url
-      }
+    setFile() {
+      this.filedetail.height = this.$refs.vForm.formModel.height
+      this.filedetail.width = this.$refs.vForm.formModel.width
+      this.filedetail.coverBool = this.$refs.vForm.formModel.coverBool
+      // this.filedetail.time = this.$refs.vForm.formModel.time
       this.$message.success('保存成功')
+      // console.log(this.filedetail, 'detail')
+      // console.log(this.$refs.imageForm.formModel.contentImagesList, 'imageForm')
+      // this.formData.contentImagesList = this.$refs.imageForm.formModel.contentImagesList
     },
-    fileRemoved(file) {
-    },
-    fileInfor(fileDate) {
-      this.fileInformation = fileDate.file
-      this.index = this.index ===  fileDate.index ? '' : fileDate.index
-      if(this.contentImagesList.length) {
-        let res = this.contentImagesList.filter((ele) => {
-          return ele.url ==  this.fileInformation.url
-        })
-        if(res.length) {
-           this.formData = res[0]
-        }
-      }else {
-        this.formData = {}
+    typeChange(val) {
+      this.rightCardShow = false
+      switch(val) {
+        case '0':
+          this.imageSettings[0].items[0].hidden = false
+          this.imageSettings[0].items[1].hidden = true
+          this.imageSettings[0].items[2].hidden = true
+          this.imageSettings[0].items[3].hidden = true
+          break
+        case '1':
+          this.imageSettings[0].items[1].hidden = false
+          this.imageSettings[0].items[0].hidden = true
+          this.imageSettings[0].items[2].hidden = true
+          this.imageSettings[0].items[3].hidden = true
+          break
+        case '2':
+          this.imageSettings[0].items[1].hidden = true
+          this.imageSettings[0].items[0].hidden = true
+          this.imageSettings[0].items[2].hidden = false
+          this.imageSettings[0].items[3].hidden = true
+          break
+        case '3':
+          this.imageSettings[0].items[1].hidden = true
+          this.imageSettings[0].items[0].hidden = true
+          this.imageSettings[0].items[2].hidden = true
+          this.imageSettings[0].items[3].hidden = false
+          break
       }
-    },
-    typeChange() {
-    },
-    complete () {
-      this.fileList = this.$refs.uploader.fileList
-      console.log(this.fileList, 'list')
-      // console.log(typeof this.$refs.uploader.file , 'uploaderFile')
-      if(this.fileList.length) {
-        this.fileList.forEach((ele) => {
-          ele.url = DOWN_URL +  ele.cmsPath.result.filePath
-        })
-      }
-    },
-    fileComplete () {
-      console.log('file complete', arguments)
-    },
-    fileSuccess(msg) {
-      // console.log(123)
-      // console.log(JSON.parse(msg))
     },
     goBack() {
       this.$store.dispatch('setContextMenu', {
@@ -302,27 +322,15 @@ export default {
     save() {
       let resoultObj = this.docInformation
       resoultObj.channelId = this.treeTags[this.treeTags.length - 1].id
-      // console.log(resoultObj, 'resoultObj')
-      console.log(this.contentImagesList)
-      console.log(this.fileList)
-      let imgageParams = []
-      if(this.fileList.length) {
-        this.fileList.forEach((ele) => {
-          if(this.contentImagesList.length) {
-            this.contentImagesList.forEach((content) => {
-              if(ele.url == content.url) {
-                imgageParams.push(content)
-              }
-            })
-          }else {
-            imgageParams.push({
-                category: 0,
-                url: ele.url
-            })
-          }
-        })
-      }
-      resoultObj.contentImagesList = imgageParams
+      let imageFile = this.$refs.imageForm.formModel.contentImagesList
+      let videoFile = this.$refs.imageForm.formModel.contentVideosList
+      let audioFile = this.$refs.imageForm.formModel.contentAudioList 
+      let otherFile = this.$refs.imageForm.formModel.articleAttachmentsList
+      resoultObj.contentImagesList = imageFile
+      resoultObj.contentVideosList = videoFile
+      resoultObj.contentAudioList = audioFile
+      resoultObj.articleAttachmentsList = otherFile
+      console.log(resoultObj)
       if(this.contextMenu.docId) {
         resoultObj.articleId = this.contextMenu.docId
         this.editDoc(resoultObj)
@@ -336,6 +344,9 @@ export default {
 
 <style lang="scss">
   .upload-file {
+    .upload-btn {
+      padding-left: 80px;
+    }
     .type-choose{
       margin-top:10px;
     }
@@ -356,7 +367,7 @@ export default {
        .form-section {
          overflow: visible;
          border-bottom: none;
-         .upload-img{
+         .upload-img, .upload-file{
             .el-upload-list {
               li {
                 margin-bottom: 26px;
@@ -372,6 +383,13 @@ export default {
               .el-button {
                 margin-top:100px;
               }
+           }
+         }
+         .upload-file {
+           .el-upload-list {
+             li {
+               border: 1px solid #c0ccda;;
+             }
            }
          }
          .file-img {

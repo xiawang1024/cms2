@@ -10,8 +10,11 @@
         </div>
       </template>
       <template slot="preview">
-        <div class="preview">
-          <div v-html="$refs.vForm.formModel.contentTitle" v-if="$refs.vForm"/>
+        <div>
+          <el-button type="primary" size="small" @click="lookPreview">预览</el-button>
+        </div>
+        <div class="preview" v-if="indexTitle">
+          <div v-html="indexTitle"/>
         </div>
       </template>
     </v-form>
@@ -80,7 +83,8 @@ export default {
         }
       ],
       formData: {},
-      isLoading: false
+      isLoading: false,
+      indexTitle: ''
     }
   },
   computed: {
@@ -94,7 +98,10 @@ export default {
         topFlag: val.topFlag + ''
       }
       this.formData = val
-    }
+    },
+    // $refs.form[formModel][contentTitle]() {
+
+    // }
   },
   mounted() {
     this.formData =  this.docInfor
@@ -105,6 +112,9 @@ export default {
     }
   },
   methods: {
+    lookPreview() {
+      this.indexTitle = this.$refs.form.formModel.contentTitle
+    },
     submitSave(data) {
       console.log(data, 'data')
     },

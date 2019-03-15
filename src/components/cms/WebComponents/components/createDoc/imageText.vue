@@ -1,7 +1,7 @@
 <template>
   <div class="imageText-wrap">
     <el-row :gutter="10">
-      <el-col :xs="12" :sm="12" :md="14" :lg="14" :xl="14">
+      <el-col :xs="12" :sm="12" :md="18" :lg="18" :xl="18">
         <el-form ref="docContentForm" :model="docContentForm" :rules="rules" label-width="80px" class="docContentForm">
           <el-form-item label="文档标题" prop="articleTitle">
             <el-input v-model="docContentForm.articleTitle"/>
@@ -24,7 +24,7 @@
           <el-button type = "primary" size="small" @click = "save">保存并发布</el-button> -->
         </div>
       </el-col>
-      <el-col :xs="12" :sm="12" :md="10" :lg="10" :xl="10" class="document-right">
+      <el-col :xs="12" :sm="12" :md="6" :lg="6" :xl="6" class="document-right">
         <div class="base-attribute">
           <el-card class="box-card">
             <div slot="header" class="clearfix">
@@ -110,11 +110,11 @@ export default {
       rules: {
         articleTitle: [
           { required: true, message: '请输入文档标题', trigger: 'blur' },
-          { min: 0, max: 17, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 0, max: 17, message: '长度在 0 到 17 个字符', trigger: 'blur' }
         ],
         contentTitle: [
           { required: true, message: '请输入首页标题', trigger: 'blur' },
-          { min: 0, max: 17, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 0, max: 17, message: '长度在 0 到 17 个字符', trigger: 'blur' }
         ],
       },
       formData: {},
@@ -199,9 +199,9 @@ export default {
     }
     this.formData.tagIds = showTags
     this.adddocSet = {
-      extractCode: this.docInfor.extractCode,
-      hiddenFlag: this.docInfor.hiddenFlag + '',
-      topFlag: this.docInfor.topFlag + ''
+      extractCode: this.docInfor.extractCode ? this.docInfor.extractCode : 0,
+      hiddenFlag: this.docInfor.hiddenFlag ? this.docInfor.hiddenFlag + '' : '0',
+      topFlag: this.docInfor.topFlag ? this.docInfor.topFlag + '' : '0'
     }
   },
   created() {
@@ -249,6 +249,7 @@ export default {
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       // 获取扩展字段的值
       let extendsFields = []
+      console.log(this.adddocSet, 'this.adddocSet')
       if(this.extendsList.length) {
         extendsFields = this.extendsList.map((ele) => {
           return {
@@ -275,6 +276,11 @@ export default {
       resoultObj.tagIdsList = chooseTags
       delete resoultObj.set
       delete resoultObj.tagIds
+      if (resoultObj.contentBody) {
+        console.log('')
+      } else {
+        resoultObj.contentBody = ''
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if(this.contextMenu.docId) {

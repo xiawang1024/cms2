@@ -4,7 +4,7 @@
     <split-pane
       :min-percent="10"
       :max-percent="30"
-      :default-percent="15"
+      :default-percent="10"
       class="pane-wrap"
       split="vertical"
       @resize="resize"
@@ -27,8 +27,6 @@
           >
             <WebComponents :component-type="contextMenu.id" />
           </el-scrollbar>
-          {{ contextMenu }}
-          123456
         </div>
       </template>
     </split-pane>
