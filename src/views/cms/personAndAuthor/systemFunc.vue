@@ -1,7 +1,7 @@
 <template>
   <div class="systemFunc-container">
     <div class="tool-bar">
-      <el-button type="primary" @click="addSystemFuncVisible = true">新增</el-button>
+      <el-button size="mini" type="primary" @click="addSystemFuncVisible = true">新增</el-button>
     </div>
     <el-table :data="siteList" style="width: 100%">
       <el-table-column prop="mark" label="标示"/>
@@ -13,8 +13,8 @@
       <el-table-column prop="expression" label="表达式"/>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="prime" @click="beforeAlter(scope.$index, scope.row)">修改</el-button>
-          <el-button type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button size="mini" type="prime" @click="beforeAlter(scope.$index, scope.row)">修改</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -44,8 +44,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addSystemFuncVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleAdd()">确 定</el-button>
+        <el-button size="mini" @click="addSystemFuncVisible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="handleAdd()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -74,8 +74,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="alterSystemFuncVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleAlter()">确 定</el-button>
+        <el-button size="mini" @click="alterSystemFuncVisible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="handleAlter()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -174,5 +174,8 @@ export default {
 
 .tool-bar {
   text-align: right;
+}
+.dialog-footer{
+  margin-top: -45px;
 }
 </style>

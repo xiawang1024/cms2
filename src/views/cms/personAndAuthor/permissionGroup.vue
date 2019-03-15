@@ -1,7 +1,7 @@
 <template>
   <div class="permissionGroup-container">
     <div class="tool-bar">
-      <el-button type="primary" @click="handleAdd">新分组</el-button>
+      <el-button size="mini" type="primary" @click="handleAdd">新分组</el-button>
     </div>
     <el-table :data="groupList" style="width: 100%">
       <el-table-column prop="name" label="分组名称"/>
@@ -13,8 +13,8 @@
       <el-table-column prop="createTime" label="创建时间"/>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button @click="handleAlter(scope.$index, scope.row)">编辑</el-button>
-          <el-button type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button size="mini" @click="handleAlter(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

@@ -40,7 +40,7 @@
       <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">这边是展示</el-col>
     </el-row>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="handleSave()">保 存</el-button>
+      <el-button size="mini" type="primary" @click="handleSave()">保 存</el-button>
     </div>
   </div>
 </template>
