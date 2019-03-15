@@ -214,14 +214,14 @@ export default {
           })
       })
     },
-    save(formName) {
+    save(formName, publishType) {
       this.$refs.form.getDataAsync().then(data => {
         if (!data) {
           return
         }
         let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
         resoultObj.channelId = this.channelId
-        resoultObj.articleStatus = '1'
+        resoultObj.articleStatus = publishType
         // 标签字段处理
         let chooseTags = []
         resoultObj.tagIds.forEach((ele) => {
@@ -235,6 +235,7 @@ export default {
           })
         })
         resoultObj.tagIdsList = chooseTags
+        resoultObj.articleType = 1
         delete resoultObj.set
         delete resoultObj.tagIds
         delete resoultObj.btn

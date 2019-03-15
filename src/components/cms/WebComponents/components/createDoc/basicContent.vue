@@ -46,7 +46,8 @@ export default {
               label: '标签',
               name: 'tagIds',
               type: 'checkbox',
-              options: []
+              options: [],
+              hidden: false
             },
             {
               label: '点击量',
@@ -119,7 +120,8 @@ export default {
               label: '标签',
               name: 'tagIds',
               type: 'checkbox',
-              options: []
+              options: [],
+              hidden: false
             },{
               label:'点击量',
               name: 'clickNum',
@@ -175,7 +177,8 @@ export default {
               label: '标签',
               name: 'tagIds',
               type: 'checkbox',
-              options: []
+              options: [],
+              hidden: false
             },
             {
               label: '设置',
@@ -254,6 +257,13 @@ export default {
             _this.imagesSeting[0].items[6].options = _this.tagList
             _this.reproduceSetting[0].items[3].options = _this.tagList
             _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList)
+            if(_this.tagList.length) {
+              console.log()
+            } else {
+              _this.otherSettings[0].items[0].hidden = true
+              _this.imagesSeting[0].items[6].hidden = true
+              _this.reproduceSetting[0].items[3].hidden = true
+            }
             if(_this.contextMenu.docId) {
               _this.getDocumentInfor(_this.contextMenu.docId)
             }
@@ -271,12 +281,12 @@ export default {
           .then((response) => {
             _this.docInfor = response.data.result
             _this.$emit('docInfor', _this.docInfor)
+            _this.typeForm.articleType = response.data.result.articleType ? response.data.result.articleType : 0
             if(_this.docInfor.extFieldsList && _this.docInfor.extFieldsList.length) {
               _this.docInfor.extFieldsList.forEach((ele) => {
                 _this.docInfor[ele.label] = ele.fieldValue
               })
             }
-            console.log(_this.$refs.images, 'refs')
             resolve()
           })
           .catch((error) => {

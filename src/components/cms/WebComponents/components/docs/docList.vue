@@ -24,8 +24,25 @@
           <i class="el-icon-view" style="cursor:pointer" @click="openWindow(scope.row.preview)"/>
         </template>
       </el-table-column>
-      <el-table-column prop="articleType" label="类型" width="100"/>
-      <el-table-column prop="articleStatus" label="状态" width="100"/>
+      <el-table-column prop="articleType" label="类型" width="100">
+        <template slot-scope="scope">
+          <span v-if="scope.row.articleType == 0">图文</span>
+          <span v-if="scope.row.articleType == 1">图集</span>
+          <span v-if="scope.row.articleType == 2">拼条</span>
+          <span v-if="scope.row.articleType == 3">转载</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="articleStatus" label="状态" width="100">
+        <template slot-scope="scope">
+          <span v-if="scope.row.articleStatus == 0">新稿</span>
+          <span v-if="scope.row.articleStatus == 1">提交审核</span>
+          <span v-if="scope.row.articleStatus == 2">审核未通过</span>
+          <span v-if="scope.row.articleStatus == 3">已撤</span>
+          <span v-if="scope.row.articleStatus == 3">已删</span>
+          <span v-if="scope.row.articleStatus == 3">待发</span>
+          <span v-if="scope.row.articleStatus == 3">已发</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="mark" label="标记" width="100"/>
       <el-table-column
         prop="createTime"
@@ -41,8 +58,8 @@
         sortable
         show-overflow-tooltip
       />
-      <el-table-column prop="editor" label="撰稿人" width="100"/>
-      <el-table-column prop="click" label="点击" sortable width="80"/>
+      <el-table-column prop="articleAuthor" label="撰稿人" width="100"/>
+      <el-table-column prop="clickNum" label="点击" sortable width="80"/>
       <el-table-column fixed="right" label="操作" width="130">
         <template slot-scope="scope">
           <el-button type="text" size="small">置顶</el-button>
@@ -116,7 +133,8 @@ export default {
      * 查看预览
      */
     openWindow(link) {
-      window.location.href = link
+      // window.location.href = link
+      window.open(link)
     },
     editDoc(docId) {
       const select = { id: '1', label: '新建文档', docId: docId}

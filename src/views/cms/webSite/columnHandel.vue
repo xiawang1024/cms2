@@ -57,10 +57,10 @@ export default {
           items: [
             {
               label: '父级栏目',
-              name: 'parentChannelId',
+              name: 'parentChannelNames',
               type: 'text',
               valueType: 'string',
-              placeholder: '请选择',
+              placeholder: '',
               disabled: true
             },
             {
@@ -84,7 +84,8 @@ export default {
               label:'存放位置',
               name: 'domainPath',
               type:'text',
-              placeholder: '请输入存放位置'
+              placeholder: '请输入存放位置',
+              hidden: true
             },{
               label: '创建人员',
               name: 'createUser',

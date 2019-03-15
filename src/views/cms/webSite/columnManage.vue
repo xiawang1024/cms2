@@ -7,8 +7,15 @@
       <el-button type="primary" @click="columnAddEdit(true, 'father')" size="small">添加</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="channelName" label="栏目名称" min-width="200"/>
-      <el-table-column prop="channelCode" label="栏目编码" min-width="200"/>
+      <el-table-column prop="channelName" label="栏目名称" min-width="300" >
+        <template slot-scope="scope">
+          <div>
+            <span>{{ scope.row.parentChannelNames }}</span>
+            <span>{{ scope.row.channelName }}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="channelCode" label="栏目编码" min-width="80"/>
       <el-table-column prop="hiddenFlag" label="状态">
         <template slot-scope="scope">
           <span v-if="scope.row.hiddenFlag == 1">隐藏</span>
@@ -40,7 +47,7 @@
     </el-table>
     <el-pagination
       :current-page="pageNum"
-      :page-sizes="[10,30,60,100]"
+      :page-sizes="[100]"
       :page-size="pageSize"
       :total="totalCount"
       background
@@ -62,7 +69,7 @@ export default {
     return {
       tableData: [],
       pageNum: 1,
-      pageSize: 10,
+      pageSize: 100,
       totalCount: 0,
       searchSettings: [{
         label: '栏目名称',
@@ -213,6 +220,16 @@ export default {
   .pagination {
     margin-top:20px;
     margin-bottom:20px;
+  }
+  .el-table {
+    // td, th{
+    //   padding:0;
+    // }
+    tr{
+      td {
+        padding:0px;
+      }
+    }
   }
 }
 </style>

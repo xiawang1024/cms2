@@ -274,6 +274,7 @@ export default {
         })
       })
       resoultObj.tagIdsList = chooseTags
+      resoultObj.articleType = 0
       delete resoultObj.set
       delete resoultObj.tagIds
       if (resoultObj.contentBody) {

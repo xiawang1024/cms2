@@ -156,14 +156,23 @@ export default {
           })
       })
     },
-    save(formName) {
+    save(formName, publishType) {
       this.$refs.form.getDataAsync().then(data => {
         if (!data) {
           return
         }
         let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
         resoultObj.channelId = this.channelId
-        resoultObj.articleStatus = '2'
+        resoultObj.articleStatus = publishType
+        resoultObj.seoKeywords = ''
+        resoultObj.articleOrigin = ''
+        resoultObj.articleAuthor = ''
+        resoultObj.seoDescription = ''
+        resoultObj.createTime = ''
+        resoultObj.articleTitle = ''
+        resoultObj.createTime = ''
+        resoultObj.contentBody = ''
+        resoultObj.articleType = 2
         if(this.contextMenu.docId) {
           resoultObj.articleId = this.contextMenu.docId
           this.editDoc(resoultObj)
