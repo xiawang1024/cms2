@@ -106,9 +106,9 @@ export default {
   mounted() {
     this.formData =  this.docInfor
     this.adddocSet = {
-      extractCode: this.docInfor.extractCode,
-      hiddenFlag: this.docInfor.hiddenFlag + '',
-      topFlag: this.docInfor.topFlag + ''
+      extractCode: this.docInfor.extractCode ? this.docInfor.extractCode : 0,
+      hiddenFlag: this.docInfor.hiddenFlag ? this.docInfor.hiddenFlag + '' : '0',
+      topFlag: this.docInfor.topFlag ? this.docInfor.topFlag + '' : '0'
     }
   },
   methods: {
