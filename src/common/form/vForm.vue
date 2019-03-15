@@ -123,9 +123,15 @@
                     </ul>
                   </div>
                   <!-- 图片描述输入框 -->
-                  <!-- <div v-if="item.hasTextInput && imgUploadText[item.name].length" class="upload-text-container">
-                    <el-input v-for="(uploadTextItem, uploadTextIndex) in imgUploadText[item.name]" :key="uploadTextIndex" v-model="imgUploadText[item.name][uploadTextIndex]" placeholder="输入图片描述"/>
-                  </div> -->
+                  <div v-if="item.hasTextInput && imgUploadText[item.name].length" class="upload-text-container">
+                    <div class="imageHandel" v-for="(uploadTextItem, uploadTextIndex) in imgUploadText[item.name]" :key="uploadTextIndex">
+                      <div class="handelBtn">
+                        <span>设为封面</span>
+                        <span>添加水印</span>
+                      </div>
+                    </div>
+                    <!-- <el-input v-for="(uploadTextItem, uploadTextIndex) in imgUploadText[item.name]" :key="uploadTextIndex" v-model="imgUploadText[item.name][uploadTextIndex]" placeholder="输入图片描述"/> -->
+                  </div>
                 </div>
               </el-upload>
             </template>
@@ -265,7 +271,12 @@ export default {
     showReturn: {
       type: Boolean,
       default: false
+    },
+    showPreview: {
+      type: Boolean,
+      default: true
     }
+
   },
   data() {
     return {
@@ -583,15 +594,18 @@ export default {
     },
     // 点击上传后的图片进行预览
     handlePreviewImg(file) {
-      console.log(file, 'preview')
-      console.log(this.imgViewer)
       if (this.imgViewer && this.imgViewer.destroy) {
         this.imgViewer.destroy()
       }
-      let img = document.createElement('img')
-      img.src = file.url
-      this.imgViewer = new Viewer(img, { transition: false })
-      this.imgViewer.show()
+      if(this.showPreview) {
+        let img = document.createElement('img')
+        img.src = file.url
+        this.imgViewer = new Viewer(img, { transition: false })
+        this.imgViewer.show()
+      } else {
+        this.$emit('fileDetail', file)
+      }
+      // this.$emit('fileDetail', file)
     },
     // 点击预览上传的文件
     handlePreviewFile(file) {
@@ -794,6 +808,23 @@ export default {
 </script>
 <style lang="scss">
 .v-form {
+  .imageHandel{
+    margin-top: 85px;
+    margin-bottom: 16px;
+    margin-left: 109px;
+    width: 100%;
+    height: 32px;
+    position: relative;
+    .handelBtn{
+      position: absolute;
+      right: 34px;
+      top: -73px;
+      display: flex;
+      flex-direction: column;
+      height: 74px;
+      align-items: center;
+    }
+  }
   max-width: 800px;
   label {
     font-weight: normal;

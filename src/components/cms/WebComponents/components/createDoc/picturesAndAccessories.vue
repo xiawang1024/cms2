@@ -10,29 +10,28 @@
     </div>
     <div class="upload-content">
       <el-row :gutter="20">
-        <el-col :xs="24" :sm="12" :md="12" :lg="14" :xl="14">
-          <el-form ref="form" :model="form" label-width="80px">
+        <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+          <!-- <el-form ref="form" :model="form" label-width="80px">
             <el-form-item label="上传图片">
               <uploader :options="options" :file-status-text="statusText" class="uploader-example" ref="uploader" @file-complete="fileComplete" @complete="complete" @fileSuccess="fileSuccess" @fileInfor = "fileInfor" @fileRemoved ="fileRemoved"/>
             </el-form-item>
-          </el-form>
+          </el-form> -->
+          <v-form ref="vForm" :form-settings="uploadSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail"/>
         </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="10" :xl="10">
-          <div v-if="typeof index === 'number'">
+        <el-col :xs="24" :sm="12" :md="12" :lg="10" :xl="10" :offset="2">
+          <div v-if="filedetail.url">
             <v-form ref="vForm" :form-settings="imageSettings" :form-data="formData" label-width="80px" :show-button = "showButton">
               <template slot="information">
                 <div class="file-infor">
                   <div class="file-img">
-                    <img :src="fileInformation.url" alt="">
+                    <img :src="filedetail.url" alt="">
                   </div>
                   <div class="desc">
-                    <div>{{ fileInformation.name }}</div>
-                    <div>{{ fileInformation.cmsPath.result.createTime }}</div>
-                    <div>{{ fileInformation.size }}</div>
+                    <div>{{ filedetail.name }}</div>
                   </div>
                 </div>
               </template>
-              <template slot="define">
+              <!-- <template slot="define">
                 <div class="define">
                   <el-row>
                     <el-col :span="4"><div class="define-title">F1=</div></el-col>
@@ -61,8 +60,9 @@
                     </el-col>
                   </el-row>
                 </div>
-              </template>
+              </template> -->
               <template slot="btn">
+                <el-button size="small">关闭</el-button>
                 <el-button type="primary" size="small" @click ="fileParams">保存</el-button>
               </template>
             </v-form>
@@ -94,6 +94,7 @@ export default {
   },
   data () {
     return {
+      showPreview: false,
       options: {
         target: 'http://172.20.5.4:55030/basefile/upload?fileRefId=jkhjkhjkhj', // '//jsonplaceholder.typicode.com/posts/',
         testChunks: false,
@@ -115,6 +116,17 @@ export default {
       },
       showButton: false,
       formData: {},
+      uploadSettings: [{
+        items: [
+          {
+            label: '附件详情',
+            name: 'information',
+            type: 'img',
+            required: false,
+            hasTextInput: true
+          }
+        ]
+      }],
       imageSettings: [{
         items: [
           {
@@ -132,11 +144,11 @@ export default {
             name: 'des',
             type: 'textarea',
           },
-          {
-            label: '自定义',
-            name: 'define',
-            type: 'slot'
-          },
+          // {
+          //   label: '自定义',
+          //   name: 'define',
+          //   type: 'slot'
+          // },
           {
             label: '',
             name: 'btn',
@@ -159,7 +171,8 @@ export default {
       fileList: [],
       // 文件参数设置列表
       contentImagesList: [],
-      docInformation: {}
+      docInformation: {},
+      filedetail: {}
     }
   },
   computed: {
@@ -180,6 +193,9 @@ export default {
     })
   },
   methods: {
+    fileDetail(val) {
+      this.filedetail = val
+    },
     getDocumentInfor(id) {
       var _this = this
       return new Promise((resolve, reject) => {
@@ -338,7 +354,26 @@ export default {
       }
       .v-form {
        .form-section {
+         overflow: visible;
          border-bottom: none;
+         .upload-img{
+            .el-upload-list {
+              li {
+                margin-bottom: 26px;
+              }
+            }
+            .el-upload {
+              width: 100%;
+              height: 200px;
+              /* border: 1px dashed; */
+              border: 1px dashed #ccc;
+              margin-bottom: 20px;
+              border-radius: 5px;
+              .el-button {
+                margin-top:100px;
+              }
+           }
+         }
          .file-img {
            height: 100px;
            img{
