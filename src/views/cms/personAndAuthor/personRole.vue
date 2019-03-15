@@ -2,7 +2,7 @@
   <div class="personRole-container">
     <el-row type="flex" class="tool-bar" justify="end">
       <el-col :span="6">
-        <el-select v-model="selectProgram" placeholder="请选择">
+        <el-select size="mini" v-model="selectProgram" placeholder="请选择">
           <el-option
             v-for="program in programList"
             :key="program.id"
@@ -13,6 +13,7 @@
       </el-col>
       <el-col :span="5">
         <el-input
+          size="mini"
           v-model="search"
           placeholder="名称/关键词"
           prefix-icon="el-icon-search"
@@ -21,7 +22,7 @@
         />
       </el-col>
       <el-col :span="4">
-        <el-button type="primary" @click="beforeAdd">新增人员</el-button>
+        <el-button size="mini" type="primary" @click="beforeAdd">新增人员</el-button>
       </el-col>
     </el-row>
     <el-table :data="roleList" style="width: 100%">
@@ -53,7 +54,11 @@
       <el-table-column prop="createTime" label="创建时间"/>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="warning" @click="handleDistribute(scope.$index, scope.row)">分配</el-button>
+          <el-button
+            size="mini"
+            type="warning"
+            @click="handleDistribute(scope.$index, scope.row)"
+          >分配</el-button>
           <el-dropdown trigger="click" style="margin-left:20px;cursor:pointer;">
             <span class="el-dropdown-link">
               更多
@@ -87,8 +92,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addPersonVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleAdd()">确 定</el-button>
+        <el-button size="mini" @click="addPersonVisible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="handleAdd()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -108,8 +113,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="alterPersonVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleAlter()">确 定</el-button>
+        <el-button size="mini" @click="alterPersonVisible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="handleAlter()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -117,93 +122,93 @@
 
 <script>
 export default {
-  name: 'PersonRole',
+  name: "PersonRole",
   data() {
     return {
-      selectProgram: '',
+      selectProgram: "",
       programList: [],
-      search: '',
+      search: "",
       roleList: [
         {
           id: 1,
-          name: '管理员',
-          phone: '13656656565',
+          name: "管理员",
+          phone: "13656656565",
           programAndRoles: [
             {
-              program: '河南广播网',
-              role: '编辑'
+              program: "河南广播网",
+              role: "编辑"
             },
             {
-              program: '河南广播网',
-              role: '编辑'
+              program: "河南广播网",
+              role: "编辑"
             },
             {
-              program: '河南广播网',
-              role: '编辑'
+              program: "河南广播网",
+              role: "编辑"
             },
             {
-              program: '河南广播网',
-              role: '编辑'
+              program: "河南广播网",
+              role: "编辑"
             },
             {
-              program: '河南广播网',
-              role: '编辑'
+              program: "河南广播网",
+              role: "编辑"
             },
             {
-              program: '河南广播网',
-              role: '编辑'
+              program: "河南广播网",
+              role: "编辑"
             }
           ],
           status: false,
           online: true,
-          createTime: '2018-01-02'
+          createTime: "2018-01-02"
         },
         {
           id: 2,
-          name: '主播',
-          phone: '13656656565',
-          program: '',
-          role: '',
+          name: "主播",
+          phone: "13656656565",
+          program: "",
+          role: "",
           status: true,
           online: false,
-          createTime: '2018-01-02'
+          createTime: "2018-01-02"
         }
       ],
       personForm: {
-        id: '',
-        name: '',
-        password: '',
-        confirm: ''
+        id: "",
+        name: "",
+        password: "",
+        confirm: ""
       },
       addPersonVisible: false,
       alterPersonVisible: false
-    }
+    };
   },
   methods: {
     searchPersonRole() {},
     beforeAdd() {
-      this.addPersonVisible = true
+      this.addPersonVisible = true;
     },
     handleAdd() {
-      this.addPersonVisible = false
+      this.addPersonVisible = false;
     },
     change() {},
     handleDistribute(row) {
       this.$router.push({
-        path: '/personAndAuthor/personRoleDistribute',
+        path: "/personAndAuthor/personRoleDistribute",
         query: {
           isAdd: false,
           permissionGroupId: row.id
         }
-      })
+      });
     },
     beforeAlter(row) {
-      this.personForm.name = row.name
-      this.personForm.phone = row.phone
-      this.alterPersonVisible = true
+      this.personForm.name = row.name;
+      this.personForm.phone = row.phone;
+      this.alterPersonVisible = true;
     },
     handleAlter() {
-      this.alterPersonVisible = false
+      this.alterPersonVisible = false;
     },
     handleCopy(row) {},
     handleCopyData(row) {},
@@ -211,7 +216,7 @@ export default {
     handleClear(row) {},
     handleDelete(row) {}
   }
-}
+};
 </script>
 
 <style scoped>
@@ -231,5 +236,8 @@ export default {
 .tool-bar .el-col {
   margin-left: 20px;
   margin-bottom: 10px;
+}
+.dialog-footer{
+  margin-top: -45px;
 }
 </style>

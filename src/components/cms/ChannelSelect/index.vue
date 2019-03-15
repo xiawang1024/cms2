@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-cascader v-model="channelCascader" :options="channelOptions" :props="props" change-on-select filterable clearable @change="handleChannelChange"/>
+    <el-cascader size="mini" v-model="channelCascader" :options="channelOptions" :props="props" change-on-select filterable clearable @change="handleChannelChange"/>
   </div>
 </template>
 

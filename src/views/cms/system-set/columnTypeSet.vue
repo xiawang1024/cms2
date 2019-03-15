@@ -1,15 +1,15 @@
 <template>
   <div class="columnType-container">
     <div class="tool-bar">
-      <el-button type="primary" @click="handleAddDialog()">新增</el-button>
+      <el-button size="mini" type="primary" @click="handleAddDialog()">新增</el-button>
     </div>
     <el-table :data="dictObj.details" style="width: 100%">
       <el-table-column prop="dictDetailName" label="栏目类型名称"/>
       <el-table-column prop="dictDetailValue" label="栏目类型值"/>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="prime" @click="beforeAlter(scope.$index, scope.row)">修改</el-button>
-          <el-button type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button size="mini" type="prime" @click="beforeAlter(scope.$index, scope.row)">修改</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -24,8 +24,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addColumnTypeVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleAdd()">确 定</el-button>
+        <el-button size="mini" @click="addColumnTypeVisible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="handleAdd()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -39,8 +39,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="alterColumnTypeVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleAlter()">确 定</el-button>
+        <el-button size="mini" @click="alterColumnTypeVisible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="handleAlter()">确 定</el-button>
       </div>
     </el-dialog>
   </div>

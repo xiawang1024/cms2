@@ -38,7 +38,7 @@
       </el-row>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="handleSave()">保 存</el-button>
+      <el-button size="mini" type="primary" @click="handleSave()">保 存</el-button>
     </div>
   </div>
 </template>

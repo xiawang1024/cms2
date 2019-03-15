@@ -1,7 +1,7 @@
 <template>
   <div class="site-set-container">
     <div class="tool-bar">
-      <el-button type="primary" @click="handleAddDialog()">新增</el-button>
+      <el-button size="mini" type="primary" @click="handleAddDialog()">新增</el-button>
     </div>
     <el-table :data="dictObj.details" style="width: 100%">
       <el-table-column prop="dictDetailName" label="名称"/>
@@ -53,7 +53,7 @@
       </div>
     </el-dialog>
 
-    <el-button type="primary" class="btn-save" @click="handleSubmit()">保存</el-button>
+    <el-button size="mini" type="primary" class="btn-save" @click="handleSubmit()">保存</el-button>
   </div>
 </template>
 
@@ -202,5 +202,13 @@ export default {
 
   .tool-bar {
     text-align: right;
+  }
+  /* liyu */
+  .site-set-container{
+    box-sizing: border-box;
+    margin: 30px;
+  }
+  .btn-save{
+    margin-top: 20px;
   }
 </style>
