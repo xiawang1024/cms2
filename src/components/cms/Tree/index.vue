@@ -142,6 +142,7 @@ export default {
          * tree 路径
          */
         this.$store.dispatch('setTreeTags', webSiteTags)
+        console.log(webSiteTags, 'webSiteTags')
       }
     }
   }

@@ -91,6 +91,7 @@ request.interceptors.request.use(
             .catch((err) => {
               // eslint-disable-next-line no-console
               console.log(err)
+              console.log('error')
             })
         }
         /* 把请求(token)=>{....}都push到一个数组中*/

@@ -87,6 +87,14 @@ export default {
         columnList({}, _this.pageNum, _this.pageSize)
           .then((response) => {
             _this.tableData = _this.toTree(response.data.result.content)
+            if(_this.tableData.length) {
+              let webSiteTags = [{
+                channelCode: _this.tableData[0].channelCode,
+                id: _this.tableData[0].channelId,
+                label: _this.tableData[0].channelName
+              }]
+              this.$store.dispatch('setTreeTags', webSiteTags)
+            }
             resolve()
           })
           .catch((error) => {
