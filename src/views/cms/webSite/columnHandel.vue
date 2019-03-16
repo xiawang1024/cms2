@@ -163,9 +163,10 @@ export default {
   mounted() {
     this.routeQuery = this.$route.query
     this.isEdit = Boolean((!this.routeQuery.isAdd || this.routeQuery.isAdd === 'false') && this.routeQuery.channelId)
-    if (this.isEdit) {
-      this.getColumnInfor()
-    }
+    // if (this.isEdit) {
+    //   this.getColumnInfor()
+    // }
+    this.getColumnInfor()
     this.fetchComponentList()
     this.getColumns()
   },
@@ -177,7 +178,7 @@ export default {
         fetchDictByDictName('栏目类型')
           .then((response) => {
             if (response.data.result.details && response.data.result.details.length) {
-              _this.formSettings[0].items[9].options = response.data.result.details.map((ele) => {
+              _this.formSettings[0].items[10].options = response.data.result.details.map((ele) => {
                 return {
                   label: ele.dictDetailValue,
                   value: ele.dictDetailValue
@@ -211,13 +212,21 @@ export default {
       return new Promise((resolve, reject) => {
         columnInfor(_this.routeQuery.channelId)
           .then((response) => {
-            _this.formData = response.data.result
-            if(_this.formData.iconUrl) {
-              _this.formData.iconUrl = [{
-                url: _this.formData.iconUrl
-              }]
+            if(_this.isEdit) {
+              _this.formData = response.data.result
+              if(_this.formData.iconUrl) {
+                _this.formData.iconUrl = [{
+                  url: _this.formData.iconUrl
+                }]
+              } else {
+                _this.formData.iconUrl = []
+              }
             } else {
-              _this.formData.iconUrl = []
+              // _this.formData.parentChannelNames = response.data.result.channelName
+              // _this.formData.parentChannelNames = response.data.result.channelName
+              _this.formData = {
+                parentChannelNames: response.data.result.channelName
+              }
             }
             resolve()
           })

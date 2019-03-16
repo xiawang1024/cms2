@@ -30,14 +30,14 @@ export const currentDoc = [
 ]
 
 export const currentColumn = [
-  {
-    id: '1',
-    label: '发布栏目首页'
-  },
-  {
-    id: '2',
-    label: '指定范围重新发布'
-  },
+  // {
+  //   id: '1',
+  //   label: '发布栏目首页'
+  // },
+  // {
+  //   id: '2',
+  //   label: '指定范围重新发布'
+  // },
   {
     id: '3',
     label: '修改栏目'
@@ -58,10 +58,10 @@ export const currentColumn = [
     id: '7',
     label: '模板'
   },
-  {
-    id: '8',
-    label: '管理评论'
-  },
+  // {
+  //   id: '8',
+  //   label: '管理评论'
+  // },
   {
     id: '9',
     label: '废件箱'
@@ -97,58 +97,58 @@ export const fromOptions = [
 
 export const typeOptions = [
   {
-    id: '1',
+    id: 0,
     label: '图文'
   },
   {
-    id: '2',
+    id: 1,
     label: '图集'
   },
   {
-    id: '3',
+    id: 2,
     label: '拼条'
   },
   {
-    id: '4',
+    id: 3,
     label: '引用'
-  },
-  {
-    id: '5',
-    label: '外链'
-  },
-  {
-    id: '6',
-    label: '转载'
   }
+  // {
+  //   id: '4',
+  //   label: '外链'
+  // },
+  // {
+  //   id: '6',
+  //   label: '转载'
+  // }
 ]
 
 export const statusOptions = [
   {
-    id: '1',
+    id: '0',
     label: '新稿'
   },
   {
+    id: '1',
+    label: '提交审核'
+  },
+  {
     id: '2',
-    label: '审核'
+    label: '审核未通过'
   },
   {
     id: '3',
-    label: '未通过'
-  },
-  {
-    id: '4',
     label: '已撤'
   },
   {
-    id: '5',
+    id: '4',
     label: '已删'
   },
   {
-    id: '6',
+    id: '11',
     label: '已发布'
   },
   {
-    id: '7',
+    id: '10',
     label: '待发布'
   }
 ]

@@ -44,7 +44,7 @@
     <div class="right">
       <span class="name">筛选：</span>
       <el-select
-        v-model="fromSelected"
+        v-model="searchData.articleOrigin"
         filterable
         clearable
         placeholder="来源"
@@ -58,7 +58,7 @@
         />
       </el-select>
       <el-select
-        v-model="typeSelected"
+        v-model="searchData.articleType"
         class="select"
         filterable
         clearable
@@ -73,7 +73,7 @@
         />
       </el-select>
       <el-select
-        v-model="statusSelected"
+        v-model="searchData.articleStatus"
         class="select"
         filterable
         clearable
@@ -88,7 +88,7 @@
         />
       </el-select>
       <el-input
-        v-model="inputSelected"
+        v-model="searchData.articleTitle"
         class="input-text"
         placeholder="请输入内容"
         size="mini"
@@ -96,10 +96,12 @@
         <el-button
           slot="append"
           icon="el-icon-search"
+          @click="searchList"
         />
       </el-input>
-
+      <!-- <el-button type="primary" size="small"  @click="searchData">搜索</el-button> -->
     </div>
+    <handel-dialog :dialog-visible.sync="dialogVisible" :title="title" :multiple-list = "multipleList" @handelSuccess = "handelSuccess"/>
   </div>
 </template>
 <script>
@@ -111,11 +113,20 @@ import {
   statusOptions
 } from './mockData.js'
 // import choosedDialog from './choosedDialog.vue'
+import handelDialog from './handelDialog'
 export default {
   name: 'DocHead',
-  // components: {
-  //   choosedDialog
-  // },
+  components: {
+    handelDialog
+  },
+  props: {
+    multipleList: {
+      default: ()=> {
+        []
+      },
+      type: Array
+    }
+  },
   data() {
     return {
       currentDoc,
@@ -123,16 +134,27 @@ export default {
       fromOptions,
       typeOptions,
       statusOptions,
-      fromSelected: '',
-      typeSelected: '',
-      statusSelected: '',
-      inputSelected: '',
-      centerDialogVisible: false
+      searchData: {
+        articleOrigin: '',
+        articleType: '',
+        articleStatus: '',
+        articleTitle: '',
+      },
+      centerDialogVisible: false,
+      dialogVisible: false,
+      title: ''
     }
   },
   methods: {
+    handelSuccess() {
+      this.$emit('handelSuccess')
+    },
     chooseHandel(item) {
       console.log(item)
+    },
+    // 文章搜索
+    searchList() {
+      this.$emit('searchList', this.searchData)
     },
     handleColumn(command) {
       // if(command == 3) {
@@ -169,9 +191,24 @@ export default {
       }
     },
     handleCommand(command) {
-      if(command == 2) {
-        const select = { id: '1', label: '新建文档' }
-        this.$store.dispatch('setContextMenu', select)
+      switch(command) {
+        case '1':
+          this.title = '发布'
+          this.dialogVisible = true
+          break
+        case '2':
+          this.$store.dispatch('setContextMenu', { id: '1', label: '新建文档' })
+          break 
+        case '3':
+          this.title = '撤销发布'
+          this.dialogVisible = true
+          break
+        case '4':
+          this.title = '删除'
+          this.dialogVisible = true
+          break 
+        default: 
+          break
       }
     },
     createDocument() {

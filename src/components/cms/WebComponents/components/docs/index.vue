@@ -1,7 +1,7 @@
 <template>
   <div class="docs-wrap">
-    <DocHead />
-    <doc-list :table-data="tableData"/>
+    <DocHead @searchList = "searchList" :multiple-list="multipleList" @handelSuccess = "handelSuccess"/>
+    <doc-list :table-data="tableData" @handelSuccess="handelSuccess" @multipleChoose="multipleChoose"/>
     <DocFoot :total="totalCount" @sizeChange = "sizeChange" @pageChange="pageChange"/>
     {{ treeTags }}
     {{ contextMenu }}
@@ -27,7 +27,8 @@ export default {
       pageSize: 10,
       totalCount: 0,
       searchData: {},
-      channelId: ''
+      channelId: '',
+      multipleList: []
     }
   },
   computed: {
@@ -51,6 +52,19 @@ export default {
     }
   },
   methods: {
+    // 获取多逊列表
+    multipleChoose(val) {
+      this.multipleList = val
+    },
+    handelSuccess() {
+      this.documentList()
+    },
+    searchList(val) {
+      console.log(val)
+      this.searchData = val
+      this.pageNum = 1
+      this.documentList()
+    },
     sizeChange(val) {
       this.pageSize = val
       this.documentList()
@@ -73,7 +87,7 @@ export default {
             reject(error)
           })
       })
-    },
+    }
   }
 }
 </script>

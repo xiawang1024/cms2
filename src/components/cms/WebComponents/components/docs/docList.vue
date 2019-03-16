@@ -11,7 +11,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"/>
-      <el-table-column fixed prop="articleId" label="ID/序号" width="100"/>
+      <el-table-column fixed prop="articleId" label="ID/序号" width="150" show-overflow-tooltip/>
       <el-table-column fixed prop="articleTitle" label="标题" min-width="160" show-overflow-tooltip/>
       <el-table-column label="查看" width="60">
         <template slot-scope="scope">
@@ -29,7 +29,7 @@
           <span v-if="scope.row.articleType == 0">图文</span>
           <span v-if="scope.row.articleType == 1">图集</span>
           <span v-if="scope.row.articleType == 2">拼条</span>
-          <span v-if="scope.row.articleType == 3">转载</span>
+          <span v-if="scope.row.articleType == 3">引用</span>
         </template>
       </el-table-column>
       <el-table-column prop="articleStatus" label="状态" width="100">
@@ -38,9 +38,9 @@
           <span v-if="scope.row.articleStatus == 1">提交审核</span>
           <span v-if="scope.row.articleStatus == 2">审核未通过</span>
           <span v-if="scope.row.articleStatus == 3">已撤</span>
-          <span v-if="scope.row.articleStatus == 3">已删</span>
-          <span v-if="scope.row.articleStatus == 3">待发</span>
-          <span v-if="scope.row.articleStatus == 3">已发</span>
+          <span v-if="scope.row.articleStatus == 4">已删</span>
+          <span v-if="scope.row.articleStatus == 5">待发</span>
+          <span v-if="scope.row.articleStatus == 6">已发</span>
         </template>
       </el-table-column>
       <el-table-column prop="mark" label="标记" width="100"/>
@@ -64,7 +64,8 @@
         <template slot-scope="scope">
           <el-button type="text" size="small">置顶</el-button>
           <el-button type="text" size="small" @click="editDoc(scope.row.articleId)">编辑</el-button>
-          <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click="handleClickDel(scope.row.articleId)">删除</el-button>
+          <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click="handleClickDel(scope.row.articleId)">删除</el-button> -->
+          <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click="deleteConfiorm(scope.row.articleId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -72,6 +73,7 @@
 </template>
 
 <script>
+import { deleteDocument } from '@/api/cms/article'
 export default {
   props: {
     tableData: {
@@ -108,6 +110,7 @@ export default {
      */
     handleSelectionChange(val) {
       this.multipleSelection = val
+      this.$emit('multipleChoose', val)
     },
     /**
      * 获取多选的id列表
@@ -124,10 +127,29 @@ export default {
     /**
      * 删除单个
      */
+    deleteConfiorm(id) {
+      this.$confirm('是否删除该文章?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.handleClickDel(id)
+      }).catch(() => {  
+      })
+    },
+    // 删除单个
     handleClickDel(id) {
-      console.log('------------------------------------')
-      console.log(id)
-      console.log('------------------------------------')
+      return new Promise((resolve, reject) => {
+        deleteDocument({articleId: id})
+          .then((response) => {
+            this.$emit('handelSuccess')
+            this.$message.success('删除成功')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     },
     /**
      * 查看预览

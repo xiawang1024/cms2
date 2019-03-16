@@ -24,7 +24,7 @@ export function createDocument(data) {
     data
   })
 }
-//删除文章
+//删除单个文章
 export function deleteDocument(data) {
   return request({
     url: '/cms/article',
@@ -32,6 +32,31 @@ export function deleteDocument(data) {
     data: data
   })
 }
+// 匹量删除
+export function deleteDocumentMore(data) {
+  return request({
+    url: '/cms/article/cutout',
+    method: 'post',
+    data: data
+  })
+}
+// 批量撤销
+export function cancelDocumentMore(data) {
+  return request({
+    url: '/cms/article/cancel',
+    method: 'post',
+    data: data
+  })
+}
+// 批量发布
+export function publishDocumentMore(data) {
+  return request({
+    url: '/cms/article/tosent',
+    method: 'post',
+    data: data
+  })
+}
+
 // 获取文章详情
 export function documentInfor(id) {
   return request({
