@@ -7,11 +7,9 @@
       <el-button type="primary" @click="columnAddEdit(true, 'father')" size="small">添加</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="channelName" label="栏目名称" min-width="250" show-overflow-tooltip>
+      <el-table-column prop="channelName" label="栏目名称" min-width="300" >
         <template slot-scope="scope">
           <div>
-            <span v-for= "(group) in channelNameChange(scope.row.parentChannelNames)" :key="group" class="space-length"/>
-            <span v-for= "(ele, index) in channelNameChange(scope.row.parentChannelNames)" :key="index" class="space-holder"/>
             <span>{{ scope.row.parentChannelNames }}</span>
             <span>{{ scope.row.channelName }}</span>
           </div>
@@ -39,11 +37,11 @@
           <el-button type="text" @click="waterSetting(scope.row)">水印设置</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="150">
+      <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button type="text" @click="columnAddEdit(false, '', scope.row.channelId)">编辑</el-button>
           <el-button type="text" v-if="checkAuth('cms:channel:delete')" @click="columnDel(scope.row)">删除</el-button>
-          <el-button type="text" @click="columnAddEdit(true, 'child', scope.row.channelId)">添加</el-button>
+          <el-button type="text" @click="columnAddEdit(true, 'child')">添加</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -99,19 +97,15 @@ export default {
       searchData: {}
     }
   },
+  watch:{
+    '$route'(){
+      this.columnList()
+    }
+  },
   mounted() {
     this.columnList()
   },
   methods: {
-    channelNameChange(val) {
-      let arr = []
-      if(val) {
-        arr = val.split(',').concat([''])
-      } else {
-        arr = []
-      }
-      return arr
-    },
     checkAuth (authKey) {
       if (this.$store.getters.authorities.indexOf(authKey) === -1) {
         return false
@@ -236,20 +230,6 @@ export default {
     // td, th{
     //   padding:0;
     // }
-    .space-holder {
-      width: 2px;
-      height: 20px;
-      background-color: #67C23A;
-      display: inline-block;
-      vertical-align: middle;
-      margin-right: 5px;
-    }
-    .space-length{
-      width: 10px;
-      height: 20px;
-      display: inline-block;
-      vertical-align: middle;
-    }
     tr{
       td {
         padding:0px;
