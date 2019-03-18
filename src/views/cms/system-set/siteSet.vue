@@ -78,7 +78,28 @@ export default {
         modifyTime: "",
         modifyIp: "",
         clientLicenseId: "",
-        details: []
+        details: [
+          {
+            dictDetailName: '站点名称',
+            dictDetailCode: '站点名称',
+            dictDetailValue: ''
+          },
+          {
+            dictDetailName: '站点描述',
+            dictDetailCode: '站点描述',
+            dictDetailValue: ''
+          },
+          {
+            dictDetailName: '站点地址',
+            dictDetailCode: '站点地址',
+            dictDetailValue: ''
+          },
+          {
+            dictDetailName: '站点管理员邮箱',
+            dictDetailCode: '站点管理员邮箱',
+            dictDetailValue: ''
+          },
+        ]
       },
       addSiteSetVisible: false,
       alterSiteSetVisible: false,
@@ -91,13 +112,6 @@ export default {
   },
   created: function() {
     this.fetchDict();
-  },
-  mounted() {
-    if (
-      !(Cookies.get("sidebarStatus") == 0 || Cookies.get("sidebarStatus") == 1)
-    ) {
-      this.$store.dispatch("toggleSideBar");
-    }
   },
   methods: {
     handleAddDialog() {
@@ -158,7 +172,28 @@ export default {
           .then(response => {
             _this.dictObj = response.data.result;
             if (_this.dictObj.details === null) {
-              _this.dictObj.details = [];
+              _this.dictObj.details = [
+                {
+                  dictDetailName: '站点名称',
+                  dictDetailCode: 'siteName',
+                  dictDetailValue: ''
+                },
+                {
+                  dictDetailName: '站点描述',
+                  dictDetailCode: 'siteDesc',
+                  dictDetailValue: ''
+                },
+                {
+                  dictDetailName: '站点地址',
+                  dictDetailCode: 'siteAddress',
+                  dictDetailValue: ''
+                },
+                {
+                  dictDetailName: '站点管理员邮箱',
+                  dictDetailCode: 'siteEmail',
+                  dictDetailValue: ''
+                },
+              ]
             }
             resolve();
           })

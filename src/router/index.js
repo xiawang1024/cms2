@@ -34,6 +34,16 @@ import application from './routers/user/application'
 const userRouterMap = [userDemo, operation, application, organization, department, user, role, permissiongroup, permission]
 
 /**
+ * 节目编排系统路由
+ */
+import channel from './routers/program/channel'
+import class1 from './routers/program/class'
+import column from './routers/program/column'
+import compere from './routers/program/compere'
+import program from './routers/program/program'
+const programRouterMap = [channel, class1, column, compere, program]
+
+/**
  * 路由map
  */
 export const routerMap = [
@@ -44,6 +54,10 @@ export const routerMap = [
   {
     type: '1',
     route: userRouterMap
+  },
+  {
+    type: '2',
+    route: programRouterMap
   }
 ]
 

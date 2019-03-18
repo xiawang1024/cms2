@@ -102,6 +102,9 @@ export default {
       /* eslint-disable */
     }
   },
+  mounted: function() {
+    this.getList()
+  },
   methods: {
     getList () {
       var _this = this
