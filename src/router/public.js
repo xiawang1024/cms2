@@ -33,22 +33,22 @@ const constantRouterMap = [
     component: () => import('@/views/public/errorPage/401'),
     hidden: true
   },
-  {
-    path: '',
-    redirect: 'cms/systemSet/siteSet',
-  },
   // {
   //   path: '',
-  //   component: Layout,
-  //   redirect: 'dashboard',
-  //   children: [
-  //     {
-  //       path: 'dashboard',
-  //       component: () => import('@/views/public/dashboard/index'),
-  //       name: 'Dashboard',
-  //       meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
-  //     }
-  //   ]
-  // }
+  //   redirect: 'cms/systemSet/siteSet',
+  // },
+  {
+    path: '',
+    component: Layout,
+    redirect: 'dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        component: () => import('@/views/public/dashboard/index'),
+        name: 'Dashboard',
+        meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
+      }
+    ]
+  }
 ]
 export default constantRouterMap

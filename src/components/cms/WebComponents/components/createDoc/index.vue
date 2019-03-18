@@ -11,7 +11,7 @@
         <RelatedDocuments/>
       </el-tab-pane> -->
     </el-tabs>
-    {{ treeTags }}
+    <!-- {{ treeTags }} -->
   </div>
 </template>
 <script>

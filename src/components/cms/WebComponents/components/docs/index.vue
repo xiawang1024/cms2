@@ -3,8 +3,8 @@
     <DocHead @searchList = "searchList" :multiple-list="multipleList" @handelSuccess = "handelSuccess"/>
     <doc-list :table-data="tableData" @handelSuccess="handelSuccess" @multipleChoose="multipleChoose"/>
     <DocFoot :total="totalCount" @sizeChange = "sizeChange" @pageChange="pageChange"/>
-    {{ treeTags }}
-    {{ contextMenu }}
+    <!-- {{ treeTags }}
+    {{ contextMenu }} -->
   </div>
 </template>
 <script>

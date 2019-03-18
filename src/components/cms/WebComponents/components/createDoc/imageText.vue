@@ -16,9 +16,9 @@
           </el-form-item>
         </el-form>
         <div class="btn-list">
-          <el-button type = "primary" size="small" @click = "goBack">预览</el-button>
+          <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
           <el-button type = "primary" size="small" @click = "save('docContentForm', '0')">存草稿</el-button>
-          <el-button type = "primary" size="small" @click = "save('docContentForm', '1')">保存并关闭</el-button>
+          <el-button type = "primary" size="small" @click = "save('docContentForm', '1')">保存并发布</el-button>
           <!-- <el-button type = "primary" size="small" @click = "save('docContentForm')">保存并发布</el-button> -->
           <!-- <el-button type = "primary" size="small" @click = "save">保存并关闭</el-button>
           <el-button type = "primary" size="small" @click = "save">保存并发布</el-button> -->
