@@ -137,6 +137,7 @@ export default {
   mounted: function () {
     this.getOperationInfo()
     this.getApplicationInfo()
+    this.getList()
   },
   methods: {
     getOperationInfo () {

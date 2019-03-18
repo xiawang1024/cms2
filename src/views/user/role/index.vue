@@ -131,6 +131,9 @@ export default {
       immediate: true
     }
   },
+  mounted: function() {
+    this.getList()
+  },
   methods: {
     getList () {
       var _this = this
