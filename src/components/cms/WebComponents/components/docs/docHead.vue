@@ -28,11 +28,7 @@
           >{{ item.label }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-button
-        type="primary"
-        size="mini"
-        icon="el-icon-plus"
-        @click="createDocument"
+      <el-button v-if="checkAuth('cms:article:add')" type="primary" size="mini" icon="el-icon-plus" @click="createDocument"
       >新建文档</el-button>
     </div>
     <div class="right">
