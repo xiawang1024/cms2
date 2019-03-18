@@ -3,66 +3,65 @@
     <el-form v-loading="loading" :rules="rules" ref="postForm" :model="postForm" class="form-container">
 
       <div class="createPost-main-container">
-          <p class="warn-content">
-            创建/编辑栏目信息
-            <small>
-              <span style="color: #F56C6C">标题红色字体为必填项</span>
-            </small>
-          </p>
+        <p class="warn-content">
+          创建/编辑栏目信息
+          <small>
+            <span style="color: #F56C6C">标题红色字体为必填项</span>
+          </small>
+        </p>
 
-          <el-form-item style="margin-bottom: 40px;" prop="columnName">
-            <MDinput v-model="postForm.columnName" :maxlength="100" name="name" required>
-              <span style="color: #F56C6C">栏目名称</span>
-            </MDinput>
-          </el-form-item>
-          <el-form-item style="margin-bottom: 40px;" label="所属频率" class="redItem" prop="channelId">
-            <el-select v-model="postForm.channelId" @change="selectChannel" placeholder="请选择所属频率">
-              <el-option v-for="item in this.channelOptions" :key="item.channel_id" :label="item.channel_name" :value="item.channel_id"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item style="margin-bottom: 40px;" label="栏目主播">
-            <el-select v-model="compere_arr" @change="selectCompere" multiple placeholder="多选">
-              <el-option :key="0" label="无主播" :value="0"></el-option>
-              <el-option :disabled="compereState" v-for="item in this.compereOptions" :key="item.compere_id" :label="item.compere_name" :value="item.compere_id"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item style="margin-bottom: 40px;" prop="className">
-            <MDinput v-model="postForm.className" disabled="disabled" :maxlength="100" name="name" required>
-              <span style="color: #F56C6C">所属分类</span>
-            </MDinput>
-          </el-form-item>
-          <el-form-item style="margin-bottom: 40px;" label="选择分类">
-            <el-tree style="margin-top: 50px;"
-              :data="treeList"
-              :props="defaultProps"
-              default-expand-all
-              @node-click="handleNodeClick">
-            </el-tree>
-          </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" prop="columnName">
+          <MDinput v-model="postForm.columnName" :maxlength="100" name="name" required>
+            <span style="color: #F56C6C">栏目名称</span>
+          </MDinput>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" label="所属频率" class="redItem" prop="channelId">
+          <el-select v-model="postForm.channelId" @change="selectChannel" placeholder="请选择所属频率">
+            <el-option v-for="item in this.channelOptions" :key="item.channel_id" :label="item.channel_name" :value="item.channel_id"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" label="栏目主播">
+          <el-select v-model="compere_arr" @change="selectCompere" multiple placeholder="多选">
+            <el-option :key="0" label="无主播" :value="0"/>
+            <el-option :disabled="compereState" v-for="item in this.compereOptions" :key="item.compere_id" :label="item.compere_name" :value="item.compere_id"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" prop="className">
+          <MDinput v-model="postForm.className" disabled="disabled" :maxlength="100" name="name" required>
+            <span style="color: #F56C6C">所属分类</span>
+          </MDinput>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" label="选择分类">
+          <el-tree style="margin-top: 50px;"
+                   :data="treeList"
+                   :props="defaultProps"
+                   default-expand-all
+                   @node-click="handleNodeClick"/>
+        </el-form-item>
 
-          <el-form-item style="margin-bottom: 40px;" label="上传logo">
-            <el-upload
-              class="avatar-uploader"
-              :action="uploadUrl()"
-              :data="upLoadData"
-              name="file"
-              list-type="picture-card"
-              :show-file-list="false"
-              :on-remove="handleRemove"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-              :on-error="imgUploadError">
-              <img v-if="imgSrc" :src="imgSrc" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="栏目描述" style="width: 40%">
-            <el-input type="textarea" v-model="desc"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitData()">提交</el-button>
-            <el-button @click="back()">返回</el-button>
-          </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" label="上传logo">
+          <el-upload
+            class="avatar-uploader"
+            :action="uploadUrl()"
+            :data="upLoadData"
+            name="file"
+            list-type="picture-card"
+            :show-file-list="false"
+            :on-remove="handleRemove"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+            :on-error="imgUploadError">
+            <img v-if="imgSrc" :src="imgSrc" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"/>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="栏目描述" style="width: 40%">
+          <el-input type="textarea" v-model="desc"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitData()">提交</el-button>
+          <el-button @click="back()">返回</el-button>
+        </el-form-item>
       </div>
     </el-form>
 

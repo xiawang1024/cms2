@@ -3,47 +3,47 @@
     <el-form v-loading="loading" :rules="rules" ref="postForm" :model="postForm" class="form-container">
 
       <div class="createPost-main-container">
-          <p class="warn-content">
-            创建/编辑主持人信息
-            <small>
-              <span style="color: #F56C6C">标题红色字体为必填项</span>
-            </small>
-          </p>
+        <p class="warn-content">
+          创建/编辑主持人信息
+          <small>
+            <span style="color: #F56C6C">标题红色字体为必填项</span>
+          </small>
+        </p>
 
-          <el-form-item style="margin-bottom: 40px;" prop="compereName">
-            <MDinput v-model="postForm.compereName" :maxlength="100" name="name" required>
-              <span style="color: #F56C6C">主播名称</span>
-            </MDinput>
-          </el-form-item>
-          <el-form-item style="margin-bottom: 40px;" label="所属频率" class="redItem" prop="channelId">
-            <el-select v-model="postForm.channelId" @change="selectGet" placeholder="请选择所属频率">
-              <el-option v-for="item in this.options" :key="item.channel_id" :label="item.channel_name" :value="item.channel_id"></el-option>
-            </el-select>
-          </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" prop="compereName">
+          <MDinput v-model="postForm.compereName" :maxlength="100" name="name" required>
+            <span style="color: #F56C6C">主播名称</span>
+          </MDinput>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" label="所属频率" class="redItem" prop="channelId">
+          <el-select v-model="postForm.channelId" @change="selectGet" placeholder="请选择所属频率">
+            <el-option v-for="item in this.options" :key="item.channel_id" :label="item.channel_name" :value="item.channel_id"/>
+          </el-select>
+        </el-form-item>
 
-          <el-form-item style="margin-bottom: 40px;" label="上传头像">
-            <el-upload
-              class="avatar-uploader"
-              :action="uploadUrl()"
-              :data="upLoadData"
-              name="file"
-              list-type="picture-card"
-              :show-file-list="false"
-              :on-remove="handleRemove"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-              :on-error="imgUploadError">
-              <img v-if="imgSrc" :src="imgSrc" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="主播描述" style="width: 40%">
-            <el-input type="textarea" v-model="desc"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitData()">提交</el-button>
-            <el-button @click="back()">返回</el-button>
-          </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" label="上传头像">
+          <el-upload
+            class="avatar-uploader"
+            :action="uploadUrl()"
+            :data="upLoadData"
+            name="file"
+            list-type="picture-card"
+            :show-file-list="false"
+            :on-remove="handleRemove"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+            :on-error="imgUploadError">
+            <img v-if="imgSrc" :src="imgSrc" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"/>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="主播描述" style="width: 40%">
+          <el-input type="textarea" v-model="desc"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitData()">提交</el-button>
+          <el-button @click="back()">返回</el-button>
+        </el-form-item>
       </div>
     </el-form>
 

@@ -26,22 +26,22 @@
 
       <el-table-column align="center" label="所属类别">
         <template slot-scope="scope">
-          <span>{{ scope.row.classId | classFilter}}</span>
+          <span>{{ scope.row.classId | classFilter }}</span>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="是否点播" width="200">
         <template slot-scope="scope">
           <el-button size="small" v-waves type="success" 
-            v-if="JSON.parse(scope.row.channelInfo).vod_set == 0"
-            @click="changeVodStatus(scope.row, '1')" icon="el-icon-check">{{ $t('table.open') }}</el-button>
+                     v-if="JSON.parse(scope.row.channelInfo).vod_set == 0"
+                     @click="changeVodStatus(scope.row, '1')" icon="el-icon-check">{{ $t('table.open') }}</el-button>
           <el-button size="small" v-waves type="danger" 
-            v-else @click="changeVodStatus(scope.row, '0')" icon="el-icon-close">{{ $t('table.close') }}</el-button>
+                     v-else @click="changeVodStatus(scope.row, '0')" icon="el-icon-close">{{ $t('table.close') }}</el-button>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.status')" class-name="status-col" width="100">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusStyleFilter">{{ scope.row.status | statusFilter}}</el-tag>
+          <el-tag :type="scope.row.status | statusStyleFilter">{{ scope.row.status | statusFilter }}</el-tag>
         </template>
       </el-table-column>
 
@@ -51,13 +51,13 @@
             <el-button type="primary" size="small" v-waves icon="el-icon-edit">{{ $t('table.edit') }}</el-button>
           </router-link>
           <el-button type="warning" size="small" v-if="scope.row.status == 1"
-            @click="handleDel(scope.row, 0)" v-waves icon="el-icon-close">{{ $t('table.disable') }}
+                     @click="handleDel(scope.row, 0)" v-waves icon="el-icon-close">{{ $t('table.disable') }}
           </el-button>
           <el-button type="success" size="small" v-waves v-else
-            @click="handleDel(scope.row, 1)" icon="el-icon-check">{{ $t('table.enable') }}
+                     @click="handleDel(scope.row, 1)" icon="el-icon-check">{{ $t('table.enable') }}
           </el-button>
           <el-button type="danger" size="small" style="margin-left: 0px"
-            @click="remove(scope.row)" v-waves icon="el-icon-close">{{ $t('table.delete') }}
+                     @click="remove(scope.row)" v-waves icon="el-icon-close">{{ $t('table.delete') }}
           </el-button>
         </template>
       </el-table-column>
@@ -136,13 +136,13 @@ export default {
       channelTypeOptions
     }
   },
-  created() {
-    this.getList()
-  },
   watch:{
     //监视路由的变化来确定是否要再次获取数据
     //避免返回列表时不刷新数据 
     '$route':["getList"]
+  },
+  created() {
+    this.getList()
   },
   methods: {
     getList() {

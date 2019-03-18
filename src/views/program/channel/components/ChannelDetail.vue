@@ -3,83 +3,83 @@
     <el-form v-loading="loading" :rules="rules" ref="postForm" :model="postForm" class="form-container">
 
       <div class="createPost-main-container">
-          <p class="warn-content">
-            创建/编辑频率信息<br>
-            <small>
-              <span style="color: #F56C6C">标题红色字体为必填项</span>
-            </small>
-          </p>
+        <p class="warn-content">
+          创建/编辑频率信息<br>
+          <small>
+            <span style="color: #F56C6C">标题红色字体为必填项</span>
+          </small>
+        </p>
 
-          <el-form-item style="margin-bottom: 40px;" prop="channelName">
-            <MDinput v-model="postForm.channelName" :maxlength="100" name="name" required>
-              <label class="material-label-lighting">频率名称</label>
-            </MDinput>
-          </el-form-item>
-          <el-form-item style="margin-bottom: 40px;">
-            <MDinput v-model="secondName" :maxlength="100" name="name" required>
-              对应直播的频率英文或拼音名称
-            </MDinput>
-          </el-form-item>
-          <el-form-item style="margin-bottom: 40px;" label="指定排序" class="redItem" prop="showOrder">
-            <el-input v-model="postForm.showOrder" maxlength="10" placeholder="请输入数字"></el-input>
-          </el-form-item>
-          <el-form-item style="margin-bottom: 40px;">
-            <MDinput type="tel" v-model="channelHotline" :maxlength="100" name="name">
-              频率热线
-            </MDinput>
-          </el-form-item>
-          <el-form-item style="margin-bottom: 40px;" class="redItem" label="所属类型">
-            <el-select v-model="classIdArr" @change="selectClass" multiple placeholder="请选择">
-              <el-option v-for="item in this.options" :key="item.class_id" :label="item.class_name" :value="item.class_id"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="是否开启点播">
+        <el-form-item style="margin-bottom: 40px;" prop="channelName">
+          <MDinput v-model="postForm.channelName" :maxlength="100" name="name" required>
+            <label class="material-label-lighting">频率名称</label>
+          </MDinput>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 40px;">
+          <MDinput v-model="secondName" :maxlength="100" name="name" required>
+            对应直播的频率英文或拼音名称
+          </MDinput>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" label="指定排序" class="redItem" prop="showOrder">
+          <el-input v-model="postForm.showOrder" maxlength="10" placeholder="请输入数字"/>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 40px;">
+          <MDinput type="tel" v-model="channelHotline" :maxlength="100" name="name">
+            频率热线
+          </MDinput>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" class="redItem" label="所属类型">
+          <el-select v-model="classIdArr" @change="selectClass" multiple placeholder="请选择">
+            <el-option v-for="item in this.options" :key="item.class_id" :label="item.class_name" :value="item.class_id"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="是否开启点播">
           <el-radio-group v-model="vodSet" @change="editVodRadio">
             <!-- label前不加冒号则无法回显整型值 -->
             <el-radio label="1">开启</el-radio>
             <el-radio label="0">关闭</el-radio>
           </el-radio-group>
-          </el-form-item>
-            <el-form-item label="是否开启互动">
-            <el-radio-group v-model="interactSet" @change="editInteractRadio">
-              <el-radio label="1">开启</el-radio>
-              <el-radio label="0">关闭</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item style="margin-bottom: 40px;" prop="streams">
-            <MDinput v-model="postForm.streams" :maxlength="100" name="name" required>
-              <label class="material-label-lighting">频率直播地址</label>
-            </MDinput>
-          </el-form-item>
-          <el-form-item style="margin-bottom: 40px;" prop="videoStreams">
-            <MDinput v-model="postForm.videoStreams" :maxlength="100" name="name" required>
-              <label class="material-label-lighting">频率视频直播地址</label>
-            </MDinput>
-          </el-form-item>
+        </el-form-item>
+        <el-form-item label="是否开启互动">
+          <el-radio-group v-model="interactSet" @change="editInteractRadio">
+            <el-radio label="1">开启</el-radio>
+            <el-radio label="0">关闭</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" prop="streams">
+          <MDinput v-model="postForm.streams" :maxlength="100" name="name" required>
+            <label class="material-label-lighting">频率直播地址</label>
+          </MDinput>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" prop="videoStreams">
+          <MDinput v-model="postForm.videoStreams" :maxlength="100" name="name" required>
+            <label class="material-label-lighting">频率视频直播地址</label>
+          </MDinput>
+        </el-form-item>
 
-          <el-form-item style="margin-bottom: 40px;" label="上传logo">
-            <el-upload
-              class="avatar-uploader"
-              :action="uploadUrl()"
-              :data="upLoadData"
-              name="file"
-              list-type="picture-card"
-              :show-file-list="false"
-              :on-remove="handleRemove"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-              :on-error="imgUploadError">
-              <img v-if="imgSrc" :src="imgSrc" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="频率描述" style="width: 40%">
-            <el-input type="textarea" v-model="desc"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitData()">提交</el-button>
-            <el-button @click="back()">返回</el-button>
-          </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" label="上传logo">
+          <el-upload
+            class="avatar-uploader"
+            :action="uploadUrl()"
+            :data="upLoadData"
+            name="file"
+            list-type="picture-card"
+            :show-file-list="false"
+            :on-remove="handleRemove"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+            :on-error="imgUploadError">
+            <img v-if="imgSrc" :src="imgSrc" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"/>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="频率描述" style="width: 40%">
+          <el-input type="textarea" v-model="desc"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitData()">提交</el-button>
+          <el-button @click="back()">返回</el-button>
+        </el-form-item>
       </div>
     </el-form>
 

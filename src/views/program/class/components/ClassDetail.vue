@@ -3,35 +3,34 @@
     <el-form v-loading="loading" :rules="rules" ref="postForm" :model="postForm" class="form-container">
 
       <div class="createPost-main-container">
-          <p class="warn-content">
-            创建/编辑类目信息
-            <small>
-              <span style="color: #F56C6C">标题红色字体为必填项</span>
-            </small>
-          </p>
+        <p class="warn-content">
+          创建/编辑类目信息
+          <small>
+            <span style="color: #F56C6C">标题红色字体为必填项</span>
+          </small>
+        </p>
 
-          <el-form-item style="margin-bottom: 40px;" prop="classname">
-            <MDinput v-model="postForm.classname" :maxlength="100" name="name" required>
-              <span style="color: #F56C6C">类目名称</span>
-            </MDinput>
-          </el-form-item>
-          <el-form-item style="margin-bottom: 40px;" prop="parentName">
-            <MDinput v-model="postForm.parentName" disabled="disabled" :maxlength="100" name="name" required>
-              <span style="color: #F56C6C">上级类目</span>
-            </MDinput>
-          </el-form-item>
-          <el-form-item style="margin-bottom: 40px;" label="选择类目">
-            <el-tree style="margin-top: 50px;"
-              :data="treeList"
-              :props="defaultProps"
-              default-expand-all
-              @node-click="handleNodeClick">
-            </el-tree>
-          </el-form-item>
-          <el-form-item style="margin-bottom: 40px;">
-            <el-button type="primary" @click="submitData()">提交</el-button>
-            <el-button @click="back()">返回</el-button>
-          </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" prop="classname">
+          <MDinput v-model="postForm.classname" :maxlength="100" name="name" required>
+            <span style="color: #F56C6C">类目名称</span>
+          </MDinput>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" prop="parentName">
+          <MDinput v-model="postForm.parentName" disabled="disabled" :maxlength="100" name="name" required>
+            <span style="color: #F56C6C">上级类目</span>
+          </MDinput>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" label="选择类目">
+          <el-tree style="margin-top: 50px;"
+                   :data="treeList"
+                   :props="defaultProps"
+                   default-expand-all
+                   @node-click="handleNodeClick"/>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 40px;">
+          <el-button type="primary" @click="submitData()">提交</el-button>
+          <el-button @click="back()">返回</el-button>
+        </el-form-item>
       </div>
     </el-form>
 

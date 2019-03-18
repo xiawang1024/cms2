@@ -75,13 +75,13 @@ export default {
       programTypeOptions
     }
   },
-  created() {
-    this.getList()
-  },
   watch:{
     //监视路由的变化来确定是否要再次获取数据
     //避免返回列表时不刷新数据 
     '$route':["getList"]
+  },
+  created() {
+    this.getList()
   },
   methods: {
     getList() {

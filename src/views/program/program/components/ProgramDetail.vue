@@ -3,162 +3,157 @@
     <el-form v-loading="loading" :rules="rules" ref="postForm" :model="postForm" class="form-container">
 
       <div class="createPost-main-container">
-          <p class="warn-content">
-            创建/编辑排单信息
-            <small>
-              <span style="color: #F56C6C">标题红色字体为必填项</span>
-            </small>
-          </p>
+        <p class="warn-content">
+          创建/编辑排单信息
+          <small>
+            <span style="color: #F56C6C">标题红色字体为必填项</span>
+          </small>
+        </p>
 
-          <el-form-item style="margin-bottom: 40px;" prop="programlistName">
-            <MDinput v-model="postForm.programlistName" :maxlength="100" name="name" required>
-              <span style="color: #F56C6C">排单名称</span>
-            </MDinput>
-          </el-form-item>
-          <el-row>
-            <el-col :span="4">
-              <el-form-item style="margin-bottom: 40px; margin-left: 20px;" prop="channelId">
-                <span style="color: #F56C6C">所属频率</span>
-                <el-select v-model="postForm.channelId" @change="selectGet" placeholder="请选择所属频率">
-                  <el-option v-for="item in this.channelOptions" :key="item.channel_id" :label="item.channel_name" :value="item.channel_id"></el-option>
+        <el-form-item style="margin-bottom: 40px;" prop="programlistName">
+          <MDinput v-model="postForm.programlistName" :maxlength="100" name="name" required>
+            <span style="color: #F56C6C">排单名称</span>
+          </MDinput>
+        </el-form-item>
+        <el-row>
+          <el-col :span="4">
+            <el-form-item style="margin-bottom: 40px; margin-left: 20px;" prop="channelId">
+              <span style="color: #F56C6C">所属频率</span>
+              <el-select v-model="postForm.channelId" @change="selectGet" placeholder="请选择所属频率">
+                <el-option v-for="item in this.channelOptions" :key="item.channel_id" :label="item.channel_name" :value="item.channel_id"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item style="margin-bottom: 40px; margin-left: 20px;" prop="startTime">
+              <span style="color: #F56C6C">生效时间</span>
+              <el-date-picker
+                v-model="postForm.startTime"
+                type="datetime"
+                placeholder="选择日期时间"
+                align="right"
+                :editable="false"
+                :picker-options="pickerOptions"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="3">
+            <el-form-item style="margin-bottom: 40px; margin-left: 20px;">
+              <span class="demonstration">设置失效时间</span>
+              <el-switch
+                v-model="switchstate"
+                active-text="设置"
+                inactive-text="无"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4" v-show="switchstate">
+            <el-form-item style="margin-bottom: 40px; margin-left: 15px;" prop="endTime">
+              <span class="demonstration">设置失效时间</span>
+              <el-date-picker
+                v-model="postForm.endTime"
+                type="datetime"
+                placeholder="选择日期时间"
+                align="right"
+                value-format="timestamp"
+                :picker-options="pickerOptions"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="适用范围">
+          <el-radio-group v-model="range" @change="setRange">
+            <el-radio label="everyday">每天</el-radio>
+            <el-radio label="workday">周一至周五</el-radio>
+            <el-radio label="weekend">周六至周日</el-radio>
+            <el-radio label="custom">自定义</el-radio>
+          </el-radio-group>
+          <el-checkbox-group v-model="weekSet">
+            <el-checkbox label="1">周一</el-checkbox>
+            <el-checkbox label="2">周二</el-checkbox>
+            <el-checkbox label="3">周三</el-checkbox>
+            <el-checkbox label="4">周四</el-checkbox>
+            <el-checkbox label="5">周五</el-checkbox>
+            <el-checkbox label="6">周六</el-checkbox>
+            <el-checkbox label="0">周日</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item label="排单描述" style="width: 40%">
+          <el-input type="textarea" v-model="postForm.programlistDesc"/>
+        </el-form-item>
+
+
+        <!-- 节目单start -->
+        <div style="margin-top: 30px" class="form-dynamic">
+          <span>节目排单</span>
+          <el-row v-for="(item) in programs" :key="item.key">
+            <el-col :span="2">
+              <el-form-item>
+                <span class="demonstration">开始时间</span>
+                <el-time-picker
+                  v-model="item.start"
+                  type="datetime"
+                  placeholder="开始时间"
+                  align="right"
+                  :editable="false"
+                  format="HH:mm"
+                  value-format="HH:mm"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="2" style="margin-left: 5px">
+              <el-form-item>
+                <span class="demonstration">结束时间</span>
+                <el-time-picker
+                  v-model="item.end"
+                  type="datetime"
+                  placeholder="结束时间"
+                  align="left"
+                  :editable="false"
+                  format="HH:mm"
+                  value-format="HH:mm"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="2" style="margin-left: 5px; width: 180px">
+              <el-form-item>
+                <span class="demonstration">选择栏目</span>
+                <el-select v-scroll="handleScroll" v-model="item.title" filterable placeholder="可输入关键字">
+                  <el-option v-for="(item1, index) in columnNamesOptions" :key="index" :label="item1.column_name" :value="item1.column_name"/>
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="4">
-              <el-form-item style="margin-bottom: 40px; margin-left: 20px;" prop="startTime">
-                <span style="color: #F56C6C">生效时间</span>
-                <el-date-picker
-                  v-model="postForm.startTime"
-                  type="datetime"
-                  placeholder="选择日期时间"
-                  align="right"
-                  :editable="false"
-                  :picker-options="pickerOptions">
-                </el-date-picker>
+            <el-col :span="2" style="margin-left: 10px">
+              <el-form-item>
+                <span class="demonstration">节目性质</span>
+                <el-radio-group v-model="item.playtype">
+                  <el-radio :label="1">首播</el-radio>
+                  <el-radio :label="2" style="margin-left: 10px">重播</el-radio>
+                </el-radio-group>
               </el-form-item>
             </el-col>
-            <el-col :span="3">
-              <el-form-item style="margin-bottom: 40px; margin-left: 20px;">
-                <span class="demonstration">设置失效时间</span>
-                  <el-switch
-                    v-model="switchstate"
-                    active-text="设置"
-                    inactive-text="无">
-                  </el-switch>
+            <el-col :span="2" style="margin-left: 40px">
+              <el-form-item>
+                <span class="demonstration">点播与否</span>
+                <el-radio-group v-model="item.vodstatus">
+                  <el-radio :label="1">开启</el-radio>
+                  <el-radio :label="0" style="margin-left: 10px">停用</el-radio>
+                </el-radio-group>
               </el-form-item>
             </el-col>
-            <el-col :span="4" v-show="switchstate">
-              <el-form-item style="margin-bottom: 40px; margin-left: 15px;" prop="endTime">
-                <span class="demonstration">设置失效时间</span>
-                <el-date-picker
-                  v-model="postForm.endTime"
-                  type="datetime"
-                  placeholder="选择日期时间"
-                  align="right"
-                  value-format="timestamp"
-                  :picker-options="pickerOptions">
-                </el-date-picker>
+            <el-col :span="2" style="margin-left: 40px; margin-top: 25px">
+              <el-form-item>
+                <a class="remove-item" v-show="programs.length>1" @click.prevent="removeItem(item)"><i class="el-icon-close"/></a>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-form-item label="适用范围">
-            <el-radio-group v-model="range" @change="setRange">
-              <el-radio label="everyday">每天</el-radio>
-              <el-radio label="workday">周一至周五</el-radio>
-              <el-radio label="weekend">周六至周日</el-radio>
-              <el-radio label="custom">自定义</el-radio>
-            </el-radio-group>
-            <el-checkbox-group v-model="weekSet">
-              <el-checkbox label="1">周一</el-checkbox>
-              <el-checkbox label="2">周二</el-checkbox>
-              <el-checkbox label="3">周三</el-checkbox>
-              <el-checkbox label="4">周四</el-checkbox>
-              <el-checkbox label="5">周五</el-checkbox>
-              <el-checkbox label="6">周六</el-checkbox>
-              <el-checkbox label="0">周日</el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item label="排单描述" style="width: 40%">
-            <el-input type="textarea" v-model="postForm.programlistDesc"></el-input>
-          </el-form-item>
-
-
-          <!-- 节目单start -->
-          <div style="margin-top: 30px" class="form-dynamic">
-          <span>节目排单</span>
-            <el-row v-for="(item) in programs" :key="item.key">
-              <el-col :span="2">
-                <el-form-item>
-                  <span class="demonstration">开始时间</span>
-                  <el-time-picker
-                    v-model="item.start"
-                    type="datetime"
-                    placeholder="开始时间"
-                    align="right"
-                    :editable="false"
-                    format="HH:mm"
-                    value-format="HH:mm">
-                  </el-time-picker>
-                </el-form-item>
-              </el-col>
-              <el-col :span="2" style="margin-left: 5px">
-                <el-form-item>
-                  <span class="demonstration">结束时间</span>
-                  <el-time-picker
-                    v-model="item.end"
-                    type="datetime"
-                    placeholder="结束时间"
-                    align="left"
-                    :editable="false"
-                    format="HH:mm"
-                    value-format="HH:mm">
-                  </el-time-picker>
-                </el-form-item>
-              </el-col>
-              <el-col :span="2" style="margin-left: 5px; width: 180px">
-                <el-form-item>
-                  <span class="demonstration">选择栏目</span>
-                  <el-select v-scroll="handleScroll" v-model="item.title" filterable placeholder="可输入关键字">
-                    <el-option v-for="(item1, index) in columnNamesOptions" :key="index" :label="item1.column_name" :value="item1.column_name"></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="2" style="margin-left: 10px">
-                <el-form-item>
-                  <span class="demonstration">节目性质</span>
-                  <el-radio-group v-model="item.playtype">
-                    <el-radio :label="1">首播</el-radio>
-                    <el-radio :label="2" style="margin-left: 10px">重播</el-radio>
-                  </el-radio-group>
-                </el-form-item>
-              </el-col>
-              <el-col :span="2" style="margin-left: 40px">
-                <el-form-item>
-                  <span class="demonstration">点播与否</span>
-                  <el-radio-group v-model="item.vodstatus">
-                    <el-radio :label="1">开启</el-radio>
-                    <el-radio :label="0" style="margin-left: 10px">停用</el-radio>
-                  </el-radio-group>
-                </el-form-item>
-              </el-col>
-              <el-col :span="2" style="margin-left: 40px; margin-top: 25px">
-                <el-form-item>
-                  <a class="remove-item" v-show="programs.length>1" @click.prevent="removeItem(item)"><i class="el-icon-close"></i></a>
-                </el-form-item>
-              </el-col>
                
-            </el-row>
-            <el-form-item class="submit-btn">
-              <el-button type="success" @click="addItem">新增一项</el-button>
-            </el-form-item>
-          </div>
-          <!-- 节目单end -->
-
-
-          <el-form-item>
-            <el-button type="primary" @click="submitData()">提交</el-button>
-            <el-button @click="back()">返回</el-button>
+          </el-row>
+          <el-form-item class="submit-btn">
+            <el-button type="success" @click="addItem">新增一项</el-button>
           </el-form-item>
+        </div>
+        <!-- 节目单end -->
+
+
+        <el-form-item>
+          <el-button type="primary" @click="submitData()">提交</el-button>
+          <el-button @click="back()">返回</el-button>
+        </el-form-item>
       </div>
     </el-form>
 
