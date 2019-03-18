@@ -113,13 +113,6 @@ export default {
   created: function() {
     this.fetchDict();
   },
-  mounted() {
-    if (
-      !(Cookies.get("sidebarStatus") == 0 || Cookies.get("sidebarStatus") == 1)
-    ) {
-      this.$store.dispatch("toggleSideBar");
-    }
-  },
   methods: {
     handleAddDialog() {
       this.siteSetForm.dictDetailId = "";
