@@ -8,7 +8,7 @@
     <button-group
       :button-array="buttonArray"
       @list-click="listClick()"
-      @create-click="createClick"
+      @create-click="createClick" @able-click="enableFlagClick('1')" @disable-click="enableFlagClick('0')"
       @role-click="roleClick"
       @edit-click="editClick"/>
     <!-- 表格的数据展示，参数放置到 tableConfig 中进行传入。 -->
@@ -43,7 +43,7 @@ import PapSearch from '@/components/pap/search/index'
 import PapTable from '@/components/pap/table/index'
 import ButtonGroup from '@/components/pap/button-group/index'
 import ElFormRenderer from '@/components/el-form-renderer'
-import { UserList, UserCreate, UserUpdate, UserRoleRelSave, UserRoleRelRoleInfoByUserId } from '@/api/user/user'
+import { UserList, UserCreate, UserUpdate, UserRoleRelSave, UserRoleRelRoleInfoByUserId, UserModifyEnableFlagByUserIds } from '@/api/user/user'
 import Role from '@/views/user/role'
 
 export default {
@@ -70,7 +70,13 @@ export default {
         {name: '搜索', auth: true, click: 'list-click', icon: 'el-icon-search'},
         {name: '新建', auth: true, click: 'create-click', icon: 'el-icon-plus'},
         {name: '编辑', auth: true, click: 'edit-click', disabled: true, icon: 'el-icon-edit'},
-        {name: '角色', auth: true, click: 'role-click', disabled: true, icon: 'el-icon-edit'}
+        {name: '角色', auth: true, click: 'role-click', disabled: true, icon: 'el-icon-edit'},
+        {name: '状态', icon:'el-icon-document', click: 'query',
+          details:[
+            {name: '启用', auth: true, icon: 'el-icon-circle-check-outline', click: 'able-click'},
+            {name: '禁用', auth: true, icon: 'el-icon-circle-close-outline', click: 'disable-click'}
+          ]
+        },
       ],
       
       // 表格
@@ -189,6 +195,27 @@ export default {
           userCode: '',
           userName: '',
           password: ''
+        })
+      })
+    },
+    enableFlagClick (enableFlag) {
+      var _this = this
+      var multiSelection = _this.$refs["user-table"].multipleSelection
+      var userIds = []
+      for(var i = 0; i < multiSelection.length; i++) {
+        userIds.push(multiSelection[i].userId)
+      }
+      var obj = {
+        enableFlag: enableFlag,
+        userIds: userIds
+      }
+      return new Promise((resolve, reject) => {
+        UserModifyEnableFlagByUserIds(obj).then(async res => {
+          console.log(res)
+          _this.getList()
+        }).catch(err => {
+          console.log('err: ', err)
+          reject(err)
         })
       })
     },
