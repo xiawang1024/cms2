@@ -267,21 +267,22 @@ export default {
         })
       }
     },
+        isActive(route) {
+      return route.path === this.$route.path
+    },
     gotoListPage(context) {
       console.log(context)
-      // context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {
-      //   if (context.isActive(context.$route)) {
-      //     const latestView = visitedViews.slice(-1)[0]
-      //     if (latestView) {
-      //       context.$router.push(latestView)
-      //     } else {
-      //       context.$router.push('/')
-      //     }
-      //   }
-      // })
-      context.$router.push({
-        path: '/cms/website/column'
+      context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {
+        if (context.isActive(context.$route)) {
+          const latestView = visitedViews.slice(-1)[0]
+          if (latestView) {
+            context.$router.push(latestView)
+          } else {
+            context.$router.push('/')
+          }
+        }
       })
+
     }
   }
 }

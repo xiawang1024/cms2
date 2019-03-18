@@ -99,6 +99,11 @@ export default {
       searchData: {}
     }
   },
+    watch:{
+    '$route'(){
+      this.columnList()
+    }
+  },
   mounted() {
     this.columnList()
   },

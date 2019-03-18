@@ -16,8 +16,8 @@
           >{{ item.label }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-dropdown size="mini" @command="handleColumn">
-        <el-button v-if="checkAuth('cms:article:channel')" type="primary" size="mini" >
+      <el-dropdown size="mini" v-if="checkAuth('cms:article:channel')" @command="handleColumn">
+        <el-button type="primary" size="mini" >
           当前栏目<i class="el-icon-arrow-down el-icon--right" />
         </el-button>
         <el-dropdown-menu slot="dropdown">
@@ -141,6 +141,8 @@ export default {
   },
   methods: {
     checkAuth (authKey) {
+      // console.log(this.$store.getters.authorities, '111111111')
+      // console.log（）
       if (this.$store.getters.authorities.indexOf(authKey) === -1) {
         return false
       } else {
