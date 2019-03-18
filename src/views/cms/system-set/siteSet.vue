@@ -58,157 +58,166 @@
 </template>
 
 <script>
-import { fetchDictByDictName, createDict, updateDict } from '@/api/cms/dict'
+import Cookies from "js-cookie";
+import { fetchDictByDictName, createDict, updateDict } from "@/api/cms/dict";
 export default {
-  name: 'SiteSet',
+  name: "SiteSet",
   data() {
     return {
       dictObj: {
-        dictId: '',
-        dictName: '站点设置',
-        dictType: '',
-        dictRemark: '',
-        seqNo: '',
-        sysFlag: '',
-        createUser: '',
-        createTime: '',
-        createIp: '',
-        modifyUser: '',
-        modifyTime: '',
-        modifyIp: '',
-        clientLicenseId: '',
-        details: [
-        ]
+        dictId: "",
+        dictName: "站点设置",
+        dictType: "",
+        dictRemark: "",
+        seqNo: "",
+        sysFlag: "",
+        createUser: "",
+        createTime: "",
+        createIp: "",
+        modifyUser: "",
+        modifyTime: "",
+        modifyIp: "",
+        clientLicenseId: "",
+        details: []
       },
       addSiteSetVisible: false,
       alterSiteSetVisible: false,
       siteSetForm: {
-        dictDetailId: '',
-        dictDetailName: '',
-        dictDetailValue: ''
+        dictDetailId: "",
+        dictDetailName: "",
+        dictDetailValue: ""
       }
-    }
+    };
   },
   created: function() {
-    this.fetchDict()
+    this.fetchDict();
+  },
+  mounted() {
+    if (
+      !(Cookies.get("sidebarStatus") == 0 || Cookies.get("sidebarStatus") == 1)
+    ) {
+      this.$store.dispatch("toggleSideBar");
+    }
   },
   methods: {
     handleAddDialog() {
-      this.siteSetForm.dictDetailId = ''
-      this.siteSetForm.dictDetailName = ''
-      this.siteSetForm.dictDetailValue = ''
-      this.addSiteSetVisible = true
+      this.siteSetForm.dictDetailId = "";
+      this.siteSetForm.dictDetailName = "";
+      this.siteSetForm.dictDetailValue = "";
+      this.addSiteSetVisible = true;
     },
     handleAdd() {
-      console.log('新增')
-      this.handleDialogObjToList()
-      this.addSiteSetVisible = false
+      console.log("新增");
+      this.handleDialogObjToList();
+      this.addSiteSetVisible = false;
       // 新增保存
-      this.handleSubmit()
+      this.handleSubmit();
     },
     beforeAlter(index, row) {
-      this.siteSetForm.dictDetailId = row.dictDetailId
-      this.siteSetForm.dictDetailName = row.dictDetailName
-      this.siteSetForm.dictDetailValue = row.dictDetailValue
-      this.alterSiteSetVisible = true
+      this.siteSetForm.dictDetailId = row.dictDetailId;
+      this.siteSetForm.dictDetailName = row.dictDetailName;
+      this.siteSetForm.dictDetailValue = row.dictDetailValue;
+      this.alterSiteSetVisible = true;
     },
     handleAlter() {
-      console.log('修改')
-      this.handleDialogObjToList()
-      this.alterSiteSetVisible = false
+      console.log("修改");
+      this.handleDialogObjToList();
+      this.alterSiteSetVisible = false;
       // 修改保存
-      this.handleSubmit()
+      this.handleSubmit();
     },
     handleDelete(index, row) {
-      console.log('删除' + row.name)
-      this.dictObj.details.splice(index, 1)
+      console.log("删除" + row.name);
+      this.dictObj.details.splice(index, 1);
       // 删除保存
-      this.handleSubmit()
+      this.handleSubmit();
     },
     // 将当前弹出框的数据重新维护到 dictObj.details 中
     handleDialogObjToList() {
-      var _this = this
-      var currentOpeIdx = -1
+      var _this = this;
+      var currentOpeIdx = -1;
       _this.dictObj.details.forEach(function(v, k) {
         if (v.dictDetailName === _this.siteSetForm.dictDetailName) {
-          currentOpeIdx = k
+          currentOpeIdx = k;
         }
-      })
+      });
       if (currentOpeIdx === -1) {
-        _this.dictObj.details.push(Object.assign({}, _this.siteSetForm))
+        _this.dictObj.details.push(Object.assign({}, _this.siteSetForm));
       } else {
-        _this.dictObj.details[currentOpeIdx].dictDetailName = _this.siteSetForm.dictDetailName
-        _this.dictObj.details[currentOpeIdx].dictDetailValue = _this.siteSetForm.dictDetailValue
+        _this.dictObj.details[currentOpeIdx].dictDetailName =
+          _this.siteSetForm.dictDetailName;
+        _this.dictObj.details[currentOpeIdx].dictDetailValue =
+          _this.siteSetForm.dictDetailValue;
       }
     },
     // 查询对象
     fetchDict() {
-      var _this = this
+      var _this = this;
       return new Promise((resolve, reject) => {
         fetchDictByDictName(_this.dictObj.dictName)
-          .then((response) => {
-            _this.dictObj = response.data.result
+          .then(response => {
+            _this.dictObj = response.data.result;
             if (_this.dictObj.details === null) {
-              _this.dictObj.details = []
+              _this.dictObj.details = [];
             }
-            resolve()
+            resolve();
           })
-          .catch((error) => {
-            reject(error)
-          })
-      })
+          .catch(error => {
+            reject(error);
+          });
+      });
     },
     // 保存对象，实际为更新
     handleSubmit() {
-      var _this = this
-      if (_this.dictObj.dictId === '' || _this.dictObj.dictId === null) {
-        _this.dictObj.dictName = '站点设置'
+      var _this = this;
+      if (_this.dictObj.dictId === "" || _this.dictObj.dictId === null) {
+        _this.dictObj.dictName = "站点设置";
         return new Promise((resolve, reject) => {
           createDict(_this.dictObj)
-            .then((response) => {
-              _this.fetchDict()
-              resolve()
+            .then(response => {
+              _this.fetchDict();
+              resolve();
             })
-            .catch((error) => {
-              reject(error)
-            })
-        })
+            .catch(error => {
+              reject(error);
+            });
+        });
       } else {
         return new Promise((resolve, reject) => {
           updateDict(_this.dictObj)
-            .then((response) => {
-              _this.fetchDict()
-              resolve()
+            .then(response => {
+              _this.fetchDict();
+              resolve();
             })
-            .catch((error) => {
-              reject(error)
-            })
-        })
+            .catch(error => {
+              reject(error);
+            });
+        });
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>
-  .el-button + .el-button {
-    margin-top: 5px;
-    margin-left: 0px;
-  }
+.el-button + .el-button {
+  margin-top: 5px;
+  margin-left: 0px;
+}
 
-  .siteSet-container {
-    margin: 30px;
-  }
+.siteSet-container {
+  margin: 30px;
+}
 
-  .tool-bar {
-    text-align: right;
-  }
-  /* liyu */
-  .site-set-container{
-    box-sizing: border-box;
-    margin: 30px;
-  }
-  .btn-save{
-    margin-top: 20px;
-  }
+.tool-bar {
+  text-align: right;
+}
+/* liyu */
+.site-set-container {
+  box-sizing: border-box;
+  margin: 30px;
+}
+.btn-save {
+  margin-top: 20px;
+}
 </style>
