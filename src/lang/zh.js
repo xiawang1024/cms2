@@ -104,7 +104,28 @@ export default {
     application: '平台应用管理',
     permissiongroup: '权限组管理',
     organization: '租户管理',
-    columnTypeSet: '栏目类型设置'
+    columnTypeSet: '栏目类型设置',
+    //------节目编排---------------------
+    compereAdmin: '主持人管理',
+    compereList: '主持人列表',
+    editCompere: '编辑主持人',
+    createCompere: '创建主持人',
+    classAdmin: '分类管理',
+    classList: '分类列表',
+    editClass: '编辑分类',
+    createClass: '创建分类',
+    columnAdmin: '栏目管理',
+    columnList: '栏目列表',
+    editColumn: '编辑栏目',
+    createColumn: '创建栏目',
+    channelAdmin: '频率管理',
+    channelList: '频率列表',
+    editChannel: '编辑频率',
+    createChannel: '创建频率',
+    programAdmin: '节目单管理',
+    programList: '节目单列表',
+    editProgram: '编辑节目单',
+    createProgram: '创建节目单'
   },
   navbar: {
     logOut: '退出登录',
@@ -172,7 +193,12 @@ export default {
     draft: '草稿',
     delete: '删除',
     cancel: '取 消',
-    confirm: '确 定'
+    confirm: '确 定',
+    open: '开启',
+    close: '关闭',
+    disable: '停用',
+    enable: '启用',
+    content: '内容'
   },
   errorLog: {
     tips: '请点击右上角bug小图标',
