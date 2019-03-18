@@ -70,6 +70,7 @@ export default {
         colomn: [
           { prop: 'permissionCode', label: '权限编码'},
           { prop: 'permissionName', label: '权限名称'},
+          { prop: 'sysApplicationId', label: '所属系统'},
           { prop: 'httpUrl', label: '请求链接'},
           { prop: 'httpMethod', label: '请求协议'}
         ],
