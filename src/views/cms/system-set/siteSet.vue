@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import { fetchDictByDictName, createDict, updateDict } from "@/api/cms/dict";
 export default {
   name: "SiteSet",

@@ -23,14 +23,14 @@ const MENU_LIST = [
     id: '1',
     label: '新建文档'
   },
-  {
-    id: '2',
-    label: '增量发布'
-  },
-  {
-    id: '3',
-    label: '发布栏目首页'
-  },
+  // {
+  //   id: '2',
+  //   label: '增量发布'
+  // },
+  // {
+  //   id: '3',
+  //   label: '发布栏目首页'
+  // },
   {
     id: '4',
     label: '修改栏目'
@@ -59,10 +59,10 @@ const MENU_LIST = [
   //   id: '10',
   //   label: '图片水印'
   // },
-  {
-    id: '11',
-    label: '图片组'
-  },
+  // {
+  //   id: '11',
+  //   label: '图片组'
+  // },
   // {
   //   id: '12',
   //   label: '自定义文档列表'
@@ -71,10 +71,10 @@ const MENU_LIST = [
   //   id: '13',
   //   label: '静态网页片段'
   // },
-  {
-    id: '14',
-    label: '废件箱'
-  }
+  // {
+  //   id: '14',
+  //   label: '废件箱'
+  // }
 ]
 export default {
   name: 'ContextMenu',

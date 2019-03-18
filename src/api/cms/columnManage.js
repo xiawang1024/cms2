@@ -37,7 +37,13 @@ export function columnInfor(id) {
     method: 'get'
   })
 }
-
+// 获取栏目下的模板
+export function columnTemplateList(id) {
+  return request({
+    url: '/cms/template/ids/' + id,
+    method: 'get'
+  })
+}
 export function getRoot() {
   return request({
     url: '/cms/channel/root',

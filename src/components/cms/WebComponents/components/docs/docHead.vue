@@ -224,7 +224,7 @@ export default {
     // 批量发布
     publishDocumentMore(id) {
       return new Promise((resolve, reject) => {
-        publishDocumentMore({articleId: id})
+        publishDocumentMore({articleIds: id})
           .then((response) => {
             // this.$emit('handelSuccess')
             this.$message.success('发布成功')
@@ -239,7 +239,7 @@ export default {
     // 批量撤销
     cancelDocumentMore(id) {
       return new Promise((resolve, reject) => {
-        cancelDocumentMore({articleId: id})
+        cancelDocumentMore({articleIds: id})
           .then((response) => {
             // this.$emit('handelSuccess')
             this.$message.success('撤销成功')
@@ -257,7 +257,7 @@ export default {
     // 删除多个
     deleteMore(id) {
       return new Promise((resolve, reject) => {
-        deleteDocumentMore({articleId: id})
+        deleteDocumentMore({articleIds: id})
           .then((response) => {
             this.$message.success('删除成功')
             this.$emit('handelSuccess')

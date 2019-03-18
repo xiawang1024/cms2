@@ -76,7 +76,7 @@ export default {
     documentList() {
       var _this = this
       _this.searchData.channelId = this.channelId
-      _this.searchData.deleteFlag = 0
+      // _this.searchData.deleteFlag = 0
       return new Promise((resolve, reject) => {
         documentList(_this.searchData, _this.pageNum, _this.pageSize)
           .then((response) => {
