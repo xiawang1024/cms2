@@ -104,6 +104,7 @@ import {
 } from './mockData.js'
 // import choosedDialog from './choosedDialog.vue'
 import handelDialog from './handelDialog'
+import { deleteDocumentMore, cancelDocumentMore, publishDocumentMore } from '@/api/cms/article'
 export default {
   name: 'DocHead',
   components: {
@@ -132,7 +133,8 @@ export default {
       },
       centerDialogVisible: false,
       dialogVisible: false,
-      title: ''
+      title: '',
+      documentIds: []
     }
   },
   methods: {
@@ -190,25 +192,81 @@ export default {
       }
     },
     handleCommand(command) {
+      this.documentIds = []
+      if(!this.multipleList.length) {
+        this.$message.warning('请选择文章')
+       return
+      }
+      this.multipleList.forEach((ele) => {
+        this.documentIds.push(ele.articleId)
+      })
       switch(command) {
         case '1':
           this.title = '发布'
-          this.dialogVisible = true
+          this.publishDocumentMore(this.documentIds.join(','))
           break
         case '2':
           this.$store.dispatch('setContextMenu', { id: '1', label: '新建文档' })
           break 
         case '3':
           this.title = '撤销发布'
-          this.dialogVisible = true
+          this.cancelDocumentMore(this.documentIds.join(','))
           break
         case '4':
           this.title = '删除'
-          this.dialogVisible = true
+          // this.dialogVisible = true
+          this.deleteMore(this.documentIds.join(','))
           break 
         default: 
           break
       }
+    },
+    // 批量发布
+    publishDocumentMore(id) {
+      return new Promise((resolve, reject) => {
+        publishDocumentMore({articleId: id})
+          .then((response) => {
+            // this.$emit('handelSuccess')
+            this.$message.success('发布成功')
+            this.$emit('handelSuccess')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    // 批量撤销
+    cancelDocumentMore(id) {
+      return new Promise((resolve, reject) => {
+        cancelDocumentMore({articleId: id})
+          .then((response) => {
+            // this.$emit('handelSuccess')
+            this.$message.success('撤销成功')
+            this.$emit('handelSuccess')
+            // this.tableData.forEach((ele) => {
+            //   ele.modifyTime = response.data.result.modifyTime
+            // })
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    // 删除多个
+    deleteMore(id) {
+      return new Promise((resolve, reject) => {
+        deleteDocumentMore({articleId: id})
+          .then((response) => {
+            this.$message.success('删除成功')
+            this.$emit('handelSuccess')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     },
     createDocument() {
       const select = { id: '1', label: '新建文档' }

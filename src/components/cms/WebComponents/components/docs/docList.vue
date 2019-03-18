@@ -21,7 +21,7 @@
 
       <el-table-column label="预览" width="60">
         <template slot-scope="scope">
-          <i class="el-icon-view" style="cursor:pointer" @click="openWindow(scope.row.preview)"/>
+          <i class="el-icon-question" style="cursor:pointer" @click="openReview(scope.row)"/>
         </template>
       </el-table-column>
       <el-table-column prop="articleType" label="类型" width="100">
@@ -39,8 +39,8 @@
           <span v-if="scope.row.articleStatus == 2">审核未通过</span>
           <span v-if="scope.row.articleStatus == 3">已撤</span>
           <span v-if="scope.row.articleStatus == 4">已删</span>
-          <span v-if="scope.row.articleStatus == 5">待发</span>
-          <span v-if="scope.row.articleStatus == 6">已发</span>
+          <span v-if="scope.row.articleStatus == 10">待发</span>
+          <span v-if="scope.row.articleStatus == 11">已发</span>
         </template>
       </el-table-column>
       <el-table-column prop="mark" label="标记" width="100"/>
@@ -62,19 +62,24 @@
       <el-table-column prop="clickNum" label="点击" sortable width="80"/>
       <el-table-column fixed="right" label="操作" width="130">
         <template slot-scope="scope">
-          <el-button v-if="checkAuth('cms:article:stick')" type="text" size="small">置顶</el-button>
+          <el-button v-if="checkAuth('cms:article:stick')" type="text" size="small" @click="setTop(scope.row.articleId)">置顶</el-button>
           <el-button v-if="checkAuth('cms:article:edit')" type="text" size="small" @click="editDoc(scope.row.articleId)">编辑</el-button>
           <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click="handleClickDel(scope.row.articleId)">删除</el-button> -->
           <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click="deleteConfiorm(scope.row.articleId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <review-dialog :dialog-visible.sync="dialogVisible" :document-infor="documentInfor"/>
   </div>
 </template>
 
 <script>
-import { deleteDocument } from '@/api/cms/article'
+import { deleteDocument, topDocument} from '@/api/cms/article'
+import reviewDialog from './review'
 export default {
+  components: {
+    reviewDialog
+  },
   props: {
     tableData: {
       type: Array,
@@ -85,7 +90,9 @@ export default {
   },
   data() {
     return {
-      multipleSelection: []
+      multipleSelection: [],
+      dialogVisible: false,
+      documentInfor: {}
     }
   },
   methods: {
@@ -124,6 +131,30 @@ export default {
       }
       return multipleId
     },
+    // 置顶文章
+    setTop(id) {
+      this.$confirm('是否置顶该文章?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.setTopConform(id)
+      }).catch(() => {  
+      })
+    },
+    setTopConform(id) {
+      return new Promise((resolve, reject) => {
+        topDocument(id)
+          .then((response) => {
+            this.$emit('handelSuccess')
+            this.$message.success('置顶成功')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
     /**
      * 删除单个
      */
@@ -150,6 +181,11 @@ export default {
             reject(error)
           })
       })
+    },
+    //预览
+    openReview(val) {
+      this.documentInfor = val
+      this.dialogVisible = true
     },
     /**
      * 查看预览

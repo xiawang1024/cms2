@@ -3,10 +3,10 @@ export const currentDoc = [
     id: '1',
     label: '发布'
   },
-  {
-    id: '2',
-    label: '修改'
-  },
+  // {
+  //   id: '2',
+  //   label: '修改'
+  // },
   {
     id: '3',
     label: '撤销发布'
@@ -15,18 +15,18 @@ export const currentDoc = [
     id: '4',
     label: '删除'
   },
-  {
-    id: '5',
-    label: '复制到'
-  },
-  {
-    id: '6',
-    label: '移动到'
-  },
-  {
-    id: '7',
-    label: '引用到'
-  }
+  // {
+  //   id: '5',
+  //   label: '复制到'
+  // },
+  // {
+  //   id: '6',
+  //   label: '移动到'
+  // },
+  // {
+  //   id: '7',
+  //   label: '引用到'
+  // }
 ]
 
 export const currentColumn = [

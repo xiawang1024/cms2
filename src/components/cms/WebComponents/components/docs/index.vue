@@ -1,7 +1,7 @@
 <template>
   <div class="docs-wrap">
     <DocHead @searchList = "searchList" :multiple-list="multipleList" @handelSuccess = "handelSuccess"/>
-    <doc-list :table-data="tableData" @handelSuccess="handelSuccess" @multipleChoose="multipleChoose"/>
+    <doc-list :table-data="tableData" ref="documentList" @handelSuccess="handelSuccess" @multipleChoose="multipleChoose"/>
     <DocFoot :total="totalCount" @sizeChange = "sizeChange" @pageChange="pageChange"/>
     <!-- {{ treeTags }}
     {{ contextMenu }} -->
@@ -36,7 +36,6 @@ export default {
   },
   watch: {
     treeTags(val) {
-      console.log(val, 'treeTags')
       if(val) {
         this.channelId = val[val.length - 1].id
         this.documentList(val)
@@ -57,10 +56,11 @@ export default {
       this.multipleList = val
     },
     handelSuccess() {
+      this.$refs.documentList = []
+      this.multipleList = []
       this.documentList()
     },
     searchList(val) {
-      console.log(val)
       this.searchData = val
       this.pageNum = 1
       this.documentList()
@@ -76,6 +76,7 @@ export default {
     documentList() {
       var _this = this
       _this.searchData.channelId = this.channelId
+      _this.searchData.deleteFlag = 0
       return new Promise((resolve, reject) => {
         documentList(_this.searchData, _this.pageNum, _this.pageSize)
           .then((response) => {

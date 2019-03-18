@@ -148,7 +148,7 @@
             </template>
             <!-- 音频上传 -->
             <template v-else-if="item.type=='audio'">
-              <el-upload :action="upURL" :file-list="formModel[item.name]" :multiple="item.multiple" :name="'file'" :limit="item.limit" :before-upload="beforeUploadCallbacks[item.name]" :on-success="uploadCallbacks[item.name]" :on-preview="handlePreviewFile" :on-remove="removeCallbacks[item.name]" :on-exceed="handelUploadExceed" :on-error="handleUploadError" :disabled="item.disabled" class="upload-file" accept="audio/*">
+              <el-upload :action="upURL" :file-list="formModel[item.name]" :multiple="item.multiple" :name="'file'" :limit="item.limit" :before-upload="beforeUploadCallbacks[item.name]" :on-success="uploadCallbacks[item.name]" :on-preview="handlePreviewFile" :on-remove="removeCallbacks[item.name]" :on-exceed="handelUploadExceed" :on-error="handleUploadError" :disabled="item.disabled" class="upload-file" accept="audio/mp3">
                 <el-button :disabled="isUploading" size="small" type="primary">点击上传</el-button>
                 <div v-if="item.tip" slot="tip" class="el-upload__tip">{{ item.tip }}
                   <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
@@ -157,7 +157,7 @@
             </template>
             <!-- 视频上传 -->
             <template v-else-if="item.type=='video'">
-              <el-upload :action="upURL" :file-list="formModel[item.name]" :multiple="item.multiple" :name="'file'" :limit="item.limit" :before-upload="beforeUploadCallbacks[item.name]" :on-success="uploadCallbacks[item.name]" :on-preview="handlePreviewFile" :on-remove="removeCallbacks[item.name]" :on-exceed="handelUploadExceed" :on-error="handleUploadError" :disabled="item.disabled" class="upload-file" accept="video/*">
+              <el-upload :action="upURL" :file-list="formModel[item.name]" :multiple="item.multiple" :name="'file'" :limit="item.limit" :before-upload="beforeUploadCallbacks[item.name]" :on-success="uploadCallbacks[item.name]" :on-preview="handlePreviewFile" :on-remove="removeCallbacks[item.name]" :on-exceed="handelUploadExceed" :on-error="handleUploadError" :disabled="item.disabled" class="upload-file" accept="video/mp4">
                 <el-button :disabled="isUploading" size="small" type="primary">点击上传</el-button>
                 <div v-if="item.tip" slot="tip" class="el-upload__tip">{{ item.tip }}
                   <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
@@ -662,8 +662,8 @@ export default {
         url: DOWN_URL + response.result.filePath,
         size: file.size,
         createTime: file.raw.lastModified,
-        width: '',
-        height: '',
+        title: '',
+        desc: '',
         coverBool: false
       }) // [{name: xx, url: xx}]
       this.isUploading = false
@@ -676,6 +676,13 @@ export default {
       this.isUploading = false
       console.log(file)
       console.log(fileList)
+    },
+    fileSizeChange(maxSize) {
+      if(maxSize < 1024) {
+        return `${maxSize}k`
+      } else {
+        return `${parseInt(maxSize / 1024)}M`
+      }
     },
     // 上传文件前的判断
     handleBeforeUploadFile(name, file, item) {
@@ -693,7 +700,7 @@ export default {
       let maxSize = this.flatFormSettings[name].maxSize
       if (maxSize && (maxSize * 1024 < file.size)) {
         this.$message({
-          message: `上传图片不能超过${maxSize}k`,
+          message: `上传图片不能超过${this.fileSizeChange(maxSize)}`,
           type: 'warning'
         })
         return false

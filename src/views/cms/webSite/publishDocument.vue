@@ -4,7 +4,7 @@
     <split-pane
       :min-percent="10"
       :max-percent="30"
-      :default-percent="10"
+      :default-percent="12"
       class="pane-wrap"
       split="vertical"
       @resize="resize"

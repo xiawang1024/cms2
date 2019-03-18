@@ -163,9 +163,7 @@ export default {
   mounted() {
     this.routeQuery = this.$route.query
     this.isEdit = Boolean((!this.routeQuery.isAdd || this.routeQuery.isAdd === 'false') && this.routeQuery.channelId)
-    if (this.isEdit) {
-      this.getColumnInfor()
-    }
+    this.getColumnInfor()
     this.fetchComponentList()
     this.getColumns()
   },
@@ -211,13 +209,19 @@ export default {
       return new Promise((resolve, reject) => {
         columnInfor(_this.routeQuery.channelId)
           .then((response) => {
-            _this.formData = response.data.result
-            if(_this.formData.iconUrl) {
-              _this.formData.iconUrl = [{
-                url: _this.formData.iconUrl
-              }]
+            if(_this.isEdit) {
+              _this.formData = response.data.result
+              if(_this.formData.iconUrl) {
+                _this.formData.iconUrl = [{
+                  url: _this.formData.iconUrl
+                }]
+              } else {
+                _this.formData.iconUrl = []
+              }
             } else {
-              _this.formData.iconUrl = []
+              _this.formData = {
+                parentChannelNames: response.data.result.channelName
+              }
             }
             resolve()
           })
@@ -237,6 +241,7 @@ export default {
       }
       formData.iconUrl = iconUrlArray.length ? iconUrlArray.join(',') : ''
       if (!this.isEdit) {
+        formData.parentChannelId = _this.routeQuery.channelId ? _this.routeQuery.channelId : ''
         return new Promise((resolve, reject) => {
           addColumn(formData)
             .then((response) => {
@@ -253,6 +258,7 @@ export default {
       } else {
         return new Promise((resolve, reject) => {
           formData.channelId = _this.routeQuery.channelId
+          formData.parentChannelId = _this.formData.parentChannelId ? _this.formData.parentChannelId : ''
           editColumn(formData)
             .then((response) => {
               _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })

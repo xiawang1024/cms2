@@ -81,8 +81,10 @@
     </div>
     <div class="upload-btn">
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
-      <el-button type = "primary" size="small" @click = "save">存草稿</el-button>
-      <el-button type = "primary" size="small" @click = "save">保存并发布</el-button>
+      <!-- <el-button type = "primary" size="small" @click = "save">存草稿</el-button>
+      <el-button type = "primary" size="small" @click = "save">保存并发布</el-button> -->
+      <el-button type = "primary" size="small" @click = "save('0')">存草稿</el-button>
+      <el-button type = "primary" size="small" @click = "save('11')">保存并发布</el-button>
     </div>
   </div>
 </template>
@@ -115,7 +117,8 @@ export default {
             type: 'img',
             required: false,
             // hasTextInput: true,
-            hidden: false
+            hidden: false,
+            maxSize: 1024*1
           },
           {
             label: '音频',
@@ -123,6 +126,8 @@ export default {
             type: 'audio',
             required: false,
             // hasTextInput: true,
+            maxSize: 1024*200,
+            limit: 1,
             hidden: true
           },
           {
@@ -130,6 +135,8 @@ export default {
             name: 'contentVideosList',
             type: 'video',
             required: false,
+            maxSize: 1024*200,
+            limit: 1,
             // hasTextInput: true,
             hidden: true
           },
@@ -138,6 +145,7 @@ export default {
             name: 'articleAttachmentsList',
             type: 'file',
             required: false,
+            maxSize: 1024*200,
             // hasTextInput: true,
             hidden: true
           },
@@ -152,12 +160,12 @@ export default {
           },
           {
             label: '标题',
-            name: 'width',
+            name: 'title',
             type: 'text'
           },
           {
             label: '描述',
-            name: 'height',
+            name: 'desc',
             type: 'textarea',
           },
           {
@@ -243,8 +251,8 @@ export default {
     },
     // 保存图片参数
     setFile() {
-      this.filedetail.height = this.$refs.vForm.formModel.height
-      this.filedetail.width = this.$refs.vForm.formModel.width
+      this.filedetail.desc = this.$refs.vForm.formModel.desc
+      this.filedetail.title = this.$refs.vForm.formModel.title
       this.filedetail.coverBool = this.$refs.vForm.formModel.coverBool
       // this.filedetail.time = this.$refs.vForm.formModel.time
       this.$message.success('保存成功')
@@ -319,7 +327,7 @@ export default {
           })
       })
     },
-    save() {
+    save(publishType) {
       let resoultObj = this.docInformation
       resoultObj.channelId = this.treeTags[this.treeTags.length - 1].id
       let imageFile = this.$refs.imageForm.formModel.contentImagesList
@@ -330,7 +338,7 @@ export default {
       resoultObj.contentVideosList = videoFile
       resoultObj.contentAudioList = audioFile
       resoultObj.articleAttachmentsList = otherFile
-      console.log(resoultObj)
+      resoultObj.articleStatus = publishType
       if(this.contextMenu.docId) {
         resoultObj.articleId = this.contextMenu.docId
         this.editDoc(resoultObj)
