@@ -32,7 +32,7 @@
         </template>
       </el-table-column>
       <el-table-column label="设置" width="300">
-        <template slot-scope="scope">
+        <template v-if="checkAuth('cms:channel:setup')" slot-scope="scope">
           <el-button type="text" @click="columnTemplate(scope.row)">栏目模板</el-button>
           <el-button type="text" @click="extendsWord(scope.row)">扩展字段</el-button>
           <el-button type="text" @click="tagSetting(scope.row)">标签设置</el-button>
@@ -40,7 +40,7 @@
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150">
-        <template slot-scope="scope">
+        <template v-if="checkAuth('cms:channel:operation')" slot-scope="scope">
           <el-button type="text" @click="columnAddEdit(false, '', scope.row.channelId)">编辑</el-button>
           <el-button type="text" v-if="checkAuth('cms:channel:delete')" @click="columnDel(scope.row)">删除</el-button>
           <el-button type="text" @click="columnAddEdit(true, 'child', scope.row.channelId)">添加</el-button>

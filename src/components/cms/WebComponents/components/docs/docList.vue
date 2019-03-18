@@ -62,8 +62,8 @@
       <el-table-column prop="clickNum" label="点击" sortable width="80"/>
       <el-table-column fixed="right" label="操作" width="130">
         <template slot-scope="scope">
-          <el-button type="text" size="small">置顶</el-button>
-          <el-button type="text" size="small" @click="editDoc(scope.row.articleId)">编辑</el-button>
+          <el-button v-if="checkAuth('cms:article:stick')" type="text" size="small">置顶</el-button>
+          <el-button v-if="checkAuth('cms:article:edit')" type="text" size="small" @click="editDoc(scope.row.articleId)">编辑</el-button>
           <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click="handleClickDel(scope.row.articleId)">删除</el-button> -->
           <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click="deleteConfiorm(scope.row.articleId)">删除</el-button>
         </template>

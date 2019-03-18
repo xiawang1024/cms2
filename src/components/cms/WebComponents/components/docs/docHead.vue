@@ -1,10 +1,7 @@
 <template>
   <div class="doc-head">
     <div class="left">
-      <el-dropdown
-        size="mini"
-        @command="handleCommand"
-      >
+      <el-dropdown v-if="checkAuth('cms:article:delete')" size="mini" @command="handleCommand" >
         <el-button
           type="success"
           size="mini"
@@ -20,10 +17,7 @@
         </el-dropdown-menu>
       </el-dropdown>
       <el-dropdown size="mini" @command="handleColumn">
-        <el-button
-          type="primary"
-          size="mini"
-        >
+        <el-button v-if="checkAuth('cms:article:channel')" type="primary" size="mini" >
           当前栏目<i class="el-icon-arrow-down el-icon--right" />
         </el-button>
         <el-dropdown-menu slot="dropdown">
@@ -146,6 +140,13 @@ export default {
     }
   },
   methods: {
+    checkAuth (authKey) {
+      if (this.$store.getters.authorities.indexOf(authKey) === -1) {
+        return false
+      } else {
+        return true
+      }
+    },
     handelSuccess() {
       this.$emit('handelSuccess')
     },
