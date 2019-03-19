@@ -10,7 +10,7 @@
                 :data="tableData"
                 :show-header="false"
                 style="width: 100%">
-                <el-table-column prop="address" label="地址">
+                <el-table-column prop="templateName" label="地址">
                   <template slot-scope="scope">
                     <div> 
                       <span class="title-color">{{ scope.row.templateName }}</span> 
@@ -79,7 +79,7 @@
 </template>
 <script>
 import { fetchList } from '@/api/cms/template'
-import { columnInfor, editColumn } from '@/api/cms/columnManage'
+import { columnInfor, editColumn, columnTemplateList } from '@/api/cms/columnManage'
 export default {
   name: 'ColumnTemplate',
   data() {
@@ -117,8 +117,36 @@ export default {
     this.channelId = this.$route.query.channelId
     this.fetchList()
     this.getColumnInfor()
+    // this.columnTemplateList()
   },
   methods: {
+    columnTemplateList(ids) {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        columnTemplateList(ids)
+          .then((response) => {
+             _this.tableData = response.data.result
+            // if(_this.isEdit) {
+            //   _this.formData = response.data.result
+            //   if(_this.formData.iconUrl) {
+            //     _this.formData.iconUrl = [{
+            //       url: _this.formData.iconUrl
+            //     }]
+            //   } else {
+            //     _this.formData.iconUrl = []
+            //   }
+            // } else {
+            //   _this.formData = {
+            //     parentChannelNames: response.data.result.channelName
+            //   }
+            // }
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
     getColumnInfor() {
       var _this = this
       return new Promise((resolve, reject) => {
@@ -126,6 +154,9 @@ export default {
           .then((response) => {
             _this.columnData = response.data.result
             // _this.tagRule = response.data.result.tagRule ? response.data.result.tagRule :  _this.tagRule
+            if(response.data.result.templateIds) {
+              _this.columnTemplateList(response.data.result.templateIds)
+            }
             resolve()
           })
           .catch((error) => {

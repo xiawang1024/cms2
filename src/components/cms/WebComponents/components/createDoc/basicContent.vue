@@ -3,7 +3,6 @@
     <div class="tool-bar clearfix">
       <el-form ref="form" :model="typeForm" label-width="80px">
         <el-form-item label="文档类型">
-          {{ contextMenu }}
           <el-radio-group v-model="typeForm.articleType" size="small" @change="typeChange">
             <el-radio-button label="0">图文</el-radio-button>
             <el-radio-button label="1">图集</el-radio-button>
@@ -81,6 +80,7 @@ export default {
               name: 'articleTitle',
               type: 'text',
               placeholder: '请输入正文标题',
+              maxlength: 80,
               required: true
             },
             {
@@ -88,6 +88,7 @@ export default {
               name: 'contentTitle',
               type: 'text',
               placeholder: '请输入首页标题',
+              maxlength: 80,
               required: true
             },
             {
@@ -115,6 +116,7 @@ export default {
               label: '摘要',
               name: 'seoDescription',
               type: 'textarea',
+              maxlength: 20,
               placeholder: '请输入摘要'
             },{
               label: '标签',
@@ -159,6 +161,7 @@ export default {
               name: 'articleTitle',
               type: 'text',
               placeholder: '请输入正文标题',
+              maxlength: 80,
               required: true
             },
             {
@@ -166,11 +169,12 @@ export default {
               name: 'contentTitle',
               type: 'text',
               placeholder: '请输入首页标题',
+              maxlength: 80,
               required: true
             },
             {
               label:'转载地址',
-              name: 'url',
+              name: 'linkTo',
               type:'text',
               placeholder: '请输入转载地址'
             },{

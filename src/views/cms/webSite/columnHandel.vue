@@ -163,9 +163,7 @@ export default {
   mounted() {
     this.routeQuery = this.$route.query
     this.isEdit = Boolean((!this.routeQuery.isAdd || this.routeQuery.isAdd === 'false') && this.routeQuery.channelId)
-    if (this.isEdit) {
-      this.getColumnInfor()
-    }
+    this.getColumnInfor()
     this.fetchComponentList()
     this.getColumns()
   },
@@ -177,9 +175,9 @@ export default {
         fetchDictByDictName('栏目类型')
           .then((response) => {
             if (response.data.result.details && response.data.result.details.length) {
-              _this.formSettings[0].items[9].options = response.data.result.details.map((ele) => {
+              _this.formSettings[0].items[10].options = response.data.result.details.map((ele) => {
                 return {
-                  label: ele.dictDetailValue,
+                  label: ele.dictDetailName,
                   value: ele.dictDetailValue
                 }
               })
@@ -211,13 +209,19 @@ export default {
       return new Promise((resolve, reject) => {
         columnInfor(_this.routeQuery.channelId)
           .then((response) => {
-            _this.formData = response.data.result
-            if(_this.formData.iconUrl) {
-              _this.formData.iconUrl = [{
-                url: _this.formData.iconUrl
-              }]
+            if(_this.isEdit) {
+              _this.formData = response.data.result
+              if(_this.formData.iconUrl) {
+                _this.formData.iconUrl = [{
+                  url: _this.formData.iconUrl
+                }]
+              } else {
+                _this.formData.iconUrl = []
+              }
             } else {
-              _this.formData.iconUrl = []
+              _this.formData = {
+                parentChannelNames: response.data.result.channelName
+              }
             }
             resolve()
           })
@@ -237,6 +241,10 @@ export default {
       }
       formData.iconUrl = iconUrlArray.length ? iconUrlArray.join(',') : ''
       if (!this.isEdit) {
+        formData.parentChannelId = _this.routeQuery.channelId ? _this.routeQuery.channelId : ''
+        if(!formData.parentChannelId) {
+          delete formData.parentChannelId
+        }
         return new Promise((resolve, reject) => {
           addColumn(formData)
             .then((response) => {
@@ -251,6 +259,10 @@ export default {
             })
         })
       } else {
+        formData.parentChannelId = _this.formData.parentChannelId ? _this.formData.parentChannelId : ''
+        if(!formData.parentChannelId) {
+          delete formData.parentChannelId
+        }
         return new Promise((resolve, reject) => {
           formData.channelId = _this.routeQuery.channelId
           editColumn(formData)
@@ -267,11 +279,10 @@ export default {
         })
       }
     },
-        isActive(route) {
+    isActive(route) {
       return route.path === this.$route.path
     },
     gotoListPage(context) {
-      console.log(context)
       context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {
         if (context.isActive(context.$route)) {
           const latestView = visitedViews.slice(-1)[0]

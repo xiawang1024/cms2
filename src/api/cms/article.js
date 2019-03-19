@@ -24,6 +24,14 @@ export function createDocument(data) {
     data
   })
 }
+// 置顶文章
+export function topDocument(id) {
+  return request({
+    url: '/cms/article/top/' + id,
+    method: 'post'
+    // data: data
+  })
+}
 //删除单个文章
 export function deleteDocument(data) {
   return request({
@@ -35,7 +43,7 @@ export function deleteDocument(data) {
 // 匹量删除
 export function deleteDocumentMore(data) {
   return request({
-    url: '/cms/article/cutout',
+    url: '/cms/article/cutouts',
     method: 'post',
     data: data
   })
@@ -43,7 +51,7 @@ export function deleteDocumentMore(data) {
 // 批量撤销
 export function cancelDocumentMore(data) {
   return request({
-    url: '/cms/article/cancel',
+    url: '/cms/article/cancels',
     method: 'post',
     data: data
   })
@@ -51,7 +59,7 @@ export function cancelDocumentMore(data) {
 // 批量发布
 export function publishDocumentMore(data) {
   return request({
-    url: '/cms/article/tosent',
+    url: '/cms/article/senteds',
     method: 'post',
     data: data
   })

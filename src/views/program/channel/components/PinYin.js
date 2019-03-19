@@ -422,31 +422,31 @@ var PinYin = {
    * @param uppercase 是否转为大写
    * @returns {string} 结果
    */
-  function getPinYin(str, split,uppercase ) {
-    split = split || " ";
-    uppercase = uppercase || false;
-    var l2 = str.length;
-    var result = "";
-    var reg = new RegExp('[a-zA-Z0-9\- ]');
-    var val;
-    var name;
-    for (var i = 0; i < l2; i++) {
-      val = str.substr(i, 1);
-      if (isChinese(val)) {
-        name = arraySearch(val);
-        if (reg.test(val)) {
-          result += split + val;
-        } else if (name !== false) {
-          result += split + name;
-        }
-      } else {
-        result += val;
-      }
-    }
-    if(uppercase) result = result.toUpperCase();
-    result = result.replace(split,"");
-    return result.trim();
-  }
+  // function getPinYin(str, split,uppercase ) {
+  //   split = split || " ";
+  //   uppercase = uppercase || false;
+  //   var l2 = str.length;
+  //   var result = "";
+  //   var reg = new RegExp('[a-zA-Z0-9\- ]');
+  //   var val;
+  //   var name;
+  //   for (var i = 0; i < l2; i++) {
+  //     val = str.substr(i, 1);
+  //     if (isChinese(val)) {
+  //       name = arraySearch(val);
+  //       if (reg.test(val)) {
+  //         result += split + val;
+  //       } else if (name !== false) {
+  //         result += split + name;
+  //       }
+  //     } else {
+  //       result += val;
+  //     }
+  //   }
+  //   if(uppercase) result = result.toUpperCase();
+  //   result = result.replace(split,"");
+  //   return result.trim();
+  // }
    
   /**
    *
@@ -457,7 +457,7 @@ var PinYin = {
     for (var name in PinYin) {
       if (PinYin[name].indexOf(str) != -1) {
         return name;
-        break;
+        // break;
       }
     }
     return false;

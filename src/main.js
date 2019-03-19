@@ -40,3 +40,19 @@ new Vue({
   i18n,
   render: (h) => h(App)
 })
+router.beforeEach((to, from, next) => {
+  // 侧边栏路由已经动态生成ok 一期特殊需求 首页为站点设置
+  if (!(store.getters.addRouters.length == 0 && store.getters.addRouters[0].redirect == "/404")) {
+    if (!window.localStorage.getItem("shouye")) {
+      window.localStorage.setItem("shouye", true)
+      store.getters.addRouters.forEach(element => {
+        if (element.name == "systemSet") {
+          router.push({
+            path: '/cms/systemSet/siteSet',
+          });
+        }
+      });
+    }
+  }
+  next();
+})

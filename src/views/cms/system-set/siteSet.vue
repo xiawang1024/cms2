@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import { fetchDictByDictName, createDict, updateDict } from "@/api/cms/dict";
 export default {
   name: "SiteSet",
@@ -112,13 +112,6 @@ export default {
   },
   created: function() {
     this.fetchDict();
-  },
-  mounted() {
-    if (
-      !(Cookies.get("sidebarStatus") == 0 || Cookies.get("sidebarStatus") == 1)
-    ) {
-      this.$store.dispatch("toggleSideBar");
-    }
   },
   methods: {
     handleAddDialog() {

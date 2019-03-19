@@ -13,7 +13,7 @@
     <div>
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
       <el-button type = "primary" size="small" @click = "save('docContentForm', '0')">存草稿</el-button>
-      <el-button type = "primary" size="small" @click = "save('docContentForm', '1')">保存并发布</el-button>
+      <el-button type = "primary" size="small" @click = "save('docContentForm', '11')">保存并发布</el-button>
     </div>
   </div>
 </template>
@@ -67,13 +67,15 @@ export default {
               name: 'articleTitle',
               type: 'text',
               placeholder: '请输入正文标题',
-              required: true
+              required: true,
+              maxlength: 10
             },
             {
               label: '首页标题',
               name: 'contentTitle',
               type: 'text',
               placeholder: '请输入首页标题',
+              maxlength: 10,
               required: true
             },
             {
