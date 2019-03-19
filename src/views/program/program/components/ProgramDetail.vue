@@ -118,21 +118,21 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="2" style="margin-left: 10px">
+            <el-col :span="2" style="margin-left: 10px; width: 155px">
               <el-form-item>
                 <span class="demonstration">节目性质</span>
                 <el-radio-group v-model="item.playtype">
                   <el-radio :label="1">首播</el-radio>
-                  <el-radio :label="2" style="margin-left: 10px">重播</el-radio>
+                  <el-radio :label="2">重播</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
-            <el-col :span="2" style="margin-left: 40px">
+            <el-col :span="2" style="margin-left: 40px; width: 155px">
               <el-form-item>
                 <span class="demonstration">点播与否</span>
                 <el-radio-group v-model="item.vodstatus">
                   <el-radio :label="1">开启</el-radio>
-                  <el-radio :label="0" style="margin-left: 10px">停用</el-radio>
+                  <el-radio :label="0">停用</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>

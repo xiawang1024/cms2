@@ -23,7 +23,7 @@
         <el-form-item style="margin-bottom: 40px;" label="栏目主播">
           <el-select v-model="compere_arr" @change="selectCompere" multiple placeholder="多选">
             <el-option :key="0" label="无主播" :value="0"/>
-            <el-option :disabled="compereState" v-for="item in this.compereOptions" :key="item.compere_id" :label="item.compere_name" :value="item.compere_id"/>
+            <el-option :disabled="compereState" v-for="item in this.compereOptions" :key="item.compere_id" :label="item.compere_name" :value="item.compere_name"/>
           </el-select>
         </el-form-item>
         <el-form-item style="margin-bottom: 40px;" prop="className">
