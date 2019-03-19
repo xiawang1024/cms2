@@ -1,15 +1,15 @@
 // optimus
 // const BASE_URL = 'http://api.optimus.1byongche.com'
-let BASE_URL = 'http://172.20.5.4:55030' // 测试地址1
-console.log(process.env, 'process')
-if (process.env.VUE_APP_ENV) {
-  if (process.env.VUE_APP_ENV == 'development') {
-    BASE_URL = 'http://47.100.76.78:8510' // 测试地址
+let BASE_URL = 'http://172.20.5.4:53010' // 测试地址1
+// console.log(process.env, 'process')
+if (process.env.NODE_ENV) {
+  if (process.env.NODE_ENV == 'development') {
+    BASE_URL = 'http://172.20.5.4:53010' // 测试地址
     // BASE_URL = 'http://api.optimus.1byongche.com' // 正式地址
-  } else if (process.env.VUE_APP_ENV == 'production') {
+  } else if (process.env.NODE_ENV == 'production') {
     BASE_URL = 'http://api.optimus.1byongche.com' // 正式地址
   } else if (process.env.VUE_APP_ENV == 'development2') {
-    BASE_URL = 'http://47.100.76.78:9510' // 开发环境
+    BASE_URL = 'http://172.20.5.4:53010' // 开发环境
   }
 }
 // 七牛上传地址七牛上传地址

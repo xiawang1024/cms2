@@ -25,7 +25,9 @@
           <!-- <span>转载地址 </span>
           <a :href="documentInfor.linkTo">{{ documentInfor.linkTo }}</a> -->
           转载地址
-          <el-button type="text" size="small" @click="openLink(documentInfor.linkTo)">{{ documentInfor.linkTo }}</el-button>
+          <div class="link-to">
+            <span size="small" class="link-url" @click="openLink(documentInfor.linkTo)">{{ documentInfor.linkTo }}</span>
+          </div>
         </div>
         <div v-html="contentBody"/>
       </div>
@@ -115,6 +117,13 @@ export default {
   .el-dialog {
     .el-dialog__header{
       border-bottom: 1px solid #ebeef5;
+    }
+    .link-to{
+      overflow: hidden;
+      .link-url{
+        cursor: pointer;
+        color: rgb(64, 158, 255)
+      }
     }
     .image-list {
       height: 150px;
