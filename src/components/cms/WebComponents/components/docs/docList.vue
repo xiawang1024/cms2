@@ -43,7 +43,7 @@
           <span v-if="scope.row.articleStatus == 11">已发</span>
         </template>
       </el-table-column>
-      <el-table-column prop="mark" label="标记" width="100"/>
+      <!-- <el-table-column prop="mark" label="标记" width="100"/> -->
       <el-table-column
         prop="createTime"
         label="创建时间"
