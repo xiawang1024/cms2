@@ -41,10 +41,10 @@
         size="mini"
       >
         <el-option
-          v-for="item in fromOptions"
-          :key="item.id"
+          v-for="item in sourceList"
+          :key="item.value"
           :label="item.label"
-          :value="item.id"
+          :value="item.value"
         />
       </el-select>
       <el-select
@@ -116,6 +116,12 @@ export default {
         []
       },
       type: Array
+    },
+    sourceList: {
+      default: ()=> {
+        []
+      },
+      type: Array
     }
   },
   data() {
@@ -135,6 +141,10 @@ export default {
       dialogVisible: false,
       title: '',
       documentIds: []
+    }
+  },
+  watch: {
+    sourceList(val) {
     }
   },
   methods: {

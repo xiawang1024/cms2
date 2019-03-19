@@ -1,7 +1,7 @@
 // optimus
 // const BASE_URL = 'http://api.optimus.1byongche.com'
-let BASE_URL = 'http://47.100.76.78:8510' // 测试地址1
-
+let BASE_URL = 'http://172.20.5.4:55030' // 测试地址1
+console.log(process.env, 'process')
 if (process.env.VUE_APP_ENV) {
   if (process.env.VUE_APP_ENV == 'development') {
     BASE_URL = 'http://47.100.76.78:8510' // 测试地址

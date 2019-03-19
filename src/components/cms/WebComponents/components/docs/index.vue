@@ -1,6 +1,6 @@
 <template>
   <div class="docs-wrap">
-    <DocHead @searchList = "searchList" :multiple-list="multipleList" @handelSuccess = "handelSuccess"/>
+    <DocHead @searchList = "searchList" :multiple-list="multipleList" :source-list="sourceList" @handelSuccess = "handelSuccess"/>
     <doc-list :table-data="tableData" ref="documentList" @handelSuccess="handelSuccess" @multipleChoose="multipleChoose"/>
     <DocFoot :total="totalCount" @sizeChange = "sizeChange" @pageChange="pageChange"/>
     <!-- {{ treeTags }}
@@ -13,6 +13,7 @@ import DocList from './docList'
 import DocFoot from './docFoot'
 import { mapGetters } from 'vuex'
 import { documentList } from '@/api/cms/article'
+import { fetchDictByDictName } from "@/api/cms/dict";
 export default {
   name: 'DocsWrap',
   components: {
@@ -28,7 +29,8 @@ export default {
       totalCount: 0,
       searchData: {},
       channelId: '',
-      multipleList: []
+      multipleList: [],
+      sourceList: []
     }
   },
   computed: {
@@ -49,8 +51,30 @@ export default {
         this.documentList()
       }
     }
+    this.fetchDict()
   },
   methods: {
+    // 文章来源
+    fetchDict() {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        fetchDictByDictName('文稿来源')
+          .then(response => {
+            if(response.data.result.details && response.data.result.details.length) {
+              _this.sourceList = response.data.result.details.map((ele) => {
+                return {
+                  label: ele.dictDetailName,
+                  value: ele.dictDetailId
+                }
+              })
+            }
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
     // 获取多逊列表
     multipleChoose(val) {
       this.multipleList = val

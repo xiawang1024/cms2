@@ -132,11 +132,11 @@ export default {
               limit: 1,
               tip: '建议图片大小：1080*1642，图片大小不超过100K'
            },
-           {
-              label: '',
-              name: 'isScale',
-              type: 'slot'
-           },
+          //  {
+          //     label: '',
+          //     name: 'isScale',
+          //     type: 'slot'
+          //  },
            {
               label:'关键字',
               name:'keywordName',

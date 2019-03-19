@@ -65,8 +65,10 @@
 <script>
 // import { fetchDictByDictName } from '@/api/cms/dict'
 import { columnList, deleteColumn } from '@/api/cms/columnManage'
+import mixins from '@/components/cms/mixins'
 export default {
   name: 'ColumnManage',
+  mixins: [mixins],
   data() {
     return {
       tableData: [],
@@ -78,7 +80,8 @@ export default {
         name: 'channelName',
         placeholder: '请输入栏目名称',
         visible: true,
-        type: 'text'
+        options: [],
+        type: 'cascader'
       }, {
         label: '状态',
         name: 'hiddenFlag',
@@ -99,15 +102,35 @@ export default {
       searchData: {}
     }
   },
-    watch:{
-    '$route'(){
+  watch:{
+    '$route'(val){
+      console.log(val)
       this.columnList()
+      this.columnSearchList()
     }
   },
   mounted() {
     this.columnList()
   },
+  created() {
+    this.columnSearchList()
+  },
   methods: {
+    columnSearchList() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        columnList({}, 1, 1000)
+          .then((response) => {
+            this.$nextTick(() => {
+              _this.searchSettings[0].options = _this.toTree(response.data.result.content)
+            })
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
     channelNameChange(val) {
       let arr = []
       if(val) {
@@ -126,6 +149,11 @@ export default {
     },
     searchItem(searchData) {
       this.searchData = searchData
+      if(this.searchData.channelName && this.searchData.channelName.length) {
+        this.searchData.channelName = this.searchData.channelName[this.searchData.channelName.length - 1]
+      } else {
+        this.searchData.channelName = ''
+      }
       this.pageNum = 1
       this.columnList()
     },
