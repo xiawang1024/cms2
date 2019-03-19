@@ -6,7 +6,7 @@
       </el-select>
       <el-input :placeholder="$t('table.content')" v-model="listQuery.content" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <router-link :to="'/channel/create'">
+      <router-link :to="'/program/channel/create'">
         <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">{{ $t('table.add') }}</el-button>
       </router-link>
     </div>
@@ -47,7 +47,7 @@
 
       <el-table-column align="center" :label="$t('table.actions')" width="300">
         <template slot-scope="scope">
-          <router-link :to="'/channel/edit/'+scope.row.channelId">
+          <router-link :to="'/program/channel/edit/'+scope.row.channelId">
             <el-button type="primary" size="small" v-waves icon="el-icon-edit">{{ $t('table.edit') }}</el-button>
           </router-link>
           <el-button type="warning" size="small" v-if="scope.row.status == 1"
@@ -131,7 +131,7 @@ export default {
         limit: 20,
         type: undefined,
         content: undefined,
-        userId: 1     //登陆用户先默认1
+        userId: this.$store.getters.tenantId     //登陆用户先默认1
       },
       channelTypeOptions
     }

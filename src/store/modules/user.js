@@ -43,7 +43,10 @@ const user = {
     },
     SET_SYS_TYPE: (state, sysType) => {
       state.sysType = sysType
-    }
+    },
+    SET_TENANT_ID: (state, tenantId) => {
+      state.tenantId = tenantId
+    },
   },
 
   actions: {
@@ -85,6 +88,7 @@ const user = {
              */
             // commit('SET_SYS_LIST', data.sysList)
             commit('SET_NAME', data.name)
+            commit('SET_TENANT_ID', data.tenant_id)
             resolve(data)
           })
           .catch((error) => {

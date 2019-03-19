@@ -9,27 +9,28 @@ const compere = {
     name: 'Compere',
     meta: {
       title: 'compereAdmin',
-      icon: 'peoples'
+      icon: 'peoples',
+      role: 'program:compere'
     },
     children: [
       {
         path: 'create',
         component: () => import(`@/${path}/create`),
         name: 'CreateCompere',
-        meta: { title: 'createCompere' },
+        meta: { title: 'createCompere', role: 'program:compere:create' },
         hidden: true
       },
       {
         path: 'list',
         component: () => import(`@/${path}/list`),
         name: 'CompereList',
-        meta: { title: 'compereList' }
+        meta: { title: 'compereList', role: 'program:compere:list' }
       },
       {
         path: 'edit/:id(\\d+)',
         component: () => import(`@/${path}/edit`),
         name: 'EditCompere',
-        meta: { title: 'editCompere', noCache: true },
+        meta: { title: 'editCompere', noCache: true, role: 'program:compere:edit' },
         hidden: true
       }
     ]

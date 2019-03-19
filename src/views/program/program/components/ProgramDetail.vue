@@ -303,13 +303,13 @@ export default {
   },
   methods: {
     getChannelOptions() {
-      let userid = 1  //假定租户id是1
+      let userid = this.$store.getters.tenantId
       fetchChannelAll(userid).then(response => {
         this.channelOptions = response.data.result;
       })
     },
     getColumnNames() {
-      let userid = 1  //假定租户id是1
+      let userid = this.$store.getters.tenantId
       fetchColumnNames(userid, this.formData.pageIndex, this.formData.pageSize).then(response => {
         this.columnNamesOptions = [...this.columnNamesOptions, ...response.data.result];
         // this.columnNamesOptions = response.data.result;

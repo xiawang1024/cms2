@@ -9,27 +9,28 @@ const column = {
     name: 'Column',
     meta: {
       title: 'columnAdmin',
-      icon: 'excel'
+      icon: 'excel',
+      role: 'program:column'
     },
     children: [
       {
         path: 'create',
         component: () => import(`@/${path}/create`),
         name: 'CreateColumn',
-        meta: { title: 'createColumn' },
+        meta: { title: 'createColumn', role: 'program:column:create' },
         hidden: true
       },
       {
         path: 'list',
         component: () => import(`@/${path}/list`),
         name: 'ColumnList',
-        meta: { title: 'columnList' }
+        meta: { title: 'columnList', role: 'program:column:list' }
       },
       {
         path: 'edit/:id(\\d+)',
         component: () => import(`@/${path}/edit`),
         name: 'EditColumn',
-        meta: { title: 'editColumn', noCache: true },
+        meta: { title: 'editColumn', noCache: true, role: 'program:column:edit' },
         hidden: true
       }
     ]

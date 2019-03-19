@@ -105,7 +105,7 @@ export default {
   },
   methods: {
     getChannelOptions() {
-      let userid = 1  //假定租户id是1
+      let userid = this.$store.getters.tenantId
       fetchChannelAll(userid).then(response => {
         this.options = response.data.result;
       })

@@ -9,27 +9,28 @@ const channel = {
     name: 'Channel',
     meta: {
       title: 'channelAdmin',
-      icon: 'excel'
+      icon: 'excel',
+      role: 'program:channel'
     },
     children: [
       {
         path: 'create',
         component: () => import(`@/${path}/create`),
         name: 'CreateChannel',
-        meta: { title: 'createChannel' },
+        meta: { title: 'createChannel'},
         hidden: true
       },
       {
         path: 'list',
         component: () => import(`@/${path}/list`),
         name: 'ChannelList',
-        meta: { title: 'channelList' }
+        meta: { title: 'channelList', role: 'program:channel:list' }
       },
       {
         path: 'edit/:id(\\d+)',
         component: () => import(`@/${path}/edit`),
         name: 'EditChannel',
-        meta: { title: 'editChannel', noCache: true },
+        meta: { title: 'editChannel', noCache: true, role: 'program:channel:edit' },
         hidden: true
       }
     ]
