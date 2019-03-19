@@ -171,7 +171,8 @@ export default {
           {
             label: '设为封面',
             name: 'coverBool',
-            type: 'switch'
+            type: 'switch',
+            hidden: false
           },
           // {
           //   label: '自定义',
@@ -230,6 +231,15 @@ export default {
       this.singleData = val
       console.log(val)
     },
+    differenceFile(articleAttachmentsList, type) {
+      let arrResoult = []
+      if(articleAttachmentsList && articleAttachmentsList.length) {
+        arrResoult = articleAttachmentsList.filter((ele) => {
+          return ele.category === type
+        })
+      }
+      return arrResoult
+    },
     getDocumentInfor(id) {
       var _this = this
       return new Promise((resolve, reject) => {
@@ -237,10 +247,15 @@ export default {
           .then((response) => {
             _this.docInformation = response.data.result
             _this.formData =  response.data.result
-            _this.formData.contentVideosList =  _this.formData.contentVideosList ?  _this.formData.contentVideosList : []
-            _this.formData.contentImagesList =  _this.formData.contentImagesList ?  _this.formData.contentImagesList : []
-            _this.formData.contentAudioList =  _this.formData.contentAudioList ?  _this.formData.contentAudioList : []
-            _this.formData.articleAttachmentsList =  _this.formData.articleAttachmentsList ?  _this.formData.articleAttachmentsList : []
+            _this.formData.contentVideosList = _this.differenceFile(response.data.result.articleAttachmentsList, 'VIDEO')
+            _this.formData.contentImagesList = _this.differenceFile(response.data.result.articleAttachmentsList, 'IMG')
+            _this.formData.contentAudioList = _this.differenceFile(response.data.result.articleAttachmentsList, 'AUDIO')
+            _this.formData.articleAttachmentsList = _this.differenceFile(response.data.result.articleAttachmentsList, 'OTHER')
+
+            // _this.formData.contentVideosList =  _this.formData.contentVideosList ?  _this.formData.contentVideosList : []
+            // _this.formData.contentImagesList =  _this.formData.contentImagesList ?  _this.formData.contentImagesList : []
+            // _this.formData.contentAudioList =  _this.formData.contentAudioList ?  _this.formData.contentAudioList : []
+            // _this.formData.articleAttachmentsList =  _this.formData.articleAttachmentsList ?  _this.formData.articleAttachmentsList : []
             // _this.formData.articleAttachmentsList =  _this.formData.articleAttachmentsList ?  _this.formData.articleAttachmentsList : []
             resolve()
           })
@@ -254,11 +269,7 @@ export default {
       this.filedetail.desc = this.$refs.vForm.formModel.desc
       this.filedetail.title = this.$refs.vForm.formModel.title
       this.filedetail.coverBool = this.$refs.vForm.formModel.coverBool
-      // this.filedetail.time = this.$refs.vForm.formModel.time
       this.$message.success('保存成功')
-      // console.log(this.filedetail, 'detail')
-      // console.log(this.$refs.imageForm.formModel.contentImagesList, 'imageForm')
-      // this.formData.contentImagesList = this.$refs.imageForm.formModel.contentImagesList
     },
     typeChange(val) {
       this.rightCardShow = false
@@ -268,24 +279,28 @@ export default {
           this.imageSettings[0].items[1].hidden = true
           this.imageSettings[0].items[2].hidden = true
           this.imageSettings[0].items[3].hidden = true
+          this.fileSettings[0].items[3].hidden = false
           break
         case '1':
           this.imageSettings[0].items[1].hidden = false
           this.imageSettings[0].items[0].hidden = true
           this.imageSettings[0].items[2].hidden = true
           this.imageSettings[0].items[3].hidden = true
+          this.fileSettings[0].items[3].hidden = true
           break
         case '2':
           this.imageSettings[0].items[1].hidden = true
           this.imageSettings[0].items[0].hidden = true
           this.imageSettings[0].items[2].hidden = false
           this.imageSettings[0].items[3].hidden = true
+          this.fileSettings[0].items[3].hidden = true
           break
         case '3':
           this.imageSettings[0].items[1].hidden = true
           this.imageSettings[0].items[0].hidden = true
           this.imageSettings[0].items[2].hidden = true
           this.imageSettings[0].items[3].hidden = false
+          this.fileSettings[0].items[3].hidden = true
           break
       }
     },
@@ -327,18 +342,34 @@ export default {
           })
       })
     },
+    addCategory(fileList, type) {
+      let arr = fileList.map((ele) => {
+        return ele
+      })
+      if(arr.length) {
+        arr.forEach((ele) => {
+          ele.category = type
+        })
+      }
+      return arr
+    },
     save(publishType) {
+      let articleAttachmentsList = []
       let resoultObj = this.docInformation
       resoultObj.channelId = this.treeTags[this.treeTags.length - 1].id
-      let imageFile = this.$refs.imageForm.formModel.contentImagesList
-      let videoFile = this.$refs.imageForm.formModel.contentVideosList
-      let audioFile = this.$refs.imageForm.formModel.contentAudioList 
-      let otherFile = this.$refs.imageForm.formModel.articleAttachmentsList
-      resoultObj.contentImagesList = imageFile
-      resoultObj.contentVideosList = videoFile
-      resoultObj.contentAudioList = audioFile
-      resoultObj.articleAttachmentsList = otherFile
+      let imageFile = this.addCategory(this.$refs.imageForm.formModel.contentImagesList, 'IMG')
+      let videoFile = this.addCategory(this.$refs.imageForm.formModel.contentVideosList, 'VIDEO')
+      let audioFile = this.addCategory(this.$refs.imageForm.formModel.contentAudioList, 'AUDIO') 
+      let otherFile = this.addCategory(this.$refs.imageForm.formModel.articleAttachmentsList, 'OTHER')
+      // resoultObj.contentImagesList = imageFile
+      // resoultObj.contentVideosList = videoFile
+      // resoultObj.contentAudioList = audioFile
+      // resoultObj.articleAttachmentsList = otherFile
       resoultObj.articleStatus = publishType
+      let articleAttachmentsListCombine = articleAttachmentsList.concat(imageFile, videoFile, audioFile, otherFile)
+      resoultObj.articleAttachmentsList = articleAttachmentsListCombine
+      console.log(resoultObj, 'resoultObj')
+      // console.log(articleAttachmentsList.concat(imageFile, videoFile, audioFile, otherFile), 'articleAttachmentsList')
       if(this.contextMenu.docId) {
         resoultObj.articleId = this.contextMenu.docId
         this.editDoc(resoultObj)

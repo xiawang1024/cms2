@@ -50,7 +50,6 @@ request.interceptors.request.use(
       /**
        * 判断 token 是否将要过期
        */
-
       if (isTokenExpired()) {
         /**
          * 判断是否正在刷新token
@@ -90,7 +89,7 @@ request.interceptors.request.use(
             })
             .catch((err) => {
               // eslint-disable-next-line no-console
-              console.log(err)
+              console.log(err, 'eeeeeeeeeerror')
               console.log('error')
             })
         }
