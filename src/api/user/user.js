@@ -68,6 +68,17 @@ export function UserShow(data) {
 }
 
 /**
+ *  当前登录用户
+ * @constructor
+ */
+export function UserCurrent() {
+  return request({
+    url: '/userb/user/currentuser',
+    method: 'GET'
+  })
+}
+
+/**
  *  disableFlag 用户可用状态更新
  * @param data  对象，用户对象
  * @constructor
