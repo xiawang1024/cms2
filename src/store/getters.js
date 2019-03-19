@@ -22,7 +22,8 @@ const userInfo = {
   name: (state) => state.user.name,
   authorities: (state) => state.user.authorities,
   sysList: (state) => state.user.sysList,
-  sysType: (state) => state.user.sysType
+  sysType: (state) => state.user.sysType,
+  tenantId: (state) => state.user.tenantId
 }
 /**
  * cms

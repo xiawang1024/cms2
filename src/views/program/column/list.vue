@@ -6,7 +6,7 @@
       </el-select>
       <el-input :placeholder="$t('table.content')" v-model="listQuery.content" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <router-link :to="'/column/create'">
+      <router-link :to="'/program/column/create'">
         <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">{{ $t('table.add') }}</el-button>
       </router-link>
     </div>
@@ -32,7 +32,7 @@
 
       <el-table-column align="center" :label="$t('table.actions')" width="200">
         <template slot-scope="scope">
-          <router-link :to="'/column/edit/'+scope.row.columnId">
+          <router-link :to="'/program/column/edit/'+scope.row.columnId">
             <el-button v-waves type="primary" size="small" icon="el-icon-edit">{{ $t('table.edit') }}</el-button>
           </router-link>
           <el-button v-waves type="danger" size="small" @click="handleDel(scope.$index, scope.row)" icon="el-icon-delete">{{ $t('table.delete') }}
@@ -70,7 +70,7 @@ export default {
         limit: 20,
         type: undefined,
         content: undefined,
-        userId: 1     //登陆用户先默认1
+        userId: this.$store.getters.tenantId
       },
       columnTypeOptions
     }

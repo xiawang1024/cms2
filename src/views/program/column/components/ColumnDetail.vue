@@ -23,7 +23,7 @@
         <el-form-item style="margin-bottom: 40px;" label="栏目主播">
           <el-select v-model="compere_arr" @change="selectCompere" multiple placeholder="多选">
             <el-option :key="0" label="无主播" :value="0"/>
-            <el-option :disabled="compereState" v-for="item in this.compereOptions" :key="item.compere_id" :label="item.compere_name" :value="item.compere_id"/>
+            <el-option :disabled="compereState" v-for="item in this.compereOptions" :key="item.compere_id" :label="item.compere_name" :value="item.compere_name"/>
           </el-select>
         </el-form-item>
         <el-form-item style="margin-bottom: 40px;" prop="className">
@@ -147,13 +147,13 @@ export default {
       })
     },
     getChannelOptions() {
-      let userid = 1  //假定租户id是1
+      let userid = this.$store.getters.tenantId
       fetchChannelAll(userid).then(response => {
         this.channelOptions = response.data.result
       })
     },
     getCompereOptions() {
-      let userid = 1  //假定租户id是1
+      let userid = this.$store.getters.tenantId
       fetchCompereAll(userid).then(response => {
         this.compereOptions = response.data.result
         // this.compereOptions.unshift({ //在下拉框顶部插入默认选项
