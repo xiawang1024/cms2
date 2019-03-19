@@ -9,27 +9,28 @@ const class1 = {
     name: 'Class',
     meta: {
       title: 'classAdmin',
-      icon: 'nested'
+      icon: 'nested',
+      role: 'program:class'
     },
     children: [
       {
         path: 'create',
         component: () => import(`@/${path}/create`),
         name: 'CreateClass',
-        meta: { title: 'createClass' },
+        meta: { title: 'createClass', role: 'program:class:create' },
         hidden: true
       },
       {
         path: 'list',
         component: () => import(`@/${path}/list`),
         name: 'ClassList',
-        meta: { title: 'classList' }
+        meta: { title: 'classList', role: 'program:class:list' }
       },
       {
         path: 'edit/:id(\\d+)',
         component: () => import(`@/${path}/edit`),
         name: 'EditClass',
-        meta: { title: 'editClass', noCache: true },
+        meta: { title: 'editClass', noCache: true, role: 'program:class:edit' },
         hidden: true
       }
     ]

@@ -227,7 +227,7 @@ export default {
       // 或者频率名称首字母拼音
       this.postForm.channelNameE = getPinYinFirstCharacter(this.postForm.channelName)
       this.postForm.channelInfo = JSON.stringify(this.postInfo)
-      this.postForm.userId = 1 //TODO 登陆的租户userID先默认为1
+      this.postForm.userId = this.$store.getters.tenantId
 
       if (this.classIdArr.length === 0 || this.classIdArr.length == '') {
           this.$message.error('请选择所属类型')
