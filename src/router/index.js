@@ -34,6 +34,12 @@ import application from './routers/user/application'
 const userRouterMap = [userDemo, operation, application, organization, department, user, role, permissiongroup, permission]
 
 /**
+ * 互动中心
+ * @type {Array}
+ */
+const internalRouterMap = []
+
+/**
  * 节目编排系统路由
  */
 import channel from './routers/program/channel'
@@ -57,6 +63,10 @@ export const routerMap = [
   },
   {
     type: '2',
+    route: internalRouterMap
+  },
+  {
+    type: '3',
     route: programRouterMap
   }
 ]
