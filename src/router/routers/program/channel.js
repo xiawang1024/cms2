@@ -17,7 +17,7 @@ const channel = {
         path: 'create',
         component: () => import(`@/${path}/create`),
         name: 'CreateChannel',
-        meta: { title: 'createChannel'},
+        meta: { title: 'createChannel', role: 'program:channel:create'},
         hidden: true
       },
       {
