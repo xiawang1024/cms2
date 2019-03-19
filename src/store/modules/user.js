@@ -3,6 +3,7 @@
  */
 
 import { loginByUsername, logout, getUserInfo } from '@/api/login'
+import { UserCurrent } from '@/api/user/user'
 import { getAuth, setAuth, removeAuth } from '@/utils/auth'
 import { sha1 } from '@/utils/index'
 import router from '@/router'
@@ -156,13 +157,28 @@ const user = {
         router.addRoutes(getters.addRouters)
       }) // 动态修改权限后 重绘侧边菜单
       if (sysType === '2') {
-        // 20190319 互动中心的访问，跳转到外部地址
-        let Base64 = require("js-base64").Base64//还是require
-        let nameBase64 = Base64.encode('郑浩')//还是那些操作
-        let timestamp = new Date().getTime()
-        let token = '/api/manager/login.do?name=' + nameBase64 + '&id=555813841255006208&time=' +  timestamp + '&appID=3a155aaea71de649f2de2171da173280&secret=d875465ae925eac87354bab6f053967137521e90'
-        let url = 'http://hudong.hndt.com/h5/hd/api/manager/login.do?name=' + nameBase64 + '&id=555813841255006208&time=' +  timestamp + '&appID=3a155aaea71de649f2de2171da173280&token=' + sha1(token)
-        console.log(nameBase64, url)
+        var redirectUrl = ''
+        return new Promise((resolve, reject) => {
+          UserCurrent()
+            .then(async res => {
+              console.log(res)
+              if (res.data.code === 0) {
+                // 20190319 互动中心的访问，跳转到外部地址
+                let Base64 = require("js-base64").Base64//还是require
+                let nameBase64 = Base64.encode(res.data.result.userName)//还是那些操作
+                let timestamp = new Date().getTime()
+                let token = '/api/manager/login.do?name=' + nameBase64 + '&id=' + res.data.result.userId + '&time=' +  timestamp + '&appID=3a155aaea71de649f2de2171da173280&secret=d875465ae925eac87354bab6f053967137521e90'
+                let url = 'http://hudong.hndt.com/h5/hd/api/manager/login.do?name=' + nameBase64 + '&id=' + res.data.result.userId + '&time=' +  timestamp + '&appID=3a155aaea71de649f2de2171da173280&token=' + sha1(token)
+                console.log(nameBase64, url)
+                redirectUrl = url
+                window.open(redirectUrl)
+                resolve()
+              }
+            })
+            .catch((error) => {
+              reject(error)
+            })
+        })
       }
     }
   }
