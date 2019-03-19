@@ -79,7 +79,6 @@ export default {
   },
   mounted() {
     this.formData =  this.docInfor
-    // this.formSettings[0].items = this.formSettings[0].items.concat(this.extendsList)
     this.formData =  this.docInfor
     let showTags = []
     if(this.docInfor.tagIdsList) {
@@ -89,9 +88,9 @@ export default {
     }
     this.formData.tagIds = showTags
     this.adddocSet = {
-      extractCode: this.docInfor.extractCode,
-      hiddenFlag: this.docInfor.hiddenFlag + '',
-      topFlag: this.docInfor.topFlag + ''
+      extractCode: this.docInfor.extractCode ? this.docInfor.extractCode : 0,
+      hiddenFlag: this.docInfor.hiddenFlag ? this.docInfor.hiddenFlag + '' : '0',
+      topFlag: this.docInfor.topFlag ? this.docInfor.topFlag + '' : '0'
     }
   },
   methods: {
@@ -138,7 +137,8 @@ export default {
         if (!data) {
           return
         }
-        let resoultObj = this.$refs.form.formModel
+        let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
+        console.log(this.adddocSet)
         // let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.docContentForm)
         resoultObj.channelId = this.channelId
         resoultObj.articleStatus = publishType
@@ -150,6 +150,21 @@ export default {
         resoultObj.createTime = ''
         resoultObj.createTime = ''
         resoultObj.contentBody = ''
+                // 标签字段处理
+        let chooseTags = []
+        resoultObj.tagIds.forEach((ele) => {
+          this.tagList.forEach((son) => {
+            if(ele == son.value) {
+              chooseTags.push({
+                tagId: son.value,
+                tagName: son.label
+              })
+            }
+          })
+        })
+        resoultObj.tagIdsList = chooseTags
+        delete resoultObj.set
+        delete resoultObj.tagIds
         if(this.contextMenu.docId) {
           resoultObj.articleId = this.contextMenu.docId
           this.editDoc(resoultObj)

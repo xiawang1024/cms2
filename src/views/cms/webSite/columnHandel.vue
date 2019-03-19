@@ -67,6 +67,7 @@ export default {
               label: '栏目编码',
               name: 'channelCode',
               type: 'text',
+              required: true,
               placeholder: '请输入排序'
             },
             {
@@ -114,6 +115,7 @@ export default {
               label:'栏目名称',
               name:'channelName',
               type:'text',
+               required: true,
               placeholder: '请输入栏目名称'
             },
             {

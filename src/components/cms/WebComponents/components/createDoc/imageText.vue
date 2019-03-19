@@ -250,7 +250,6 @@ export default {
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       // 获取扩展字段的值
       let extendsFields = []
-      console.log(this.adddocSet, 'this.adddocSet')
       if(this.extendsList.length) {
         extendsFields = this.extendsList.map((ele) => {
           return {
