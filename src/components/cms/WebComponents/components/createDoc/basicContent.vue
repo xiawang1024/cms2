@@ -3,12 +3,19 @@
     <div class="tool-bar clearfix">
       <el-form ref="form" :model="typeForm" label-width="80px">
         <el-form-item label="文档类型">
-          <el-radio-group v-model="typeForm.articleType" size="small" @change="typeChange">
+          <!-- <el-radio-group v-model="typeForm.articleType" size="small" @change="typeChange">
             <el-radio-button label="0">图文</el-radio-button>
             <el-radio-button label="1">图集</el-radio-button>
             <el-radio-button label="2">拼条</el-radio-button>
             <el-radio-button label="3">转载</el-radio-button>
-          </el-radio-group>
+          </el-radio-group> -->
+          <el-select v-model="typeForm.articleType" placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"/>
+          </el-select>
         </el-form-item>
       </el-form>
     </div>
@@ -32,12 +39,25 @@ export default {
   data() {
     return {
       typeForm: {
-        articleType: '0'
+        articleType: 0
       },
       extendsList: [],
       tagList: [],
       channelId: '',
       docInfor: {},
+      options: [{
+          value: 0,
+          label: '图文'
+        }, {
+          value: 1,
+          label: '图集'
+        }, {
+          value: 2,
+          label: '拼条'
+        }, {
+          value: 3,
+          label: '转载'
+        }],
       otherSettings: [
         {
           items: [
@@ -307,6 +327,13 @@ export default {
   .tool-bar{
     label {
       font-weight: normal;
+    }
+    .el-form-item {
+      margin-bottom:0px;
+      .el-input__inner{
+        height: 32px;
+        line-height: 32px;
+      }
     }
   }
 }

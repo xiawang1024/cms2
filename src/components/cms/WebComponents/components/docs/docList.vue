@@ -60,7 +60,7 @@
       />
       <el-table-column prop="articleAuthor" label="撰稿人" width="100"/>
       <el-table-column prop="clickNum" label="点击" sortable width="80"/>
-      <el-table-column fixed="right" label="操作" width="130">
+      <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
           <el-button v-if="checkAuth('cms:article:stick')" type="text" size="small" @click="setTop(scope.row.articleId)">置顶</el-button>
           <el-button v-if="checkAuth('cms:article:edit')" type="text" size="small" @click="editDoc(scope.row.articleId)">编辑</el-button>

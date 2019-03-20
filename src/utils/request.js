@@ -3,9 +3,9 @@ import { Message } from 'element-ui'
 import baseUrl from '@/config/base-url'
 import { getAuth, setAuth, getRefreshToken, isTokenExpired, isNotGetTokenApi } from './auth.js'
 import { refreshToken } from '@/api/login'
-
+// console.log(baseUrl, 'baseUrl')
 const request = axios.create({
-  baseURL: baseUrl || '/',
+  baseURL: baseUrl.BASE_URL || '/',
   // baseURL: 'http://172.20.5.4:53010',
   timeout: 10000
 })
