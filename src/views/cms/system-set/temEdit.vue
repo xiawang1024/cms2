@@ -165,6 +165,16 @@ export default {
         fetchTemplate(_this.chooseTemplateId)
           .then((response) => {
             _this.templateForm = response.data.result
+            if(response.data.result.enableFlag) {
+              _this.templateForm.enableFlag = response.data.result.enableFlag + ''
+            } else {
+              console.log('flase')
+              if(response.data.result.enableFlag == 0) {
+                _this.templateForm.enableFlag = '0'
+              } else {
+                _this.templateForm.enableFlag = '1'
+              }
+            }
             resolve()
           })
           .catch((error) => {

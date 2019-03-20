@@ -58,6 +58,8 @@ export default {
   },
   mounted() {
     this.columnList()
+    console.log('mounted')
+    this.$store.dispatch('toggleSideBar')
   },
   // TODO:webSiteViewType
   beforeRouteEnter(to, from, next) {

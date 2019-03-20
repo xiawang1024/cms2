@@ -82,3 +82,10 @@ export function deleteExtendsWord(channelId, data) {
     data
   })
 }
+// 栏目编码是否重复
+export function isColumnRepet(channelCode) {
+  return request({
+    url: '/cms/channel/channelcoderepeatcheck/' + channelCode,
+    method: 'get'
+  })
+}

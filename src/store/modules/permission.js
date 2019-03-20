@@ -7,6 +7,7 @@ import constantRouterMap from '@/router/public'
  * @param {*} sysType
  */
 function filterSysRouter(sysType) {
+  console.log(routerMap)
   return routerMap.filter((item) => item.type === sysType)[0].route
 }
 /**

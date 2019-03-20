@@ -1,7 +1,7 @@
 <template>
   <div class="doc-head">
     <div class="left">
-      <el-dropdown v-if="checkAuth('cms:article:delete')" size="mini" @command="handleCommand" >
+      <el-dropdown v-if="checkAuth('cms:article:delete')" size="mini" @command="handleCommand" trigger="click" placement="bottom-start">
         <el-button
           type="success"
           size="mini"
@@ -13,10 +13,11 @@
             v-for="item of currentDoc"
             :key="item.id"
             :command="item.id"
+            :divided="true"
           >{{ item.label }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-dropdown size="mini" v-if="checkAuth('cms:article:channel')" @command="handleColumn">
+      <el-dropdown size="mini" v-if="checkAuth('cms:article:channel')" @command="handleColumn" placement="bottom-start">
         <el-button type="primary" size="mini" >
           当前栏目<i class="el-icon-arrow-down el-icon--right" />
         </el-button>
@@ -25,6 +26,7 @@
             v-for="item of currentColumn"
             :key="item.id"
             :command="item.id"
+            :divided="true"
           >{{ item.label }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -286,6 +288,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+#dropdown-menu-695{
+  width: 108px;
+}
 .doc-head {
   display: flex;
   width: 100%;

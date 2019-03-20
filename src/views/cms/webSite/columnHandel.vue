@@ -36,7 +36,7 @@
 
 <script>
 // const Upload = _ => import('@/components/cms/Upload/upload')
-import { columnInfor, addColumn, editColumn } from '@/api/cms/columnManage'
+import { columnInfor, addColumn, editColumn, isColumnRepet } from '@/api/cms/columnManage'
 import { fetchDictByDictName } from '@/api/cms/dict'
 import { fetchComponentList } from '@/api/cms/component'
 export default {
@@ -68,7 +68,13 @@ export default {
               name: 'channelCode',
               type: 'text',
               required: true,
-              placeholder: '请输入排序'
+              rule: [{
+                validator: this.checkColumnRepet,
+              }, {
+                required: true,
+                trigger: 'blur'
+              }],
+              placeholder: '请输入栏目编码'
             },
             {
               label: '位置排序',
@@ -99,7 +105,7 @@ export default {
               activeValue: 0,
               inactiveValue: 1,
               activeColor: '#13ce66',
-              value: 1,
+              value: 0,
               type: 'switch'
             },{
               label: '其他数据',
@@ -170,6 +176,32 @@ export default {
     this.getColumns()
   },
   methods: {
+    // 栏目编码是否重复
+    checkColumnRepet(rule, value, callback) {
+      if (!value) {
+        return callback(new Error('请输入栏目编码'))
+      }
+      let columnCode = this.$refs.vform.getData('channelCode')
+      if(this.isEdit && (columnCode == this.formData.channelCode)) {
+        callback()
+      } else {
+        return new Promise((resolve, reject) => {
+          isColumnRepet(columnCode)
+            .then((response) => {
+              // _this.componentList = response.data.result.content
+              if(response.data.result) {
+                callback()
+              } else {
+                callback(new Error('栏目编码不能重复'))
+              }
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+            })
+        })
+      }
+    },
     // 查询栏目类型
     getColumns() {
       var _this = this
@@ -222,7 +254,8 @@ export default {
               }
             } else {
               _this.formData = {
-                parentChannelNames: response.data.result.channelName
+                parentChannelNames: response.data.result.channelName,
+                hiddenFlag: 0
               }
             }
             resolve()

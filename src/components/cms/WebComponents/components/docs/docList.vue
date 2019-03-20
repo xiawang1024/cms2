@@ -3,19 +3,26 @@
     <el-table
       ref="multipleTable"
       :data="tableData"
-      :default-sort="{prop: 'publishTime', order: 'descending'}"
       :highlight-current-row="true"
       tooltip-effect="dark"
       style="width: 100%"
       size="small"
       @selection-change="handleSelectionChange"
+      :row-class-name="tableRowClassName"
     >
+      <!-- :default-sort="{prop: 'publishTime', order: 'descending'}" -->
       <el-table-column type="selection" width="55"/>
       <el-table-column fixed prop="articleId" label="ID/序号" width="150" show-overflow-tooltip/>
-      <el-table-column fixed prop="articleTitle" label="标题" min-width="160" show-overflow-tooltip/>
+      <el-table-column fixed prop="articleTitle" label="标题" min-width="160" show-overflow-tooltip>
+        <template slot-scope="scope">
+          <span v-if="checkAuth('cms:article:stick')" class="titleClick" @click="editDoc(scope.row.articleId)">{{ scope.row.articleTitle }}</span>
+          <span v-else>{{ scope.row.articleTitle }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="查看" width="60">
         <template slot-scope="scope">
           <i class="el-icon-view" style="cursor:pointer" @click="openWindow(scope.row.outLink)"/>
+          {{ scope.row.topFlag }}
         </template>
       </el-table-column>
 
@@ -48,18 +55,16 @@
         prop="createTime"
         label="创建时间"
         min-width="120"
-        sortable
         show-overflow-tooltip
       />
       <el-table-column
         prop="publishTime"
         label="发布时间"
         min-width="120"
-        sortable
         show-overflow-tooltip
       />
       <el-table-column prop="articleAuthor" label="撰稿人" width="100"/>
-      <el-table-column prop="clickNum" label="点击" sortable width="80"/>
+      <el-table-column prop="clickNum" label="点击" width="80"/>
       <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
           <el-button v-if="checkAuth('cms:article:stick')" type="text" size="small" @click="setTop(scope.row.articleId)">置顶</el-button>
@@ -96,7 +101,14 @@ export default {
     }
   },
   methods: {
+    // 置顶的文章加背景色
+    tableRowClassName({row, rowIndex}) {
+      if(row.topFlag == 1) {
+        return 'top-row';
+      }
+    },
     checkAuth (authKey) {
+      // console.log(this.$store.getters.authorities, 'this.$store.getters.authorities')
       if (this.$store.getters.authorities.indexOf(authKey) === -1) {
         return false
       } else {
@@ -201,11 +213,25 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .doc-list {
   width: 100%;
   padding: 0 10px;
   box-sizing: border-box;
+  .titleClick{
+    cursor: pointer;
+    color: #409EFF;
+  }
+  .el-table{
+    .top-row {
+      background: #f0f9eb;
+    }
+  }
+  // tbody{
+  //   tr {
+  //     background-color: #DCDFE6;
+  //   }
+  // }
 }
 </style>
 

@@ -44,7 +44,9 @@ request.interceptors.request.use(
     /**
      * 判断是否已登录
      */
+    // console.log(isTokenExpired(), 'isTokenExpired')
     if (auth && isNotGetTokenApi(config)) {
+      // console.log('check-token')
       config.headers.Authorization = `${auth.token_type} ${auth.access_token}`
 
       /**
@@ -127,14 +129,13 @@ request.interceptors.request.use(
  */
 request.interceptors.response.use(
   (res) => {
-    console.log(res)
     return res
   },
   (error) => {
-    console.log(error, 'error')
     console.log('err' + error) // for debug
+    // error.massage 提示报错信息
     Message({
-      message: error.message,
+      message: error.response.data.error_description,
       type: 'error',
       duration: 5 * 1000
     })

@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 //新增
 //查询文章列表
-export function documentList(queryObj, pageNo, pageSize) {
+export function documentList(queryObj, pageNo, pageSize, sortBy='topFlag', order='asc') {
   return request({
-    url: '/cms/article/page?pageNo=' + pageNo + '&pageSize=' + pageSize,
+    url: '/cms/article/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + ',createTime&order=' + order,
     method: 'post',
     data: queryObj
   })
