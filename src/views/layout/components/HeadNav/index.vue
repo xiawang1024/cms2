@@ -25,7 +25,7 @@
           <screenfull class="screenfull right-menu-item" />
         </el-tooltip>
 
-        <el-tooltip
+        <!-- <el-tooltip
           :content="$t('navbar.size')"
           effect="dark"
           placement="bottom"
@@ -41,7 +41,7 @@
           placement="bottom"
         >
           <theme-picker class="theme-switch right-menu-item" />
-        </el-tooltip>
+        </el-tooltip> -->
       </template>
 
       <el-dropdown
@@ -57,7 +57,7 @@
         </div>
         <el-dropdown-menu slot="dropdown">
 
-          <router-link to="/">
+          <!-- <router-link to="/">
             <el-dropdown-item>
               {{ $t('navbar.center') }}
             </el-dropdown-item>
@@ -76,7 +76,7 @@
             <el-dropdown-item>
               {{ $t('navbar.help') }}
             </el-dropdown-item>
-          </router-link>
+          </router-link> -->
           <el-dropdown-item divided>
             <span
               style="display:block;"
@@ -111,6 +111,9 @@ export default {
   },
   computed: {
     ...mapGetters(['sidebar', 'name', 'avatar', 'device'])
+  },
+  mounted() {
+    console.log(111111111111)
   },
   methods: {
     toggleSideBar() {
