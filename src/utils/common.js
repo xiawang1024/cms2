@@ -50,7 +50,7 @@ export const download = ((fileName, data, needAppendDate = true) => {
 })()
 
 const Axios = axios.create({
-  baseURL: baseUrl || '/',
+  baseURL: baseUrl.BASE_URL || '/',
   timeout: 120000,
   responseType: 'blob',
   headers: {

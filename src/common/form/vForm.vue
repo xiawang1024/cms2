@@ -243,7 +243,8 @@
 // import citySelect from '@/components/city-select'
 // import websiteSelect from '@/components/website-select'
 import Viewer from 'viewerjs'
-import { DOWN_URL } from '@/config/base-url'
+// import { DOWN_URL } from '@/config/base-url'
+import baseUrl from '@/config/base-url'
 import { hashCode } from '@/utils/common.js'
 export default {
   name: 'VForm',
@@ -338,7 +339,8 @@ export default {
       uploadCallbacks: {},
       removeCallbacks: {},
       beforeUploadCallbacks: {},
-      upURL: 'http://172.20.5.4:55030/basefile/upload?fileRefId=jkhjkhjkhj',
+      // upURL: 'http://172.20.5.4:55030/basefile/upload?fileRefId=jkhjkhjkhj',
+      upURL: baseUrl.UP_URL,
       upToken: null,
       isUploading: false,
       provinceList: [
@@ -659,7 +661,7 @@ export default {
       console.log(file, 'file')
       this.formModel[name].push({
         name: response.result.fileName,
-        url: DOWN_URL + response.result.filePath,
+        url: baseUrl.DOWN_URL + response.result.filePath,
         size: file.size,
         createTime: file.raw.lastModified,
         title: '',

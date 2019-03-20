@@ -1,11 +1,12 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
-
+import baseUrl from '@/config/base-url'
 import { getAuth, setAuth, getRefreshToken, isTokenExpired, isNotGetTokenApi } from './auth.js'
 import { refreshToken } from '@/api/login'
-
+// console.log(baseUrl, 'baseUrl')
 const request = axios.create({
-  baseURL: 'http://172.20.5.4:53010',
+  baseURL: baseUrl.BASE_URL || '/',
+  // baseURL: 'http://172.20.5.4:53010',
   timeout: 10000
 })
 
@@ -43,13 +44,13 @@ request.interceptors.request.use(
     /**
      * 判断是否已登录
      */
-
     if (auth && isNotGetTokenApi(config)) {
       config.headers.Authorization = `${auth.token_type} ${auth.access_token}`
 
       /**
        * 判断 token 是否将要过期
        */
+      // isTokenExpired()
       if (isTokenExpired()) {
         /**
          * 判断是否正在刷新token
@@ -65,6 +66,9 @@ request.interceptors.request.use(
 
           refreshToken(getRefreshToken())
             .then((res) => {
+              console.log('login')
+              console.log(res, 'res')
+              console.log(auth, 'auth')
               /**
            * 将刷新 token 的标志置为false
            */
@@ -89,7 +93,6 @@ request.interceptors.request.use(
             })
             .catch((err) => {
               // eslint-disable-next-line no-console
-              console.log(err, 'eeeeeeeeeerror')
               console.log('error')
             })
         }
@@ -124,9 +127,11 @@ request.interceptors.request.use(
  */
 request.interceptors.response.use(
   (res) => {
+    console.log(res)
     return res
   },
   (error) => {
+    console.log(error, 'error')
     console.log('err' + error) // for debug
     Message({
       message: error.message,
