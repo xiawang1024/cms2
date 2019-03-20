@@ -165,7 +165,7 @@ const user = {
               if (res.data.code === 0) {
                 // 20190319 互动中心的访问，跳转到外部地址
                 let Base64 = require("js-base64").Base64//还是require
-                let nameBase64 = Base64.encode(res.data.result.userName)//还是那些操作
+                let nameBase64 = Base64.encodeURI(res.data.result.userName)//还是那些操作
                 let timestamp = new Date().getTime()
                 let token = '/api/manager/login.do?name=' + nameBase64 + '&id=' + res.data.result.userId + '&time=' +  timestamp + '&appID=3a155aaea71de649f2de2171da173280&secret=d875465ae925eac87354bab6f053967137521e90'
                 let url = 'http://hudong.hndt.com/h5/hd/api/manager/login.do?name=' + nameBase64 + '&id=' + res.data.result.userId + '&time=' +  timestamp + '&appID=3a155aaea71de649f2de2171da173280&token=' + sha1(token)
