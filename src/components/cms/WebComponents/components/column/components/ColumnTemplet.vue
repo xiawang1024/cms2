@@ -80,7 +80,7 @@
 </template>
 <script>
 import { fetchList } from '@/api/cms/template'
-import { columnInfor, editColumn } from '@/api/cms/columnManage'
+import { columnInfor, editColumn, columnTemplateList } from '@/api/cms/columnManage'
 export default {
   name: 'ColumnTemplate',
   props: {
@@ -138,6 +138,20 @@ export default {
     this.getColumnInfor()
   },
   methods: {
+    // 已选模板
+    getColumnTemplateList(ids) {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        columnTemplateList(ids)
+          .then((response) => {
+             _this.tableData = response.data.result
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
     getFather(channelArray) {
       let id = ''
       if(channelArray.length > 1) {
@@ -154,6 +168,9 @@ export default {
           .then((response) => {
             _this.columnData = response.data.result
             // _this.tagRule = response.data.result.tagRule ? response.data.result.tagRule :  _this.tagRule
+            if(response.data.result.templateIds) {
+              _this.getColumnTemplateList(response.data.result.templateIds)
+            }
             resolve()
           })
           .catch((error) => {

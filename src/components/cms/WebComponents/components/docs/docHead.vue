@@ -1,6 +1,7 @@
 <template>
   <div class="doc-head">
     <div class="left">
+      <!-- {{ treeTags }} -->
       <el-dropdown v-if="checkAuth('cms:article:delete')" size="mini" @command="handleCommand" placement="bottom-start">
         <el-button
           type="success"
@@ -107,6 +108,7 @@ import {
 // import choosedDialog from './choosedDialog.vue'
 import handelDialog from './handelDialog'
 import { deleteDocumentMore, cancelDocumentMore, publishDocumentMore } from '@/api/cms/article'
+import { mapGetters } from 'vuex'
 export default {
   name: 'DocHead',
   components: {
@@ -144,6 +146,9 @@ export default {
       title: '',
       documentIds: []
     }
+  },
+  computed: {
+    ...mapGetters(['treeTags'])
   },
   watch: {
     sourceList(val) {

@@ -51,9 +51,9 @@ export function getRoot() {
   })
 }
 
-export function columnList(queryObj, pageNo, pageSize) {
+export function columnList(queryObj, pageNo, pageSize, sortBy='seqNo') {
   return request({
-    url: '/cms/channel/page?pageNo=' + pageNo + '&pageSize=' + pageSize,
+    url: '/cms/channel/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy,
     method: 'post',
     data: queryObj
   })

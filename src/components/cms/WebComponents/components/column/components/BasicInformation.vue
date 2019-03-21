@@ -36,7 +36,7 @@
 
 <script>
 const Upload = _ => import('@/components/cms/Upload/upload')
-import { columnInfor, editColumn } from '@/api/cms/columnManage'
+import { columnInfor, editColumn, isColumnRepet } from '@/api/cms/columnManage'
 import { fetchDictByDictName } from '@/api/cms/dict'
 export default {
   name: 'BasicInformation',
@@ -122,6 +122,19 @@ export default {
               disabled: true
             },
             {
+              label: '栏目编码',
+              name: 'channelCode',
+              type: 'text',
+              required: true,
+              rule: [{
+                validator: this.checkColumnRepet,
+              }, {
+                required: true,
+                trigger: 'blur'
+              }],
+              placeholder: '请输入栏目编码'
+            },
+            {
               label: '位置排序',
               name: 'seqNo',
               type: 'text',
@@ -132,11 +145,6 @@ export default {
               name: 'domainName',
               type: 'text',
               placeholder: '请输入访问域名'
-            },{
-              label:'存放位置',
-              name: 'domainPath',
-              type:'text',
-              placeholder: '请输入存放位置'
             },{
               label: '创建人员',
               name: 'createUser',
@@ -165,7 +173,8 @@ export default {
               label:'栏目名称',
               name:'channelName',
               type:'text',
-              placeholder: '请输入栏目名称'
+              placeholder: '请输入栏目名称',
+              required: true,
             },
             {
               label: '栏目类型',
@@ -181,11 +190,11 @@ export default {
               limit: 1,
               tip: '建议图片大小：1080*1642，图片大小不超过100K'
            },
-           {
-              label: '',
-              name: 'isScale',
-              type: 'slot'
-           },
+          //  {
+          //     label: '',
+          //     name: 'isScale',
+          //     type: 'slot'
+          //  },
            {
               label:'关键字',
               name:'keywordName',
@@ -225,6 +234,32 @@ export default {
     this.getColumnInfor()
   },
   methods: {
+    // 栏目编码是否重复
+    checkColumnRepet(rule, value, callback) {
+      if (!value) {
+        return callback(new Error('请输入栏目编码'))
+      }
+      let columnCode = this.$refs.vform.getData('channelCode')
+      if(columnCode == this.formData.channelCode) {
+        callback()
+      } else {
+        return new Promise((resolve, reject) => {
+          isColumnRepet(columnCode)
+            .then((response) => {
+              // _this.componentList = response.data.result.content
+              if(response.data.result) {
+                callback()
+              } else {
+                callback(new Error('栏目编码不能重复'))
+              }
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+            })
+        })
+      }
+    },
     // 查询栏目类型
     getColumns() {
       var _this = this

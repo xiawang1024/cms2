@@ -56,6 +56,14 @@ export default {
   computed: {
     ...mapGetters(['contextMenu', 'choosedColumn'])
   },
+  watch: {
+    contextMenu(val) {
+      console.log(val, 'contextMenu')
+      if(val.id == '0') {
+        // this.columnList()
+      }
+    }
+  },
   mounted() {
     this.columnList()
     console.log('mounted')

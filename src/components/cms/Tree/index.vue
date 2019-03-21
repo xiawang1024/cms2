@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="column-list-left">
     <el-input
       v-model="filterText"
       placeholder="搜索栏目"
@@ -23,6 +23,7 @@
       :visible="menuVisible"
       :left="menuLeft"
       :top="menuTop"
+      :is-create="isCreate"
     />
   </div>
 </template>
@@ -49,14 +50,16 @@ export default {
       webSitTags: [],
       menuVisible: false,
       menuLeft: '0px',
-      menuTop: '0px',
+      menuTop: '10px',
       // treeData: TreeData,
       objectID: null,
       defaultProps: {
         children: 'children',
         label: 'label'
       },
-      defaultChecked: []
+      defaultChecked: [],
+      // 是否为父栏目且无子栏目
+      isCreate: false
     }
   },
   watch: {
@@ -80,15 +83,25 @@ export default {
   methods: {
     // TODO:左键点击
     handleNodeClick(object, node, element) {
-      console.log(node, 'node')
-      console.log(object, 'object')
-      console.log(element, 'element')
+      // console.log(node, 'node')
+      // console.log(object, 'object')
+      // console.log(element, 'element')
       this.menuVisible = false
       this.webSitTags = []
       this.generateTags(node, 'left')
+      if((object.parentChannelId == -1 || !object.parentChannelId) && object.children) {
+        this.isCreate = false
+      } else {
+         this.isCreate = true
+      }
     },
     // TODO:右键点击
     handleNodeContextmenu(event, object, node, element) {
+      if((object.parentChannelId == -1 || !object.parentChannelId) && object.children) {
+        this.isCreate = false
+      } else {
+         this.isCreate = true
+      }
       const { clientWidth, clientHeight, nodeName } = event.target
       if (nodeName.toLowerCase() === 'span') {
         if (this.objectID !== object.id) {
@@ -125,7 +138,8 @@ export default {
         const nodeVal = {}
         nodeVal.id = node.data.id
         nodeVal.label = node.data.label
-        nodeVal.channelCode = node.data.channelCode
+        nodeVal.channelCode = node.data.channelCode,
+        nodeVal.isCreate = this.isCreate
         this.webSitTags.push(nodeVal)
       } else {
         const webSiteTags = this.webSitTags
@@ -153,9 +167,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.el-menu-item {
-  height: 36px;
-  line-height: 36px;
+.column-list-left {
+  .el-menu-item {
+    height: 36px;
+    line-height: 36px;
+  }
+  .el-tree--highlight-current{
+    padding-bottom:80px;
+  }
 }
 </style>
 

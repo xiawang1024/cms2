@@ -14,7 +14,6 @@
         <LabelSetting :active-name = "activeName" :channel-id = "treeTags[treeTags.length - 1].id"/>
       </el-tab-pane>
     </el-tabs>
-    {{ treeTags }}
   </div>
 </template>
 

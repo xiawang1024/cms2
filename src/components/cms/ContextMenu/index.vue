@@ -10,6 +10,7 @@
       v-for="item of menuList"
       :index="item.id.toString()"
       :key="item.id"
+      v-if="canCreate || !item.control"
     >
       <span slot="title">{{ item.label }}</span>
     </el-menu-item>
@@ -21,7 +22,8 @@
 const MENU_LIST = [
   {
     id: '1',
-    label: '新建文档'
+    label: '新建文档',
+    control: true
   },
   // {
   //   id: '2',
@@ -90,11 +92,20 @@ export default {
     top: {
       type: String,
       default: '0px'
+    },
+    isCreate: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       menuList: MENU_LIST
+    }
+  },
+  computed: {
+    canCreate() {
+      return this.isCreate
     }
   },
   watch: {
@@ -103,6 +114,12 @@ export default {
     },
     top: function() {
       this.refreshPosition()
+    },
+    isCreate: function(val) {
+      // console.log(val, 'val')
+    },
+    visible(val) {
+      console.log(val, 'val')
     }
   },
   mounted() {
@@ -118,6 +135,7 @@ export default {
     },
     handleSelect(key, keyPath) {
       const selectMenu = this.menuList.filter(item => item.id === key)
+      console.log(selectMenu, 'selectMenu')
       this.$store.dispatch('setContextMenu', selectMenu[0])
     }
   }

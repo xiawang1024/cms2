@@ -80,48 +80,58 @@ export default {
               label: '位置排序',
               name: 'seqNo',
               type: 'text',
-              placeholder: '请输入排序'
+              placeholder: '请输入排序',
+              hidden: true
             },
             {
               label: '访问域名',
               name: 'domainName',
               type: 'text',
-              placeholder: '请输入访问域名'
-            },{
-              label:'存放位置',
-              name: 'domainPath',
-              type:'text',
-              placeholder: '请输入存放位置',
+              placeholder: '请输入访问域名',
               hidden: true
-            },{
+            },
+            // {
+            //   label:'存放位置',
+            //   name: 'domainPath',
+            //   type:'text',
+            //   placeholder: '请输入存放位置',
+            //   hidden: true
+            // },
+            {
               label: '创建人员',
               name: 'createUser',
               type: 'text',
               placeholder: '请输入创建人员',
-              disabled: true
-            },{
+              disabled: true,
+              hidden: true
+            },
+            {
               label: '正常显示',
               name: 'hiddenFlag',
               activeValue: 0,
               inactiveValue: 1,
               activeColor: '#13ce66',
               value: 0,
-              type: 'switch'
+              type: 'switch',
+              hidden: true
             },{
               label: '其他数据',
               name: 'extra',
               type: 'textarea',
-              placeholder: '请输入其他数据'
+              placeholder: '请输入其他数据',
+              hidden: true
             },{
               label:'管理人员',
               name: 'managerUser',
               type:'text',
-              placeholder: '请输入管理员'
-            },{
+              placeholder: '请输入管理员',
+              hidden: true
+            }
+            ,{
               label:'栏目名称',
               name:'channelName',
               type:'text',
-               required: true,
+              required: true,
               placeholder: '请输入栏目名称'
             },
             {
@@ -129,30 +139,29 @@ export default {
               name: 'categoryId',
               type: 'select',
               options: [],
-              placeholder: '请选择'
+              placeholder: '请选择',
+              hidden: true
             },
             {
               label: '栏目图标',
               name: 'iconUrl',
               type: 'img',
               limit: 1,
-              tip: '建议图片大小：1080*1642，图片大小不超过100K'
+              tip: '建议图片大小：1080*1642，图片大小不超过100K',
+              hidden: true
            },
-          //  {
-          //     label: '',
-          //     name: 'isScale',
-          //     type: 'slot'
-          //  },
            {
               label:'关键字',
               name:'keywordName',
               type:'text',
-              placeholder: '请输入关键字'
+              placeholder: '请输入关键字',
+              hidden: true
            },{
               label:'栏目描述',
               name:'descriptionRemark',
               type:'textarea',
-               placeholder: '请输入栏目描述'
+              placeholder: '请输入栏目描述',
+              hidden: true
             }
           ]
         }
@@ -284,7 +293,11 @@ export default {
           addColumn(formData)
             .then((response) => {
               _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-              _this.gotoListPage(_this)
+              // 快速添加
+              // _this.gotoListPage(_this)
+              this.formData = {
+                parentChannelNames: formData.parentChannelNames
+              }
               resolve()
               _this.isLoading = false
             })
