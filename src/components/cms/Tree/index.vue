@@ -75,10 +75,14 @@ export default {
     }
   },
   mounted() {
+    console.log(this.treeData, 'treeData')
   },
   methods: {
     // TODO:左键点击
     handleNodeClick(object, node, element) {
+      console.log(node, 'node')
+      console.log(object, 'object')
+      console.log(element, 'element')
       this.menuVisible = false
       this.webSitTags = []
       this.generateTags(node, 'left')

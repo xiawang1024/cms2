@@ -19,11 +19,11 @@
           <span v-else>{{ scope.row.articleTitle }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="查看" width="60">
+      <!-- <el-table-column label="查看" width="60">
         <template slot-scope="scope">
           <i class="el-icon-view" style="cursor:pointer" @click="openWindow(scope.row.outLink)"/>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column label="预览" width="60">
         <template slot-scope="scope">
