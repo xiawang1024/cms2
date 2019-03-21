@@ -115,10 +115,9 @@ export default {
           items: [
             {
               label: '父级栏目',
-              name: 'parentChannelId',
+              name: 'parentChannelNames',
               type: 'text',
               valueType: 'string',
-              placeholder: '请选择',
               disabled: true
             },
             {
@@ -313,6 +312,10 @@ export default {
       formData.iconUrl = iconUrlArray.length ? iconUrlArray.join(',') : ''
       return new Promise((resolve, reject) => {
         formData.channelId = _this.channelId
+        formData.stampSetting = _this.formData.stampSetting
+        formData.tagRule = _this.formData.tagRule
+        formData.templateIds = _this.formData.templateIds
+        formData.extFieldsList = _this.formData.extFieldsList
         editColumn(formData)
           .then((response) => {
             _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
