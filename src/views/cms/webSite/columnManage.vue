@@ -39,7 +39,7 @@
           <el-button type="text" @click="waterSetting(scope.row)">水印设置</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" width="150">
         <template v-if="checkAuth('cms:channel:operation')" slot-scope="scope">
           <el-button type="text" @click="columnAddEdit(false, '', scope.row.channelId)">编辑</el-button>
           <el-button type="text" v-if="checkAuth('cms:channel:delete')" @click="columnDel(scope.row)">删除</el-button>
@@ -255,7 +255,7 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
 .column-manage {
   margin:30px;
   .tool-bar {
@@ -283,7 +283,7 @@ export default {
       display: inline-block;
       vertical-align: middle;
     }
-    tr{
+    tr {
       td {
         padding:0px;
       }

@@ -222,6 +222,7 @@ export default {
           updateDict(_this.dictObj)
             .then(response => {
               _this.fetchDict();
+              this.$message.success('保存成功')
               resolve();
             })
             .catch(error => {

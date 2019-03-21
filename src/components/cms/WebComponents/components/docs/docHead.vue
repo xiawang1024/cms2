@@ -1,7 +1,7 @@
 <template>
   <div class="doc-head">
     <div class="left">
-      <el-dropdown v-if="checkAuth('cms:article:delete')" size="mini" @command="handleCommand" trigger="click" placement="bottom-start">
+      <el-dropdown v-if="checkAuth('cms:article:delete')" size="mini" @command="handleCommand" placement="bottom-start">
         <el-button
           type="success"
           size="mini"

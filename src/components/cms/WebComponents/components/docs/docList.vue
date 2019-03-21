@@ -22,7 +22,6 @@
       <el-table-column label="查看" width="60">
         <template slot-scope="scope">
           <i class="el-icon-view" style="cursor:pointer" @click="openWindow(scope.row.outLink)"/>
-          {{ scope.row.topFlag }}
         </template>
       </el-table-column>
 
