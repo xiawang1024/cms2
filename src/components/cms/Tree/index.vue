@@ -16,7 +16,7 @@
       :filter-node-method="filterNode"
       @node-click="handleNodeClick"
       @node-contextmenu="handleNodeContextmenu"
-      :default-checked-keys = "defaultChecked"
+      :default-checked-keys="defaultChecked"
       node-key="id"
     />
     <context-menu

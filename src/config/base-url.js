@@ -15,7 +15,7 @@ if (process.env.NODE_ENV) {
     // UP_URL = 'http://192.168.25.148:55030/basefile/upload?fileRefId=jkhjkhjkhj'
     // DOWN_URL = 'http://192.168.25.148:55030'
   } else if (process.env.NODE_ENV == 'production') {
-    BASE_URL = 'http://192.168.25.143:53010' // 测试地址
+    BASE_URL = 'http://gw.dianzhenkeji.com:53010' // 测试地址
     UP_URL = 'http://192.168.25.148:55030/basefile/upload?fileRefId=jkhjkhjkhj'
     DOWN_URL = 'http://192.168.25.148:55030'
     // BASE_URL = 'http://10.1.3.43:53010' // 正式地址

@@ -261,6 +261,16 @@ export default {
               } else {
                 _this.formData.iconUrl = []
               }
+              _this.formSettings[0].items[2].hidden =false
+              _this.formSettings[0].items[3].hidden =false
+              _this.formSettings[0].items[5].hidden =false
+              _this.formSettings[0].items[6].hidden =false
+              _this.formSettings[0].items[7].hidden =false
+              _this.formSettings[0].items[8].hidden =false
+              _this.formSettings[0].items[9].hidden =false
+              _this.formSettings[0].items[10].hidden =false
+              _this.formSettings[0].items[11].hidden =false
+              _this.formSettings[0].items[12].hidden =false
             } else {
               _this.formData = {
                 parentChannelNames: response.data.result.channelName,
@@ -307,12 +317,18 @@ export default {
             })
         })
       } else {
+        console.log(formData, 'formData')
         formData.parentChannelId = _this.formData.parentChannelId ? _this.formData.parentChannelId : ''
+        formData.stampSetting = _this.formData.stampSetting
+        formData.tagRule = _this.formData.tagRule
+        formData.templateIds = _this.formData.templateIds
+        formData.extFieldsList = _this.formData.extFieldsList
         if(!formData.parentChannelId) {
           delete formData.parentChannelId
         }
         return new Promise((resolve, reject) => {
           formData.channelId = _this.routeQuery.channelId
+          console.log(_this.formData, 1111)
           editColumn(formData)
             .then((response) => {
               _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })

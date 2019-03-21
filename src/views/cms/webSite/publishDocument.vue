@@ -58,7 +58,6 @@ export default {
   },
   watch: {
     contextMenu(val) {
-      console.log(val, 'contextMenu')
       if(val.id == '0') {
         // this.columnList()
       }
