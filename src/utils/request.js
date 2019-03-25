@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import baseUrl from '@/config/base-url'
-import { getAuth, setAuth, getRefreshToken, isTokenExpired, isNotGetTokenApi } from './auth.js'
+import { getAuth, setAuth, getRefreshToken, isTokenExpired, isNotGetTokenApi, isRefreshTokenExpired } from './auth.js'
 import { refreshToken } from '@/api/login'
 // console.log(baseUrl, 'baseUrl')
 const request = axios.create({
@@ -48,7 +48,16 @@ request.interceptors.request.use(
     if (auth && isNotGetTokenApi(config)) {
       // console.log('check-token')
       config.headers.Authorization = `${auth.token_type} ${auth.access_token}`
-
+      /** 
+       * 判断token是否过期
+      */
+      // console.log(isRefreshTokenExpired())
+      if (isRefreshTokenExpired()) {
+        this.$store.dispatch('FedLogOut').then(() => {
+          location.reload()
+        })
+        return
+      }
       /**
        * 判断 token 是否将要过期
        */

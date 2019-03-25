@@ -4,10 +4,10 @@
       <el-col :xs="12" :sm="12" :md="18" :lg="18" :xl="18">
         <el-form ref="docContentForm" :model="docContentForm" :rules="rules" label-width="80px" class="docContentForm">
           <el-form-item label="文档标题" prop="articleTitle">
-            <el-input v-model="docContentForm.articleTitle"/>
+            <el-input v-model="docContentForm.articleTitle" placeholder="请输入文档标题"/>
           </el-form-item>
           <el-form-item label="首页标题" prop="contentTitle">
-            <el-input v-model="docContentForm.contentTitle"/>
+            <el-input v-model="docContentForm.contentTitle" placeholder="请输入首页标题"/>
           </el-form-item>
           <el-form-item label="">
             <div class="grid-content bg-purple">
@@ -109,11 +109,11 @@ export default {
       },
       rules: {
         articleTitle: [
-          { required: true, message: '请输入文档标题', trigger: 'blur' },
-          { min: 0, max: 80, message: '长度在 0 到 17 个字符', trigger: 'blur' }
+          { required: true, message: '请输入文档标题', trigger: 'blur'},
+          { min: 0, max: 80, message: '长度在 0 到 17 个字符', trigger: 'blur'}
         ],
         contentTitle: [
-          { required: true, message: '请输入首页标题', trigger: 'blur' },
+          { required: true, message: '请输入首页标题', trigger: 'blur', placeholder: '请输入首页标题' },
           { min: 0, max: 80, message: '长度在 0 到 17 个字符', trigger: 'blur' }
         ],
       },

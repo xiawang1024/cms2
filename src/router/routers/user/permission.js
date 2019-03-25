@@ -3,7 +3,6 @@ import Layout from '@/views/layout/Layout'
 import { userPath } from '../config'
 const path = `views/${userPath}/permission`
 
-console.log(path)
 
 const permission = {
   path: `/${userPath}/permission`,
