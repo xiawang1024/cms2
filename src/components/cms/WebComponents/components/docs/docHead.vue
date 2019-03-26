@@ -180,6 +180,9 @@ export default {
       //   this.$store.dispatch('setContextMenu', select)
       // }
       switch(command) {
+        case '2':
+          this.$store.dispatch('setContextMenu', {id: '4', label: '建立子栏目'})
+          break;
         case '3':
           this.$store.dispatch('setContextMenu', {id: '4', label: '修改栏目'})
           break;

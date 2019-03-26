@@ -32,7 +32,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['treeTags'])
+    ...mapGetters(['treeTags', 'contextMenu'])
   },
   mounted() {
     console.log(this.treeTags, 'tags')

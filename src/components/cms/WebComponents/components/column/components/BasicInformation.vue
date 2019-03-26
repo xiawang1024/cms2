@@ -38,6 +38,7 @@
 const Upload = _ => import('@/components/cms/Upload/upload')
 import { columnInfor, editColumn, isColumnRepet } from '@/api/cms/columnManage'
 import { fetchDictByDictName } from '@/api/cms/dict'
+import { mapGetters } from 'vuex'
 export default {
   name: 'BasicInformation',
   components: { Upload },
@@ -218,6 +219,9 @@ export default {
       showReturn: true
     }
   },
+  computed: {
+    ...mapGetters(['contextMenu'])
+  },
   watch: {
     activeName(val) {
       if(val === 'information') {
@@ -226,11 +230,10 @@ export default {
       }
     }
   },
-  mounted() {
-  },
   created() {
     this.getColumns()
     this.getColumnInfor()
+    // console.log(this.contextMenu, 'contextMenu1')
   },
   methods: {
     // 栏目编码是否重复
@@ -285,13 +288,19 @@ export default {
       return new Promise((resolve, reject) => {
         columnInfor(_this.channelId)
           .then((response) => {
-            _this.formData = response.data.result
-            if(_this.formData.iconUrl) {
-              _this.formData.iconUrl = [{
-                url: _this.formData.iconUrl
-              }]
+            if(this.contextMenu.label == '建立子栏目') {
+              console.log(1111)
+              // _this.formData.parentChannelNames = response.data.result.channelName
+              _this.formData.parentChannelNames = '123'
             } else {
-              _this.formData.iconUrl = []
+              _this.formData = response.data.result
+              if(_this.formData.iconUrl) {
+                _this.formData.iconUrl = [{
+                  url: _this.formData.iconUrl
+                }]
+              } else {
+                _this.formData.iconUrl = []
+              }
             }
             resolve()
           })
