@@ -2,12 +2,12 @@
   <div class="navbar">
 
     <div class="logo-wrap">
-      <img
+      <!-- <img
         src="http://hndt.com/oa/imgs/logo.png"
         alt=""
         class="logo"
-      >
-
+      > -->
+      {{ siteName }}
     </div>
     <div class="sysType-wrap">
       <sys-type />
@@ -99,6 +99,7 @@ import SizeSelect from '@/components/public/SizeSelect'
 import LangSelect from '@/components/public/LangSelect'
 import ThemePicker from '@/components/public/ThemePicker'
 import SysType from './sysType.vue'
+import { fetchDictByDictName} from "@/api/cms/dict"
 
 export default {
   components: {
@@ -110,12 +111,27 @@ export default {
     ThemePicker
   },
   computed: {
-    ...mapGetters(['sidebar', 'name', 'avatar', 'device'])
+    ...mapGetters(['sidebar', 'name', 'avatar', 'device', 'siteName'])
   },
   mounted() {
-    console.log(111111111111)
+    console.log('login')
+    this.fetchDict()
   },
   methods: {
+    // 查询站点名称
+    fetchDict() {
+      return new Promise((resolve, reject) => {
+        fetchDictByDictName('站点设置')
+          .then(response => {
+            let siteName = response.data.result.details[0].dictDetailValue ? response.data.result.details[0].dictDetailValue + '内容发布子系统' : '内容发布子系统'
+            this.$store.dispatch('SetSiteName', siteName)
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
     toggleSideBar() {
       this.$store.dispatch('toggleSideBar')
     },
@@ -143,6 +159,8 @@ export default {
     flex: 0 0 200px;
     width: 200px;
     padding-left: 10px;
+    color: #fff;
+    font-size: 15px;
     .logo {
       vertical-align: middle;
     }

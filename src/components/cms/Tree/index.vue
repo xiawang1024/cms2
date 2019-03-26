@@ -25,12 +25,14 @@
       :left="menuLeft"
       :top="menuTop"
       :is-create="isCreate"
+      :choosed-tag="treeTags"
     />
   </div>
 </template>
 
 <script>
 import ContextMenu from '@/components/cms/ContextMenu/index.vue'
+import { mapGetters } from 'vuex'
 // import TreeData from './mockData.js'
 export default {
   name: 'WebTree',
@@ -64,6 +66,9 @@ export default {
       expandedKeys: []
     }
   },
+  computed: {
+    ...mapGetters(['contextMenu', 'treeTags'])
+  },
   watch: {
     filterText(val) {
       this.$refs.websitTree.filter(val)
@@ -82,7 +87,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.treeData, 'treeData')
   },
   methods: {
     // TODO:左键点击
@@ -92,7 +96,7 @@ export default {
       // console.log(element, 'element')
       this.menuVisible = false
       this.webSitTags = []
-      this.generateTags(node, 'left')
+      this.generateTags(node, 'left', element)
       if((object.parentChannelId == -1 || !object.parentChannelId) && object.children) {
         this.isCreate = false
       } else {
@@ -111,7 +115,7 @@ export default {
         if (this.objectID !== object.id) {
           this.objectID = object.id
           this.menuVisible = true
-          this.generateTags(node, 'right')
+          this.generateTags(node, 'right', element)
         } else {
           this.menuVisible = !this.menuVisible
         }
@@ -131,7 +135,12 @@ export default {
     /**
      * 生成treeTag
      */
-    generateTags(node, direct) {
+    generateTags(node, direct, element) {
+      this.$nextTick(() => {
+        if(document.querySelectorAll('.el-tree-node').length) {
+          document.querySelectorAll('.el-tree-node')[1].classList.remove('is-current')
+        }
+      })
       this.direct = direct
       this.webSitTags = []
       this.findParentNode(node)

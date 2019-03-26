@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import baseUrl from '@/config/base-url'
-import { getAuth, setAuth, getRefreshToken, isTokenExpired, isNotGetTokenApi } from './auth.js'
+import { getAuth, setAuth, getRefreshToken, isTokenExpired, isNotGetTokenApi, isRefreshTokenExpired, removeAuth } from './auth.js'
 import { refreshToken } from '@/api/login'
 // console.log(baseUrl, 'baseUrl')
 const request = axios.create({
@@ -18,7 +18,6 @@ window.isRefreshing = false
  * 被挂起的请求数组
  */
 let refreshSubscribers = []
-
 /**
  * push所有请求到数组中
  * @param {Function} cb
@@ -48,7 +47,15 @@ request.interceptors.request.use(
     if (auth && isNotGetTokenApi(config)) {
       // console.log('check-token')
       config.headers.Authorization = `${auth.token_type} ${auth.access_token}`
-
+      /** 
+       * 判断token是否过期
+      */
+      // console.log(isRefreshTokenExpired())
+      if (isRefreshTokenExpired()) {
+        removeAuth()
+        location.reload()
+        return
+      }
       /**
        * 判断 token 是否将要过期
        */
@@ -68,9 +75,6 @@ request.interceptors.request.use(
 
           refreshToken(getRefreshToken())
             .then((res) => {
-              console.log('login')
-              console.log(res, 'res')
-              console.log(auth, 'auth')
               /**
            * 将刷新 token 的标志置为false
            */
@@ -107,7 +111,6 @@ request.interceptors.request.use(
             resolve(config)
           })
         })
-        // console.log(subscribeTokenRefresh)
         return retry
       }
       return config

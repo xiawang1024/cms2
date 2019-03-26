@@ -36,7 +36,28 @@ export const isTokenExpired = () => {
    * 过期时间前10分钟内刷新token
    * true 过期， false 未过期
    */
-  if (currentTime - diffTime > expireTime) {
+  // console.log(expireTime, 'expireTime')
+  if (currentTime + diffTime > expireTime) {
+    return true
+  } else {
+    return false
+  }
+
+  // 测试修改
+  // return true
+}
+/**
+ * 
+ * 判断是否登陆过期
+ */
+export const isRefreshTokenExpired = () => {
+  const currentTime = getCurrentTime()
+  const expireTime = getAuth()['expires_in']
+  /**
+   * 如果当前时间大于过期时间，token失效
+   * true 过期， false 未过期
+   */
+  if (currentTime > expireTime) {
     return true
   } else {
     return false

@@ -65,7 +65,6 @@ export default {
   },
   mounted() {
     this.columnList()
-    console.log('mounted')
     this.$store.dispatch('toggleSideBar')
   },
   // TODO:webSiteViewType
@@ -97,12 +96,24 @@ export default {
           .then((response) => {
             _this.tableData = _this.toTree(response.data.result.content)
             if(_this.tableData.length) {
-              let webSiteTags = [{
-                channelCode: _this.tableData[0].channelCode,
-                id: _this.tableData[0].channelId,
-                label: _this.tableData[0].channelName
-              }]
+              let webSiteTags = []
+              if(_this.tableData[0].children && _this.tableData[0].children.length) {
+                webSiteTags = [{
+                  channelCode: _this.tableData[0].children[0].channelCode,
+                  id: _this.tableData[0].children[0].channelId,
+                  label: _this.tableData[0].children[0].channelName
+                }]
+              } else {
+                webSiteTags = [{
+                  channelCode: _this.tableData[0].channelCode,
+                  id: _this.tableData[0].channelId,
+                  label: _this.tableData[0].channelName
+                }]
+              }
               this.$store.dispatch('setTreeTags', webSiteTags)
+              this.$nextTick(() => {
+                document.querySelectorAll('.el-tree-node')[1].classList.add('is-current')
+              })
             }
             resolve()
           })

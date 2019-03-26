@@ -316,6 +316,7 @@ export default {
         formData.tagRule = _this.formData.tagRule
         formData.templateIds = _this.formData.templateIds
         formData.extFieldsList = _this.formData.extFieldsList
+        formData.parentChannelId = _this.formData.parentChannelId
         editColumn(formData)
           .then((response) => {
             _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })

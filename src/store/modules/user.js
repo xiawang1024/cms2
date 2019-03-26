@@ -18,7 +18,8 @@ const user = {
     sysType: '0',
     setting: {
       articlePlatform: []
-    }
+    },
+    siteName: '内容发布子系统'
   },
 
   mutations: {
@@ -49,9 +50,17 @@ const user = {
     SET_TENANT_ID: (state, tenantId) => {
       state.tenantId = tenantId
     },
+    SET_SITE_NAME: (state, siteName) => {
+      state.siteName = siteName
+    }
   },
 
   actions: {
+    // 站点名称
+    SetSiteName({ commit }, siteName) {
+      console.log(siteName)
+      commit('SET_SITE_NAME', siteName)
+    },
     // 用户名登录
     LoginByUsername({ commit }, userInfo) {
       const username = userInfo.username.trim()
@@ -119,6 +128,7 @@ const user = {
     // 前端 登出
     FedLogOut({ commit }) {
       return new Promise((resolve) => {
+        console.log('loginOut')
         commit('SET_TOKEN', '')
 
         commit('SET_AUTHORITIES', [])

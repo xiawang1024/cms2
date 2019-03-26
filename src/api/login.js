@@ -3,7 +3,10 @@ import Qs from 'qs'
 
 import { getAuth } from '@/utils/auth.js'
 
-request.defaults.headers.contentType = 'application/x-www-form-urlencoded'
+// request.defaults.headers.contentType = 'application/x-www-form-urlencoded'
+if(request) {
+  request.defaults.headers.contentType = 'application/x-www-form-urlencoded'
+}
 /**
  * 密码模式登陆获取auth token refreshToken
  * @param {String} username

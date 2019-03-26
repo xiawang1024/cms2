@@ -223,6 +223,8 @@ export default {
             .then(response => {
               _this.fetchDict();
               this.$message.success('保存成功')
+              let siteName = response.data.result.details[0].dictDetailValue ? response.data.result.details[0].dictDetailValue + '内容发布子系统' : '内容发布子系统'
+              this.$store.dispatch('SetSiteName', siteName)
               resolve();
             })
             .catch(error => {

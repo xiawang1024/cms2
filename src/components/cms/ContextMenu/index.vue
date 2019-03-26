@@ -6,6 +6,9 @@
     text-color="#fff"
     @select="handleSelect"
   >
+    <div class="channel-code">
+      {{ choosedTag[choosedTag.length - 1] ? choosedTag[choosedTag.length - 1].channelCode : '' }}
+    </div>
     <el-menu-item
       v-for="item of menuList"
       :index="item.id.toString()"
@@ -96,6 +99,12 @@ export default {
     isCreate: {
       type: Boolean,
       default: false
+    },
+    choosedTag: {
+      type: Array,
+      default: ()=> {
+        []
+      }
     }
   },
   data() {
@@ -149,6 +158,11 @@ export default {
   width: 106px;
   border-radius: 4px;
   overflow: hidden;
+  .channel-code{
+    color: #C0C4CC;
+    font-size: 12px;
+    padding-left: 6px;
+  }
   .el-menu-item {
     padding: 0 6px !important;
     height: 28px;
