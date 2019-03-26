@@ -349,7 +349,7 @@ export default {
         let date =  (new Date()).getTime()/1000
         this.postForm.addtime = date
         this.postForm.programlistInfo = JSON.stringify(this.programs)
-        //TODO this.postForm.adduser = 
+        this.postForm.adduser = this.$store.getters.tenantId
 
       this.$refs['postForm'].validate(valid => {
         if(valid) {
