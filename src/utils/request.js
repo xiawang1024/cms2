@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import baseUrl from '@/config/base-url'
-import { getAuth, setAuth, getRefreshToken, isTokenExpired, isNotGetTokenApi, isRefreshTokenExpired } from './auth.js'
+import { getAuth, setAuth, getRefreshToken, isTokenExpired, isNotGetTokenApi, isRefreshTokenExpired, removeAuth } from './auth.js'
 import { refreshToken } from '@/api/login'
 // console.log(baseUrl, 'baseUrl')
 const request = axios.create({
@@ -53,9 +53,8 @@ request.interceptors.request.use(
       */
       // console.log(isRefreshTokenExpired())
       if (isRefreshTokenExpired()) {
-        this.$store.dispatch('FedLogOut').then(() => {
-          location.reload()
-        })
+        removeAuth()
+        location.reload()
         return
       }
       /**
@@ -77,9 +76,6 @@ request.interceptors.request.use(
 
           refreshToken(getRefreshToken())
             .then((res) => {
-              console.log('login')
-              console.log(res, 'res')
-              console.log(auth, 'auth')
               /**
            * 将刷新 token 的标志置为false
            */

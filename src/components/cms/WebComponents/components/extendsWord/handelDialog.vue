@@ -48,6 +48,7 @@ export default {
               label: '名称',
               name: 'label',
               type: 'text',
+              required: true,
               placeholder: '请输入名称'
             },
             {
@@ -66,7 +67,8 @@ export default {
                   label: '数字',
                   value: '3'
                 }
-              ]
+              ],
+              required: true,
             },
             {
               label: '必填',

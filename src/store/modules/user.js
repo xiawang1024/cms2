@@ -128,6 +128,7 @@ const user = {
     // 前端 登出
     FedLogOut({ commit }) {
       return new Promise((resolve) => {
+        console.log('loginOut')
         commit('SET_TOKEN', '')
 
         commit('SET_AUTHORITIES', [])

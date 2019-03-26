@@ -57,7 +57,7 @@ export const isRefreshTokenExpired = () => {
    * 如果当前时间大于过期时间，token失效
    * true 过期， false 未过期
    */
-  if (currentTime  > expireTime) {
+  if (currentTime > expireTime) {
     return true
   } else {
     return false
