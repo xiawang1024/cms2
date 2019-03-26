@@ -49,7 +49,6 @@ export default {
       if(this.treeTags && this.treeTags.length) {
         this.channelId = this.treeTags[this.treeTags.length - 1].id
         this.documentList()
-        console.log(2222222222)
       }
     }
     this.fetchDict()

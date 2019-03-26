@@ -91,9 +91,6 @@ export default {
   methods: {
     // TODO:左键点击
     handleNodeClick(object, node, element) {
-      // console.log(node, 'node')
-      // console.log(object, 'object')
-      // console.log(element, 'element')
       this.menuVisible = false
       this.webSitTags = []
       this.generateTags(node, 'left', element)
@@ -137,8 +134,20 @@ export default {
      */
     generateTags(node, direct, element) {
       this.$nextTick(() => {
-        if(document.querySelectorAll('.el-tree-node').length) {
-          document.querySelectorAll('.el-tree-node')[1].classList.remove('is-current')
+        if(this.treeData && this.treeData.length) {
+          if(this.treeData[0].children) {
+            if(node.data.channelId == this.treeData[0].children[0].channelId) {
+              document.querySelectorAll('.el-tree-node')[1].classList.add('is-current')
+            } else {
+              document.querySelectorAll('.el-tree-node')[1].classList.remove('is-current')
+            }
+          } else {
+            if(node.data.channelId == this.treeData[0].channelId) {
+              document.querySelectorAll('.el-tree-node')[0].classList.add('is-current')
+            } else {
+              document.querySelectorAll('.el-tree-node')[0].classList.remove('is-current')
+            }
+          }
         }
       })
       this.direct = direct

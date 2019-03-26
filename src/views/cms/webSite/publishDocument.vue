@@ -112,7 +112,13 @@ export default {
               }
               this.$store.dispatch('setTreeTags', webSiteTags)
               this.$nextTick(() => {
-                document.querySelectorAll('.el-tree-node')[1].classList.add('is-current')
+                if(_this.tableData && _this.tableData.length) {
+                  if(_this.tableData[0].children) {
+                    document.querySelectorAll('.el-tree-node')[1].classList.add('is-current')
+                  } else {
+                    document.querySelectorAll('.el-tree-node')[0].classList.add('is-current')
+                  }
+                }
               })
             }
             resolve()

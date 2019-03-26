@@ -38,7 +38,7 @@
 <script>
 import ScrollPane from '@/components/public/ScrollPane'
 import { generateTitle } from '@/utils/i18n'
-
+import { mapGetters } from 'vuex'
 export default {
   components: { ScrollPane },
   data() {
@@ -52,7 +52,8 @@ export default {
   computed: {
     visitedViews() {
       return this.$store.state.tagsView.visitedViews
-    }
+    },
+    ...mapGetters(['treeTags'])
   },
   watch: {
     $route() {
@@ -110,6 +111,9 @@ export default {
       })
     },
     closeSelectedTag(view) {
+      if(this.treeTags) {
+        this.$store.dispatch('setTreeTags', [])
+      }
       this.$store.dispatch('delView', view).then(({ visitedViews }) => {
         if (this.isActive(view)) {
           const latestView = visitedViews.slice(-1)[0]
