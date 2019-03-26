@@ -18,7 +18,6 @@ window.isRefreshing = false
  * 被挂起的请求数组
  */
 let refreshSubscribers = []
-
 /**
  * push所有请求到数组中
  * @param {Function} cb
@@ -112,7 +111,6 @@ request.interceptors.request.use(
             resolve(config)
           })
         })
-        // console.log(subscribeTokenRefresh)
         return retry
       }
       return config
