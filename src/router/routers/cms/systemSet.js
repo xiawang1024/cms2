@@ -117,6 +117,15 @@ const systemSet = {
       name: 'helpDocEdit',
       meta: { title: 'helpDocEdit', icon: 'helpDocEdit', role: 'cms' },
       hidden: true
+    },
+    {
+      /**
+       * 蜜蜂采集
+       */
+      path: 'collection',
+      component: () => import(`@/${path}/form`),
+      name: 'collection',
+      meta: { title: 'collection', icon: 'helpDoc', role: 'cms' },
     }
   ]
 }

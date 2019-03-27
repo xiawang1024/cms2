@@ -81,6 +81,7 @@ export default {
     comComponent: '公用组件管理',
     componentEdit: '公用组件新增或修改',
     helpDoc: '帮助文档管理',
+    collection: '蜜蜂采集',
     systemStatus: '系统状态',
     logs: '日志',
     backTask: '后台任务',
