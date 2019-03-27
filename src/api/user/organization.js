@@ -79,3 +79,15 @@ export function OrganizationShow(data) {
     data
   })
 }
+
+/**
+ *  编码是否重复
+ * @param organizationCode
+ * @constructor
+ */
+export function OrganizationCheckCode(organizationCode) {
+  return request({
+    url: '/userb/organization/checkcode/' + organizationCode,
+    method: 'GET'
+  })
+}

@@ -21,7 +21,7 @@ import PapSearch from '@/components/pap/search/index'
 import PapTable from '@/components/pap/table/index'
 import PapDialog from '@/components/pap/dialog/index'
 import ButtonGroup from '@/components/pap/button-group/index'
-import { OrganizationList, OrganizationCreate, OrganizationUpdate, OrganizationUpdateForEnable } from '@/api/user/organization'
+import { OrganizationList, OrganizationCreate, OrganizationUpdate, OrganizationUpdateForEnable, OrganizationCheckCode } from '@/api/user/organization'
 
 export default {
   name: 'SysOrganization',
@@ -88,7 +88,12 @@ export default {
           $el: { placeholder: '请输入', style: 'width: 200px' }
         },
         {$id: 'organizationCode', $type: 'input', $label: '租户编码', $default: '',
-          $el: { placeholder: '请输入', style: 'width: 200px' }
+          $el: { placeholder: '请输入', style: 'width: 200px' },
+          rules: [
+            {
+              validator: this.checkOrganizationRepeat
+            }
+          ]
         },
         {$id: 'organizationName', $type: 'input', $label: '租户名称', $default: '',
           $el: { placeholder: '请输入', style: 'width: 200px' }
@@ -101,6 +106,8 @@ export default {
         }
       ],
       dialogSubmitClickEmit: 'dialogSubmitClick',
+      dialogOperationType: '',
+      dialogOrganizationCopyTemp: '',
       filename: ''
       /* eslint-disable */
     }
@@ -164,6 +171,7 @@ export default {
           organizationManager: '',
           remark: ''
         })
+        _this.dialogOperationType = '新增'
       })
     },
     dialogSubmitClick (data) {
@@ -246,6 +254,42 @@ export default {
 	    var selObj = _this.multipleSelection[0]
       _this.$nextTick(function () {
         _this.$refs["organization-dialog-ref"].$refs.formRender.updateForm(selObj)
+        _this.dialogOperationType = '修改'
+        _this.dialogOrganizationCopyTemp = selObj.organizationCode
+      })
+    },
+    checkOrganizationRepeat (rule, value, callback) {
+      var _this = this
+      if (!value) {
+        return callback(new Error('请输入租户编码'))
+      }
+      var organizationCode = _this.$refs["organization-dialog-ref"].$refs.formRender.getFormValue().organizationCode
+      return new Promise((resolve, reject) => {
+        OrganizationCheckCode(organizationCode)
+          .then((response) => {
+            if(_this.dialogOperationType == '新增') {
+              if(response.data.result == 0 || response.data.result == -1) {
+                callback()
+              } else {
+                callback(new Error('租户编码不能重复'))
+              }
+            }
+            if(_this.dialogOperationType == '修改') {
+              console.log(_this.dialogOrganizationCopyTemp)
+              if(_this.dialogOrganizationCopyTemp === _this.$refs["organization-dialog-ref"].$refs.formRender.getFormValue().organizationCode) {
+                callback()
+              }
+              if(response.data.result == 0 || response.data.result == -1) {
+                callback()
+              } else {
+                callback(new Error('租户编码不能重复'))
+              }
+            }
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
       })
     },
     handleSizeChange (val) {

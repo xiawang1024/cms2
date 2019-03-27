@@ -15,7 +15,7 @@
     <!-- 分页条处理：每页条数变化、当前页页码条数、表格选中数据监听 -->
     <pap-table ref="user-table" v-bind="tableConfig" @handle-size-change="handleSizeChange" @handle-current-change="handleCurrentChange" @multiple-selection="multipleSelectionEmit"/>
     <!-- 用户管理 弹窗组件 -->
-    <el-dialog :visible.sync="dialogFormVisible" :before-close="handleClose" title="用户管理" width="30%">
+    <el-dialog ref="dialogUserManager" :visible.sync="dialogFormVisible" :before-close="handleClose" title="用户管理" width="30%">
       <el-form-renderer ref="dialogFormRender" :inline="dialogFormInlineFlag" :class="dialogFormInlineFlag ? 'demo-form-inline' : '' " :content="dialogForm" label-width="100px"/>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -43,7 +43,7 @@ import PapSearch from '@/components/pap/search/index'
 import PapTable from '@/components/pap/table/index'
 import ButtonGroup from '@/components/pap/button-group/index'
 import ElFormRenderer from '@/components/el-form-renderer'
-import { UserList, UserCreate, UserUpdate, UserRoleRelSave, UserRoleRelRoleInfoByUserId, UserModifyEnableFlagByUserIds } from '@/api/user/user'
+import { UserList, UserCreate, UserUpdate, UserRoleRelSave, UserRoleRelRoleInfoByUserId, UserModifyEnableFlagByUserIds, UserCheckCode } from '@/api/user/user'
 import Role from '@/views/user/role'
 
 export default {
@@ -113,13 +113,20 @@ export default {
           $el: { placeholder: '请输入', style: 'width: 200px' }
         },
         {$id: 'userName', $type: 'input', $label: '名称', $default: '',
-          $el: { placeholder: '请输入', style: 'width: 200px' }
+          $el: { placeholder: '请输入', style: 'width: 200px' },
+          rules: [
+            {
+              validator: this.checkUserNameRepeat
+            }
+          ]
         },
         {$id: 'password', $type: 'input', $label: '密码', $default: '',
           $el: { placeholder: '请输入', style: 'width: 200px' }
         },
       ],
       dialogFormVisible: false,
+      dialogOperationType: '',
+      dialogUserNameCopyTemp: '',
       // 弹窗用户管理部分
       dialogUserManagerVisible: false,
       // 用户角色管理弹窗部分
@@ -199,6 +206,7 @@ export default {
           userName: '',
           password: ''
         })
+        _this.dialogOperationType = '新增'
       })
     },
     enableFlagClick (enableFlag) {
@@ -288,6 +296,8 @@ export default {
           userName: _this.multipleSelection[0].userName,
           password: _this.multipleSelection[0].password
         })
+        _this.dialogOperationType = '修改'
+        _this.dialogUserNameCopyTemp = _this.multipleSelection[0].userName
       })
     },
     roleClick () {
@@ -350,6 +360,39 @@ export default {
     },
     showClick () {
       console.log(this.multipleSelection)
+    },
+    checkUserNameRepeat (rule, value, callback) {
+      var _this = this
+      if (!value) {
+        return callback(new Error('请输入用户名称'))
+      }
+      var userName = _this.$refs["dialogFormRender"].getFormValue().userName
+      return new Promise((resolve, reject) => {
+        UserCheckCode(userName)
+          .then((response) => {
+            if(_this.dialogOperationType == '新增') {
+              if(response.data.result == 0 || response.data.result == -1) {
+                callback()
+              } else {
+                callback(new Error('用户名称不能重复'))
+              }
+            }
+            if(_this.dialogOperationType == '修改') {
+              if(_this.dialogUserNameCopyTemp === _this.$refs["dialogFormRender"].getFormValue().userName) {
+                callback()
+              }
+              if(response.data.result == 0 || response.data.result == -1) {
+                callback()
+              } else {
+                callback(new Error('用户名称不能重复'))
+              }
+            }
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     },
     handleSizeChange (val) {
       console.log(val)
