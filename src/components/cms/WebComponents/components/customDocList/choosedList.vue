@@ -4,27 +4,27 @@
       :data="tableData"
       style="width: 100%">
       <el-table-column
-        prop="date"
+        prop="articleTitle"
         label="标题"
         width="120"/>
       <el-table-column
-        prop="name"
+        prop="articleType"
         label="类型"
         width="120"/>
       <el-table-column
-        prop="name"
+        prop="channelName"
         label="所属栏目"/>
       <el-table-column
         prop="name"
         label="标记"/>
       <el-table-column
-        prop="name"
+        prop="createUser"
         label="发稿人"/>
       <el-table-column
-        prop="name"
+        prop="publishTime"
         label="发布时间"/>
       <el-table-column
-        prop="name"
+        prop="clickNum"
         label="点击"/>
       <el-table-column
         prop=""
@@ -34,7 +34,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <document-dialog :dialog-visible.sync = "dialogVisible"/>
+    <document-dialog :dialog-visible.sync = "dialogVisible" @getChoosed = "getChoosed"/>
   </div>
 </template>
 <script>
@@ -45,27 +45,15 @@
     },
     data() {
       return {
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }],
+        tableData: [],
         dialogVisible: false
       }
     },
     methods: {
+      getChoosed(list) {
+        console.log(list, 'list')
+        this.tableData = list
+      },
       chooseDoc() {
         this.dialogVisible = true
       }

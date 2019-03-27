@@ -21,7 +21,7 @@
         <el-button type="primary" @click="innerVisible = true">打开内层 Dialog</el-button>
       </div>
     </el-dialog> -->
-    <v-page :visible.sync="addPage">
+    <v-page :visible.sync="addPage" @goBack="goBack">
       <h3 slot="title">{{ title }}</h3>
       <template slot="content">
         <!-- 详情页组件 -->
@@ -29,7 +29,7 @@
         <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave">
           <template slot="list">
             <div class="choosed-list">
-              <choosed-list/>
+              <choosed-list ref="choosedList"/>
             </div>
           </template>
         </v-form>
@@ -40,6 +40,8 @@
 <script>
 import tableList from './table'
 import choosedList from './choosedList'
+import { mapGetters } from 'vuex'
+import { createDefineArticle, defineArticleList } from '@/api/cms/article'
 export default {
   components: {
     tableList,
@@ -87,17 +89,65 @@ export default {
             }
           ]
         }
-      ]
+      ],
+      pageNum: 1,
+      pageSize: 100,
     }
   },
+  computed: {
+    ...mapGetters(['treeTags'])
+  },
+  mounted() {
+    this.getDefineArticleList()
+  },
   methods: {
+    getDefineArticleList() {
+      var _this = this
+      let formData = {
+        channelId: this.treeTags[this.treeTags.length - 1].id
+      }
+      return new Promise((resolve, reject) => {
+        defineArticleList(formData, _this.pageNum, _this.pageSize)
+          .then((response) => {
+            // _this.documentsData = response.data.result.content
+            // _this.totalCount = response.data.result.total
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
     handelDoc(type) {
       if(type == 'add') {
         this.title = '创建文档列表'
       }
       this.addPage = true
     },
-    submitSave() {
+    submitSave(data) {
+      let choosed = []
+      if(this.$refs.choosedList.tableData.length) {
+        this.$refs.choosedList.tableData.forEach((ele) => {
+          choosed.push({ articleId: ele.articleId })
+        })
+      }
+      data.details = choosed
+      data.channelId = this.treeTags[this.treeTags.length - 1].id
+      delete data.list
+      return new Promise((resolve, reject) => {
+        createDefineArticle(data)
+          .then((response) => {
+            this.$message.success('添加成功')
+            this.goBack()
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    goBack() {
+      this.addPage = false
     }
   }
 }

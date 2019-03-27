@@ -112,3 +112,20 @@ export function updateArticle(data) {
     data
   })
 }
+/** 
+ * 自定义文档列表
+ */
+export function createDefineArticle(data) {
+  return request({
+    url: '/cms/document',
+    method: 'post',
+    data
+  })
+}
+export function defineArticleList(queryObj, pageNo, pageSize) {
+  return request({
+    url: '/cms/document/page?pageNo=' + pageNo + '&pageSize=' + pageSize,
+    method: 'post',
+    data: queryObj
+  })
+}
