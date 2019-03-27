@@ -52,9 +52,10 @@
 <script>
 import {columnList} from "@/api/cms/columnManage.js"
 import baseUrl from '@/config/base-url'
+baseUrl['BASE_URL']='http://10.1.3.43:53010'
 let cpath=baseUrl['BASE_URL'].split(":");
 let  Cpath=cpath[0].toString()+':'+cpath[1].toString()
-
+console.log(Cpath)
 export default {
     name:'Form',
     data(){
