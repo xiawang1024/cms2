@@ -1,57 +1,62 @@
 
 
 <template>
-    <div>
+  <div>
        
-         <div class="placer">
-            <span>抓取信息规则</span>
-         </div>
-        <div class="formbody">
-            
-            <ul class="forminfo">
-                <li><label>栏目</label>
-                <select v-model="selectCloum" class="dfinput" style="opacity:1"  >
-                    <option value ="" class="dfinput" slecter>--请选择栏目--</option>
-                    <option v-for="item in content" :value="item.channelId">{{item.channelName}}</option>               
-                </select>
-                </li>
-                    <li><label>已有规则</label>
-                    <select v-model="selectRule" class="dfinput" style="opacity:1"  @change="al" >
-                         <option value ="" class="dfinput" >--请选择规则--</option>
-                         <option v-for="item in ruleContent" :value="item.id">{{item.id}}</option>
-                        
-                    </select> 
-                    </li>
-                <li><label>列表页面URL</label><input name="newslisturl" :value="res.newsListUrl"  type="text" class="dfinput" /></li>
-                <li><label>列表页面URL规则</label><input name="newslisturlrule" :value="res.newsListUrlRule" type="text" class="dfinput" /></li>
-                <li><label>列表标题规则</label><input name="newslisttitle" :value="res.newsListTitle" type="text" class="dfinput" /></li>
-                <li><label>列表标题链接规则</label><input name="titleurl" :value="res.titleUrl" type="text" class="dfinput" /></li>
-                <li><label>列表规则</label><input name="newslistrule" :value="res.newsListRule" type="text" class="dfinput" /></li>
-                <li><label>详情页面规则</label><input name="newsrule" :value="res.newsRule" type="text" class="dfinput" /></li>
-                <li><label>标题标签</label><input name="titlerule" :value="res.titleRule" type="text" class="dfinput" /></li>
-                <li><label>正文标签</label><input name="contentrule" :value="res.contentRule" type="text" class="dfinput" /></li>
-                <li><label>来源标签</label><input name="formrule" :value="res.formRule" type="text" class="dfinput" /></li>
-                    <li><label>编码</label><input name="Encoding" :value="res.encoding" type="text" class="dfinput" /></li>
-                <li><label>&nbsp;</label>
-                    <button  type="submit" class="loginbtn" @click="test"  >测试</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <button  type="submit" class="loginbtn" @click="save"  >保存</button>
-                </li>
-                    <li>
-                    <label>标题：</label>  <textarea name="title" cols="" rows="" :value="testData.title" class="smiltextinput"></textarea>
-                    </li>
-                    <li>
-                    <label>来源：</label>  <textarea name="form"  cols="" rows="" :value="testData.form" class="smiltextinput"></textarea>
-                    </li>
-                    <li class="topaside">
-                    <label >正文：</label>  <textarea class="textinput" name="content"  cols="" rows="" :value="testData.content" ></textarea>
-                    </li>
-            </ul>
-        </div>
+    <div class="placer">
+      <span>抓取信息规则</span>
     </div>
+    <div class="formbody">
+            
+      <ul class="forminfo">
+        <li><label>栏目</label>
+          <select v-model="selectCloum" class="dfinput" style="opacity:1" >
+            <option value ="" class="dfinput" slecter>--请选择栏目--</option>
+            <option v-for="item in content" :value="item.channelId" :key="item.channelId">{{ item.channelName }}</option>               
+          </select>
+        </li>
+        <li><label>已有规则</label>
+          <select v-model="selectRule" class="dfinput" style="opacity:1" >
+            <option value ="" class="dfinput" >--请选择规则--</option>
+            <option v-for="item in ruleContent" :value="item.id" :key="item.channelId">{{ item.id }}</option>
+                        
+          </select> 
+        </li>
+        <li><label>列表页面URL</label><input name="newslisturl" v-model="res.newsListUrl" type="text" class="dfinput" ></li>
+        <li><label>列表页面URL规则</label><input name="newslisturlrule" v-model="res.newsListUrlRule" type="text" class="dfinput" ></li>
+        <li><label>列表标题规则</label><input name="newslisttitle" v-model="res.newsListTitle" type="text" class="dfinput" ></li>
+        <li><label>列表标题链接规则</label><input name="titleurl" v-model="res.titleUrl" type="text" class="dfinput" ></li>
+        <li><label>列表规则</label><input name="newslistrule" v-model="res.newsListRule" type="text" class="dfinput" ></li>
+        <li><label>详情页面规则</label><input name="newsrule" v-model="res.newsRule" type="text" class="dfinput" ></li>
+        <li><label>标题标签</label><input name="titlerule" v-model="res.titleRule" type="text" class="dfinput" ></li>
+        <li><label>正文标签</label><input name="contentrule" v-model="res.contentRule" type="text" class="dfinput" ></li>
+        <li><label>来源标签</label><input name="formrule" v-model="res.formRule" type="text" class="dfinput" ></li>
+        <li><label>编码</label><input name="Encoding" v-model="res.encoding" type="text" class="dfinput" ></li>
+        <li><label>&nbsp;</label>
+          <button type="submit" class="loginbtn" @click="test" >测试</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <button type="submit" class="loginbtn" @click="save" >保存</button>
+        </li>
+        <li>
+          <label>标题：</label>  <textarea name="title" cols="" rows="" :value="testData.title" class="smiltextinput"/>
+        </li>
+        <li>
+          <label>来源：</label>  <textarea name="form" cols="" rows="" :value="testData.form" class="smiltextinput"/>
+        </li>
+        <li class="topaside">
+          <label >正文：</label>  <textarea class="textinput" name="content" cols="" rows="" :value="testData.content" />
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 <script>
+import {columnList} from "@/api/cms/columnManage.js"
+import baseUrl from '@/config/base-url'
+let cpath=baseUrl['BASE_URL'].split(":");
+let  Cpath=cpath[0].toString()+':'+cpath[1].toString()
+
 export default {
-    name:'form',
+    name:'Form',
     data(){
         return{
             content:[],
@@ -61,36 +66,18 @@ export default {
             res:{},
             testData:{}
 
+
         }
-    },
-    created(){    
-            console.log(this.$store.getters.token.access_token)   
-                this.$.ajax({
-                    type:"POST",
-                    url:"http://172.20.5.4:53010/cms/channel/page?pageNo=1&pageSize=200&access_token="+this.$store.getters.token.access_token,
-
-                    contentType:'application/json;charset=utf-8',
-                    data: JSON.stringify({}),
-                    dataType: "json",
-                    success:(data)=>{
-                        if(data.code==0){
-                             this.content=data.result.content;
-                          
-                        }
-                    },
-                    error:function (data) {
-                        alert("请求失败");
-                    }
-                });
-
-
     },
     
     watch:{
         selectCloum(){
+            this.ruleContent=[],
+            this.res={},
+            this.testData={},
             this.$.ajax({
                     type:"POST",
-                    url:"http://172.20.5.4:19080/content-grab/newslist/getAllRuleByClumnId",
+                    url:Cpath+":19080/content-grab/newslist/getAllRuleByClumnId",
                     data:{
                         "clumnid" :this.selectCloum,
                     },
@@ -111,7 +98,7 @@ export default {
         selectRule(){
             this.$.ajax({
             type:"POST",
-            url:"http://172.20.5.4:19080/content-grab/newslist/getAllRuleById",
+            url:Cpath+":19080/content-grab/newslist/getAllRuleById",
             data:{
                 "ruleid" : this.selectRule,
             },
@@ -130,25 +117,73 @@ export default {
         }
        
     },
+    created(){      
+               var _this = this
+                 return new Promise((resolve, reject) => {
+                   columnList({},1,1000)
+                    .then((response) => {
+                        _this.$nextTick(()=>{
+                            _this.content = response.data.result.content
+                        })
+                        resolve()
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    })
+                }) 
+
+
+    },
     
     methods:{
-        al(){       
-         return console.log(this.testData);
-        },
-       
-        test(){
-            alert(this.res);
-             if(this.res.newsListUrl==""||this.res.newsListUrl==null){
-            alert("列表页面URL不能为空");
-            return false;
+        check(){
+            if(this.res.newsListUrl==""||this.res.newsListUrl==null){
+                alert("列表页面URL不能为空");
+                return false;
+            }
+            if(this.res.newsListUrlRule==""||this.res.newsListUrlRule==null){
+                alert("列表页面URL规则不能为空");
+                return false;
+            }
+            if(this.res.newsListTitle==""||this.res.newsListTitle==null){
+                alert("列表标题规则不能为空");
+                return false;
+            }
+            if(this.res.titleUrl==""||this.res.titleUrl==null){
+                alert("列表标题链接规则不能为空");
+                return false;
             }
             if(this.res.newsListRule==""||this.res.newsListRule==null){
                 alert("抓取信息的规则不能为空");
                 return false;
             }
+            if(this.res.newsRule==""||this.res.newsRule==null){
+                alert("详情页面规则不能为空");
+                return false;
+            }
+            if(this.res.titleRule==""||this.res.titleRule==null){
+                alert("标题标签不能为空");
+                return false;
+            }
+            if(this.res.contentRule==""||this.res.contentRule==null){
+                alert("正文标签不能为空");
+                return false;
+            }
+            if(this.res.formRule==""||this.res.formRule==null){
+                alert("来源标签不能为空");
+                return false;
+            }
+            if(this.res.encoding==""||this.res.encoding==null){
+                alert("编码不能为空");
+                return false;
+            }
+            
+        },
+        test(){
+            this.check(),
             this.$.ajax({
                     type:"POST",
-                    url:"http://172.20.5.4:19080/content-grab/newslist/getnewslist",
+                    url:Cpath+":19080/content-grab/newslist/getnewslist",
                     data:{
                         "column" : this.selectCloum,
                         "newslisturl":this.res.newsListUrl,
@@ -183,18 +218,11 @@ export default {
         if(id==" " || id==null){
             alert("确定要修改这条规则信息吗？")
         }
-        if(this.res.newsListUrl==""||this.res.newsListUrl==null){
-            alert("列表页面URL不能为空");
-            return false;
-        }
-        if(this.res.newsListRule==""||this.res.newsListRule==null){
-            alert("抓取信息的规则不能为空");
-            return false;
-        }
+        this.check(),
         this.$.ajax({
             type:"POST",
             
-            url:"http://172.20.5.4:19080/content-grab/newslist/saverule",
+            url:Cpath+":19080/content-grab/newslist/saverule",
             data:{
                 "id":this.selectRule,
 				"column" : this.selectCloum,
