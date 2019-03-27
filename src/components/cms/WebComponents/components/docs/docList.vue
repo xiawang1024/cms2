@@ -62,7 +62,7 @@
         min-width="120"
         show-overflow-tooltip
       />
-      <el-table-column prop="articleAuthor" label="撰稿人" width="100"/>
+      <el-table-column prop="createUser" label="撰稿人" width="100"/>
       <el-table-column prop="clickNum" label="点击" width="80"/>
       <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
