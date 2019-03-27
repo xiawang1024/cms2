@@ -8,7 +8,8 @@ module.exports = {
   dev: {
     // Paths
     assetsSubDirectory: 'static',
-    assetsPublicPath: 'http://172.20.5.2/zhaojp/admin/',
+    // assetsPublicPath: 'http://172.20.5.2/zhaojp/admin/',
+    assetsPublicPath: '/',
     proxyTable: {},
 
     // Various Dev Server settings
