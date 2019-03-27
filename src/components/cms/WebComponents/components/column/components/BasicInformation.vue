@@ -54,63 +54,6 @@ export default {
   },
   data() {
     return {
-      basicInformation: {
-        parentColumn: '河南广播网',
-        preColumn: '',
-        domain: '',
-        location: '',
-        creator: '',
-        display: '',
-        otherData: '',
-        manager: '',
-        name: '',
-        type: '',
-        icon: {
-          url: '',
-          isScale: false,
-          scaleWidth: '',
-          scaleHeight: ''
-        },
-        keyWords: '',
-        desc: '',
-        modules: ''
-      },
-      preColumnList: [
-        {
-          id: 1,
-          name: '最前面'
-        },
-        {
-          id: 2,
-          name: '焦点图'
-        },
-        {
-          id: 3,
-          name: '电台动态'
-        },
-        {
-          id: 4,
-          name: '新闻资讯'
-        }
-      ],
-      typeList: [
-        {
-          id: 1,
-          name: '新闻'
-        },
-        {
-          id: 2,
-          name: '音乐'
-        },
-        {
-          id: 3,
-          name: '文学'
-        },
-        {
-          id: 4,
-          name: '综艺'
-        }
-      ],
       formSettings: [
         {
           items: [

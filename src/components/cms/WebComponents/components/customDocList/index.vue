@@ -1,288 +1,111 @@
 <template>
-  <div class="customDocList-wrap">
-    <div class="tool-bar">
-      <el-button
-        type="primary"
-        @click="handleAddCustomDocList"
-      >新增</el-button>
+  <div class="define-doucment">
+    <div class="add-btn">
+      <el-button type="primary" size="small" @click="handelDoc('add')">创建文档列表</el-button>
     </div>
-    <el-table
-      :data="customDocList"
-      style="width: 100%"
-    >
-      <el-table-column
-        prop="name"
-        label="名称"
-      />
-      <el-table-column
-        prop="desc"
-        label="描述"
-      />
-      <el-table-column
-        prop="docNum"
-        label="文档数量"
-      />
-      <el-table-column
-        prop="author"
-        label="创建人"
-      />
-      <el-table-column
-        prop="createTime"
-        label="创建时间"
-      />
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button @click="handleEdit(scope.row)">编辑</el-button>
-          <el-button
-            type="danger"
-            @click="handleDelete(scope.row)"
-          >删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-dialog
-      :visible.sync="addCustomDocListVisible"
-      :before-close="handleClean"
-      top="8vh"
-      width="70%"
-      title="文档列表详情"
-    >
-      <el-form
-        ref="customDocListForm"
-        :model="customDocListForm"
-        label-width="100px"
-        label-position="left"
-      >
-        <el-form-item label="名称">
-          <el-input
-            v-model="customDocListForm.name"
-            style="max-width:300px"
-          />
-        </el-form-item>
-        <el-form-item label="描述">
-          <el-input
-            v-model="customDocListForm.desc"
-            style="max-width:300px"
-          />
-        </el-form-item>
-        <el-form-item label="是否禁用">
-          <el-switch
-            v-model="customDocListForm.disable"
-            active-color="#13ce66"
-          />
-        </el-form-item>
-        <el-form-item label="标签" />
-        <el-form-item label="列表">
-          <el-table
-            :data="customDocListForm.imageList"
-            style="width: 100%"
-          >
-            <el-table-column
-              prop="title"
-              label="标题"
-            />
-            <el-table-column
-              prop="type"
-              label="类型"
-            />
-            <el-table-column
-              prop="belongColumn"
-              label="所属栏目"
-            />
-            <el-table-column
-              prop="sign"
-              label="标记"
-            />
-            <el-table-column
-              prop="author"
-              label="发稿人"
-            />
-            <el-table-column
-              prop="createTime"
-              label="发布时间"
-            />
-            <el-table-column
-              prop="clickNum"
-              label="点击"
-            />
-            <el-table-column>
-              <template
-                slot="header"
-                slot-scope="scope"
-              >
-                <el-button
-                  type="text"
-                  @click="handleAddDoc(scope.row)"
-                >添加</el-button>
-              </template>
-              <template slot-scope="scope">
-                <el-button
-                  type="text"
-                  style="color:#f56c6c"
-                  @click="handleDelete(scope.row)"
-                >删除</el-button>
-                <el-button
-                  icon="el-icon-arrow-up"
-                  circle
-                />
-                <el-button
-                  icon="el-icon-arrow-down"
-                  circle
-                />
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-form-item>
-      </el-form>
+    <div>
+      <table-list/>
+    </div>
+    <!-- <el-dialog title="外层 Dialog" :visible.sync="outerVisible">
       <el-dialog
-        :visible.sync="addCustomDocVisible"
-        title="选择文章"
-        append-to-body
-      >
-        <el-row :gutter="10">
-          <el-col
-            :xs="24"
-            :sm="24"
-            :md="8"
-            :lg="8"
-            :xl="8"
-          >
-            <el-tree
-              ref="websitTree"
-              :data="treeData"
-              :highlight-current="true"
-              :check-on-click-node="true"
-              @node-click="handleNodeClick"
-            />
-          </el-col>
-          <el-col
-            :xs="24"
-            :sm="24"
-            :md="16"
-            :lg="16"
-            :xl="16"
-          >
-            <el-table
-              :data="tableData"
-              style="width: 100%"
-            >
-              <el-table-column
-                type="selection"
-                width="55"
-              />
-              <el-table-column
-                prop="title"
-                label="标题"
-              />
-              <el-table-column
-                prop="belongColumn"
-                label="所属栏目"
-              />
-              <el-table-column
-                prop="releaseTime"
-                label="发布时间"
-              />
-              <el-table-column
-                prop="author"
-                label="发布时间"
-              />
-            </el-table>
-          </el-col>
-        </el-row>
-        <span
-          slot="footer"
-          class="dialog-footer"
-        >
-          <el-button @click="addCustomDocVisible = false">取 消</el-button>
-          <el-button
-            type="primary"
-            @click="addCustomDocVisible = false"
-          >确 定</el-button>
-        </span>
+        width="60%"
+        title="内层 Dialog"
+        :visible.sync="innerVisible"
+        append-to-body>
+        <div>
+          内部
+        </div>
       </el-dialog>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="addCustomDocListVisible = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="addCustomDocListVisible = false"
-        >保 存</el-button>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="outerVisible = false">取 消</el-button>
+        <el-button type="primary" @click="innerVisible = true">打开内层 Dialog</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
+    <v-page :visible.sync="addPage">
+      <h3 slot="title">{{ title }}</h3>
+      <template slot="content">
+        <!-- 详情页组件 -->
+        <!-- <v-detail :detailData="detailData" :detailId="detailId"></v-detail> -->
+        <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave">
+          <template slot="list">
+            <div class="choosed-list">
+              <choosed-list/>
+            </div>
+          </template>
+        </v-form>
+      </template>
+    </v-page>
   </div>
 </template>
 <script>
-import { CustomDocList, TreeData } from './mockData.js'
+import tableList from './table'
+import choosedList from './choosedList'
 export default {
-  name: 'CustomDocList',
+  components: {
+    tableList,
+    choosedList
+  },
   data() {
     return {
-      addCustomDocListVisible: false,
-      addCustomDocVisible: false,
-      customDocList: CustomDocList,
-      TreeData: TreeData,
-      customDocListForm: {
-        id: '',
-        name: '',
-        desc: '',
-        disable: '',
-        tag: '',
-        imageList: []
-      }
+      outerVisible: false,
+      innerVisible: false,
+      addPage: false,
+      title: '创建文档列表',
+      formData: {},
+      formSettings: [
+        {
+          items: [
+            {
+              label: '名称',
+              name: 'documentName',
+              type: 'text',
+              placeholder: '请输入名称'
+            },
+            {
+              label: '描述',
+              name: 'documentRemark',
+              type: 'text',
+              placeholder: '请输入描述'
+            },{
+              label: '是否禁用',
+              name: 'enableFlag',
+              activeValue: 0,
+              inactiveValue: 1,
+              activeColor: '#13ce66',
+              value: 1,
+              type: 'switch'
+            },{
+              label: '标签',
+              name: 'tagIds',
+              type: 'textarea',
+              placeholder: '请输入其他数据'
+            },{
+              label:'列表',
+              name: 'list',
+              type:'slot',
+              placeholder: ''
+            }
+          ]
+        }
+      ]
     }
   },
   methods: {
-    handleAddCustomDocList() {
-      this.customDocListForm = {
-        id: '',
-        name: '',
-        desc: '',
-        disable: '',
-        tag: '',
-        imageList: []
+    handelDoc(type) {
+      if(type == 'add') {
+        this.title = '创建文档列表'
       }
-      this.addCustomDocListVisible = true
+      this.addPage = true
     },
-    handleAddDoc() {
-      this.addCustomDocVisible = true
-    },
-    handleEdit(row) {
-      this.customDocListForm.imageList = row.imageList
-      this.addCustomDocListVisible = true
-    },
-    handleClean() {
-      this.addCustomDocListVisible = false
-    },
-    handleSave() {},
-    handleDelete() {}
+    submitSave() {
+    }
   }
 }
 </script>
-<style lang="scss" scoped>
-.el-button + .el-button {
-  margin: 5px 0px;
-}
-.customDocList-wrap {
-  margin: 0 5px;
-}
-.tool-bar {
-  text-align: right;
-}
-.title {
-  color: #454545;
-  padding: 10px 0;
-  font-weight: 700;
-  border-bottom: 1px solid #444;
-  margin-bottom: 20px;
-}
-.location-box {
-  width: 300px;
-}
-.location-btn {
-  width: 30%;
-  padding: 20px;
-}
+<style lang="scss">
+  .define-doucment{
+    .add-btn {
+      text-align: right;
+    }
+  }
 </style>
-
