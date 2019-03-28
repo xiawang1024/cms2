@@ -19,7 +19,7 @@ const createLintingRule = () => ({
   //   emitWarning: !config.dev.showEslintErrorsInOverlay
   // }
 })
-
+console.log(process.env.NODE_ENV)
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
@@ -28,10 +28,20 @@ module.exports = {
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
-    publicPath:
-      process.env.NODE_ENV === 'production'
-        ? config.build.assetsPublicPath
-        : config.dev.assetsPublicPath
+    publicPath: (()=> {
+      let env = ''
+      if(process.env.NODE_ENV === 'production') {
+        env = config.build.assetsPublicPath
+      } else if(process.env.NODE_ENV === 'development') {
+        env = 'http://172.20.5.2/zhaojp/admin/'
+      } else {
+        env = config.dev.assetsPublicPath
+      }
+      return env
+    })()
+    // process.env.NODE_ENV === 'production'
+    //   ? config.build.assetsPublicPath
+    //   : config.dev.assetsPublicPath 
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
