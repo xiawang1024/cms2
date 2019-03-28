@@ -19,13 +19,6 @@
         </template>
       </el-table-column>
       <el-table-column prop="channelName" label="所属栏目" min-width="100" show-overflow-tooltip/>
-      <!-- <el-table-column label="查看" width="60">
-        <template slot-scope="scope">
-          <i class="el-icon-view" style="cursor:pointer" @click="openWindow(scope.row.outLink)"/>
-        </template>
-      </el-table-column> -->
-
-      <!-- <el-table-column prop="mark" label="标记" width="100"/> -->
       <el-table-column
         prop="publishTime"
         label="发布时间"
@@ -48,6 +41,12 @@ export default {
       default: ()=> {
         []
       }
+    },
+    multiple: {
+      type: Array,
+      default: ()=> {
+        []
+      }
     }
   },
   data() {
@@ -56,6 +55,21 @@ export default {
       dialogVisible: false,
       documentInfor: {}
     }
+  },
+  watch: {
+    tableData(val) {
+      if(val.length) {
+        this.$nextTick(() => {
+          this.multipleSelection = this.multiple
+        })
+      }
+    }
+    // multiple(val) {
+    //   console.log(val, 'multiple')
+    //   this.$nextTick(() => {
+    //     this.multipleSelection = val
+    //   })
+    // }
   },
   methods: {
     // 置顶的文章加背景色

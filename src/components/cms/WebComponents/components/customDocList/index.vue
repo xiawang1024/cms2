@@ -1,35 +1,19 @@
 <template>
   <div class="define-doucment">
     <div class="add-btn">
-      <el-button type="primary" size="small" @click="handelDoc('add')">创建文档列表</el-button>
+      <el-button type="primary" size="small" @click="handelDoc">创建文档列表</el-button>
     </div>
     <div>
-      <table-list/>
+      <table-list :list="createdList" @handelSuccess = "getDefineArticleList" @editDoc="handelDoc"/>
     </div>
-    <!-- <el-dialog title="外层 Dialog" :visible.sync="outerVisible">
-      <el-dialog
-        width="60%"
-        title="内层 Dialog"
-        :visible.sync="innerVisible"
-        append-to-body>
-        <div>
-          内部
-        </div>
-      </el-dialog>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="outerVisible = false">取 消</el-button>
-        <el-button type="primary" @click="innerVisible = true">打开内层 Dialog</el-button>
-      </div>
-    </el-dialog> -->
     <v-page :visible.sync="addPage" @goBack="goBack">
       <h3 slot="title">{{ title }}</h3>
       <template slot="content">
         <!-- 详情页组件 -->
-        <!-- <v-detail :detailData="detailData" :detailId="detailId"></v-detail> -->
         <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave">
           <template slot="list">
             <div class="choosed-list">
-              <choosed-list ref="choosedList"/>
+              <choosed-list ref="choosedList" :details-list = "detailsList"/>
             </div>
           </template>
         </v-form>
@@ -41,7 +25,8 @@
 import tableList from './table'
 import choosedList from './choosedList'
 import { mapGetters } from 'vuex'
-import { createDefineArticle, defineArticleList } from '@/api/cms/article'
+import { createDefineArticle, defineArticleList, defineDocumentInfor } from '@/api/cms/article'
+import { columnInfor } from '@/api/cms/columnManage'
 export default {
   components: {
     tableList,
@@ -79,8 +64,9 @@ export default {
             },{
               label: '标签',
               name: 'tagIds',
-              type: 'textarea',
-              placeholder: '请输入其他数据'
+              type: 'checkbox',
+              placeholder: '请输入其他数据',
+              options: []
             },{
               label:'列表',
               name: 'list',
@@ -92,13 +78,25 @@ export default {
       ],
       pageNum: 1,
       pageSize: 100,
+      createdList: [],
+      tagList: [],
+      // 文章详情选中列表
+      detailsList: []
     }
   },
   computed: {
     ...mapGetters(['treeTags'])
   },
+  watch: {
+    addPage(val) {
+      if(val) {
+        this.getColumnInfor()
+      }
+    }
+  },
   mounted() {
     this.getDefineArticleList()
+    // this.getColumnInfor()
   },
   methods: {
     getDefineArticleList() {
@@ -109,8 +107,7 @@ export default {
       return new Promise((resolve, reject) => {
         defineArticleList(formData, _this.pageNum, _this.pageSize)
           .then((response) => {
-            // _this.documentsData = response.data.result.content
-            // _this.totalCount = response.data.result.total
+            _this.createdList = response.data.result.content
             resolve()
           })
           .catch((error) => {
@@ -118,11 +115,56 @@ export default {
           })
       })
     },
-    handelDoc(type) {
-      if(type == 'add') {
+    // 获取栏目详情
+    getColumnInfor() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        columnInfor(this.treeTags[this.treeTags.length - 1].id)
+          .then((response) => {
+            _this.tagList = []
+            if(response.data.result.tagRule) {
+              Object.keys(response.data.result.tagRule).forEach((ele) => {
+                if(response.data.result.tagRule[ele]) {
+                  _this.tagList.push({
+                    label: response.data.result.tagRule[ele],
+                    value: ele
+                  })
+                }
+              })
+            }
+            _this.formSettings[0].items[3].options = _this.tagList
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    handelDoc(row) {
+      if(row) {
+        this.title = '文档详情'
+        this.getDocumentInfor(row.documentId)
+      } else {
         this.title = '创建文档列表'
       }
       this.addPage = true
+    },
+    // 获取文章详情
+    getDocumentInfor(id) {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        defineDocumentInfor(id)
+          .then((response) => {
+            _this.formData = response.data.result
+            _this.detailsList = response.data.result.details ? response.data.result.details : []
+            // this.$message.success('添加成功')
+            // this.goBack()
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     },
     submitSave(data) {
       let choosed = []
@@ -148,6 +190,7 @@ export default {
     },
     goBack() {
       this.addPage = false
+      this.getDefineArticleList()
     }
   }
 }
@@ -156,6 +199,28 @@ export default {
   .define-doucment{
     .add-btn {
       text-align: right;
+    }
+    .v-form{
+      max-width: 1100px;
+      .form-section {
+        border-bottom: none;
+      }
+      .section-content {
+        .el-form-item:nth-child(-n+4) {
+          max-width: 800px;
+        }
+        .choosed-list {
+          .el-table{
+            th{
+              padding:0px;
+              padding-bottom:12px;
+            }
+            td{
+              padding:5px;
+            }
+          }
+        }
+      }
     }
   }
 </style>

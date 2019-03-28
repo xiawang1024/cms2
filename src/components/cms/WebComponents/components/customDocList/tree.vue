@@ -15,7 +15,6 @@
       :check-on-click-node="true"
       :filter-node-method="filterNode"
       @node-click="handleNodeClick"
-      @node-contextmenu="handleNodeContextmenu"
       :default-expanded-keys="expandedKeys"
       :default-checked-keys="defaultChecked"
       node-key="id"
@@ -78,11 +77,6 @@ export default {
         this.treeData.forEach((ele) => {
           this.expandedKeys.push(ele.id)
         })
-        // this.defaultChecked = [val[0].id]
-        // this.$refs.websitTree.setCheckedNodes([{
-        //   id: val[0].id,
-        //   label: val[0].label
-        // }])
       }
     }
   },
@@ -91,41 +85,8 @@ export default {
   methods: {
     // TODO:左键点击
     handleNodeClick(object, node, element) {
-      // console.log(object)
       this.$emit('chooseColumn', object)
-      // this.menuVisible = false
-      // this.webSitTags = []
-      // this.generateTags(node, 'left', element)
-      // if((object.parentChannelId == -1 || !object.parentChannelId) && object.children) {
-      //   this.isCreate = false
-      // } else {
-      //    this.isCreate = true
-      // }
-    },
-    // TODO:右键点击
-    handleNodeContextmenu(event, object, node, element) {
-      // if((object.parentChannelId == -1 || !object.parentChannelId) && object.children) {
-      //   this.isCreate = false
-      // } else {
-      //    this.isCreate = true
-      // }
-      // const { clientWidth, clientHeight, nodeName } = event.target
-      // if (nodeName.toLowerCase() === 'span') {
-      //   if (this.objectID !== object.id) {
-      //     this.objectID = object.id
-      //     this.menuVisible = true
-      //     this.generateTags(node, 'right', element)
-      //   } else {
-      //     this.menuVisible = !this.menuVisible
-      //   }
-      //   document.addEventListener('click', () => {
-      //     this.menuVisible = false
-      //   })
-      //   this.menuLeft = `${event.clientX + clientWidth / 2}px`
-      //   this.menuTop = `${event.clientY + clientHeight}px`
-      // } else {
-      //   return false
-      // }
+      this.generateTags(node, 'left', element)
     },
     filterNode(value, data) {
       if (!value) return true
@@ -139,54 +100,20 @@ export default {
         if(this.treeData && this.treeData.length) {
           if(this.treeData[0].children) {
             if(node.data.channelId == this.treeData[0].children[0].channelId) {
-              document.querySelectorAll('.el-tree-node')[1].classList.add('is-current')
+              document.querySelectorAll('.el-dialog__body .el-tree-node')[1].classList.add('is-current')
             } else {
-              document.querySelectorAll('.el-tree-node')[1].classList.remove('is-current')
+              document.querySelectorAll('.el-dialog__body .el-tree-node')[1].classList.remove('is-current')
             }
           } else {
             if(node.data.channelId == this.treeData[0].channelId) {
-              document.querySelectorAll('.el-tree-node')[0].classList.add('is-current')
+              document.querySelectorAll('.el-dialog__body .el-tree-node')[0].classList.add('is-current')
             } else {
-              document.querySelectorAll('.el-tree-node')[0].classList.remove('is-current')
+              document.querySelectorAll('.el-dialog__body .el-tree-node')[0].classList.remove('is-current')
             }
           }
         }
       })
-      this.direct = direct
-      this.webSitTags = []
-      this.findParentNode(node)
     },
-    findParentNode(node) {
-      if (node.parent) {
-        this.findParentNode(node.parent)
-        const nodeVal = {}
-        nodeVal.id = node.data.id
-        nodeVal.label = node.data.label
-        nodeVal.channelCode = node.data.channelCode,
-        nodeVal.isCreate = this.isCreate
-        this.webSitTags.push(nodeVal)
-      } else {
-        const webSiteTags = this.webSitTags
-        /**
-         * 操作清空
-         */
-
-        const direct = this.direct
-        if (direct === 'left') {
-          this.$store.dispatch('setContextMenu', {
-            id: '0',
-            label: ''
-          })
-        } else {
-          this.$store.dispatch('setContextMenu', {})
-        }
-        /**
-         * tree 路径
-         */
-        this.$store.dispatch('setTreeTags', webSiteTags)
-        console.log(webSiteTags, 'webSiteTags')
-      }
-    }
   }
 }
 </script>

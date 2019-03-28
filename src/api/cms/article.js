@@ -129,3 +129,16 @@ export function defineArticleList(queryObj, pageNo, pageSize) {
     data: queryObj
   })
 }
+export function deleteDefineArticle(data) {
+  return request({
+    url: '/cms/document',
+    method: 'delete',
+    data
+  })
+}
+export function defineDocumentInfor(id) {
+  return request({
+    url: '/cms/document/' + id,
+    method: 'get'
+  })
+}
