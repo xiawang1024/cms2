@@ -58,27 +58,17 @@
           </ul>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="抓取公众号信息规则" name="second">
+      <el-tab-pane label="抓取公众号信息规则" name="second" v-loading="loading">
         <ul>
-          <li><label>公众号名称</label><input v-model="weChatData.title" type="text" class="dfinput" ></li>
-          <li><label>微信号</label><input v-model="weChatData.id" type="text" class="dfinput" ></li>
-          <li><label>功能介绍</label><input v-model="weChatData.info" type="text" class="dfinput" ></li>
-          <li><label>页面URL</label><input v-model="weChatData.url" type="text" class="dfinput" ></li>
-          <li/><li><label>&nbsp;</label><label>&nbsp;</label>
-                
+          
+          <li><label>微信号</label><input v-model="weChatId" type="text" class="dfinput grid-content" ></li>
+          <li/><li><label>&nbsp;</label>              
             <button type="submit" class="loginbtn" @click="wxtest" >测试</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button type="submit" class="loginbtn" @click="wxsave" >保存</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                
-          </li>
-          <li>
-            <label>标题：</label>  <textarea name="title" cols="" rows="" :value="testData.title" class="smiltextinput"/>
-          </li>
-          <li>
-            <label>来源：</label>  <textarea name="form" cols="" rows="" :value="testData.form" class="smiltextinput"/>
-          </li>
-          <li class="topaside">
-            <label >正文：</label>  <textarea class="textinput" name="content" cols="" rows="" :value="testData.content" />
-          </li>
+          </li><li><label>微信认证</label><input v-model="wxData.wechatCertification" type="text" class="dfinput grid-content" ></li> 
+          <li><label>功能介绍</label><input v-model="wxData.wechatFeatures" type="text" class="dfinput grid-content" ></li>
+          <li><label>公众号名称</label><input v-model="wxData.wechatName" type="text" class="dfinput grid-content" ></li> 
+          <li><label>页面URL</label><input v-model="wxData.wechatUrl" type="text" class="dfinput  grid-content" ></li>
         </ul>
       </el-tab-pane>
     </el-tabs>
@@ -110,17 +100,17 @@ export default {
             toggle:'',
             saveRes:'',
             activeName: 'second',
-            weChatData:{title:'中央纪委国家监委网站',id:'zyjwgjjw',info:'中央纪委国家监委网站官方微信公众号',url:'https://mp.weixin.qq.com/'},
-            wxData:'',
+            weChatId:'',
+            wxData:{},
         }
     },
     
     watch:{
         selectCloum(){
-            this.ruleContent=[],
-            this.res={},
-            this.testData={},
-            this.getRule()
+            this.ruleContent=[]
+            this.res={}
+            this.testData={}
+            this.getRule()    
         },
         /** 选择规则          
           */ 
@@ -151,7 +141,7 @@ export default {
     created(){   
 
             // this.getFullRule();   
-               var _this = this
+              var _this = this
                  return new Promise((resolve, reject) => {
                    columnList({},1,1000)
                     .then((response) => {
@@ -164,15 +154,12 @@ export default {
                     .catch((error) => {
                         reject(error)
                     })
-                }) 
-               
-
-
+                })               
     },
     
     methods:{
         /** 选择栏目          
-        */         
+        */ 
         getRule(){
             this.$.ajax({
                     type:"POST",
@@ -182,9 +169,7 @@ export default {
                     },
                     success:(data)=> {
                         if(data.status=="success"){
-                            return this.ruleContent=data.data;
-                           
-
+                            return this.ruleContent=data.data;                          
                         }else {
                              this.res=this.saveRes;
                             // alert(data.data);
@@ -377,47 +362,43 @@ export default {
             this.selectCloum="";
             this.selectRule="";
             console.log(e)
-        },
-        stopRequest(){
-            return false
-        },
-         handleClick(tab, event) {
+        },        
+        handleClick(tab, event) {
         console.log(tab, event);
         },
         wxcheck(){
-            if(this.weChatData.title==""||this.res.title==null){
-                alert("公众号号不能为空！");
+            if(this.wxData.wechatCertification==""||this.wxData.wechatCertification==null){
+                alert("微信认证不能为空！");
                 return false;
             }
-            if(this.weChatData.id==""||this.res.id==null){
-                alert("微信号不能为空！");
-                return false;
-            }
-            if(this.weChatData.info==""||this.res.info==null){
+            if(this.wxData.wechatFeatures==""||this.wxData.wechatFeatures==null){
                 alert("功能介绍不能为空！");
                 return false;
             }
-            if(this.weChatData.url==""||this.res.url==null){
-                alert("URL不能为空！");
+            if(this.wxData.wechatName==""||this.wxData.wechatName==null){
+                alert("公众号名称不能为空！");
+                return false;
+            }
+            if(this.wxData.wechatUrl==""||this.wxData.wechatUrl==null){
+                alert("页面URL不能为空！");
                 return false;
             }
             return true
         },
         wxtest(){
-            //  let flag=this.wxcheck();
-            // if(flag){
+                if(this.weChatId==""||this.weChatId==null){
+                alert("微信号不能为空！");
+                return false;
+            }
                 this.loading=true;           
                 this.$.ajax({
-                    type:"GET",
-                        url:Cpath+":19080/content-grab/wechatarticle/testwechat?number=gh_840cb6b31ef7",
-                        // dataType: "json",
+                    type:"POST",
+                        url:Cpath+":19080/content-grab/wechatarticle/testwechat?number="+this.weChatId,
                         success:(data)=> {
                             if(data.status=="success"){
-                                // alert(data.data.title);
                                 this.loading=false;
-                                console.log(data)
                                 this.wxData=data.data;
-                            
+                                 console.log( this.wxData)
                             }else {
                                 this.loading=false;
                                 alert("请求失败")
@@ -428,22 +409,21 @@ export default {
                             alert(data);
                         }
                 });
-            // }
+            
         },
         wxsave(){
-            //  let flag=this.wxcheck();
-            // if(flag){
+             let flag=this.wxcheck();
+            if(flag){
                 this.loading=true;           
                 this.$.ajax({
-                    type:"GET",
-                        url:Cpath+":19080/content-grab/wechatarticle/saveWechatRule?number=XXTV0373&name=新乡广播电视台",
-                        // dataType: "json",
+                    type:"POST",
+                        url:Cpath+":19080/content-grab/wechatarticle/saveWechatRule?number="+this.wxData.wechatNumber+"&name="+this.wxData.wechatName,
                         success:(data)=> {
                             if(data.status=="success"){
-                                // alert(data.data.title);
+                            
                                 this.loading=false;
                                 console.log(data)
-                                this.wxData=data.data;
+                               alert("保存成功")
                             
                             }else {
                                 this.loading=false;
@@ -455,7 +435,7 @@ export default {
                             alert(data);
                         }
                 });
-            // }
+            }
         }
 
     }
@@ -482,35 +462,6 @@ export default {
     }
     .formBox{
         margin-left:20px;
-    }
-    .place,.placer{
-         width:100%;
-         height: 40px;
-         background-color:#EDF6FA;
-          overflow: hidden;
-          line-height:40px;
-          font-size:14px;
-    }
-    .placer{
-        background-color:#fff;
-        height:45px;
-    }
-    .placer span{
-        font-weight:bold;
-        float:left;        
-        margin-left:20px;
-        border-bottom:3px solid #66C9F3;
-    }
-    .place span{
-        font-weight:bold;
-        float:left;
-    }
-    .placeul{
-        float:left;
-    }
-    .placeul li {
-        list-style: none;
-        float: left;
     }
     .formbody{
         position:relative;       
@@ -568,12 +519,7 @@ export default {
         overflow:hidden;
 
     }
-    .topaside label{
     
-    }
-    .topaside textarea{
-        
-    }
 
 
 
