@@ -1,7 +1,7 @@
 <template>
   <div class="define-doucment">
     <div class="add-btn">
-      <el-button type="primary" size="small" @click="handelDoc">创建文档列表</el-button>
+      <el-button type="primary" size="small" @click="handelDoc()">创建文档列表</el-button>
     </div>
     <div>
       <table-list :list="createdList" @handelSuccess = "getDefineArticleList" @editDoc="handelDoc"/>
@@ -25,7 +25,7 @@
 import tableList from './table'
 import choosedList from './choosedList'
 import { mapGetters } from 'vuex'
-import { createDefineArticle, defineArticleList, defineDocumentInfor } from '@/api/cms/article'
+import { createDefineArticle, defineArticleList, defineDocumentInfor, editDefineArticle } from '@/api/cms/article'
 import { columnInfor } from '@/api/cms/columnManage'
 export default {
   components: {
@@ -65,7 +65,6 @@ export default {
               label: '标签',
               name: 'tagIds',
               type: 'checkbox',
-              placeholder: '请输入其他数据',
               options: []
             },{
               label:'列表',
@@ -146,6 +145,7 @@ export default {
         this.getDocumentInfor(row.documentId)
       } else {
         this.title = '创建文档列表'
+        this.formData = {}
       }
       this.addPage = true
     },
@@ -156,6 +156,7 @@ export default {
         defineDocumentInfor(id)
           .then((response) => {
             _this.formData = response.data.result
+            _this.formData.tagIds = response.data.result.tagIds ? response.data.result.tagIds.split(',') : []
             _this.detailsList = response.data.result.details ? response.data.result.details : []
             // this.$message.success('添加成功')
             // this.goBack()
@@ -176,17 +177,44 @@ export default {
       data.details = choosed
       data.channelId = this.treeTags[this.treeTags.length - 1].id
       delete data.list
-      return new Promise((resolve, reject) => {
-        createDefineArticle(data)
-          .then((response) => {
-            this.$message.success('添加成功')
-            this.goBack()
-            resolve()
-          })
-          .catch((error) => {
-            reject(error)
-          })
-      })
+      data.tagIds = data.tagIds.join(',')
+      console.log(data)
+      if(this.title == '创建文档列表') {
+        return new Promise((resolve, reject) => {
+          createDefineArticle(data)
+            .then((response) => {
+              this.$message.success('添加成功')
+              this.goBack()
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+            })
+        })
+      } else {
+        return new Promise((resolve, reject) => {
+          editDefineArticle(data)
+            .then((response) => {
+              this.$message.success('修改成功')
+              this.goBack()
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+            })
+        })
+      }
+      // return new Promise((resolve, reject) => {
+      //   createDefineArticle(data)
+      //     .then((response) => {
+      //       this.$message.success('添加成功')
+      //       this.goBack()
+      //       resolve()
+      //     })
+      //     .catch((error) => {
+      //       reject(error)
+      //     })
+      // })
     },
     goBack() {
       this.addPage = false
@@ -198,7 +226,6 @@ export default {
 <style lang="scss">
   .define-doucment{
     .add-btn {
-      text-align: right;
     }
     .v-form{
       max-width: 1100px;

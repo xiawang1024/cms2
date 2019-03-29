@@ -122,6 +122,13 @@ export function createDefineArticle(data) {
     data
   })
 }
+export function editDefineArticle(data) {
+  return request({
+    url: '/cms/document',
+    method: 'put',
+    data
+  })
+}
 export function defineArticleList(queryObj, pageNo, pageSize) {
   return request({
     url: '/cms/document/page?pageNo=' + pageNo + '&pageSize=' + pageSize,

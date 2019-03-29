@@ -141,6 +141,9 @@ export default {
 .pane-wrap {
   margin-top: 12px;
 }
+.splitter-pane-resizer {
+  background: #ccc !important;
+}
 .left-container {
   /* background-color: #f38181; */
   height: 100%;
@@ -150,5 +153,6 @@ export default {
 .right-container {
   // background-color: #fce38a;
   height: 100%;
+  padding-left: 10px;
 }
 </style>

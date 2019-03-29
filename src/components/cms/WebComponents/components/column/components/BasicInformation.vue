@@ -36,7 +36,7 @@
 
 <script>
 const Upload = _ => import('@/components/cms/Upload/upload')
-import { columnInfor, editColumn, isColumnRepet } from '@/api/cms/columnManage'
+import { columnInfor, editColumn, isColumnRepet, addColumn } from '@/api/cms/columnManage'
 import { fetchDictByDictName } from '@/api/cms/dict'
 import { mapGetters } from 'vuex'
 export default {
@@ -133,11 +133,6 @@ export default {
               limit: 1,
               tip: '建议图片大小：1080*1642，图片大小不超过100K'
            },
-          //  {
-          //     label: '',
-          //     name: 'isScale',
-          //     type: 'slot'
-          //  },
            {
               label:'关键字',
               name:'keywordName',
@@ -176,7 +171,6 @@ export default {
   created() {
     this.getColumns()
     this.getColumnInfor()
-    // console.log(this.contextMenu, 'contextMenu1')
   },
   methods: {
     // 栏目编码是否重复
@@ -232,9 +226,8 @@ export default {
         columnInfor(_this.channelId)
           .then((response) => {
             if(this.contextMenu.label == '建立子栏目') {
-              console.log(1111)
-              // _this.formData.parentChannelNames = response.data.result.channelName
-              _this.formData.parentChannelNames = '123'
+              _this.$refs.vform.setData('parentChannelNames', response.data.result.channelName)
+              _this.$refs.vform.setData('parentChannelId', response.data.result.channelId)
             } else {
               _this.formData = response.data.result
               if(_this.formData.iconUrl) {
@@ -269,16 +262,33 @@ export default {
         formData.templateIds = _this.formData.templateIds
         formData.extFieldsList = _this.formData.extFieldsList
         formData.parentChannelId = _this.formData.parentChannelId
-        editColumn(formData)
-          .then((response) => {
-            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            _this.isLoading = false
-            resolve()
-          })
-          .catch((error) => {
-            reject(error)
-            _this.isLoading = false
-          })
+        if(this.contextMenu.label == '建立子栏目') {
+          // 新建子栏目
+          formData.parentChannelId = _this.channelId
+          delete formData.channelId
+          addColumn(formData)
+            .then((response) => {
+              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+              _this.isLoading = false
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+              _this.isLoading = false
+            })
+        } else {
+          // 修改栏目
+          editColumn(formData)
+            .then((response) => {
+              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+              _this.isLoading = false
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+              _this.isLoading = false
+            })
+        }
       })
     },
     onReturn() {

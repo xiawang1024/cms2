@@ -303,7 +303,7 @@ export default {
   display: flex;
   width: 100%;
   margin-bottom: 20px;
-  padding: 0 30px;
+  // padding: 0 30px;
   justify-content: space-between;
   box-sizing: border-box;
   .right {

@@ -86,6 +86,8 @@
     },
     methods: {
       getChoosed(list) {
+        console.log(list, 'list')
+        console.log(this.tableData, 'this.tableData')
         this.tableData = this.tableData.concat(list)
       },
       chooseDoc() {

@@ -215,7 +215,7 @@ export default {
 <style lang="scss">
 .doc-list {
   width: 100%;
-  padding: 0 10px;
+  // padding: 0 10px;
   box-sizing: border-box;
   .titleClick{
     cursor: pointer;

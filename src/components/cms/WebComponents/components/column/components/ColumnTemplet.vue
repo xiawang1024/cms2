@@ -72,7 +72,7 @@
         </el-col>
       </el-row>
     </div>
-    <div>
+    <div class="bottom-btn">
       <el-button type="primary" size="small" class="save-btn" @click="submitSave" :loading="isLoading">保存</el-button>
       <el-button size="small" @click="onReturn">返回</el-button>
     </div>
@@ -310,6 +310,9 @@ export default {
 }
 .save-btn {
   margin-left: 30px;
+}
+.bottom-btn{
+  margin-bottom:30px;
 }
 </style>
 

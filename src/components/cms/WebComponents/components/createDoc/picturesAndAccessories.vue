@@ -11,11 +11,6 @@
     <div class="upload-content">
       <el-row :gutter="20">
         <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-          <!-- <el-form ref="form" :model="form" label-width="80px">
-            <el-form-item label="上传图片">
-              <uploader :options="options" :file-status-text="statusText" class="uploader-example" ref="uploader" @file-complete="fileComplete" @complete="complete" @fileSuccess="fileSuccess" @fileInfor = "fileInfor" @fileRemoved ="fileRemoved"/>
-            </el-form-item>
-          </el-form> -->
           <v-form ref="imageForm" :form-settings="imageSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail" @removeFile="removeFile"/>
           <!-- <v-form ref="videoForm" :form-settings="videoSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail"/> -->
         </el-col>
@@ -40,39 +35,9 @@
                   </div>
                 </div>
               </template>
-              <!-- <template slot="define">
-                <div class="define">
-                  <el-row>
-                    <el-col :span="4"><div class="define-title">F1=</div></el-col>
-                    <el-col :span="10">
-                      <div>
-                        <el-input/>
-                      </div>
-                    </el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col :span="4"><div class="define-title">F2=</div></el-col>
-                    <el-col :span="10">
-                      <div>
-                        <el-input/>
-                      </div>
-                    </el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col :span="4">
-                      <div class="define-title">F3=</div>
-                    </el-col>
-                    <el-col :span="10">
-                      <div>
-                        <el-input/>
-                      </div>
-                    </el-col>
-                  </el-row>
-                </div>
-              </template> -->
               <template slot="btn">
-                <el-button size="small" @click="colseSet">关闭</el-button>
                 <el-button type="primary" size="small" @click ="setFile">保存</el-button>
+                <el-button size="small" @click="colseSet">关闭</el-button>
               </template>
             </v-form>
           </div>

@@ -61,7 +61,8 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  padding: 15px;
+  // padding: 15px;
+  // padding-left:10px;
   background-color: #fff;
   z-index: 99;
   .v-page--header {
