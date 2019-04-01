@@ -17,11 +17,11 @@
       </el-table-column>
     </el-table>
     <pagination :total="total"/>
-    <access-dialog :dialog-visible.sync="showAccess"/>
+    <!-- <access-dialog :dialog-visible.sync="showAccess" :tree-data="treeData" :user-infor="userInfor" @handelSuccess="handelSuccess"/> -->
   </div>
 </template>
 <script>
-import accessDialog from './accessDiolog'
+// import accessDialog from './accessDiolog'
 import { UserList } from '@/api/user/user'
 import { columnList } from '@/api/cms/columnManage'
 import Pagination from '@/common/Pagination'
@@ -30,7 +30,7 @@ export default
  {
   name: 'PermissionGroup',
   components: {
-    accessDialog,
+    // accessDialog,
     Pagination
   },
   mixins: [mixins],
@@ -54,7 +54,8 @@ export default
         userName: ''
       },
       total: 0,
-      treeData: []
+      treeData: [],
+      userInfor: {}
     }
   },
   mounted() {
@@ -62,6 +63,9 @@ export default
     this.columnSearchList()
   },
   methods: {
+    handelSuccess() {
+      this.getUserList()
+    },
     search(data) {
       this.searchData = data
       this.page = 1
@@ -80,6 +84,7 @@ export default
     },
     handleAlter(index, row) {
       this.showAccess = true
+      this.userInfor = row
       // this.$router.push({
       //   path: '/personAndAuthor/permissionGroupEdit',
       //   query: {
