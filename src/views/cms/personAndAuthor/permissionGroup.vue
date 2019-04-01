@@ -1,66 +1,72 @@
 <template>
   <div class="permissionGroup-container">
-    <div class="tool-bar">
-      <el-button size="mini" type="primary" @click="handleAdd">新分组</el-button>
-    </div>
-    <el-table :data="groupList" style="width: 100%">
-      <el-table-column prop="name" label="分组名称"/>
-      <el-table-column prop="status" label="启动状态">
+    <v-search :search-settings="searchSettings" @search="search"/>
+    <el-table :data="tableData" style="width: 100%" highlight-current-row>
+      <el-table-column prop="userCode" label="用户编码"/>
+      <el-table-column prop="userName" label="用户名"/>
+      <el-table-column prop="enableFlag" label="用户状态">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.status" active-color="#13ce66" @change="change(scope.row)"/>
+          <span v-if="scope.row.enableFlag == 1">启用</span>
+          <span v-else>禁用</span>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="创建时间"/>
-      <el-table-column label="操作">
+      <el-table-column label="操作" width="120">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleAlter(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button size="mini" type="primary" @click="handleAlter(scope.$index, scope.row)">权限设置</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <pagination :total="total"/>
+    <access-dialog :dialog-visible.sync="showAccess"/>
   </div>
 </template>
-
 <script>
-export default {
+import accessDialog from './accessDiolog'
+import { UserList } from '@/api/user/user'
+import { columnList } from '@/api/cms/columnManage'
+import Pagination from '@/common/Pagination'
+import mixins from '@/components/cms/mixins'
+export default
+ {
   name: 'PermissionGroup',
+  components: {
+    accessDialog,
+    Pagination
+  },
+  mixins: [mixins],
   data() {
     return {
-      groupList: [
+      tableData: [
+      ],
+      showAccess: false,
+      page: 1,
+      pageSize: 10,
+      searchSettings: [
         {
-          id: 1,
-          name: '809编辑',
-          status: false,
-          createTime: '2018-01-02'
-        },
-        {
-          id: 2,
-          name: '交通广播',
-          status: true,
-          createTime: '2018-01-02'
-        },
-        {
-          id: 3,
-          name: '娱乐广播',
-          status: true,
-          createTime: '2018-01-02'
-        },
-        {
-          id: 4,
-          name: '管理员分组',
-          status: false,
-          createTime: '2018-01-02'
-        },
-        {
-          id: 5,
-          name: '党生日歌分组',
-          status: true,
-          createTime: '2018-01-02'
+          label: '姓名',
+          name: 'userName',
+          placeholder: '请输入姓名',
+          visible: true,
+          type: 'text'
         }
-      ]
+      ],
+      searchData: {
+        userName: ''
+      },
+      total: 0,
+      treeData: []
     }
   },
+  mounted() {
+    this.getUserList()
+    this.columnSearchList()
+  },
   methods: {
+    search(data) {
+      this.searchData = data
+      this.page = 1
+      this.getUserList()
+    },
     handleAdd() {
       this.$router.push({
         path: '/personAndAuthor/permissionGroupEdit',
@@ -73,15 +79,46 @@ export default {
       console.log(row.id)
     },
     handleAlter(index, row) {
-      this.$router.push({
-        path: '/personAndAuthor/permissionGroupEdit',
-        query: {
-          isAdd: false,
-          permissionGroupId: row.id
-        }
+      this.showAccess = true
+      // this.$router.push({
+      //   path: '/personAndAuthor/permissionGroupEdit',
+      //   query: {
+      //     isAdd: false,
+      //     permissionGroupId: row.id
+      //   }
+      // })
+    },
+    handleDelete(index, row) {},
+    getUserList () {
+      return new Promise((resolve, reject) => {
+        UserList(this.searchData, this.page, this.pageSize).then(async res => {
+          this.total = res.data.result.total
+          this.tableData = res.data.result.content
+          // 结束
+          resolve()
+        })
+          .catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
       })
     },
-    handleDelete(index, row) {}
+    columnSearchList() {
+      return new Promise((resolve, reject) => {
+        columnList({}, 1, 1000)
+          .then((response) => {
+            // this.$nextTick(() => {
+            //   // _this.searchSettings[0].options = _this.toTree(response.data.result.content)
+            // })
+            this.treeData = this.toTree(response.data.result.content)
+            console.log( this.treeData )
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
   }
 }
 </script>

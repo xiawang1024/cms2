@@ -179,6 +179,7 @@ export default {
       delete data.list
       data.tagIds = data.tagIds.join(',')
       console.log(data)
+      console.log(this.formData)
       if(this.title == '创建文档列表') {
         return new Promise((resolve, reject) => {
           createDefineArticle(data)
@@ -192,6 +193,7 @@ export default {
             })
         })
       } else {
+        data.documentId = this.formData.documentId
         return new Promise((resolve, reject) => {
           editDefineArticle(data)
             .then((response) => {
@@ -204,17 +206,6 @@ export default {
             })
         })
       }
-      // return new Promise((resolve, reject) => {
-      //   createDefineArticle(data)
-      //     .then((response) => {
-      //       this.$message.success('添加成功')
-      //       this.goBack()
-      //       resolve()
-      //     })
-      //     .catch((error) => {
-      //       reject(error)
-      //     })
-      // })
     },
     goBack() {
       this.addPage = false
