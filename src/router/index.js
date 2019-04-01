@@ -48,6 +48,11 @@ import column from './routers/program/column'
 import compere from './routers/program/compere'
 import program from './routers/program/program'
 const programRouterMap = [channel, class1, column, compere, program]
+/**
+ * 新闻指挥
+ */
+import channel1 from './routers/program/channel'
+const newcommandRouterMap = [channel1]
 
 /**
  * 路由map
@@ -68,6 +73,10 @@ export const routerMap = [
   {
     type: '3',
     route: programRouterMap
+  },
+  {
+    type: '4',
+    route: newcommandRouterMap
   }
 ]
 

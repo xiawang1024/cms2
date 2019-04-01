@@ -5,3 +5,4 @@
 export const cmsPath = 'cms'
 export const userPath = 'user'
 export const programPath = 'program'
+export const newcommandPath = 'newcommand'
