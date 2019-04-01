@@ -452,6 +452,9 @@ export default {
         height: 32px;
         line-height: 32px;
       }
+      .el-form-item__content{
+        text-align: left;
+      }
     }
   }
 }
