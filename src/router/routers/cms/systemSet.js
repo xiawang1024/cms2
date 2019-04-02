@@ -125,7 +125,7 @@ const systemSet = {
       path: 'collection',
       component: () => import(`@/${path}/form`),
       name: 'collection',
-      meta: { title: 'collection', icon: 'helpDoc', role: 'cms' },
+      meta: { title: 'collection', icon: 'bee', role: 'cms' },
     }
   ]
 }
