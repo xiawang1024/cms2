@@ -243,7 +243,20 @@
                        if(response.data.status=="success"){
                            
                            _this.ruleContent=response.data.data; 
-                            this.res={}                    
+                            this.res={
+                              clumnId:_this.selectCloum,
+                                       id:"" , 
+                                       newsListUrl:"",
+                                       newsListUrlRule:"",
+                                       newsListTitle:"",
+                                       titleUrl:"",
+                                        newsListRule:"",
+                                       newsRule:"",
+                                       titleRule:"",
+                                       contentRule:"",
+                                        formRule:"",
+                                        encoding:"",
+                            }                    
                        }else {                      
                            if(_this.selectCloum==""){                              
                                    _this.res=_this.saveRes;
