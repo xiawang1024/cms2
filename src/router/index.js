@@ -51,8 +51,9 @@ const programRouterMap = [channel, class1, column, compere, program]
 /**
  * 新闻指挥
  */
+import webSite1 from './routers/cms/webSite'
 import channel1 from './routers/program/channel'
-const newcommandRouterMap = [channel1]
+const newcommandRouterMap = [webSite1,channel1]
 
 /**
  * 路由map

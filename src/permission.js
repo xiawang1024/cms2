@@ -33,6 +33,8 @@ router.beforeEach((to, from, next) => {
           .dispatch('GetUserInfo')
           .then((res) => {
             // 拉取user_info
+            console.log("拉取user_info")
+            console.log(res)
             const authorities = res.user_authorities.permissionCodeList // note: authorities must be a array! such as: ['editor','develop']
 
             store.dispatch('GenerateRoutes', { authorities }).then(() => {

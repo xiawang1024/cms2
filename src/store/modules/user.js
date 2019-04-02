@@ -154,7 +154,7 @@ const user = {
       })
     },
     /**
-     * 选择子系统，动态修改路由
+     * 选择子系统，动态修改路由 
      */
     selectSysType({ commit, dispatch, getters, state }, sysType) {
       commit('SET_SYS_TYPE', sysType)

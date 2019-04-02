@@ -14,6 +14,10 @@ const sysType = [
   {
     type: '3',
     value: '节目编单'
+  },
+  {
+    type: '4',
+    value: '新闻指挥'
   }
 ]
 

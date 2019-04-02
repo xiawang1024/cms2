@@ -6,6 +6,7 @@ import constantRouterMap from '@/router/public'
  * @param {*} routerMap
  * @param {*} sysType
  */
+//
 function filterSysRouter(sysType) {
   return routerMap.filter((item) => item.type === sysType)[0].route
 }
@@ -35,6 +36,9 @@ function filterAsyncRouter(routes, authorities) {
       if (tmp.children) {
         tmp.children = filterAsyncRouter(tmp.children, authorities)
       }
+      // 
+      console.log("循环出额路由列表")
+      console.log(tmp)
       res.push(tmp)
     }
   })
@@ -48,6 +52,7 @@ const permission = {
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {
+
       state.addRouters = []
       /**
        * 动态路由刷新404bug
@@ -65,6 +70,8 @@ const permission = {
 
         asyncSysRouterMap = filterSysRouter(getters.sysType)
         const accessedRouters = filterAsyncRouter(asyncSysRouterMap, authorities)
+        console.log("vuex里的router")
+        console.log(accessedRouters)
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })
