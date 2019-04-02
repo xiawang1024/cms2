@@ -28,6 +28,7 @@ function hasPermission(authorities, route) {
  * @param routes asyncRouterMap
  * @param authorities
  */
+// 
 function filterAsyncRouter(routes, authorities) {
   const res = []
   routes.forEach((route) => {

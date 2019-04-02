@@ -3,7 +3,7 @@ import Layout from '@/views/layout/Layout'
 import { cmsPath } from '../config'
 const path = `views/${cmsPath}/webSite`
 
-console.log(path)
+
 // TODO:左侧菜单 网站
 
 const webSite = {

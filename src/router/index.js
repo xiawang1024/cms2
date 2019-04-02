@@ -51,15 +51,14 @@ const programRouterMap = [channel, class1, column, compere, program]
 /**
  * 新闻指挥
  */
-import webSite1 from './routers/cms/webSite'
-import channel1 from './routers/program/channel'
-const newcommandRouterMap = [webSite1,channel1]
+import webSite1 from './routers/newcommand/webSite'
+// import channel1 from './routers/newcommand/channel'
+const newscommandRouterMap = [webSite1]
 
 /**
  * 路由map
  */
-export const routerMap = [
-  {
+export const routerMap = [{
     type: '0',
     route: cmsRouterMap
   },
@@ -77,12 +76,14 @@ export const routerMap = [
   },
   {
     type: '4',
-    route: newcommandRouterMap
+    route: newscommandRouterMap
   }
 ]
 
 export default new Router({
   // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({
+    y: 0
+  }),
   routes: constantRouterMap
 })

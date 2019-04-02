@@ -1,55 +1,59 @@
 import Layout from '@/views/layout/Layout'
 
-import { cmsPath } from '../config'
-const path = `views/${cmsPath}/webSite`
+import {
+  newcommandPath
+} from '../config'
+// 组件所在位置
+const path = `views/${newcommandPath}/manageClue`
 
 console.log(path)
-// TODO:左侧菜单 网站
+// TODO:左侧菜单 线索管理
 
 const webSite = {
-  path: `/${cmsPath}/website`,
+  path: `/${newcommandPath}/manageclue`,
   component: Layout,
   // redirect: `${cmsPath}/website/doc`,
-  meta: { title: 'webSite', icon: 'webSite', role: 'cms' },
-  name: 'website',
-  children: [
-    /**
-       * 发布文章
-       */
-    // {
-    //   path: 'doc',
-    //   component: () => import(`@/${path}/index`),
-    //   name: 'webSite',
-    //   meta: { title: 'webSite', icon: 'webSite', role: 'cms' },
-    //   hidden: true
-    // },
-    {
+  meta: {
+    title: 'manageClue',
+    icon: 'webSite',
+  },
+  name: 'manageclue',
+  children: [{
       /**
-       * 发布管理
+       * 爆料列表
        */
-      path: 'document',
-      component: () => import(`@/${path}/publishDocument`),
-      name: 'PublishDocument',
-      meta: { title: 'publishDocument', icon: 'docSource', role: 'cms' }
+      path: 'discloselist',
+      component: () => import(`@/${path}/discloseList`),
+      name: 'discloseList',
+      meta: {
+        title: 'discloseList',
+        icon: 'docSource',
+      }
     },
     {
       /**
-       * 栏目管理
+       * 添加爆料
        */
-      path: 'column',
-      component: () => import(`@/${path}/columnManage`),
-      name: 'ColumnManage',
-      meta: { title: 'columnManage', icon: 'docSource', role: 'cms' }
+      path: 'addDisclose',
+      component: () => import(`@/${path}/addDisclose`),
+      name: 'addDisclose',
+      meta: {
+        title: 'addDisclose',
+        icon: 'docSource',
+      },
+
     },
     {
       /**
-       * 栏目添加与修改
+       * 热点新闻
        */
-      path: 'columnHandel',
-      component: () => import(`@/${path}/columnHandel`),
-      name: 'columnHandel',
-      meta: { title: 'columnHandel', icon: 'temEdit', role: 'cms' },
-      hidden: true
+      path: 'hotNews',
+      component: () => import(`@/${path}/hotNews`),
+      name: 'hotNews',
+      meta: {
+        title: 'hotNews',
+        icon: 'docSource',
+      }
     },
     {
       /**
@@ -58,39 +62,13 @@ const webSite = {
       path: 'columnTemplate',
       component: () => import(`@/${path}/columnTemplate`),
       name: 'ColumnTemplate',
-      meta: { title: 'columnTemplate', icon: 'docSource', role: 'cms' },
-      hidden: true
-    },
-    {
-      /**
-       * 扩展字段
-       */
-      path: 'extendsWord',
-      component: () => import(`@/${path}/extendsWord`),
-      name: 'ExtendsWord',
-      meta: { title: 'extendsWord', icon: 'temEdit', role: 'cms' },
-      hidden: true
-    },
-    {
-      /**
-       * 标签设置
-       */
-      path: 'tagSetting',
-      component: () => import(`@/${path}/tagSetting`),
-      name: 'TagSetting',
-      meta: { title: 'tagSetting', icon: 'docSource', role: 'cms' },
-      hidden: true
-    },
-    {
-      /**
-       * 水印设置
-       */
-      path: 'waterSetting',
-      component: () => import(`@/${path}/waterSetting`),
-      name: 'WaterSetting',
-      meta: { title: 'waterSetting', icon: 'temEdit', role: 'cms' },
+      meta: {
+        title: 'columnTemplate',
+        icon: 'docSource',
+      },
       hidden: true
     }
+
   ]
 }
 
