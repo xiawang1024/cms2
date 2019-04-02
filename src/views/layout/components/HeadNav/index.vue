@@ -57,7 +57,7 @@
         </div>
         <el-dropdown-menu slot="dropdown">
 
-          <router-link to="/">
+          <router-link to="/userSetting/userCenter">
             <el-dropdown-item>
               {{ $t('navbar.center') }}
             </el-dropdown-item>
