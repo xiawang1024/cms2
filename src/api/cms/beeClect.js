@@ -27,3 +27,11 @@ export function getFullRuleSend(data) {
       data:QS.stringify(data)
     })
 }
+
+export function testRequest(data) {
+  return request({
+    url: Cpath+':19080/content-grab/newslist/getnewslist',
+    method: 'post',
+    data:QS.stringify(data)
+  })
+}

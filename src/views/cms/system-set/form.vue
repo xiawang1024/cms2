@@ -78,7 +78,7 @@
 </template>
   <script>
   import {columnList} from "@/api/cms/columnManage.js"
-import {getRuler,getCloumRule} from "@/api/cms/beeClect.js"
+  import {getRuler,getCloumRule,getFullRuleSend} from "@/api/cms/beeClect.js"
   import baseUrl from '@/config/base-url'
   let cpath=baseUrl['BASE_URL'].split(":");
   let  Cpath=cpath[0].toString()+':'+cpath[1].toString()
@@ -92,7 +92,8 @@ import {getRuler,getCloumRule} from "@/api/cms/beeClect.js"
               selectCloum:"",            
               ruleContent:[],
               selectRule:'',
-              res:{
+              res:{  
+                id:"" ,             
                 clumnId:"",
                 newsListUrl:"",
                 newsListUrlRule:"",
@@ -111,6 +112,7 @@ import {getRuler,getCloumRule} from "@/api/cms/beeClect.js"
               checkRuleId:'',
               toggle:'',
               saveRes:{
+                id:"" , 
                 clumnId:"",
                 newsListUrl:"",
                 newsListUrlRule:"",
@@ -137,6 +139,7 @@ import {getRuler,getCloumRule} from "@/api/cms/beeClect.js"
                 var _this=this;
                 this.ruleContent=[];               
                 this.res={
+                    id:"" , 
                     clumnId:"",
                     newsListUrl:"",
                     newsListUrlRule:"",
@@ -248,6 +251,7 @@ import {getRuler,getCloumRule} from "@/api/cms/beeClect.js"
                                  
                                   _this.res={
                                        clumnId:_this.selectCloum,
+                                       id:"" , 
                                        newsListUrl:"",
                                        newsListUrlRule:"",
                                        newsListTitle:"",
@@ -339,47 +343,47 @@ import {getRuler,getCloumRule} from "@/api/cms/beeClect.js"
           },
           getFullRule(){
               this.fullRule={};
-                // var _this=this
-                // return new Promise((resolve,reject)=>{
-                //     getFullRuleSend({})
-                //     .then((response)=>{
-                //          console.log(response)
-                //         if(response.data.status=="success"){                           
-                //                _this.fullRule=response.data.data;  
-                //           }else {
-                //               alert(response.data);
-                //           }
-                //     })
-                //     .catch((reject)=>{
-                //          alert("请求失败");
-                //     })
-                // })
+                var _this=this
+                return new Promise((resolve,reject)=>{
+                    getFullRuleSend({})
+                    .then((response)=>{
+                        //  console.log(response)
+                        if(response.data.status=="success"){                           
+                               _this.fullRule=response.data.data;  
+                          }else {
+                              alert(response.data);
+                          }
+                    })
+                    .catch((reject)=>{
+                         alert("请求失败");
+                    })
+                })
 
 
 
-              this.$.ajax({
-                      type:"GET",
-                      url:Cpath+":19080/content-grab/newslist/getallrule",
+            //   this.$.ajax({
+            //           type:"GET",
+            //           url:Cpath+":19080/content-grab/newslist/getallrule",
                       
-                      success:(data)=> {
-                          if(data.status=="success"){
-                              console.log(data.data)
-                              return this.fullRule=data.data;
+            //           success:(data)=> {
+            //               if(data.status=="success"){
+            //                   console.log(data.data)
+            //                   return this.fullRule=data.data;
                              
   
-                          }else {
-                              alert(data.data);
-                          }
-                      },
-                      error:function (data) {
-                          alert("请求失败");
-                      }
-                  });
+            //               }else {
+            //                   alert(data.data);
+            //               }
+            //           },
+            //           error:function (data) {
+            //               alert("请求失败");
+            //           }
+            //       });
           },
           test(){
               let flag=this.check();
               if(flag){
-                  this.loading=true;           
+                  this.loading=true;  
                   this.$.ajax({
                       type:"POST",
                           url:Cpath+":19080/content-grab/newslist/getnewslist",
@@ -424,10 +428,12 @@ import {getRuler,getCloumRule} from "@/api/cms/beeClect.js"
               let flag=this.check();        
               if(flag){
                   this.loading=true;
+                
                   this.$.ajax({
                       type:"POST",            
                       url:Cpath+":19080/content-grab/newslist/saverule",
                       data:{
+                        
                             "id":this.res.id,
                         //   "id":this.selectRule,
                           "column" : this.res.clumnId,
