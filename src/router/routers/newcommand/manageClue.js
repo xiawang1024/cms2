@@ -8,11 +8,9 @@ const path = `views/${newcommandPath}/manageClue`
 
 console.log(path)
 // TODO:左侧菜单 线索管理
-
-const webSite = {
+const manageClue = {
   path: `/${newcommandPath}/manageclue`,
   component: Layout,
-  // redirect: `${cmsPath}/website/doc`,
   meta: {
     title: 'manageClue',
     icon: 'webSite',
@@ -54,22 +52,9 @@ const webSite = {
         title: 'hotNews',
         icon: 'docSource',
       }
-    },
-    {
-      /**
-       * 栏目模板
-       */
-      path: 'columnTemplate',
-      component: () => import(`@/${path}/columnTemplate`),
-      name: 'ColumnTemplate',
-      meta: {
-        title: 'columnTemplate',
-        icon: 'docSource',
-      },
-      hidden: true
     }
 
   ]
 }
 
-export default webSite
+export default manageClue

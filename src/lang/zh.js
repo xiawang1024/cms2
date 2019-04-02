@@ -134,7 +134,18 @@ export default {
     hotNews: '热点新闻',
     commandDispatch: '指挥调度',
     allTask: '所以任务',
-    manuscriptClue: '线索管理'
+    myTask: '我的任务',
+    manuscriptClue: '稿件管理',
+    myManuscript: '我的稿件',
+    pendingManuscript: '待审稿件',
+    commonManuscript: '公共稿件',
+    filesClue: '文件管理',
+    liveClue: '直播管理',
+    liveList: '直播列表',
+    connectionList: '通话列表',
+    operationsRecord: '操作记录'
+
+
   },
   navbar: {
     logOut: '退出登录',
