@@ -78,7 +78,7 @@
 </template>
   <script>
   import {columnList} from "@/api/cms/columnManage.js"
-  import {getRuler,getCloumRule,getFullRuleSend} from "@/api/cms/beeClect.js"
+  import {getRuler,getCloumRule,getFullRuleSend,currentuser} from "@/api/cms/beeClect.js"
   import baseUrl from '@/config/base-url'
   let cpath=baseUrl['BASE_URL'].split(":");
   let  Cpath=cpath[0].toString()+':'+cpath[1].toString()
@@ -88,6 +88,8 @@
       name:'Form',
       data(){
           return{
+              clientLicenseId:'',
+              userName:'',
               content:[],
               selectCloum:"",            
               ruleContent:[],
@@ -128,7 +130,8 @@
               activeName: 'first',
               weChatId:'',
               wxData:{},
-              selectCloumName:"" 
+              selectCloumName:"" ,
+              
           }
       },      
       watch:{
@@ -213,7 +216,9 @@
         },      
       created(){   
   
-              this.getFullRule();   
+              this.getFullRule();  
+              this.getcurrentuser(); 
+               
                 var _this = this
                    return new Promise((resolve, reject) => {
                      columnList({},1,1000)
@@ -227,19 +232,50 @@
                       .catch((error) => {
                           reject(error)
                       })
-                  })               
+                  })  
+                
+                  /***
+                    获取用户id ，租户id
+                    http://172.20.5.4:53010/userb/user/currentuser
+                    Request Method: GET
+                    保存请求添加这两个参数
+                    clientLicenseId: "hnr1"
+                    userName: "hnr1"
+                   */ 
+
+
       },
       
       methods:{
+        /** 选择栏目          
+          */ 
+          getcurrentuser(){
+              var _this=this;
+              return new Promise((resolve,reject)=>{
+                currentuser()
+                .then((response)=>{
+                
+                console.log(response)
+                _this.clientLicenseId=response.data.result.clientLicenseId;
+                _this.userName=response.data.result.userName;
+                  resolve();
+              })
+              .catch((reject)=>{
+                console.log(reject)
+              })
+              
+              })
+              
+          },
+
           /** 选择栏目          
           */ 
           getRule(){
               var _this=this
-              this.selectRule=""
-             
+              this.selectRule=""              
               return new Promise((resolve,reject)=>{
                    getCloumRule({clumnid:_this.selectCloum})
-                   .then((response)=>{                      
+                   .then((response)=>{                                        
                        if(response.data.status=="success"){
                            
                            _this.ruleContent=response.data.data; 
@@ -412,6 +448,8 @@
                               "contentrule":this.res.contentRule,
                               "formrule":this.res.formRule,
                               "encoding":this.res.encoding,
+                              "clientLicenseId":this.clientLicenseId,
+                              "userName":this.userName,
                           },
                           // dataType: "json",
                           success:(data)=> {
@@ -460,6 +498,9 @@
                           "contentrule":this.res.contentRule,
                           "formrule":this.res.formRule,
                           "encoding":this.res.encoding,
+                           "clientLicenseId":this.clientLicenseId,
+                           "userName":this.userName,
+
                       },
                       success:(data)=> {
                           this.loading=false;
@@ -494,6 +535,8 @@
                           "contentrule":this.res.contentRule,
                           "formrule":this.res.formRule,
                           "encoding":this.res.encoding,
+                          "clientLicenseId":this.clientLicenseId,
+                           "userName":this.userName,
                       },
                       success:(data)=> {
                           this.loading=false;
