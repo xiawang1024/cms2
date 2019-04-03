@@ -13,7 +13,7 @@ const manageClue = {
   component: Layout,
   meta: {
     title: 'manageClue',
-    icon: 'webSite',
+    icon: 'manageClue',
   },
   name: 'manageclue',
   children: [{
@@ -25,7 +25,7 @@ const manageClue = {
       name: 'discloseList',
       meta: {
         title: 'discloseList',
-        icon: 'docSource',
+        icon: 'discloseList',
       }
     },
     {
@@ -37,21 +37,9 @@ const manageClue = {
       name: 'addDisclose',
       meta: {
         title: 'addDisclose',
-        icon: 'docSource',
+        icon: 'addDisclose',
       },
 
-    },
-    {
-      /**
-       * 热点新闻
-       */
-      path: 'hotNews',
-      component: () => import(`@/${path}/hotNews`),
-      name: 'hotNews',
-      meta: {
-        title: 'hotNews',
-        icon: 'docSource',
-      }
     }
 
   ]

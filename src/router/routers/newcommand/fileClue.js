@@ -13,7 +13,7 @@ const webSite = {
   component: Layout,
   meta: {
     title: 'fileClue',
-    icon: 'webSite',
+    icon: 'filesClue',
   },
   name: 'fileClue',
   children: [{
@@ -25,7 +25,7 @@ const webSite = {
     name: 'filesClue',
     meta: {
       title: 'filesClue',
-      icon: 'docSource',
+      icon: 'filesClue',
     }
   }
 ]

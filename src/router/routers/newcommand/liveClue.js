@@ -13,7 +13,7 @@ const webSite = {
   component: Layout,
   meta: {
     title: 'liveClue',
-    icon: 'webSite',
+    icon: 'liveClue',
   },
   name: 'liveClue',
   children: [{
@@ -25,22 +25,9 @@ const webSite = {
       name: 'liveList',
       meta: {
         title: 'liveList',
-        icon: 'docSource',
+        icon: 'liveClue',
       }
-    },
-    {
-      /**
-       * 通话列表
-       */
-      path: 'connectionList',
-      component: () => import(`@/${path}/connectionList`),
-      name: 'connectionList',
-      meta: {
-        title: 'connectionList',
-        icon: 'docSource',
-      },
-
-    },
+    }
 
 
   ]

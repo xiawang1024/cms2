@@ -13,7 +13,7 @@ const commandDispatch = {
   component: Layout,
   meta: {
     title: 'commandDispatch',
-    icon: 'webSite',
+    icon: 'commandDispatch',
   },
   name: 'commandDispatch',
   children: [{
@@ -25,7 +25,7 @@ const commandDispatch = {
       name: 'allTask',
       meta: {
         title: 'allTask',
-        icon: 'docSource',
+        icon: 'allTask',
       }
     },
     {
@@ -37,7 +37,7 @@ const commandDispatch = {
       name: 'myTask',
       meta: {
         title: 'myTask',
-        icon: 'docSource',
+        icon: 'myTask',
       },
 
     },

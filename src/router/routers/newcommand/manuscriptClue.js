@@ -13,7 +13,7 @@ const manuscriptClue = {
   component: Layout,
   meta: {
     title: 'manuscriptClue',
-    icon: 'webSite',
+    icon: 'manuscriptClue',
   },
   name: 'manuscriptClue',
   children: [{
@@ -25,7 +25,7 @@ const manuscriptClue = {
       name: 'myManuscript',
       meta: {
         title: 'myManuscript',
-        icon: 'docSource',
+        icon: 'myManuscript',
       }
     },
     {
@@ -37,7 +37,7 @@ const manuscriptClue = {
       name: 'pendingManuscript',
       meta: {
         title: 'pendingManuscript',
-        icon: 'docSource',
+        icon: 'pendingManuscript',
       },
 
     },
@@ -50,7 +50,7 @@ const manuscriptClue = {
       name: 'commonManuscript',
       meta: {
         title: 'commonManuscript',
-        icon: 'docSource',
+        icon: 'commonManuscript',
       }
     },
 
