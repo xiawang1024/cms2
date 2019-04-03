@@ -19,10 +19,10 @@
         </el-form-item>
       </el-form>
     </div>
-    <imageText :extends-list="extendsList" :other-settings="otherSettings" :tag-list="tagList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 0"/>
-    <images :extends-list="extendsList" :images-setting="imagesSeting" :tag-list="tagList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 1"/>
-    <splicing :channel-id = "channelId" :doc-infor="docInfor" :tag-list = "tagList" v-if="typeForm.articleType == 2"/>
-    <reproduce :channel-id = "channelId" :doc-infor="docInfor" :reproduce-setting="reproduceSetting" :tag-list = "tagList" v-if="typeForm.articleType == 3"/>
+    <imageText ref="imageText" :prop-information="propInformation" :extends-list="extendsList" :other-settings="otherSettings" :tag-list="tagList" :source-list="sourceList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 0"/>
+    <images ref="images" :prop-information="propInformation" :extends-list="extendsList" :images-setting="imagesSeting" :tag-list="tagList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 1"/>
+    <splicing ref="splicing" :prop-information="propInformation" :channel-id = "channelId" :doc-infor="docInfor" :tag-list = "tagList" v-if="typeForm.articleType == 2"/>
+    <reproduce ref="reproduce" :prop-information="propInformation" :channel-id = "channelId" :doc-infor="docInfor" :reproduce-setting="reproduceSetting" :tag-list = "tagList" v-if="typeForm.articleType == 3"/>
   </div>
 </template>
 <script>
@@ -32,10 +32,24 @@ import splicing from './splicing.vue'
 import reproduce from './reproduce.vue'
 import { columnInfor } from '@/api/cms/columnManage'
 import { documentInfor } from '@/api/cms/article'
+import { fetchDictByDictName } from "@/api/cms/dict"
+import {otherSettings, imagesSeting, reproduceSetting} from './setting.js'
 import { mapGetters } from 'vuex'
 export default {
   name: 'BasicContent',
   components: { imageText, images, splicing, reproduce },
+  props: {
+   activeName: {
+     default: '',
+     type: String
+   },
+   propInformation: {
+     default: ()=> {
+       return {}
+     },
+     type: Object
+   }
+  },
   data() {
     return {
       typeForm: {
@@ -58,292 +72,39 @@ export default {
           value: 3,
           label: '转载'
         }],
-      otherSettings: [
-        {
-          items: [
-            {
-              label: '标签',
-              name: 'tagIds',
-              type: 'checkbox',
-              options: [],
-              hidden: false
-            },
-            {
-              label: '点击量',
-              name: 'clickNum',
-              type: 'number',
-              placeholder: '请输入点击量'
-            },
-            {
-              label: '创建时间',
-              name: 'createTime',
-              type: 'date'
-            },
-            {
-              label: '设置',
-              name: 'set',
-              type: 'slot',
-            },
-            {
-              label: '排序号',
-              name: 'seqNo',
-              type: 'number'
-            },
-            {
-              label: '展现形式',
-              name: 'articleShowStyle',
-              type: 'select',
-              options: [
-                {
-                  label: '正文标题和描述',
-                  value: 0
-                },
-                {
-                  label: '左图，右正文标题',
-                  value: 1
-                },
-                {
-                  label: '右图，左正文标题',
-                  value: 2
-                },
-                {
-                  label: '一个图片通栏，无标题',
-                  value: 3
-                },
-                {
-                  label: '上正文标题，下一个图片通栏',
-                  value: 4
-                },
-                {
-                  label: '上正文标题，下两张图片',
-                  value: 5
-                },
-                {
-                  label: '上正文标题，下三张图片',
-                  value: 6
-                },
-                {
-                  label: '上正文标题，下左一张图片，下右描述',
-                  value: 7
-                }
-              ]
-            },
-          ]
-        }
-      ],
-      imagesSeting: [
-        {
-          items: [
-            {
-              label: '正文标题',
-              name: 'articleTitle',
-              type: 'text',
-              placeholder: '请输入正文标题',
-              maxlength: 80,
-              required: true
-            },
-            {
-              label: '首页标题',
-              name: 'contentTitle',
-              type: 'text',
-              placeholder: '请输入首页标题',
-              maxlength: 80,
-              required: true
-            },
-            {
-              label: '文档来源',
-              name: 'articleOrigin',
-              type: 'select',
-              placeholder: '请选择',
-              options: [
-                {
-                  label: '1',
-                  value: '123'
-                }
-              ]
-            },{
-              label:'文档作者',
-              name: 'articleAuthor',
-              type:'text',
-              placeholder: '请输入文档作者'
-            },{
-              label: '关键字',
-              name: 'seoKeywords',
-              type: 'text',
-              placeholder: '请输入关键字',
-            },{
-              label: '摘要',
-              name: 'seoDescription',
-              type: 'textarea',
-              maxlength: 20,
-              placeholder: '请输入摘要'
-            },{
-              label: '标签',
-              name: 'tagIds',
-              type: 'checkbox',
-              options: [],
-              hidden: false
-            },{
-              label:'点击量',
-              name: 'clickNum',
-              type:'number',
-              placeholder: '请输入点击量'
-            },{
-              label:'创建时间',
-              name:'createTime',
-              type:'date',
-              placeholder: '请选择'
-            },
-            {
-              label: '设置',
-              name: 'set',
-              type: 'slot',
-            },
-            {
-              label: '排序号',
-              name: 'seqNo',
-              type: 'number'
-            },
-            {
-              label: '展现形式',
-              name: 'articleShowStyle',
-              type: 'select',
-              options: [
-                {
-                  label: '正文标题和描述',
-                  value: 0
-                },
-                {
-                  label: '左图，右正文标题',
-                  value: 1
-                },
-                {
-                  label: '右图，左正文标题',
-                  value: 2
-                },
-                {
-                  label: '一个图片通栏，无标题',
-                  value: 3
-                },
-                {
-                  label: '上正文标题，下一个图片通栏',
-                  value: 4
-                },
-                {
-                  label: '上正文标题，下两张图片',
-                  value: 5
-                },
-                {
-                  label: '上正文标题，下三张图片',
-                  value: 6
-                },
-                {
-                  label: '上正文标题，下左一张图片，下右描述',
-                  value: 7
-                }
-              ]
-            },
-            {
-              label: '',
-              name: 'btn',
-              type: 'slot'
-            },
-          ]
-        }
-      ],
-      reproduceSetting: [
-        {
-          items: [
-            {
-              label: '正文标题',
-              name: 'articleTitle',
-              type: 'text',
-              placeholder: '请输入正文标题',
-              maxlength: 80,
-              required: true
-            },
-            {
-              label: '首页标题',
-              name: 'contentTitle',
-              type: 'text',
-              placeholder: '请输入首页标题',
-              maxlength: 80,
-              required: true
-            },
-            {
-              label:'转载地址',
-              name: 'linkTo',
-              type:'text',
-              placeholder: '请输入转载地址'
-            },{
-              label: '标签',
-              name: 'tagIds',
-              type: 'checkbox',
-              options: [],
-              hidden: false
-            },
-            {
-              label: '设置',
-              name: 'set',
-              type: 'slot'
-            },
-            {
-              label: '排序号',
-              name: 'seqNo',
-              type: 'number',
-              value: 0
-            },
-            {
-              label: '展现形式',
-              name: 'articleShowStyle',
-              type: 'select',
-              options: [
-                {
-                  label: '正文标题和描述',
-                  value: 0
-                },
-                {
-                  label: '左图，右正文标题',
-                  value: 1
-                },
-                {
-                  label: '右图，左正文标题',
-                  value: 2
-                },
-                {
-                  label: '一个图片通栏，无标题',
-                  value: 3
-                },
-                {
-                  label: '上正文标题，下一个图片通栏',
-                  value: 4
-                },
-                {
-                  label: '上正文标题，下两张图片',
-                  value: 5
-                },
-                {
-                  label: '上正文标题，下三张图片',
-                  value: 6
-                },
-                {
-                  label: '上正文标题，下左一张图片，下右描述',
-                  value: 7
-                }
-              ]
-            },
-          ]
-        }
-      ]
+        otherSettings: otherSettings,
+        imagesSeting: imagesSeting,
+        reproduceSetting: reproduceSetting,
+        sourceList: []
     }
   },
   computed: {
     ...mapGetters(['treeTags', 'contextMenu'])
   },
+  watch: {
+    activeName(val) {
+      if(val == 'picturesAndAccessories' && this.typeForm.articleType == 0) {
+        console.log(this.$refs.imageText.getSubmitData(), '图文')
+        this.$emit('docInfor', this.$refs.imageText.getSubmitData())
+      }
+      if(val == 'picturesAndAccessories' && this.typeForm.articleType == 1) {
+        console.log(this.$refs.images.getSubmitData(), '图集')
+        this.$emit('docInfor', this.$refs.images.getSubmitData())
+      }
+      if(val == 'picturesAndAccessories' && this.typeForm.articleType == 2) {
+        this.$emit('docInfor', this.$refs.splicing.getSubmitData())
+      }
+      if(val == 'picturesAndAccessories' && this.typeForm.articleType == 3) {
+        console.log( this.$refs.reproduce.getSubmitData(), '转载')
+        this.$emit('docInfor', this.$refs.reproduce.getSubmitData())
+      }
+    }
+  },
   created() {
     // 获取栏目详情
     this.getColumnInfor(this.treeTags[this.treeTags.length - 1].id)
     this.channelId = this.treeTags[this.treeTags.length - 1].id
+    this.fetchDict()
   },
   methods: {
     handleSave() {},
@@ -434,6 +195,27 @@ export default {
             reject(error)
           })
       })
+    },
+    fetchDict() {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        fetchDictByDictName('文稿来源')
+          .then(response => {
+            if(response.data.result.details && response.data.result.details.length) {
+              _this.sourceList = response.data.result.details.map((ele) => {
+                return {
+                  label: ele.dictDetailName,
+                  value: ele.dictDetailId
+                }
+              })
+              _this.imagesSeting[0].items[2].options = _this.sourceList
+            }
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
     }
   }
 }
@@ -451,6 +233,9 @@ export default {
       .el-input__inner{
         height: 32px;
         line-height: 32px;
+      }
+      .el-form-item__content{
+        text-align: left;
       }
     }
   }

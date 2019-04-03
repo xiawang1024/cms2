@@ -1,15 +1,16 @@
 // optimus
 // const BASE_URL = 'http://api.optimus.1byongche.com'
-let BASE_URL = 'http://172.20.5.4:53010' // 测试地址1
+let BASE_URL = ' http://gw.test.dianzhenkeji.com' // 测试地址1
 let UP_URL = 'http://172.20.5.4:55030/basefile/upload?fileRefId=jkhjkhjkhj'
 let DOWN_URL = 'http://172.20.5.4:55030'
 // console.log(process.env, 'process')
 if (process.env.NODE_ENV) {
   if (process.env.NODE_ENV == 'development') {
-    BASE_URL = 'http://172.20.5.4:53010' // 测试地址
+    BASE_URL = ' http://gw.test.dianzhenkeji.com' // 测试地址
     UP_URL = 'http://172.20.5.4:55030/basefile/upload?fileRefId=jkhjkhjkhj'
     // UP_URL = 'http://192.168.25.148:55030/basefile/upload?fileRefId=jkhjkhjkhj'
     DOWN_URL = 'http://172.20.5.4:55030'
+    // DOWN_URL = 'http://cmsres.test.dianzhenkeji.com'
 
     // BASE_URL = 'http://192.168.25.143:53010' // 测试地址
     // UP_URL = 'http://192.168.25.148:55030/basefile/upload?fileRefId=jkhjkhjkhj'

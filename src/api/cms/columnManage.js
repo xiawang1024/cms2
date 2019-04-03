@@ -51,9 +51,9 @@ export function getRoot() {
   })
 }
 
-export function columnList(queryObj, pageNo, pageSize, sortBy='seqNo') {
+export function columnList(queryObj, pageNo, pageSize, sortBy='channelLevel,seqNo') {
   return request({
-    url: '/cms/channel/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy,
+    url: '/cms/channel/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + "&order=asc,desc",
     method: 'post',
     data: queryObj
   })
@@ -89,3 +89,4 @@ export function isColumnRepet(channelCode) {
     method: 'get'
   })
 }
+
