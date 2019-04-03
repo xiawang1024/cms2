@@ -44,6 +44,12 @@ export default {
         return []
       },
       type: Array
+    },
+    propInformation: {
+      default: ()=> {
+        return {}
+      },
+      type: Object
     }
   },
   data() {
@@ -132,14 +138,42 @@ export default {
           })
       })
     },
+    getSubmitData() {
+      let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
+      resoultObj.channelId = this.channelId
+      resoultObj.articleType = 3
+      resoultObj.seoKeywords = ''
+      resoultObj.articleOrigin = ''
+      resoultObj.articleAuthor = ''
+      resoultObj.seoDescription = ''
+      resoultObj.createTime = ''
+      resoultObj.createTime = ''
+      resoultObj.contentBody = ''
+              // 标签字段处理
+      let chooseTags = []
+      if(resoultObj.tagIds) {
+        resoultObj.tagIds.forEach((ele) => {
+          this.tagList.forEach((son) => {
+            if(ele == son.value) {
+              chooseTags.push({
+                tagId: son.value,
+                tagName: son.label
+              })
+            }
+          })
+        })
+      }
+      resoultObj.tagIdsList = chooseTags
+      delete resoultObj.set
+      delete resoultObj.tagIds
+      return resoultObj
+    },
     save(formName, publishType) {
       this.$refs.form.getDataAsync().then(data => {
         if (!data) {
           return
         }
         let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
-        console.log(this.adddocSet)
-        // let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.docContentForm)
         resoultObj.channelId = this.channelId
         resoultObj.articleStatus = publishType
         resoultObj.articleType = 3
@@ -152,16 +186,18 @@ export default {
         resoultObj.contentBody = ''
                 // 标签字段处理
         let chooseTags = []
-        resoultObj.tagIds.forEach((ele) => {
-          this.tagList.forEach((son) => {
-            if(ele == son.value) {
-              chooseTags.push({
-                tagId: son.value,
-                tagName: son.label
-              })
-            }
+        if(resoultObj.tagIds) {
+          resoultObj.tagIds.forEach((ele) => {
+            this.tagList.forEach((son) => {
+              if(ele == son.value) {
+                chooseTags.push({
+                  tagId: son.value,
+                  tagName: son.label
+                })
+              }
+            })
           })
-        })
+        }
         resoultObj.tagIdsList = chooseTags
         delete resoultObj.set
         delete resoultObj.tagIds
@@ -169,6 +205,7 @@ export default {
           resoultObj.articleId = this.contextMenu.docId
           this.editDoc(resoultObj)
         } else {
+          resoultObj.articleAttachmentsList = this.propInformation.articleAttachmentsList
           this.createDoc(resoultObj)
         }
       })

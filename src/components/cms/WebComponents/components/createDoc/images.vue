@@ -50,6 +50,12 @@ export default {
         return []
       },
       type: Array
+    },
+    propInformation: {
+      default: ()=> {
+        return {}
+      },
+      type: Object
     }
   },
   data() {
@@ -216,16 +222,12 @@ export default {
           })
       })
     },
-    save(formName, publishType) {
-      this.$refs.form.getDataAsync().then(data => {
-        if (!data) {
-          return
-        }
-        let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
-        resoultObj.channelId = this.channelId
-        resoultObj.articleStatus = publishType
-        // 标签字段处理
-        let chooseTags = []
+    getSubmitData() {
+      let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
+      resoultObj.channelId = this.channelId
+      // 标签字段处理
+      let chooseTags = []
+      if( resoultObj.tagIds) {
         resoultObj.tagIds.forEach((ele) => {
           this.tagList.forEach((son) => {
             if(ele == son.value) {
@@ -236,6 +238,41 @@ export default {
             }
           })
         })
+      }
+      resoultObj.tagIdsList = chooseTags
+      resoultObj.articleType = 1
+      delete resoultObj.set
+      delete resoultObj.tagIds
+      delete resoultObj.btn
+      if (resoultObj.contentBody) {
+        console.log('')
+      } else {
+        resoultObj.contentBody = ''
+      }
+      return resoultObj
+    },
+    save(formName, publishType) {
+      this.$refs.form.getDataAsync().then(data => {
+        if (!data) {
+          return
+        }
+        let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
+        resoultObj.channelId = this.channelId
+        resoultObj.articleStatus = publishType
+        // 标签字段处理
+        let chooseTags = []
+        if(resoultObj.tagIds) {
+          resoultObj.tagIds.forEach((ele) => {
+            this.tagList.forEach((son) => {
+              if(ele == son.value) {
+                chooseTags.push({
+                  tagId: son.value,
+                  tagName: son.label
+                })
+              }
+            })
+          })
+        }
         resoultObj.tagIdsList = chooseTags
         resoultObj.articleType = 1
         delete resoultObj.set
@@ -250,6 +287,7 @@ export default {
           resoultObj.articleId = this.contextMenu.docId
           this.editDoc(resoultObj)
         } else {
+          resoultObj.articleAttachmentsList = this.propInformation.articleAttachmentsList
           this.createDoc(resoultObj)
         }
       })

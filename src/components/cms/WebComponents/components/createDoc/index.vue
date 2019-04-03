@@ -2,10 +2,10 @@
   <div class="docs-wrap">
     <el-tabs v-model="activeName" type="card">
       <el-tab-pane label="基本内容" name="basicContent">
-        <BasicContent @docInfor="docInfor" :active-name="activeName"/>
+        <BasicContent @docInfor="docInfor" :prop-information="docInformation" :active-name="activeName"/>
       </el-tab-pane>
       <el-tab-pane label="图片和附件" name="picturesAndAccessories">
-        <PicturesAndAccessories :doc-information="docInformation" :active-name="activeName"/>
+        <PicturesAndAccessories :prop-information="docInformation" :active-name="activeName" @docInfor="docInfor"/>
       </el-tab-pane>
       <!-- <el-tab-pane label="相关文档" name="relatedDocuments">
         <RelatedDocuments/>
@@ -37,8 +37,8 @@ export default {
   },
   methods: {
     docInfor(val) {
-      console.log(val)
       this.docInformation = val
+      console.log(val, 'docInformation11')
     }
   }
 }
