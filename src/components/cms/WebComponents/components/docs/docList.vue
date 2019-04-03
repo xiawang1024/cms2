@@ -8,6 +8,7 @@
       style="width: 100%"
       size="small"
       @selection-change="handleSelectionChange"
+      @row-click="rowClick"
       :row-class-name="tableRowClassName"
     >
       <!-- :default-sort="{prop: 'publishTime', order: 'descending'}" -->
@@ -100,6 +101,17 @@ export default {
     }
   },
   methods: {
+    // 点击行
+    rowClick(row) {
+      if(row) {
+        let singelRow = [row]
+        singelRow.forEach(ele => {
+          this.$refs.multipleTable.toggleRowSelection(ele);
+        })
+      } else {
+        this.$refs.multipleTable.clearSelection();
+      }
+    },
     // 置顶的文章加背景色
     tableRowClassName({row, rowIndex}) {
       if(row.topFlag == 1) {
