@@ -354,7 +354,7 @@ export default {
               return false;
           }
       }
-    // 判断排单时间是否有重叠 end
+      // 判断排单时间是否有重叠 end
       
       // 将信息集体打包成json作为单独一个字段传入后台
       // this.postForm.programInfo = JSON.stringify(this.postInfo)
