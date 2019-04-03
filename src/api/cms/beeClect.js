@@ -35,3 +35,11 @@ export function testRequest(data) {
     data:QS.stringify(data)
   })
 }
+
+export function currentuser(data) {
+  return request({
+    url:'/userb/user/currentuser',
+    method: 'get',
+    data
+  })
+}
