@@ -336,8 +336,43 @@ export default {
         console.log(err)
       })
     },
+    // isHasRepeatTime() {
+    //   let begin = ['2015-01-02 10:01:38','2015-01-04 09:28:12','2015-01-11 01:37:13'];
+    //   let over = ['2015-01-04 10:27:21','2015-01-09 21:28:13','2015-01-16 10:22:23'];
+
+    //   begin = begin.sort();
+    //   over  = over.sort();
+
+    //   for(let i=1;i<begin.length;i++){
+    //       if (begin[i] <= over[i-1]){
+    //           alert("排单时间有重叠！");
+    //           return false;
+    //       }
+    //   }
+    //   alert("排单时间没有重复！");
+    //   return true;
+    // },
     submitData() {
-      //将信息集体打包成json作为单独一个字段传入后台
+    // 判断排单时间是否有重叠 start
+      let startTimeArr = [];
+      let endTimeArr = [];
+      (this.programs || []).map(function(item) {
+          startTimeArr.push(item.start);
+          endTimeArr.push(item.end);
+      });
+
+      let begin = startTimeArr.sort();
+      let over  = endTimeArr.sort();
+
+      for(let i=1;i<begin.length;i++){
+          if (begin[i] <= over[i-1]){
+              alert("排单时间有重叠！");
+              return false;
+          }
+      }
+    // 判断排单时间是否有重叠 end
+      
+      // 将信息集体打包成json作为单独一个字段传入后台
       // this.postForm.programInfo = JSON.stringify(this.postInfo)
         this.postForm.weekset = this.weekSet.join(',')
         this.postForm.starttime = this.postForm.startTime/1000
@@ -361,21 +396,11 @@ export default {
               type: 'success',
               duration: 2000
             })
-            //清空表单值
-            // this.postForm = {brand_right:0}
-            // this.postForm.startTime = 0,        // 开始时间戳
-            // this.postForm.endTime = 0,          // 开始时间戳
-            // this.range = '',           // 范围
-            // this.weekSet = [],         // 当前选中日期
-            // this.programs = [{         // 节目集合
-            //     title: '',
-            //     start: '',
-            //     end: '',
-            //     playtype: '',
-            //     vodstatus: '',
-            //   }]
            this.back()
           })
+        } else {
+          console.log('error submit!!')
+          return false
         }
       })
     },
