@@ -1,47 +1,21 @@
 <template>
   <div class="docSource-container">
     <div class="tool-bar">
-      <el-button size="mini" type="primary" @click="handleAddDialog()">新增</el-button>
+      <el-button size="small" type="primary" @click="handleDialog('add')">新增</el-button>
     </div>
-    <el-table :data="dictObj.details" style="width: 100%">
-      <el-table-column prop="dictDetailName" label="来源名称"/>
-      <el-table-column prop="dictDetailValue" label="来源路径"/>
-      <el-table-column label="操作">
+    <el-table :data="dictObj.details" style="width: 100%" highlight-current-row>
+      <el-table-column prop="dictDetailName" label="来源名称" min-width="150" show-overflow-tooltip/>
+      <el-table-column prop="dictDetailValue" label="来源路径" min-width="150" show-overflow-tooltip/>
+      <el-table-column label="操作" width="200">
         <template slot-scope="scope">
-          <el-button size="mini" type="prime" @click="beforeAlter(scope.$index, scope.row)">修改</el-button>
+          <el-button size="mini" type="primary" @click="handleDialog('edit', scope.$index, scope.row)">修改</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <el-dialog :visible.sync="addDocSourceVisible" title="添加文稿来源">
-      <el-form :model="docSourceForm">
-        <el-form-item label="来源名称">
-          <el-input v-model="docSourceForm.dictDetailName"/>
-        </el-form-item>
-        <el-form-item label="来源路径">
-          <el-input v-model="docSourceForm.dictDetailValue"/>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="addDocSourceVisible = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="handleAdd()">确 定</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog :visible.sync="alterDocSourceVisible" title="修改文稿来源">
-      <el-form :model="docSourceForm">
-        <el-form-item label="来源名称">
-          <el-input :disabled="true" v-model="docSourceForm.dictDetailName"/>
-        </el-form-item>
-        <el-form-item label="来源路径">
-          <el-input v-model="docSourceForm.dictDetailValue"/>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="alterDocSourceVisible = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="handleAlter()">确 定</el-button>
-      </div>
+    <el-dialog :visible.sync="docSourceVisible" :title="dialogTitle" width="30%">
+      <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" label-width="80px" :btn-loading = "isLoading"/>
     </el-dialog>
   </div>
 </template>
@@ -74,104 +48,144 @@ export default {
         dictDetailId: "",
         dictDetailName: "",
         dictDetailValue: ""
-      }
-    };
+      },
+      formData: {},
+      formSettings: [
+        {
+          items: [
+            {
+              label: '来源名称',
+              name: 'dictDetailName',
+              type: 'text',
+              valueType: 'string',
+              disabled: false,
+              required: true,
+              placeholder: '请输入来源名称'
+            },
+            {
+              label: '来源路径',
+              name: 'dictDetailValue',
+              type: 'text',
+              required: true,
+              placeholder: '请输入来源路径'
+            },
+            {
+              label: '图标',
+              name: 'dictDetailRemark',
+              type: 'img',
+              placeholder: '请输入排序',
+              limit: 1
+            }
+          ]
+        }
+      ],
+      isLoading: false,
+      dialogTitle: '添加文稿来源',
+      docSourceVisible: false,
+      handelType: 'add',
+      currentIndex: '',
+      currentRow: {}
+    }
   },
   created: function() {
     this.fetchDict();
   },
   methods: {
-    handleAddDialog() {
-      this.docSourceForm.dictDetailId = "";
-      this.docSourceForm.dictDetailName = "";
-      this.docSourceForm.dictDetailValue = "";
-      this.addDocSourceVisible = true;
+    // 弹框操作
+    handleDialog(type, index, row) {
+      this.handelType = type
+      if(type == 'add') {
+        this.dialogTitle = '添加文稿来源'
+      } else {
+        this.dialogTitle = '修改文稿来源'
+      }
+      this.docSourceVisible = true
+      if(row) {
+        this.formData = {
+          dictDetailName: row.dictDetailName,
+          dictDetailValue: row.dictDetailValue,
+          dictDetailRemark: row.dictDetailRemark ? [{url: row.dictDetailRemark}] : []
+        }
+      } else {
+        this.formData = {}
+      }
+      this.currentIndex = index,
+      this.currentRow = row
     },
-    handleAdd() {
-      console.log("新增");
-      this.handleDialogObjToList();
-      this.addDocSourceVisible = false;
-      // 新增保存
-      this.handleSubmit();
-    },
-    beforeAlter(index, row) {
-      this.docSourceForm.dictDetailId = row.dictDetailId;
-      this.docSourceForm.dictDetailName = row.dictDetailName;
-      this.docSourceForm.dictDetailValue = row.dictDetailValue;
-      this.alterDocSourceVisible = true;
-    },
-    handleAlter() {
-      console.log("修改");
-      this.handleDialogObjToList();
-      this.alterDocSourceVisible = false;
-      // 修改保存
-      this.handleSubmit();
+    // 确认提交
+    submitSave(data) {
+      let copyData = JSON.parse(JSON.stringify(this.dictObj))
+      if(this.handelType == 'add') {
+        copyData.details.push(data)
+      } else {
+        copyData.details[this.currentIndex] = Object.assign(copyData.details[this.currentIndex], data)
+      }
+      this.handleSubmit(copyData)
     },
     handleDelete(index, row) {
-      console.log("删除" + row.name);
-      this.dictObj.details.splice(index, 1);
-      // 删除保存
-      this.handleSubmit();
-    },
-    // 将当前弹出框的数据重新维护到 dictObj.details 中
-    handleDialogObjToList() {
-      var _this = this;
-      var currentOpeIdx = -1;
-      _this.dictObj.details.forEach(function(v, k) {
-        if (v.dictDetailName === _this.docSourceForm.dictDetailName) {
-          currentOpeIdx = k;
-        }
-      });
-      if (currentOpeIdx === -1) {
-        _this.dictObj.details.push(Object.assign({}, _this.docSourceForm));
-      } else {
-        _this.dictObj.details[currentOpeIdx].dictDetailName =
-          _this.docSourceForm.dictDetailName;
-        _this.dictObj.details[currentOpeIdx].dictDetailValue =
-          _this.docSourceForm.dictDetailValue;
-      }
+        this.$confirm('确定删除该来源吗', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let copyData = JSON.parse(JSON.stringify(this.dictObj))
+          copyData.details.splice(index, 1)
+          this.handleSubmit(copyData)
+        }).catch(() => {        
+        })
     },
     // 查询对象
     fetchDict() {
       var _this = this;
       return new Promise((resolve, reject) => {
-        fetchDictByDictName(_this.dictObj.dictName)
+        fetchDictByDictName('文稿来源')
           .then(response => {
             _this.dictObj = response.data.result;
-            if (_this.dictObj.details === null) {
-              _this.dictObj.details = [];
+            if (!_this.dictObj.details) {
+              _this.dictObj.details = []
             }
             resolve();
           })
           .catch(error => {
-            reject(error);
+            reject(error)
           });
       });
     },
     // 保存对象，实际为更新
-    handleSubmit() {
+    handleSubmit(data) {
       var _this = this;
-      if (_this.dictObj.dictId === "" || _this.dictObj.dictId === null) {
-        _this.dictObj.dictName = "文稿来源";
+      data.details.forEach((ele) => {
+        if(ele.dictDetailRemark && ele.dictDetailRemark.length) {
+          ele.dictDetailRemark = ele.dictDetailRemark[0].url
+        } else {
+          ele.dictDetailRemark = ''
+        }
+      })
+      if (!_this.dictObj.dictId) {
+        data.dictName = "文稿来源";
         return new Promise((resolve, reject) => {
-          createDict(_this.dictObj)
+          createDict(data)
             .then(response => {
               _this.fetchDict();
-              resolve();
+              this.$message.success('操作成功')
+              this.docSourceVisible = false
+              resolve()
             })
             .catch(error => {
-              reject(error);
+              reject(error)
             });
         });
       } else {
         return new Promise((resolve, reject) => {
-          updateDict(_this.dictObj)
+          updateDict(data)
             .then(response => {
               _this.fetchDict();
+              this.$message.success('操作成功')
+              this.docSourceVisible = false
               resolve();
             })
             .catch(error => {
-              reject(error);
+              reject(error)
             });
         });
       }
