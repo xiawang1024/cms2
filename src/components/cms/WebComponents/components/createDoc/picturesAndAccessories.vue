@@ -40,36 +40,6 @@
                   </div>
                 </div>
               </template>
-              <!-- <template slot="define">
-                <div class="define">
-                  <el-row>
-                    <el-col :span="4"><div class="define-title">F1=</div></el-col>
-                    <el-col :span="10">
-                      <div>
-                        <el-input/>
-                      </div>
-                    </el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col :span="4"><div class="define-title">F2=</div></el-col>
-                    <el-col :span="10">
-                      <div>
-                        <el-input/>
-                      </div>
-                    </el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col :span="4">
-                      <div class="define-title">F3=</div>
-                    </el-col>
-                    <el-col :span="10">
-                      <div>
-                        <el-input/>
-                      </div>
-                    </el-col>
-                  </el-row>
-                </div>
-              </template> -->
               <template slot="btn">
                 <el-button size="small" @click="colseSet">关闭</el-button>
                 <el-button type="primary" size="small" @click ="setFile">保存</el-button>
@@ -98,6 +68,12 @@ export default {
     activeName: {
       default: '',
       type: String
+    },
+    propInformation: {
+      default: ()=> {
+        return {}
+      },
+      type: Object
     }
   },
   data () {
@@ -205,11 +181,14 @@ export default {
   },
   watch: {
     activeName(val) {
-     if(val === 'picturesAndAccessories') {
-       if(this.contextMenu.docId) {
-         this.getDocumentInfor(this.contextMenu.docId)
-       }
-     }
+      if(val === 'picturesAndAccessories') {
+        if(this.contextMenu.docId) {
+          this.getDocumentInfor(this.contextMenu.docId)
+        }
+      }
+      if(val == 'basicContent') {
+        this.$emit('docInfor', this.getSubmitData())
+      }
     }
   },
   mounted () {
@@ -270,6 +249,9 @@ export default {
       this.filedetail.title = this.$refs.vForm.formModel.title
       this.filedetail.coverBool = this.$refs.vForm.formModel.coverBool
       this.$message.success('保存成功')
+      
+      console.log(this.$refs.imageForm.formModel.contentImagesList, 'imageForm')
+      console.log(this.filedetail, 'filedetail')
     },
     typeChange(val) {
       this.rightCardShow = false
@@ -353,6 +335,18 @@ export default {
       }
       return arr
     },
+    getSubmitData() {
+      let articleAttachmentsList = []
+      let resoultObj = this.docInformation
+      resoultObj.channelId = this.treeTags[this.treeTags.length - 1].id
+      let imageFile = this.addCategory(this.$refs.imageForm.formModel.contentImagesList, 'IMG')
+      let videoFile = this.addCategory(this.$refs.imageForm.formModel.contentVideosList, 'VIDEO')
+      let audioFile = this.addCategory(this.$refs.imageForm.formModel.contentAudioList, 'AUDIO') 
+      let otherFile = this.addCategory(this.$refs.imageForm.formModel.articleAttachmentsList, 'OTHER')
+      let articleAttachmentsListCombine = articleAttachmentsList.concat(imageFile, videoFile, audioFile, otherFile)
+      resoultObj.articleAttachmentsList = articleAttachmentsListCombine
+      return resoultObj
+    },
     save(publishType) {
       let articleAttachmentsList = []
       let resoultObj = this.docInformation
@@ -361,19 +355,22 @@ export default {
       let videoFile = this.addCategory(this.$refs.imageForm.formModel.contentVideosList, 'VIDEO')
       let audioFile = this.addCategory(this.$refs.imageForm.formModel.contentAudioList, 'AUDIO') 
       let otherFile = this.addCategory(this.$refs.imageForm.formModel.articleAttachmentsList, 'OTHER')
-      // resoultObj.contentImagesList = imageFile
-      // resoultObj.contentVideosList = videoFile
-      // resoultObj.contentAudioList = audioFile
-      // resoultObj.articleAttachmentsList = otherFile
       resoultObj.articleStatus = publishType
       let articleAttachmentsListCombine = articleAttachmentsList.concat(imageFile, videoFile, audioFile, otherFile)
       resoultObj.articleAttachmentsList = articleAttachmentsListCombine
-      console.log(resoultObj, 'resoultObj')
-      // console.log(articleAttachmentsList.concat(imageFile, videoFile, audioFile, otherFile), 'articleAttachmentsList')
       if(this.contextMenu.docId) {
         resoultObj.articleId = this.contextMenu.docId
         this.editDoc(resoultObj)
       } else {
+        resoultObj = Object.assign(resoultObj, this.propInformation)
+        if(!resoultObj.articleTitle && resoultObj.articleType !==2) {
+          this.$message.warning('正文标题不能为空')
+          return
+        }
+        if(!resoultObj.contentTitle) {
+          this.$message.warning('首页标题不能为空')
+          return
+        }
         this.createDoc(resoultObj)
       }
     }

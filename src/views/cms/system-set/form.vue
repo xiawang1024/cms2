@@ -53,7 +53,7 @@
           <ul class="bottom">
             <h4>已有规则列表：</h4>
             <el-row :gutter="20">
-              <el-col v-for="(item,index) in fullRule" :span="6" :key="item.id" ><div class="grid-content bg-purple" :class="{active:checkRuleId==index}" @click="choice(item.id)">{{ item.id }}: {{ item.newsListUrl }}</div></el-col>
+              <el-col v-for="(item,index) in fullRule" :span="6" :key="item.id" ><div class="grid-content bg-purple handover" :class="{active:checkRuleId==index}" @click="choice(index)">{{ item.id }}: {{ item.newsListUrl }}</div></el-col>
           
             </el-row>
           </ul>
@@ -78,6 +78,7 @@
 </template>
   <script>
   import {columnList} from "@/api/cms/columnManage.js"
+  import {getRuler,getCloumRule,getFullRuleSend} from "@/api/cms/beeClect.js"
   import baseUrl from '@/config/base-url'
   let cpath=baseUrl['BASE_URL'].split(":");
   let  Cpath=cpath[0].toString()+':'+cpath[1].toString()
@@ -91,13 +92,39 @@
               selectCloum:"",            
               ruleContent:[],
               selectRule:'',
-              res:{},
+              res:{  
+                id:"" ,             
+                clumnId:"",
+                newsListUrl:"",
+                newsListUrlRule:"",
+                newsListTitle:"",
+                titleUrl:"",
+                newsListRule:"",
+                newsRule:"",
+                titleRule:"",
+                contentRule:"",
+                formRule:"",
+                encoding:"",
+              },
               testData:{},
               loading: false,
               fullRule:{},             
               checkRuleId:'',
               toggle:'',
-              saveRes:'',
+              saveRes:{
+                id:"" , 
+                clumnId:"",
+                newsListUrl:"",
+                newsListUrlRule:"",
+                newsListTitle:"",
+                titleUrl:"",
+                newsListRule:"",
+                newsRule:"",
+                titleRule:"",
+                contentRule:"",
+                formRule:"",
+                encoding:"",
+              },
               activeName: 'first',
               weChatId:'',
               wxData:{},
@@ -105,10 +132,26 @@
           }
       },      
       watch:{
+          /** 
+            *选择栏目          
+            **/ 
           selectCloum(){              
                 var _this=this;
                 this.ruleContent=[];               
-                this.res={};               
+                this.res={
+                    id:"" , 
+                    clumnId:"",
+                    newsListUrl:"",
+                    newsListUrlRule:"",
+                    newsListTitle:"",
+                    titleUrl:"",
+                    newsListRule:"",
+                    newsRule:"",
+                    titleRule:"",
+                    contentRule:"",
+                    formRule:"",
+                    encoding:"",
+                };               
                 this.testData={};
                 this.selectCloumName="" ;                
                  for(let i=0;i<this.content.length;i++){
@@ -118,32 +161,56 @@
                  }  
               this.getRule() 
           },
-          /** 选择规则          
-            */ 
-          selectRule(){
-              this.res={};
-              this.$.ajax({
-              type:"POST",
-              url:Cpath+":19080/content-grab/newslist/getAllRuleById",
-              data:{
-                  "ruleid" : this.selectRule,
-              },
-              success:(data)=> {
-                  if(data.status=="success"){
-                       return this.res=data.data;
-                     
-                  }else {
-                      this.res=this.saveRes;
-                      // alert(data.data);
-                  }
-              },
-              error:function (data) {
-                  alert("请求失败");
-              }
-          });
-          },
+          /** 
+            *选择规则          
+            **/ 
+            selectRule(){
+                this.res={};
+                var _this=this;
+                    return new Promise((resolve, reject) => {
+                     getRuler({ruleid:_this.selectRule})
+                      .then((response) => { 
+                        //   console.log(response)
+                               if(response.data.status=='success'){
+                                   
+                                 _this.res=response.data.data;
+                        
+                                }else {
+                                    _this.res=_this.saveRes;
+                                  
+                                }
+                           
+                        //    console.log(_this.res)
+                          resolve()
+                      })
+                      .catch((error) => {
+                          reject(error)
+                      })
+                  }) 
+
+
+                // this.$.ajax({
+                // type:"POST",
+                // url:Cpath+":19080/content-grab/newslist/getAllRuleById",
+                // data:{
+                //     "ruleid" : this.selectRule,
+                // },
+                // success:(data)=> {
+                //     if(data.status=="success"){
+                //         return this.res=data.data;
+                        
+                //     }else {
+                //         this.res=this.saveRes;
+                //         // alert(data.data);
+                //     }
+                // },
+                // error:function (data) {
+                //     alert("请求失败");
+                // }
+                // });
+            },
           
-      },      
+        },      
       created(){   
   
               this.getFullRule();   
@@ -167,29 +234,82 @@
           /** 选择栏目          
           */ 
           getRule(){
-              this.$.ajax({
-                      type:"POST",
-                      url:Cpath+":19080/content-grab/newslist/getAllRuleByClumnId",
-                      data:{
-                          "clumnid" :this.selectCloum,
-                      },
-                      success:(data)=> {
-                          if(data.status=="success"){
-                              return this.ruleContent=data.data;                          
-                          }else {
-                              if(this.selectCloum==""){
-                                   this.res=this.saveRes;
+              var _this=this
+              this.selectRule=""
+             
+              return new Promise((resolve,reject)=>{
+                   getCloumRule({clumnid:_this.selectCloum})
+                   .then((response)=>{                      
+                       if(response.data.status=="success"){
+                           
+                           _this.ruleContent=response.data.data; 
+                            this.res={
+                              clumnId:_this.selectCloum,
+                                       id:"" , 
+                                       newsListUrl:"",
+                                       newsListUrlRule:"",
+                                       newsListTitle:"",
+                                       titleUrl:"",
+                                        newsListRule:"",
+                                       newsRule:"",
+                                       titleRule:"",
+                                       contentRule:"",
+                                        formRule:"",
+                                        encoding:"",
+                            }                    
+                       }else {                      
+                           if(_this.selectCloum==""){                              
+                                   _this.res=_this.saveRes;
                               }else{
-                                  this.res={}
                                  
-                              }
-                          }
-                      },
-                      error:function (data) {
-                          alert("请求失败");
-                      }
-                  });
-          },
+                                  _this.res={
+                                       clumnId:_this.selectCloum,
+                                       id:"" , 
+                                       newsListUrl:"",
+                                       newsListUrlRule:"",
+                                       newsListTitle:"",
+                                       titleUrl:"",
+                                        newsListRule:"",
+                                       newsRule:"",
+                                       titleRule:"",
+                                       contentRule:"",
+                                        formRule:"",
+                                        encoding:"",
+                                  }
+                                   alert(response.data.data)
+                                 
+                            }
+                       }
+                   })
+                   .catch((reject)=>{
+                        alert("请求失败");
+                       console.log(reject)
+                   })
+              })
+             
+            //   this.$.ajax({
+            //           type:"POST",
+            //           url:Cpath+":19080/content-grab/newslist/getAllRuleByClumnId",
+            //           data:{
+            //               "clumnid" :this.selectCloum,
+            //           },
+            //           success:(data)=> {
+            //               if(data.status=="success"){
+            //                   return this.ruleContent=data.data;                          
+            //               }else {
+            //                   if(this.selectCloum==""){
+            //                        this.res=this.saveRes;
+            //                   }else{
+            //                       this.res={}
+                                 
+            //                   }
+            //               }
+            //           },
+            //           error:function (data) {
+            //               alert("请求失败");
+            //           }
+            //       });
+            },
   
           check(){
               if(this.res.newsListUrl==""||this.res.newsListUrl==null){
@@ -236,28 +356,47 @@
           },
           getFullRule(){
               this.fullRule={};
-              this.$.ajax({
-                      type:"GET",
-                      url:Cpath+":19080/content-grab/newslist/getallrule",
+                var _this=this
+                return new Promise((resolve,reject)=>{
+                    getFullRuleSend({})
+                    .then((response)=>{
+                        //  console.log(response)
+                        if(response.data.status=="success"){                           
+                               _this.fullRule=response.data.data;  
+                          }else {
+                              alert(response.data);
+                          }
+                    })
+                    .catch((reject)=>{
+                         alert("请求失败");
+                    })
+                })
+
+
+
+            //   this.$.ajax({
+            //           type:"GET",
+            //           url:Cpath+":19080/content-grab/newslist/getallrule",
                       
-                      success:(data)=> {
-                          if(data.status=="success"){
-                              return this.fullRule=data.data;
+            //           success:(data)=> {
+            //               if(data.status=="success"){
+            //                   console.log(data.data)
+            //                   return this.fullRule=data.data;
                              
   
-                          }else {
-                              alert(data.data);
-                          }
-                      },
-                      error:function (data) {
-                          alert("请求失败");
-                      }
-                  });
+            //               }else {
+            //                   alert(data.data);
+            //               }
+            //           },
+            //           error:function (data) {
+            //               alert("请求失败");
+            //           }
+            //       });
           },
           test(){
               let flag=this.check();
               if(flag){
-                  this.loading=true;           
+                  this.loading=true;  
                   this.$.ajax({
                       type:"POST",
                           url:Cpath+":19080/content-grab/newslist/getnewslist",
@@ -302,11 +441,14 @@
               let flag=this.check();        
               if(flag){
                   this.loading=true;
+                
                   this.$.ajax({
                       type:"POST",            
                       url:Cpath+":19080/content-grab/newslist/saverule",
                       data:{
-                          "id":this.selectRule,
+                        
+                            "id":this.res.id,
+                        //   "id":this.selectRule,
                           "column" : this.res.clumnId,
                           "newslisturl":this.res.newsListUrl,
                           "newslisturlrule":this.res.newsListUrlRule,
@@ -366,11 +508,11 @@
               } 
           },
           choice(e){
-              this.checkRuleId=e-1;
-              this.res=this.fullRule[e-1];
+              this.checkRuleId=e;
+              this.res=this.fullRule[e];
               this.saveRes=this.res;
               this.selectCloum="";
-              this.selectRule="";
+              this.selectRule="";            
             //   console.log(e);
             //   console.log(this.checkRuleId)
           },        
@@ -564,6 +706,9 @@
     .row-bg {
       padding: 10px 0;
       background-color: #f9fafc;
+    }
+    .handover:hover{
+        cursor:pointer ;
     }
   
   </style>

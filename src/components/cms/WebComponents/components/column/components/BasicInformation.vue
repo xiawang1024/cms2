@@ -158,7 +158,17 @@ export default {
               activeColor: '#13ce66',
               value: 1,
               type: 'switch'
-            },{
+            },
+            {
+              label: '是否在app显示',
+              name: 'appShowFlag',
+              activeValue: 1,
+              inactiveValue: 0,
+              activeColor: '#13ce66',
+              value: 1,
+              type: 'switch'
+            },
+            {
               label: '其他数据',
               name: 'extra',
               type: 'textarea',
