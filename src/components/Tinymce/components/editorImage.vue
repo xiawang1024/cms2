@@ -17,7 +17,7 @@
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
         class="editor-slide-upload"
-        action="https://httpbin.org/post"
+        :action="upURL"
         list-type="picture-card"
       >
         <el-button
@@ -36,7 +36,7 @@
 
 <script>
 // import { getToken } from 'api/qiniu'
-
+import baseUrl from '@/config/base-url'
 export default {
   name: 'EditorSlideUpload',
   props: {
@@ -49,7 +49,8 @@ export default {
     return {
       dialogVisible: false,
       listObj: {},
-      fileList: []
+      fileList: [],
+      upURL: baseUrl.UP_URL,
     }
   },
   methods: {
@@ -76,7 +77,7 @@ export default {
       const objKeyArr = Object.keys(this.listObj)
       for (let i = 0, len = objKeyArr.length; i < len; i++) {
         if (this.listObj[objKeyArr[i]].uid === uid) {
-          this.listObj[objKeyArr[i]].url = response.files.file
+          this.listObj[objKeyArr[i]].url = baseUrl.DOWN_URL + '/' + response.result.filePath,
           this.listObj[objKeyArr[i]].hasSuccess = true
           return
         }
