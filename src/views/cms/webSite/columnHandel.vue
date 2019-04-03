@@ -114,7 +114,18 @@ export default {
               value: 0,
               type: 'switch',
               hidden: true
-            },{
+            },
+            {
+              label: '是否在app显示',
+              name: 'appShowFlag',
+              activeValue: 1,
+              inactiveValue: 0,
+              activeColor: '#13ce66',
+              value: 1,
+              type: 'switch',
+              hidden: true
+            },
+            {
               label: '其他数据',
               name: 'extra',
               type: 'textarea',
@@ -271,10 +282,12 @@ export default {
               _this.formSettings[0].items[10].hidden =false
               _this.formSettings[0].items[11].hidden =false
               _this.formSettings[0].items[12].hidden =false
+              _this.formSettings[0].items[13].hidden =false
             } else {
               _this.formData = {
                 parentChannelNames: response.data.result.channelName,
-                hiddenFlag: 0
+                hiddenFlag: 0,
+                appShowFlag: 1
               }
             }
             resolve()
