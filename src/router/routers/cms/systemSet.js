@@ -126,6 +126,25 @@ const systemSet = {
       component: () => import(`@/${path}/form`),
       name: 'collection',
       meta: { title: 'collection', icon: 'bee', role: 'cms' },
+    },
+    {
+      /**
+       * 配置组管理
+       */
+      path: 'KvGroupController',
+      component: () => import(`@/${path}/KvGroupController`),
+      name: 'KvGroupController',
+      meta: { title: 'KvGroupController', icon: 'bee', role: 'cms' },
+    },
+    {
+      /**
+       * 配置组管理详情
+       */
+      path: 'Kvdetail',
+      component: () => import(`@/${path}/Kvdetail`),
+      name: 'Kvdetail',
+      meta: { title: 'Kvdetail', icon: 'bee', role: 'cms' },
+      hidden: true
     }
   ]
 }
