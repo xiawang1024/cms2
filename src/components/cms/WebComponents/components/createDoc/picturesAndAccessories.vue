@@ -94,7 +94,7 @@ export default {
             required: false,
             // hasTextInput: true,
             hidden: false,
-            maxSize: 1024*1
+            maxSize: 1024*5
           },
           {
             label: '音频',
