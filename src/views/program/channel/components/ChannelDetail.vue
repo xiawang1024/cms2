@@ -92,6 +92,7 @@ import MDinput from '@/components/MDinput'
 import { validateURL, validateNumber, validateAlphabets } from '@/utils/validate'
 import { getPinYinFirstCharacter } from '../components/PinYin'
 import Vue from 'vue'
+import baseUrl from '@/config/base-url'
 
 const defaultForm = {
   channelId: '',      // ID
@@ -207,7 +208,7 @@ export default {
       fetchChannel(id).then(response => {
         this.postForm = response.data.result
         this.logo = JSON.parse(response.data.result.channelInfo).logo
-        this.imgSrc = process.env.BASE_API + this.logo
+        this.imgSrc = baseUrl.DOWN_URL + this.logo
         this.desc = JSON.parse(response.data.result.channelInfo).desc
         this.channelHotline = JSON.parse(response.data.result.channelInfo).channel_hotline
         this.vodSet = JSON.parse(response.data.result.channelInfo).vod_set
@@ -305,7 +306,7 @@ export default {
       this.$router.go(-1)
     },
     uploadUrl() {
-        var url = "http://172.20.5.4:55030/basefile/upload" // 文件服务地址
+        var url = baseUrl.UP_URL+"program" // 文件服务地址
         return url
     },
     handleRemove(file, fileList) {//移除图片
@@ -330,7 +331,7 @@ export default {
       },
       handleAvatarSuccess(res, file) {//图片上传成功
         this.logo = file.response.result.filePath
-        this.imgSrc = file.response.result.fileUrl + this.logo
+        this.imgSrc = baseUrl.DOWN_URL + this.logo
       },
       imgUploadError(err, file, fileList){//图片上传失败调用
         this.$message.error('上传图片失败!')
