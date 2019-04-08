@@ -65,7 +65,9 @@ const webpackConfig = merge(baseWebpackConfig, {
           if(process.env.NODE_ENV === 'production') {
             base = config.build.assetsPublicPath + config.build.assetsSubDirectory
           } else if(process.env.NODE_ENV === 'development') {
-            base = 'http://172.20.5.2/zhaojp/admin/' + config.build.assetsPublicPath + config.build.assetsSubDirectory
+            // base = 'http://172.20.5.2/zhaojp/admin/' + config.build.assetsPublicPath + config.build.assetsSubDirectory
+            // base = 'http://172.20.5.2/zhaojp/admin/' + config.build.assetsPublicPath + config.build.assetsSubDirectory
+            base = config.build.assetsPublicPath + config.build.assetsSubDirectory
           } else {
             base = config.build.assetsPublicPath + config.build.assetsSubDirectory
           }

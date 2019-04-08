@@ -1,31 +1,24 @@
 // optimus
-// const BASE_URL = 'http://api.optimus.1byongche.com'
-let BASE_URL = ' http://gw.test.dianzhenkeji.com' // 测试地址1
-let UP_URL = 'http://172.20.5.4:55030/basefile/upload?fileRefId=jkhjkhjkhj'
-let DOWN_URL = 'http://172.20.5.4:55030'
+let BASE_URL = ' http://gw.test.dianzhenkeji.com' // 测试地址
+let UP_URL = 'http://fupload.test.dianzhenkeji.com:55030/basefile/upload?fileRefId='
+let DOWN_URL = 'http://cmsres.test.dianzhenkeji.com'
 // console.log(process.env, 'process')
 if (process.env.NODE_ENV) {
   if (process.env.NODE_ENV == 'development') {
+    // BASE_URL = ' http://gw.test.dianzhenkeji.com' // 测试地址
+    // UP_URL = 'http://172.20.5.4:55030/basefile/upload?fileRefId=jkhjkhjkhj'
+    // DOWN_URL = 'http://172.20.5.4:55030'
     BASE_URL = ' http://gw.test.dianzhenkeji.com' // 测试地址
-    UP_URL = 'http://172.20.5.4:55030/basefile/upload?fileRefId=jkhjkhjkhj'
-    // UP_URL = 'http://192.168.25.148:55030/basefile/upload?fileRefId=jkhjkhjkhj'
-    DOWN_URL = 'http://172.20.5.4:55030'
-    // DOWN_URL = 'http://cmsres.test.dianzhenkeji.com'
-
-    // BASE_URL = 'http://192.168.25.143:53010' // 测试地址
-    // UP_URL = 'http://192.168.25.148:55030/basefile/upload?fileRefId=jkhjkhjkhj'
-    // DOWN_URL = 'http://192.168.25.148:55030'
+    UP_URL = 'http://fupload.test.dianzhenkeji.com:55030/basefile/upload?fileRefId='
+    DOWN_URL = 'http://cmsres.test.dianzhenkeji.com'
   } else if (process.env.NODE_ENV == 'production') {
-    BASE_URL = 'http://gw.dianzhenkeji.com:53010' // 测试地址
-    UP_URL = 'http://192.168.25.148:55030/basefile/upload?fileRefId=jkhjkhjkhj'
-    DOWN_URL = 'http://192.168.25.148:55030'
-    // BASE_URL = 'http://10.1.3.43:53010' // 正式地址
-    // UP_URL = 'http://10.1.3.48:55030/basefile/upload?fileRefId=jkhjkhjkhj'
-    // DOWN_URL = 'http://192.168.25.148:55030'
+    BASE_URL = 'http://gw.dianzhenkeji.com' // 正式地址
+    UP_URL = 'http://fupload.dianzhenkeji.com:55030/basefile/upload?fileRefId='
+    DOWN_URL = 'http://cmsres.dianzhenkeji.com'
   } else if (process.env.VUE_APP_ENV == 'development2') {
-    BASE_URL = 'http://172.20.5.4:53010' // 开发环境
-    UP_URL = 'http://172.20.5.4:55030/basefile/upload?fileRefId=jkhjkhjkhj'
-    DOWN_URL = 'http://172.20.5.4:55030'
+    BASE_URL = ' http://gw.test.dianzhenkeji.com' // 测试地址
+    UP_URL = 'http://fupload.test.dianzhenkeji.com:55030/basefile/upload?fileRefId='
+    DOWN_URL = 'http://cmsres.test.dianzhenkeji.com'
   }
 }
 

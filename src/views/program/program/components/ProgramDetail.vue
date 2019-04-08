@@ -20,7 +20,7 @@
             <el-form-item style="margin-bottom: 40px; margin-left: 20px;" prop="channelId">
               <span style="color: #F56C6C">所属频率</span>
               <el-select v-model="postForm.channelId" @change="selectGet" placeholder="请选择所属频率">
-                <el-option v-for="item in this.channelOptions" :key="item.channel_id" :label="item.channel_name" :value="item.channel_id"/>
+                <el-option v-for="item in channelOptions" :key="item.channel_id" :label="item.channel_name" :value="item.channel_id"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -33,7 +33,9 @@
                 placeholder="选择日期时间"
                 align="right"
                 :editable="false"
-                :picker-options="pickerOptions"/>
+                :picker-options="pickerOptions"
+               
+                value-format="timestamp"/>
             </el-form-item>
           </el-col>
           <el-col :span="3">
@@ -163,28 +165,28 @@
 <script>
 import { fetchChannelAll } from '@/api/program/channel'
 import { fetchColumnNames } from '@/api/program/column'
-import { fetchProgram, createProgram, fetchProgramInfo } from '@/api/program/program'
+import { fetchProgram, createProgram } from '@/api/program/program'
 import MDinput from '@/components/MDinput'
 import Vue from 'vue'
 
 
 
-const defaultForm = {
-  programlistId: '',      // 排单Id
-  programlistName: '',    // 排单名称
-  starttime: '',          // 开始时间
-  endtime: '',            // 结束时间
-  weekset: '',            // 周设定
-  programlistInfo: '',    // 节目排单
-  channelId: '',          // 所属频率
-  programlistDesc: '',    // 排单描述
-  addtime: '',            // 添加时间
-  adduser: '',            // 添加者
-  status: 1,              // 状态    
-  startTime: '',          // 开始时间戳
-  endTime: ''             // 结束时间戳
+// const defaultForm = {
+//   programlistId: '',      // 排单Id
+//   programlistName: '',    // 排单名称
+//   starttime: 0,           // 开始时间
+//   endtime: 0,             // 结束时间
+//   weekset: '',            // 周设定
+//   programlistInfo: '',    // 节目排单
+//   channelId: '',          // 所属频率
+//   programlistDesc: '',    // 排单描述
+//   addtime: '',            // 添加时间
+//   adduser: '',            // 添加者
+//   status: 1,              // 状态    
+//   startTime: 0,           // 开始时间戳
+//   endTime: 0              // 结束时间戳
   
-}
+// }
 
 export default {
   name: 'ProgramDetail',
@@ -194,7 +196,7 @@ export default {
       bind (el, binding) {
         // 获取滚动页面DOM
         let SCROLL_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
-        let scrollPosition = 0
+        // let scrollPosition = 0
         SCROLL_DOM.addEventListener('scroll', function () {
           /**
             * scrollHeight 获取元素内容高度(只读)
@@ -236,7 +238,23 @@ export default {
       }
     };
     return {
-      postForm: Object.assign({}, defaultForm),
+      // postForm: Object.assign({}, defaultForm),
+      postForm:{
+          programlistId: '',      // 排单Id
+          programlistName: '',    // 排单名称
+          starttime: 0,           // 开始时间
+          endtime: 0,             // 结束时间
+          weekset: '',            // 周设定
+          programlistInfo: '',    // 节目排单
+          channelId: '',          // 所属频率
+          programlistDesc: '',    // 排单描述
+          addtime: '',            // 添加时间
+          adduser: '',            // 添加者
+          status: 1,              // 状态    
+          startTime: '',          // 开始时间戳
+          endTime: ''             // 结束时间戳
+          
+      },
       loading: false,
       switchstate: false,
       range: '',           // 范围
@@ -293,8 +311,7 @@ export default {
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       this.fetchData(id)
-    } else {
-      this.postForm = Object.assign({}, defaultForm)
+      // this.postForm.startTime = 1554220800 *1000
     }
   },
   mounted() {
@@ -320,16 +337,17 @@ export default {
       this.getColumnNames()
     },
     fetchData(id) {
+      // this.postForm.startTime = 1554220800 *1000
       this.loading = true
       fetchProgram(id).then(response => {
         this.postForm = response.data.result
         this.weekSet = this.postForm.weekset.split(',')
-        this.postForm.startTime = this.postForm.starttime*1000
-        this.programs = JSON.parse(response.data.result.programlistInfo)
+        this.$set(this.postForm, 'startTime', response.data.result.starttime*1000)  //动态赋值 临时解决时间控件回显不能编辑的问题
         if(this.postForm.endtime != 0){
           this.switchstate = true
-          this.postForm.endTime = this.postForm.endtime*1000
+          this.$set(this.postForm, 'endTime', response.data.result.endtime*1000)
         }
+        this.programs = JSON.parse(response.data.result.programlistInfo)
         this.loading = false
 
       }).catch(err => {
@@ -354,10 +372,10 @@ export default {
               return false;
           }
       }
-      // 判断排单时间是否有重叠 end
+       // 判断排单时间是否有重叠 end
       
-      // 将信息集体打包成json作为单独一个字段传入后台
-      // this.postForm.programInfo = JSON.stringify(this.postInfo)
+       // 将信息集体打包成json作为单独一个字段传入后台
+       // this.postForm.programInfo = JSON.stringify(this.postInfo)
         this.postForm.weekset = this.weekSet.join(',')
         this.postForm.starttime = this.postForm.startTime/1000
         if(this.switchstate) {

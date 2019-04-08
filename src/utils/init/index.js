@@ -3,7 +3,7 @@ import { initComponent } from './init-component'
 import { initFilter } from './init-filter'
 // import { initService } from './init-service'
 // import { initDirective } from './init-directive'
-// import { initIcon } from './init-icon'
+import { initIcon } from './init-icon'
 
 export default function initVue(Vue) {
   initComponent(Vue)
@@ -11,5 +11,5 @@ export default function initVue(Vue) {
   initFilter(Vue)
   // initService(Vue)
   // initDirective(Vue)
-  // initIcon(Vue)
+  initIcon(Vue)
 }

@@ -10,6 +10,11 @@ function resolve(dir) {
 }
 
 const createLintingRule = () => ({
+  include: [
+    resolve('src'),
+    resolve('test'),
+    resolve('node_modules/vue-awesome')
+   ]
   // test: /\.(js|vue)$/,
   // loader: 'eslint-loader',
   // enforce: 'pre',
@@ -28,20 +33,20 @@ module.exports = {
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
-    publicPath: (()=> {
-      let env = ''
-      if(process.env.NODE_ENV === 'production') {
-        env = config.build.assetsPublicPath
-      } else if(process.env.NODE_ENV === 'development') {
-        env = 'http://172.20.5.2/zhaojp/admin/'
-      } else {
-        env = config.dev.assetsPublicPath
-      }
-      return env
-    })()
-    // process.env.NODE_ENV === 'production'
-    //   ? config.build.assetsPublicPath
-    //   : config.dev.assetsPublicPath 
+    // publicPath: (()=> {
+    //   let env = ''
+    //   if(process.env.NODE_ENV === 'production') {
+    //     env = config.build.assetsPublicPath
+    //   } else if(process.env.NODE_ENV === 'development') {
+    //     env = 'http://172.20.5.2/zhaojp/admin/'
+    //   } else {
+    //     env = config.dev.assetsPublicPath
+    //   }
+    //   return env
+    // })()
+    publicPath: process.env.NODE_ENV === 'production'
+      ? config.build.assetsPublicPath
+      : config.dev.assetsPublicPath
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],

@@ -153,6 +153,8 @@ export default {
               var blobCache = window.tinymce.activeEditor.editorUpload.blobCache
               var base64 = reader.result.split(',')[1]
               var blobInfo = blobCache.create(id, file, base64)
+              console.log(base64, 'base64')
+              console.log(blobInfo)
               blobCache.add(blobInfo)
 
               // call the callback and populate the Title field with the file name
