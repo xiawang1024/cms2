@@ -57,12 +57,12 @@
         </div>
         <el-dropdown-menu slot="dropdown">
 
-          <!-- <router-link to="/">
+          <router-link to="/userSetting/userCenter">
             <el-dropdown-item>
               {{ $t('navbar.center') }}
             </el-dropdown-item>
           </router-link>
-          <router-link to="/">
+          <!-- <router-link to="/">
             <el-dropdown-item>
               {{ $t('navbar.operateRecord') }}
             </el-dropdown-item>
@@ -123,7 +123,7 @@ export default {
       return new Promise((resolve, reject) => {
         fetchDictByDictName('站点设置')
           .then(response => {
-            let siteName = response.data.result.details[0].dictDetailValue ? response.data.result.details[0].dictDetailValue + '内容发布子系统' : '内容发布子系统'
+            let siteName = response.data.result ? response.data.result.details[0].dictDetailValue + '内容发布子系统' : '内容发布子系统'
             this.$store.dispatch('SetSiteName', siteName)
             resolve();
           })

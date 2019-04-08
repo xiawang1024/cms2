@@ -60,7 +60,7 @@ export default {
       return new Promise((resolve, reject) => {
         fetchDictByDictName('文稿来源')
           .then(response => {
-            if(response.data.result.details && response.data.result.details.length) {
+            if(response.data.result && response.data.result.details.length) {
               _this.sourceList = response.data.result.details.map((ele) => {
                 return {
                   label: ele.dictDetailName,
