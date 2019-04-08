@@ -37,9 +37,8 @@ function filterAsyncRouter(routes, authorities) {
       if (tmp.children) {
         tmp.children = filterAsyncRouter(tmp.children, authorities)
       }
-      // 
-      console.log("循环出额路由列表")
-      console.log(tmp)
+      // console.log("循环出额路由列表")
+      // console.log(tmp)
       res.push(tmp)
     }
   })

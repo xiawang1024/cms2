@@ -39,6 +39,21 @@ const manageClue = {
         title: 'addDisclose',
         icon: 'addDisclose',
       },
+      hidden: true
+
+    },
+    {
+      /**
+       * 爆料详情
+       */
+      path: 'discloseDetails',
+      component: () => import(`@/${path}/discloseDetails`),
+      name: 'discloseDetails',
+      meta: {
+        title: 'discloseDetails',
+        icon: 'discloseDetails',
+      },
+      hidden: true
 
     }
 

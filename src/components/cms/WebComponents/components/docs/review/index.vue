@@ -10,7 +10,7 @@
         <h3>{{ documentInfor.articleTitle }}</h3>
         <div>
           {{ documentInfor.createTime }}
-          <span v-if="documentInfor.articleOrigin">{{ documentInfor.articleOrigin }}</span>
+          <span v-if="documentInfor.createUser">{{ documentInfor.createUser }}</span>
         </div>
         <div v-if="documentInfor.articleType =='1'">
           <el-row :gutter="20" >

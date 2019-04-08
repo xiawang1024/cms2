@@ -51,14 +51,13 @@ const programRouterMap = [channel, class1, column, compere, program]
 /**
  * 新闻指挥
  */
-import manageClue from './routers/newcommand/manageClue'
-import commandDispatch from './routers/newcommand/commandDispatch'
-import manuscriptClue from './routers/newcommand/manuscriptClue'
-import fileClue from './routers/newcommand/fileClue'
-import liveClue from './routers/newcommand/liveClue'
-import operationRecord from './routers/newcommand/operationRecord'
+import manageClue from './routers/newCommand/manageClue'
+import commandDispatch from './routers/newCommand/commandDispatch'
+import manuscriptClue from './routers/newCommand/manuscriptClue'
+import fileClue from './routers/newCommand/fileClue'
+import liveClue from './routers/newCommand/liveClue'
+import operationRecord from './routers/newCommand/operationRecord'
 const newscommandRouterMap = [manageClue,commandDispatch,manuscriptClue,fileClue,liveClue,operationRecord]
-
 /**
  * 路由map
  */

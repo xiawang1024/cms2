@@ -132,6 +132,7 @@ export default {
     manageClue: '线索管理',
     discloseList: '爆料列表',
     addDisclose: '添加爆料',
+    discloseDetails:'爆料详情',
     hotNews: '热点新闻',
     commandDispatch: '指挥调度',
     allTask: '所以任务',
