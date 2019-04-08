@@ -180,6 +180,9 @@ export default {
       //   this.$store.dispatch('setContextMenu', select)
       // }
       switch(command) {
+        case '2':
+          this.$store.dispatch('setContextMenu', {id: '4', label: '建立子栏目'})
+          break;
         case '3':
           this.$store.dispatch('setContextMenu', {id: '4', label: '修改栏目'})
           break;
@@ -300,7 +303,7 @@ export default {
   display: flex;
   width: 100%;
   margin-bottom: 20px;
-  padding: 0 30px;
+  // padding: 0 30px;
   justify-content: space-between;
   box-sizing: border-box;
   .right {

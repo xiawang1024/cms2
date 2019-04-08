@@ -4,13 +4,13 @@
       <el-tab-pane label="栏目基本信息" name="information">
         <BasicInformation :active-name = "activeName" :channel-id = "treeTags[treeTags.length - 1].id"/>
       </el-tab-pane>
-      <el-tab-pane label="设置栏目模板" name="templet">
+      <el-tab-pane label="设置栏目模板" name="templet" v-if="contextMenu.label !== '建立子栏目'">
         <ColumnTemplet :active-name = "activeName" :channel-array = "treeTags"/>
       </el-tab-pane>
-      <el-tab-pane label="拓展字段" name="field">
+      <el-tab-pane label="拓展字段" name="field" v-if="contextMenu.label !== '建立子栏目'">
         <ExtendField :active-name = "activeName" :channel-id = "treeTags[treeTags.length - 1].id"/>
       </el-tab-pane>
-      <el-tab-pane label="标签设置" name="label">
+      <el-tab-pane label="标签设置" name="label" v-if="contextMenu.label !== '建立子栏目'">
         <LabelSetting :active-name = "activeName" :channel-id = "treeTags[treeTags.length - 1].id"/>
       </el-tab-pane>
     </el-tabs>
@@ -32,10 +32,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['treeTags'])
+    ...mapGetters(['treeTags', 'contextMenu'])
   },
   mounted() {
-    console.log(this.treeTags, 'tags')
   },
   methods: {
     handleClick() {}
@@ -45,6 +44,5 @@ export default {
 
 <style scoped>
 .logs-container {
-  margin: 10px;
 }
 </style>

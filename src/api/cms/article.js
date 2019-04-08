@@ -112,3 +112,40 @@ export function updateArticle(data) {
     data
   })
 }
+/** 
+ * 自定义文档列表
+ */
+export function createDefineArticle(data) {
+  return request({
+    url: '/cms/document',
+    method: 'post',
+    data
+  })
+}
+export function editDefineArticle(data) {
+  return request({
+    url: '/cms/document',
+    method: 'put',
+    data
+  })
+}
+export function defineArticleList(queryObj, pageNo, pageSize) {
+  return request({
+    url: '/cms/document/page?pageNo=' + pageNo + '&pageSize=' + pageSize,
+    method: 'post',
+    data: queryObj
+  })
+}
+export function deleteDefineArticle(data) {
+  return request({
+    url: '/cms/document',
+    method: 'delete',
+    data
+  })
+}
+export function defineDocumentInfor(id) {
+  return request({
+    url: '/cms/document/' + id,
+    method: 'get'
+  })
+}

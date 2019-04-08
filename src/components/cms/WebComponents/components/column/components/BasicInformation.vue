@@ -36,8 +36,9 @@
 
 <script>
 const Upload = _ => import('@/components/cms/Upload/upload')
-import { columnInfor, editColumn, isColumnRepet } from '@/api/cms/columnManage'
+import { columnInfor, editColumn, isColumnRepet, addColumn } from '@/api/cms/columnManage'
 import { fetchDictByDictName } from '@/api/cms/dict'
+import { mapGetters } from 'vuex'
 export default {
   name: 'BasicInformation',
   components: { Upload },
@@ -53,63 +54,6 @@ export default {
   },
   data() {
     return {
-      basicInformation: {
-        parentColumn: '河南广播网',
-        preColumn: '',
-        domain: '',
-        location: '',
-        creator: '',
-        display: '',
-        otherData: '',
-        manager: '',
-        name: '',
-        type: '',
-        icon: {
-          url: '',
-          isScale: false,
-          scaleWidth: '',
-          scaleHeight: ''
-        },
-        keyWords: '',
-        desc: '',
-        modules: ''
-      },
-      preColumnList: [
-        {
-          id: 1,
-          name: '最前面'
-        },
-        {
-          id: 2,
-          name: '焦点图'
-        },
-        {
-          id: 3,
-          name: '电台动态'
-        },
-        {
-          id: 4,
-          name: '新闻资讯'
-        }
-      ],
-      typeList: [
-        {
-          id: 1,
-          name: '新闻'
-        },
-        {
-          id: 2,
-          name: '音乐'
-        },
-        {
-          id: 3,
-          name: '文学'
-        },
-        {
-          id: 4,
-          name: '综艺'
-        }
-      ],
       formSettings: [
         {
           items: [
@@ -199,11 +143,6 @@ export default {
               limit: 1,
               tip: '建议图片大小：1080*1642，图片大小不超过100K'
            },
-          //  {
-          //     label: '',
-          //     name: 'isScale',
-          //     type: 'slot'
-          //  },
            {
               label:'关键字',
               name:'keywordName',
@@ -228,6 +167,9 @@ export default {
       showReturn: true
     }
   },
+  computed: {
+    ...mapGetters(['contextMenu'])
+  },
   watch: {
     activeName(val) {
       if(val === 'information') {
@@ -235,8 +177,6 @@ export default {
         this.getColumnInfor()
       }
     }
-  },
-  mounted() {
   },
   created() {
     this.getColumns()
@@ -295,13 +235,18 @@ export default {
       return new Promise((resolve, reject) => {
         columnInfor(_this.channelId)
           .then((response) => {
-            _this.formData = response.data.result
-            if(_this.formData.iconUrl) {
-              _this.formData.iconUrl = [{
-                url: _this.formData.iconUrl
-              }]
+            if(this.contextMenu.label == '建立子栏目') {
+              _this.$refs.vform.setData('parentChannelNames', response.data.result.channelName)
+              _this.$refs.vform.setData('parentChannelId', response.data.result.channelId)
             } else {
-              _this.formData.iconUrl = []
+              _this.formData = response.data.result
+              if(_this.formData.iconUrl) {
+                _this.formData.iconUrl = [{
+                  url: _this.formData.iconUrl
+                }]
+              } else {
+                _this.formData.iconUrl = []
+              }
             }
             resolve()
           })
@@ -327,16 +272,33 @@ export default {
         formData.templateIds = _this.formData.templateIds
         formData.extFieldsList = _this.formData.extFieldsList
         formData.parentChannelId = _this.formData.parentChannelId
-        editColumn(formData)
-          .then((response) => {
-            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            _this.isLoading = false
-            resolve()
-          })
-          .catch((error) => {
-            reject(error)
-            _this.isLoading = false
-          })
+        if(this.contextMenu.label == '建立子栏目') {
+          // 新建子栏目
+          formData.parentChannelId = _this.channelId
+          delete formData.channelId
+          addColumn(formData)
+            .then((response) => {
+              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+              _this.isLoading = false
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+              _this.isLoading = false
+            })
+        } else {
+          // 修改栏目
+          editColumn(formData)
+            .then((response) => {
+              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+              _this.isLoading = false
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+              _this.isLoading = false
+            })
+        }
       })
     },
     onReturn() {

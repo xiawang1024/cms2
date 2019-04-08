@@ -11,13 +11,18 @@
       :data="imageGroupList"
       size="mini"
       style="width: 100%"
+      highlight-current-row
     >
       <el-table-column
         prop="name"
+        min-width="150px"
+        show-overflow-tooltip
         label="名称"
       />
       <el-table-column
         prop="desc"
+        show-overflow-tooltip
+        min-width="150px"
         label="描述"
       />
       <el-table-column
@@ -29,13 +34,17 @@
         label="创建人"
       />
       <el-table-column
+        width="200px"
         prop="createTime"
         label="创建时间"
       />
-      <el-table-column label="操作">
+      <el-table-column label="操作"
+                       width="150px"
+      >
         <template slot-scope="scope">
           <el-button
             size="mini"
+            type="primary"
             @click="handleEdit(scope.row)"
           >编辑</el-button>
           <el-button
@@ -50,167 +59,49 @@
       :visible.sync="addImageGroupVisible"
       :before-close="handleClean"
       top="8vh"
-      width="70%"
       title="收货地址"
     >
-      <el-form
-        ref="imageGroupForm"
-        :model="imageGroupForm"
-        label-width="100px"
-        label-position="left"
-      >
-        <el-form-item label="名称">
-          <el-input
-            v-model="imageGroupForm.name"
-            style="max-width:300px"
-          />
-        </el-form-item>
-        <el-form-item label="描述">
-          <el-input
-            v-model="imageGroupForm.desc"
-            style="max-width:300px"
-          />
-        </el-form-item>
-        <el-form-item label="是否禁用">
-          <el-switch
-            v-model="imageGroupForm.disable"
-            active-color="#13ce66"
-          />
-        </el-form-item>
-        <el-form-item label="标签" />
-        <el-form-item label="图集">
-          <el-table
-            :data="imageGroupForm.imageList"
-            style="width: 100%"
-          >
-            <el-table-column
-              prop="title"
-              label="文件"
-            >
-              <template slot-scope="scope">
-                <img
-                  :src="scope.row.imageUrl"
-                  style="width:100%"
-                >
-                <span class="fileName">{{ scope.row.fileName }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="belongColumn"
-              label="信息"
-            >
-              <template slot-scope="scope">
-                <div>
-                  <i class="el-icon-document" />
-                  {{ scope.row.size }}
-                </div>
-                <div>
-                  <i class="el-icon-info" />
-                  {{ scope.row.width }}*{{ scope.row.height }}
-                </div>
-                <div>
-                  <i class="el-icon-date" />
-                  {{ scope.row.uploadTime }}
-                </div>
-                <el-input v-model="scope.row.location" />
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="releaseTime"
-              label="自定义数据"
-            >
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.f1">
-                  <template slot="prepend">F1=</template>
-                </el-input>
-                <el-input v-model="scope.row.f2">
-                  <template slot="prepend">F2=</template>
-                </el-input>
-                <el-input v-model="scope.row.f3">
-                  <template slot="prepend">F3=</template>
-                </el-input>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="author"
-              label="标题与描述"
-            >
-              <template slot-scope="scope">
-                <el-input
-                  v-model="scope.row.title"
-                  placeholder="标题"
-                />
-                <el-input
-                  v-model="scope.row.desc"
-                  type="textarea"
-                  placeholder="描述..."
-                />
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="redirectLocation"
-              label="跳转地址"
-            >
-              <template slot-scope="scope">
-                <el-input
-                  v-model="scope.row.redirectLocation"
-                  type="textarea"
-                  placeholder="跳转地址"
-                />
-              </template>
-            </el-table-column>
-            <el-table-column>
-              <template
-                slot="header"
-                slot-scope="scope"
-              >
-                <Upload />
-              </template>
-              <template slot-scope="scope">
-                <el-button
-                  type="danger"
-                  style="display:block"
-                  @click="handleDelete(scope.row)"
-                >删除</el-button>
-                <el-button
-                  type="success"
-                  style="display:block"
-                  @click="handleSetCover(scope.row)"
-                >设为封面</el-button>
-                <el-button
-                  type="primary"
-                  style="display:block"
-                  @click="handleSetCover(scope.row)"
-                >重新上传</el-button>
-                <el-button
-                  icon="el-icon-arrow-up"
-                  circle
-                />
-                <el-button
-                  icon="el-icon-arrow-down"
-                  circle
-                />
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-form-item>
-      </el-form>
+      <el-row :gutter="20">
+        <el-col :xs="24" :sm="12" :md="12" :lg="14" :xl="14">
+          <v-form ref="vform" :form-settings="formSettings" :form-data="formData" :show-preview="showPreview" label-width="80px" @fileDetail="fileDetail" @removeFile="removeFile" @save="submitSave"/>
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" :offset="1">
+          <div v-if="rightCardShow" class="image-setting">
+            <el-card class="box-card">
+              <v-form ref="formSetting" :form-settings="fileSettings" :form-data="singleData" label-width="80px" :show-button = "false">
+                <template slot="information">
+                  <div class="file-infor">
+                    <div class="file-img">
+                      <img :src="filedetail.url" alt="">
+                    </div>
+                    <div class="desc">
+                      <div>{{ filedetail.name }}</div>
+                      <div v-if="filedetail.createTime">{{ parseInt(filedetail.createTime)|timeFilter }}</div>
+                      <div v-if="filedetail.size">{{ Math.floor(filedetail.size / 1024) }} kb</div>
+                    </div>
+                  </div>
+                </template>
+                <template slot="btn">
+                  <el-button type="primary" size="small" @click ="setFile">保存</el-button>
+                  <el-button size="small" @click="colseSet">关闭</el-button>
+                </template>
+              </v-form>
+            </el-card>
+          </div>
+        </el-col>
+      </el-row>
       <div
         slot="footer"
         class="dialog-footer"
-      >
-        <el-button @click="addImageGroupVisible = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="addImageGroupVisible = false"
-        >保 存</el-button>
-      </div>
+      />
     </el-dialog>
   </div>
 </template>
 <script>
 import Upload from '@/components/cms/Upload/uploadBtn'
 import { imageGroupList } from './mockData.js'
+import { columnInfor } from '@/api/cms/columnManage'
+import { mapGetters } from 'vuex'
 export default {
   name: 'ImageGroup',
   components: { Upload },
@@ -225,10 +116,113 @@ export default {
         disable: '',
         tag: '',
         imageList: []
-      }
+      },
+      rightCardShow: false,
+      showPreview: false,
+      formSettings: [{
+        items: [
+          {
+            label: '名称',
+            name: 'groupName',
+            type: 'text',
+            placeholder: '请输入名称'
+          },
+          {
+            label: '描述',
+            name: 'groupDes',
+            type: 'text',
+            placeholder: '请输入描述'
+          },
+          {
+            label: '是否禁用',
+            name: 'enableFlag',
+            activeValue: 0,
+            inactiveValue: 1,
+            activeColor: '#13ce66',
+            value: 1,
+            type: 'switch'
+          },
+          {
+            label: '标签',
+            name: 'tagIds',
+            type: 'checkbox',
+            options: []
+          },
+          {
+            label: '图片组',
+            name: 'contentImagesList',
+            type: 'img',
+            required: false,
+            // hasTextInput: true,
+            hidden: false,
+            maxSize: 1024*1
+          }
+        ]
+      }],
+      fileSettings: [{
+        items: [
+          {
+            label: '附件详情',
+            name: 'information',
+            type: 'slot'
+          },
+          {
+            label: '标题',
+            name: 'title',
+            type: 'text'
+          },
+          {
+            label: '描述',
+            name: 'desc',
+            type: 'textarea',
+          },
+          {
+            label: '设为封面',
+            name: 'coverBool',
+            type: 'switch',
+            hidden: false
+          },
+          {
+            label: '',
+            name: 'btn',
+            type: 'slot'
+          },
+        ]
+      }],
+      formData: {},
+      singleData: {},
+      filedetail: {}
     }
   },
+  computed: {
+    ...mapGetters(['treeTags'])
+  },
+  mounted() {
+    this.getColumnInfor()
+  },
   methods: {
+    submitSave(data) {
+      console.log(data, 'data')
+      console.log(this.$refs.vform.formModel)
+    },
+    fileDetail(val) {
+      this.rightCardShow = true
+      this.singleData = {}
+      this.filedetail = val
+      this.singleData = val
+    },
+    colseSet() {
+      this.rightCardShow = false
+    },
+    removeFile() {
+      this.rightCardShow = false
+    },
+    setFile() {
+      this.filedetail.desc = this.$refs.formSetting.formModel.desc
+      this.filedetail.title = this.$refs.formSetting.formModel.title
+      this.filedetail.coverBool = this.$refs.formSetting.formModel.coverBool
+      this.$message.success('保存成功')
+    },
     handleAdd() {
       this.imageGroupForm = {
         id: '',
@@ -240,6 +234,31 @@ export default {
       }
       this.addImageGroupVisible = true
     },
+    // 获取栏目详情
+    getColumnInfor() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        columnInfor(this.treeTags[this.treeTags.length - 1].id)
+          .then((response) => {
+            _this.tagList = []
+            if(response.data.result.tagRule) {
+              Object.keys(response.data.result.tagRule).forEach((ele) => {
+                if(response.data.result.tagRule[ele]) {
+                  _this.tagList.push({
+                    label: response.data.result.tagRule[ele],
+                    value: ele
+                  })
+                }
+              })
+            }
+            _this.formSettings[0].items[3].options = _this.tagList
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
     handleEdit(row) {
       this.imageGroupForm.imageList = row.imageList
       this.addImageGroupVisible = true
@@ -249,32 +268,79 @@ export default {
     },
     handleSave() {},
     handleDelete() {}
-  }
+  },
 }
 </script>
-<style lang="scss" scoped>
-.el-button + .el-button {
-  margin: 5px 0px;
+<style lang="scss">
+.imageGroup-wrap{
+  .image-setting{
+    .form-section{
+      border-bottom:none;
+    }
+    .el-card{
+      margin-top:16px;
+      .el-card__body {
+        padding:0px;
+      }
+    }
+  }
+  .v-form {
+    .form-section {
+      overflow: visible;
+      .upload-img, .upload-file{
+        .el-upload-list {
+          li {
+            margin-bottom: 26px;
+          }
+        }
+      }
+      .upload-file {
+        .el-upload-list {
+          li {
+            border: 1px solid #c0ccda;;
+          }
+        }
+      }
+      .file-img {
+        height: 100px;
+        img{
+          width: auto;
+          height:100%;
+        }
+      }
+      .file-infor {
+        .desc {
+          margin-top:10px;
+          div {
+            color: #C0C4CC;
+            line-height: 16px;
+          }
+        }
+      }
+    }
+  }
 }
-.imageGroup-wrap {
-  margin: 0 5px;
-}
-.tool-bar {
-  text-align: right;
-}
-.title {
-  color: #454545;
-  padding: 10px 0;
-  font-weight: 700;
-  border-bottom: 1px solid #444;
-  margin-bottom: 20px;
-}
-.location-box {
-  width: 300px;
-}
-.location-btn {
-  width: 30%;
-  padding: 20px;
-}
+// .el-button + .el-button {
+//   margin: 5px 0px;
+// }
+// .imageGroup-wrap {
+//   margin: 0 5px;
+// }
+// .tool-bar {
+// }
+// .title {
+//   color: #454545;
+//   padding: 10px 0;
+//   font-weight: 700;
+//   border-bottom: 1px solid #444;
+//   margin-bottom: 20px;
+// }
+// .location-box {
+//   width: 300px;
+// }
+// .location-btn {
+//   width: 30%;
+//   padding: 20px;
+// }
 </style>
 
