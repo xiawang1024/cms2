@@ -281,6 +281,10 @@ export default {
         }
         if(this.contextMenu.docId) {
           resoultObj.articleId = this.contextMenu.docId
+          console.log(this.getDocInformation, '')
+          if(this.getDocInformation.attachmentsList) {
+            resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+          }
           this.editDoc(resoultObj)
         } else {
           resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
