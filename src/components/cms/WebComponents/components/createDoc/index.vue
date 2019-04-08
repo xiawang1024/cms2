@@ -2,14 +2,13 @@
   <div class="docs-wrap">
     <el-tabs v-model="activeName" type="card">
       <el-tab-pane label="基本内容" name="basicContent">
-        <BasicContent @docInfor="docInfor" :prop-information="docInformation" :active-name="activeName"/>
+        <BasicContent :active-name="activeName"/>
       </el-tab-pane>
       <el-tab-pane label="图片和附件" name="picturesAndAccessories">
         <PicturesAndAccessories :prop-information="docInformation" :active-name="activeName" @docInfor="docInfor"/>
       </el-tab-pane>
-      <el-tab-pane label="相关文档" name="relatedDocuments">
-        相关文档
-        <!-- <RelatedDocuments/> -->
+      <el-tab-pane label="相关文档" name="relatedDocuments" :active-name="activeName">
+        <RelatedDocuments/>
       </el-tab-pane>
     </el-tabs>
     <!-- {{ treeTags }} -->
@@ -18,14 +17,14 @@
 <script>
 import PicturesAndAccessories from './picturesAndAccessories'
 import BasicContent from './basicContent'
-// import RelatedDocuments from './relatedDocuments'
+import RelatedDocuments from './relatedDocuments'
 import { mapGetters } from 'vuex'
 export default {
   name: 'DocsWrap',
   components: {
     PicturesAndAccessories,
     BasicContent,
-    // RelatedDocuments
+    RelatedDocuments
   },
   data() {
     return {

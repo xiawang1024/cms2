@@ -45,12 +45,12 @@ export default {
       },
       type: Array
     },
-    propInformation: {
-      default: ()=> {
-        return {}
-      },
-      type: Object
-    }
+    // propInformation: {
+    //   default: ()=> {
+    //     return {}
+    //   },
+    //   type: Object
+    // }
   },
   data() {
     return {
@@ -140,7 +140,7 @@ export default {
     },
     getSubmitData() {
       let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
-      resoultObj.channelId = this.channelId
+      // resoultObj.channelId = this.channelId
       resoultObj.articleType = 3
       resoultObj.seoKeywords = ''
       resoultObj.articleOrigin = ''
@@ -205,7 +205,7 @@ export default {
           resoultObj.articleId = this.contextMenu.docId
           this.editDoc(resoultObj)
         } else {
-          resoultObj.articleAttachmentsList = this.propInformation.articleAttachmentsList
+          resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
           this.createDoc(resoultObj)
         }
       })

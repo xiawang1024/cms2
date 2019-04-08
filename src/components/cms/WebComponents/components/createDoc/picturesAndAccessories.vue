@@ -177,17 +177,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['contextMenu', 'treeTags'])
+    ...mapGetters(['contextMenu', 'treeTags', 'getDocInformation'])
   },
   watch: {
-    activeName(val) {
+    activeName(val, oldval) {
       if(val === 'picturesAndAccessories') {
         if(this.contextMenu.docId) {
           this.getDocumentInfor(this.contextMenu.docId)
         }
       }
-      if(val == 'basicContent') {
-        this.$emit('docInfor', this.getSubmitData())
+      if(oldval == 'picturesAndAccessories') {
+        this.$store.dispatch('setAttachmentsList', this.getSubmitData())
       }
     }
   },
@@ -230,12 +230,6 @@ export default {
             _this.formData.contentImagesList = _this.differenceFile(response.data.result.articleAttachmentsList, 'IMG')
             _this.formData.contentAudioList = _this.differenceFile(response.data.result.articleAttachmentsList, 'AUDIO')
             _this.formData.articleAttachmentsList = _this.differenceFile(response.data.result.articleAttachmentsList, 'OTHER')
-
-            // _this.formData.contentVideosList =  _this.formData.contentVideosList ?  _this.formData.contentVideosList : []
-            // _this.formData.contentImagesList =  _this.formData.contentImagesList ?  _this.formData.contentImagesList : []
-            // _this.formData.contentAudioList =  _this.formData.contentAudioList ?  _this.formData.contentAudioList : []
-            // _this.formData.articleAttachmentsList =  _this.formData.articleAttachmentsList ?  _this.formData.articleAttachmentsList : []
-            // _this.formData.articleAttachmentsList =  _this.formData.articleAttachmentsList ?  _this.formData.articleAttachmentsList : []
             resolve()
           })
           .catch((error) => {
@@ -337,15 +331,12 @@ export default {
     },
     getSubmitData() {
       let articleAttachmentsList = []
-      let resoultObj = this.docInformation
-      resoultObj.channelId = this.treeTags[this.treeTags.length - 1].id
       let imageFile = this.addCategory(this.$refs.imageForm.formModel.contentImagesList, 'IMG')
       let videoFile = this.addCategory(this.$refs.imageForm.formModel.contentVideosList, 'VIDEO')
       let audioFile = this.addCategory(this.$refs.imageForm.formModel.contentAudioList, 'AUDIO') 
       let otherFile = this.addCategory(this.$refs.imageForm.formModel.articleAttachmentsList, 'OTHER')
       let articleAttachmentsListCombine = articleAttachmentsList.concat(imageFile, videoFile, audioFile, otherFile)
-      resoultObj.articleAttachmentsList = articleAttachmentsListCombine
-      return resoultObj
+      return articleAttachmentsListCombine
     },
     save(publishType) {
       let articleAttachmentsList = []
@@ -362,7 +353,7 @@ export default {
         resoultObj.articleId = this.contextMenu.docId
         this.editDoc(resoultObj)
       } else {
-        resoultObj = Object.assign(resoultObj, this.propInformation)
+        resoultObj = Object.assign(resoultObj, this.getDocInformation.baseInfor)
         if(!resoultObj.articleTitle && resoultObj.articleType !==2) {
           this.$message.warning('正文标题不能为空')
           return

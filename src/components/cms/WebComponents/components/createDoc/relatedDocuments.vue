@@ -57,6 +57,18 @@ export default {
       dialogVisible: false
     }
   },
+  watch: {
+    activeName(val, oldval) {
+      // if(val === 'picturesAndAccessories') {
+      //   if(this.contextMenu.docId) {
+      //     this.getDocumentInfor(this.contextMenu.docId)
+      //   }
+      // }
+      // if(oldval == 'relatedDocuments') {
+      //   this.$store.dispatch('setRelationList', [1,2,3,4])
+      // }
+    }
+  },
   methods: {
     handleAdd() {
       this.dialogVisible = true

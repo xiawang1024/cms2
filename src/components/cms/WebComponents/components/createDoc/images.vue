@@ -51,12 +51,12 @@ export default {
       },
       type: Array
     },
-    propInformation: {
-      default: ()=> {
-        return {}
-      },
-      type: Object
-    }
+    // propInformation: {
+    //   default: ()=> {
+    //     return {}
+    //   },
+    //   type: Object
+    // }
   },
   data() {
     return {
@@ -224,7 +224,7 @@ export default {
     },
     getSubmitData() {
       let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
-      resoultObj.channelId = this.channelId
+      // resoultObj.channelId = this.channelId
       // 标签字段处理
       let chooseTags = []
       if( resoultObj.tagIds) {
@@ -244,9 +244,7 @@ export default {
       delete resoultObj.set
       delete resoultObj.tagIds
       delete resoultObj.btn
-      if (resoultObj.contentBody) {
-        console.log('')
-      } else {
+      if (!resoultObj.contentBody) {
         resoultObj.contentBody = ''
       }
       return resoultObj
@@ -278,16 +276,14 @@ export default {
         delete resoultObj.set
         delete resoultObj.tagIds
         delete resoultObj.btn
-        if (resoultObj.contentBody) {
-          console.log('')
-        } else {
+        if (!resoultObj.contentBody) {
           resoultObj.contentBody = ''
         }
         if(this.contextMenu.docId) {
           resoultObj.articleId = this.contextMenu.docId
           this.editDoc(resoultObj)
         } else {
-          resoultObj.articleAttachmentsList = this.propInformation.articleAttachmentsList
+          resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
           this.createDoc(resoultObj)
         }
       })
