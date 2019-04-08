@@ -75,6 +75,7 @@ import { fetchClassAll } from '@/api/program/class'
 import { fetchColumn, createColumn } from '@/api/program/column'
 import MDinput from '@/components/MDinput'
 import Vue from 'vue'
+import baseUrl from '@/config/base-url'
 
 const defaultForm = {
   columnId: '',       // Id
@@ -168,7 +169,7 @@ export default {
       fetchColumn(id).then(response => {
         this.postForm = response.data.result
         this.logo = JSON.parse(response.data.result.columnInfo).logo
-        this.imgSrc = process.env.BASE_API + this.logo
+        this.imgSrc = baseUrl.DOWN_URL + this.logo
         this.desc = JSON.parse(response.data.result.columnInfo).desc
         this.channel_name = JSON.parse(response.data.result.columnInfo).channel_name
         this.compere_str = JSON.parse(response.data.result.columnInfo).compere_str
@@ -241,8 +242,7 @@ export default {
       this.$router.go(-1)
     },
     uploadUrl() {
-        // var url = process.env.BASE_API + "/system/common/imgUpload" // 生产环境和开发环境的判断
-        var url = "http://172.20.5.4:55030/basefile/upload" // 文件服务地址
+        var url = baseUrl.UP_URL+"program" // 文件服务地址
         return url
     },
     handleRemove(file, fileList) {//移除图片
@@ -268,7 +268,7 @@ export default {
       handleAvatarSuccess(res, file) {//图片上传成功
         // this.imageUrl = URL.createObjectURL(file.raw);
         this.logo = file.response.result.filePath
-        this.imgSrc = file.response.result.fileUrl + this.logo
+        this.imgSrc = baseUrl.DOWN_URL + this.logo
       },
       imgUploadError(err, file, fileList){//图片上传失败调用
         this.$message.error('上传图片失败!')
