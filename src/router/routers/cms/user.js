@@ -19,7 +19,7 @@ const personAndAuthor = {
       path: 'permissionGroup',
       component: () => import(`@/${path}/permissionGroup`),
       name: 'permissionGroup',
-      meta: { title: 'permissionGroup', icon: 'permissionGroup', role: '' }
+      meta: { title: 'permissionGroup', icon: 'permissionGroup', role: 'cms' }
     },
     // {
     //   /**

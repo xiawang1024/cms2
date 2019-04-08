@@ -8,7 +8,7 @@ import 'element-ui/lib/theme-chalk/base.css'
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
 
 // 引入自定义全局组件
-// import vPage from '@/components/page/'
+import vPage from '@/common/page/'
 import vSearch from '@/common/search'
 import vForm from '@/common/form'
 // import formGenerator from '@/components/formGenerator'
@@ -23,6 +23,7 @@ export function initComponent(Vue) {
   Vue.use(upLoader)
   Vue.use(vSearch)
   Vue.use(vForm)
+  Vue.use(vPage)
   // Vue.component('formGenerator', formGenerator)
 
   // Object.defineProperty(Vue.prototype, '$localforage', {
