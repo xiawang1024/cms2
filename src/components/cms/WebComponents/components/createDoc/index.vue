@@ -7,9 +7,10 @@
       <el-tab-pane label="图片和附件" name="picturesAndAccessories">
         <PicturesAndAccessories :prop-information="docInformation" :active-name="activeName" @docInfor="docInfor"/>
       </el-tab-pane>
-      <!-- <el-tab-pane label="相关文档" name="relatedDocuments">
-        <RelatedDocuments/>
-      </el-tab-pane> -->
+      <el-tab-pane label="相关文档" name="relatedDocuments">
+        相关文档
+        <!-- <RelatedDocuments/> -->
+      </el-tab-pane>
     </el-tabs>
     <!-- {{ treeTags }} -->
   </div>
