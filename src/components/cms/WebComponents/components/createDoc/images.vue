@@ -149,7 +149,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['contextMenu'])
+    ...mapGetters(['contextMenu', 'getDocInformation'])
   },
   watch: {
     docInfor(val) {
@@ -281,10 +281,10 @@ export default {
         }
         if(this.contextMenu.docId) {
           resoultObj.articleId = this.contextMenu.docId
-          console.log(this.getDocInformation, '')
-          if(this.getDocInformation.attachmentsList) {
-            resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
-          }
+          console.log(this.getDocInformation, 'getDocInformation')
+          // if(this.getDocInformation.attachmentsList) {
+          //   resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+          // }
           this.editDoc(resoultObj)
         } else {
           resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList

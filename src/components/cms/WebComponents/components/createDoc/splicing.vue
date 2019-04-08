@@ -133,7 +133,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['contextMenu'])
+    ...mapGetters(['contextMenu', 'getDocInformation'])
   },
   watch: {
     docInfor(val) {
