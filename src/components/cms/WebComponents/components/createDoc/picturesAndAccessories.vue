@@ -181,17 +181,20 @@ export default {
   },
   watch: {
     activeName(val, oldval) {
-      if(val === 'picturesAndAccessories') {
-        if(this.contextMenu.docId) {
-          this.getDocumentInfor(this.contextMenu.docId)
-        }
-      }
+      // if(val === 'picturesAndAccessories') {
+      //   if(this.contextMenu.docId) {
+      //     this.getDocumentInfor(this.contextMenu.docId)
+      //   }
+      // }
       if(oldval == 'picturesAndAccessories') {
         this.$store.dispatch('setAttachmentsList', this.getSubmitData())
       }
     }
   },
   mounted () {
+    if(this.contextMenu.docId) {
+      this.getDocumentInfor(this.contextMenu.docId)
+    }
   },
   methods: {
     // 关闭

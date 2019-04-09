@@ -7,9 +7,9 @@ const webSite = {
       id: '0'
     },
     docInformation: {
-      baseInfor: {},
-      attachmentsList: [],
-      relationList: []
+      baseInfor: '',
+      attachmentsList: '',
+      relationList: ''
     }
   },
   mutations: {

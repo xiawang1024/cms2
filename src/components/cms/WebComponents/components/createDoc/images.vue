@@ -280,14 +280,19 @@ export default {
           resoultObj.contentBody = ''
         }
         if(this.contextMenu.docId) {
+          if(this.getDocInformation.attachmentsList) {
+            resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+          } else {
+            resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
+          }
           resoultObj.articleId = this.contextMenu.docId
-          console.log(this.getDocInformation, 'getDocInformation')
-          // if(this.getDocInformation.attachmentsList) {
-          //   resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
-          // }
           this.editDoc(resoultObj)
         } else {
-          resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+          if(this.getDocInformation.attachmentsList) {
+            resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+          } else {
+            resoultObj.articleAttachmentsList = []
+          }
           this.createDoc(resoultObj)
         }
       })

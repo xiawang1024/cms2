@@ -342,10 +342,19 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if(this.contextMenu.docId) {
+            if(this.getDocInformation.attachmentsList) {
+              resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+            } else {
+              resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
+            }
             resoultObj.articleId = this.contextMenu.docId
             this.editDoc(resoultObj)
           } else {
-            resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+             if(this.getDocInformation.attachmentsList) {
+              resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+            } else {
+              resoultObj.articleAttachmentsList = []
+            }
             this.createDoc(resoultObj)
           }
         } else {
