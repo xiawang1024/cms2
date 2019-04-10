@@ -115,3 +115,15 @@ export function UserRoleRelRoleInfoByUserId(userId) {
     method: 'GET'
   })
 }
+
+/**
+ *  名称是否重复
+ * @param organizationCode
+ * @constructor
+ */
+export function UserCheckCode(userName) {
+  return request({
+    url: '/userb/user/checkusername/' + userName,
+    method: 'GET'
+  })
+}

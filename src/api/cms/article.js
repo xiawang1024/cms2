@@ -149,3 +149,21 @@ export function defineDocumentInfor(id) {
     method: 'get'
   })
 }
+/*
+  相关文档
+*/
+// 获取文章下的关联文档
+export function getRelationDoc(id) {
+  return request({
+    url: `/cms/article/relatedarticleshow/${id}`,
+    method: 'post'
+  })
+}
+// 保存文章下的关联文档
+export function saveRelationDoc(id, data) {
+  return request({
+    url: `/cms/article/relatedarticleoperation/${id}`,
+    method: 'post',
+    data
+  })
+}

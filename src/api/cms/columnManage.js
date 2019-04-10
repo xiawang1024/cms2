@@ -89,3 +89,4 @@ export function isColumnRepet(channelCode) {
     method: 'get'
   })
 }
+

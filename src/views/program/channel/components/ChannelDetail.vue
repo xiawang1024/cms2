@@ -15,8 +15,8 @@
             <label class="material-label-lighting">频率名称</label>
           </MDinput>
         </el-form-item>
-        <el-form-item style="margin-bottom: 40px;">
-          <MDinput v-model="secondName" :maxlength="100" name="name" required>
+        <el-form-item style="margin-bottom: 40px;" prop="secondName">
+          <MDinput v-model="postForm.secondName" :maxlength="100" name="name" required>
             对应直播的频率英文或拼音名称
           </MDinput>
         </el-form-item>
@@ -30,7 +30,7 @@
         </el-form-item>
         <el-form-item style="margin-bottom: 40px;" class="redItem" label="所属类型">
           <el-select v-model="classIdArr" @change="selectClass" multiple placeholder="请选择">
-            <el-option v-for="item in this.options" :key="item.class_id" :label="item.class_name" :value="item.class_id"/>
+            <el-option v-for="item in options" :key="item.class_id" :label="item.class_name" :value="item.class_id"/>
           </el-select>
         </el-form-item>
         <el-form-item label="是否开启点播">
@@ -89,7 +89,7 @@
 <script>
 import { fetchChannel, createChannel } from '@/api/program/channel'
 import MDinput from '@/components/MDinput'
-import { validateURL } from '@/utils/validate'
+import { validateURL, validateNumber, validateAlphabets } from '@/utils/validate'
 import { getPinYinFirstCharacter } from '../components/PinYin'
 import Vue from 'vue'
 
@@ -98,12 +98,13 @@ const defaultForm = {
   classId: '',        // 所属类别id串
   channelName: '',    // 频率名称
   channelNameE:'',    // 频率英文或拼音名称
-  showOrder:'999',    // 指定排序
+  showOrder: '999',   // 指定排序
   channelInfo: '',    // 频率详情
   userId: '',         // 租户ID
   status: 1,          // 状态0未启用1启用
   streams: '',        // 频率直播地址
-  videoStreams: ''    // 频率视频直播地址
+  videoStreams: '',   // 频率视频直播地址
+  secondName: ''      // 第二名称
 }
 
 export default {
@@ -121,7 +122,29 @@ export default {
         if (validateURL(value)) {
           callback()
         } else {
-          callback(new Error('url格式不正确'))
+          callback(new Error('url格式不正确, 示例http://xxxx.com'))
+        }
+      } else {
+        callback()
+      }
+    }
+    const validateOrderNumber = (rule, value, callback) => {
+      if (value) {
+        if (validateNumber(value)) {
+          callback()
+        } else {
+          callback(new Error('必须为数字类型'))
+        }
+      } else {
+        callback()
+      }
+    }
+    const validateLetters = (rule, value, callback) => {
+      if (value) {
+        if (validateAlphabets(value)) {
+          callback()
+        } else {
+          callback(new Error('必须为英文或拼音'))
         }
       } else {
         callback()
@@ -131,12 +154,11 @@ export default {
       postForm: Object.assign({}, defaultForm),
       postInfo: {},
       loading: false,
-      secondName: '',       // 第二名称
       logo: '',             // logo
       desc: '',             // 描述
       channelHotline: '',   // 频率热线
-      vodSet: '1',           // 是否开启点播
-      interactSet: '1',      // 是否开启互动
+      vodSet: '1',          // 是否开启点播
+      interactSet: '1',     // 是否开启互动
       imgSrc: '',           // 图片
       classIdArr: [],       // 类别id数组
       options: [{
@@ -163,8 +185,9 @@ export default {
       },
       rules: {
         channelName: [{ required: true, message: '频率名称为必填项', trigger: 'blur' }],
-        showOrder: [{ required: true, message: '排序为必填项', trigger: 'blur' }],
-        streams: [{required: true, message: '频率直播地址为必填项', trigger: 'blur'}, { validator: validateSourceUri, trigger: 'blur' }],
+        showOrder: [{ required: true, message: '排序为必填项', trigger: 'blur' }, { validator: validateOrderNumber, trigger: 'blur' }],
+        secondName: [{ required: false, trigger: 'blur' }, { validator: validateLetters, trigger: 'blur' }],
+        streams: [{ required: true, message: '频率直播地址为必填项', trigger: 'blur'}, { validator: validateSourceUri, trigger: 'blur' }],
         videoStreams: [{ required: true, message: '频率视频直播地址为必填项', trigger: 'blur'}, {validator: validateSourceUri, trigger: 'blur' }]
       }
     }
@@ -191,7 +214,7 @@ export default {
         this.interactSet = JSON.parse(response.data.result.channelInfo).interact_set
         this.postForm.streams = JSON.parse(response.data.result.channelInfo).streams
         this.postForm.videoStreams = JSON.parse(response.data.result.channelInfo).video_streams
-        this.secondName = JSON.parse(response.data.result.channelInfo).second_name
+        this.postForm.secondName = JSON.parse(response.data.result.channelInfo).second_name
         //将数组内的id串拆分成数组后再转为整型
         let classJsonStr = this.postForm.classId
         // 去掉前后','
@@ -213,7 +236,7 @@ export default {
     },
     submitData() {
       //将信息集体打包成json作为单独一个字段传入后台
-      Vue.set(this.postInfo, 'second_name', this.secondName)
+      Vue.set(this.postInfo, 'second_name', this.postForm.secondName)
       Vue.set(this.postInfo, 'channel_hotline', this.channelHotline)
       Vue.set(this.postInfo, 'vod_set', this.vodSet)
       Vue.set(this.postInfo, 'interact_set', this.interactSet)

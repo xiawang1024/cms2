@@ -93,7 +93,19 @@ export default {
         return []
       },
       type: Array
-    }
+    },
+    sourceList: {
+      default: ()=> {
+        return []
+      },
+      type: Array
+    },
+    // propInformation: {
+    //   default: ()=> {
+    //     return {}
+    //   },
+    //   type: Object
+    // }
   },
   data() {
     return {
@@ -137,8 +149,9 @@ export default {
             {
               label: '来源',
               name: 'articleOrigin',
-              type: 'text',
-              placeholder: '请输入来源'
+              type: 'select',
+              placeholder: '请选择',
+              options: []
             },
             {
               label: '作者',
@@ -161,7 +174,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['contextMenu'])
+    ...mapGetters(['contextMenu', 'getDocInformation'])
   },
   watch: {
     docInfor(val) {
@@ -183,9 +196,18 @@ export default {
         })
       }
       this.formData.tagIds = showTags
+    },
+    sourceList(val) {
+      if(val.length) {
+        console.log(val)
+        this.baseSettings[0].items[1].options = val
+      }
     }
   },
   mounted() {
+    if(this.sourceList.length) {
+      this.baseSettings[0].items[1].options = this.sourceList
+    }
     this.docContentForm = {
       articleTitle: this.docInfor.articleTitle,
       contentTitle: this.docInfor.contentTitle,
@@ -246,6 +268,43 @@ export default {
           })
       })
     },
+    getSubmitData() {
+      let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
+      // 获取扩展字段的值
+      let extendsFields = []
+      if(this.extendsList.length) {
+        extendsFields = this.extendsList.map((ele) => {
+          return {
+            label: ele.label,
+            fieldValue: resoultObj[ele.label]
+          }
+        })
+      }
+      resoultObj.extFieldsList = extendsFields
+      resoultObj.channelId = this.channelId
+      // 标签字段处理
+      let chooseTags = []
+      if(resoultObj.tagIds) {
+        resoultObj.tagIds.forEach((ele) => {
+          this.tagList.forEach((son) => {
+            if(ele == son.value) {
+              chooseTags.push({
+                tagId: son.value,
+                tagName: son.label
+              })
+            }
+          })
+        })
+      }
+      resoultObj.tagIdsList = chooseTags
+      resoultObj.articleType = 0
+      delete resoultObj.set
+      delete resoultObj.tagIds
+      if(!resoultObj.contentBody) {
+        resoultObj.contentBody = ''
+      }
+      return resoultObj
+    },
     save(formName, publishType) {
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       // 获取扩展字段的值
@@ -277,17 +336,25 @@ export default {
       resoultObj.articleType = 0
       delete resoultObj.set
       delete resoultObj.tagIds
-      if (resoultObj.contentBody) {
-        console.log('')
-      } else {
+      if (!resoultObj.contentBody) {
         resoultObj.contentBody = ''
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if(this.contextMenu.docId) {
+            if(this.getDocInformation.attachmentsList) {
+              resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+            } else {
+              resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
+            }
             resoultObj.articleId = this.contextMenu.docId
             this.editDoc(resoultObj)
           } else {
+             if(this.getDocInformation.attachmentsList) {
+              resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+            } else {
+              resoultObj.articleAttachmentsList = []
+            }
             this.createDoc(resoultObj)
           }
         } else {

@@ -63,6 +63,12 @@ export default {
     activeName: {
       default: '',
       type: String
+    },
+    propInformation: {
+      default: ()=> {
+        return {}
+      },
+      type: Object
     }
   },
   data () {
@@ -83,7 +89,7 @@ export default {
             required: false,
             // hasTextInput: true,
             hidden: false,
-            maxSize: 1024*1
+            maxSize: 1024*5
           },
           {
             label: '音频',
@@ -166,18 +172,24 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['contextMenu', 'treeTags'])
+    ...mapGetters(['contextMenu', 'treeTags', 'getDocInformation'])
   },
   watch: {
-    activeName(val) {
-     if(val === 'picturesAndAccessories') {
-       if(this.contextMenu.docId) {
-         this.getDocumentInfor(this.contextMenu.docId)
-       }
-     }
+    activeName(val, oldval) {
+      // if(val === 'picturesAndAccessories') {
+      //   if(this.contextMenu.docId) {
+      //     this.getDocumentInfor(this.contextMenu.docId)
+      //   }
+      // }
+      if(oldval == 'picturesAndAccessories') {
+        this.$store.dispatch('setAttachmentsList', this.getSubmitData())
+      }
     }
   },
   mounted () {
+    if(this.contextMenu.docId) {
+      this.getDocumentInfor(this.contextMenu.docId)
+    }
   },
   methods: {
     // 关闭
@@ -216,12 +228,6 @@ export default {
             _this.formData.contentImagesList = _this.differenceFile(response.data.result.articleAttachmentsList, 'IMG')
             _this.formData.contentAudioList = _this.differenceFile(response.data.result.articleAttachmentsList, 'AUDIO')
             _this.formData.articleAttachmentsList = _this.differenceFile(response.data.result.articleAttachmentsList, 'OTHER')
-
-            // _this.formData.contentVideosList =  _this.formData.contentVideosList ?  _this.formData.contentVideosList : []
-            // _this.formData.contentImagesList =  _this.formData.contentImagesList ?  _this.formData.contentImagesList : []
-            // _this.formData.contentAudioList =  _this.formData.contentAudioList ?  _this.formData.contentAudioList : []
-            // _this.formData.articleAttachmentsList =  _this.formData.articleAttachmentsList ?  _this.formData.articleAttachmentsList : []
-            // _this.formData.articleAttachmentsList =  _this.formData.articleAttachmentsList ?  _this.formData.articleAttachmentsList : []
             resolve()
           })
           .catch((error) => {
@@ -235,6 +241,9 @@ export default {
       this.filedetail.title = this.$refs.vForm.formModel.title
       this.filedetail.coverBool = this.$refs.vForm.formModel.coverBool
       this.$message.success('保存成功')
+      
+      console.log(this.$refs.imageForm.formModel.contentImagesList, 'imageForm')
+      console.log(this.filedetail, 'filedetail')
     },
     typeChange(val) {
       this.rightCardShow = false
@@ -318,6 +327,15 @@ export default {
       }
       return arr
     },
+    getSubmitData() {
+      let articleAttachmentsList = []
+      let imageFile = this.addCategory(this.$refs.imageForm.formModel.contentImagesList, 'IMG')
+      let videoFile = this.addCategory(this.$refs.imageForm.formModel.contentVideosList, 'VIDEO')
+      let audioFile = this.addCategory(this.$refs.imageForm.formModel.contentAudioList, 'AUDIO') 
+      let otherFile = this.addCategory(this.$refs.imageForm.formModel.articleAttachmentsList, 'OTHER')
+      let articleAttachmentsListCombine = articleAttachmentsList.concat(imageFile, videoFile, audioFile, otherFile)
+      return articleAttachmentsListCombine
+    },
     save(publishType) {
       let articleAttachmentsList = []
       let resoultObj = this.docInformation
@@ -326,19 +344,22 @@ export default {
       let videoFile = this.addCategory(this.$refs.imageForm.formModel.contentVideosList, 'VIDEO')
       let audioFile = this.addCategory(this.$refs.imageForm.formModel.contentAudioList, 'AUDIO') 
       let otherFile = this.addCategory(this.$refs.imageForm.formModel.articleAttachmentsList, 'OTHER')
-      // resoultObj.contentImagesList = imageFile
-      // resoultObj.contentVideosList = videoFile
-      // resoultObj.contentAudioList = audioFile
-      // resoultObj.articleAttachmentsList = otherFile
       resoultObj.articleStatus = publishType
       let articleAttachmentsListCombine = articleAttachmentsList.concat(imageFile, videoFile, audioFile, otherFile)
       resoultObj.articleAttachmentsList = articleAttachmentsListCombine
-      console.log(resoultObj, 'resoultObj')
-      // console.log(articleAttachmentsList.concat(imageFile, videoFile, audioFile, otherFile), 'articleAttachmentsList')
       if(this.contextMenu.docId) {
         resoultObj.articleId = this.contextMenu.docId
         this.editDoc(resoultObj)
       } else {
+        resoultObj = Object.assign(resoultObj, this.getDocInformation.baseInfor)
+        if(!resoultObj.articleTitle && resoultObj.articleType !==2) {
+          this.$message.warning('正文标题不能为空')
+          return
+        }
+        if(!resoultObj.contentTitle) {
+          this.$message.warning('首页标题不能为空')
+          return
+        }
         this.createDoc(resoultObj)
       }
     }

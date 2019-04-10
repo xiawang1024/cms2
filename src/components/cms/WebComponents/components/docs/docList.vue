@@ -14,10 +14,12 @@
       <!-- :default-sort="{prop: 'publishTime', order: 'descending'}" -->
       <el-table-column type="selection" width="55"/>
       <el-table-column fixed prop="articleId" label="ID/序号" width="150" show-overflow-tooltip/>
-      <el-table-column fixed prop="articleTitle" label="标题" min-width="160" show-overflow-tooltip>
+      <el-table-column fixed prop="articleTitle" label="标题" min-width="300" show-overflow-tooltip>
         <template slot-scope="scope">
           <span v-if="checkAuth('cms:article:stick')" class="titleClick" @click="editDoc(scope.row.articleId)">{{ scope.row.articleTitle }}</span>
           <span v-else>{{ scope.row.articleTitle }}</span>
+          <icon name="file-alt" title="正文有图" v-if="scope.row.contentImagesList && scope.row.contentImagesList.length"/>
+          <icon name="file-image" title="附件有图" v-if="documentHasImg(scope.row.articleAttachmentsList)"/>
         </template>
       </el-table-column>
       <!-- <el-table-column label="查看" width="60">
@@ -26,12 +28,12 @@
         </template>
       </el-table-column> -->
 
-      <el-table-column label="预览" width="60">
+      <el-table-column label="预览" width="50">
         <template slot-scope="scope">
           <i class="el-icon-question" style="cursor:pointer" @click="openReview(scope.row)"/>
         </template>
       </el-table-column>
-      <el-table-column prop="articleType" label="类型" width="100">
+      <el-table-column prop="articleType" label="类型" width="50">
         <template slot-scope="scope">
           <span v-if="scope.row.articleType == 0">图文</span>
           <span v-if="scope.row.articleType == 1">图集</span>
@@ -39,7 +41,7 @@
           <span v-if="scope.row.articleType == 3">引用</span>
         </template>
       </el-table-column>
-      <el-table-column prop="articleStatus" label="状态" width="100">
+      <el-table-column prop="articleStatus" label="状态" width="80">
         <template slot-scope="scope">
           <span v-if="scope.row.articleStatus == 0">新稿</span>
           <span v-if="scope.row.articleStatus == 1">提交审核</span>
@@ -51,21 +53,26 @@
         </template>
       </el-table-column>
       <!-- <el-table-column prop="mark" label="标记" width="100"/> -->
+      <el-table-column prop="tagIdsList" label="标记" width="100" show-overflow-tooltip>
+        <template slot-scope="scope">
+          {{ tagsChange(scope.row.tagIdsList) }}
+        </template>
+      </el-table-column>
       <el-table-column
         prop="createTime"
         label="创建时间"
-        min-width="120"
+        width="135"
         show-overflow-tooltip
       />
       <el-table-column
         prop="publishTime"
         label="发布时间"
-        min-width="120"
+        width="135"
         show-overflow-tooltip
       />
-      <el-table-column prop="articleAuthor" label="撰稿人" width="100"/>
-      <el-table-column prop="clickNum" label="点击" width="80"/>
-      <el-table-column fixed="right" label="操作" width="150">
+      <el-table-column prop="createUser" label="撰稿人" width="100" show-overflow-tooltip/>
+      <el-table-column prop="clickNum" label="点击" width="50"/>
+      <el-table-column fixed="right" label="操作" width="140">
         <template slot-scope="scope">
           <el-button v-if="checkAuth('cms:article:stick')" type="text" size="small" @click="setTop(scope.row.articleId)">置顶</el-button>
           <el-button v-if="checkAuth('cms:article:edit')" type="text" size="small" @click="editDoc(scope.row.articleId)">编辑</el-button>
@@ -111,6 +118,28 @@ export default {
       } else {
         this.$refs.multipleTable.clearSelection();
       }
+    },
+    documentHasImg(val) {
+      let hasImg = false
+      if(val && val.length) {
+        hasImg = val.some((item)=> {
+          return item.category === 'IMG'
+        })
+      } else {
+        hasImg = false
+      }
+      return hasImg
+    },
+    tagsChange(tags) {
+      let tagName = ''
+      if(tags && tags.length) {
+        tagName = tags.map((ele) => {
+          return ele.tagName
+        }).join(',')
+      } else {
+        tagName = ''
+      }
+      return tagName
     },
     // 置顶的文章加背景色
     tableRowClassName({row, rowIndex}) {
@@ -225,6 +254,16 @@ export default {
 }
 </script>
 <style lang="scss">
+.fa-icon{
+  width:15px;
+  height:15px;
+
+  /* 要在 Safari 中正常工作，需要再引入如下两行代码 */
+  max-width: 100%;
+  max-height: 100%;
+  color: #606266;
+  vertical-align: text-bottom;
+}
 .doc-list {
   width: 100%;
   // padding: 0 10px;

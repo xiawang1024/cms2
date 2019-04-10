@@ -56,8 +56,23 @@ const webpackConfig = merge(baseWebpackConfig, {
       inject: true,
       favicon: resolve('favicon.ico'),
       title: 'vue-element-admin',
+      // templateParameters: {
+      //   BASE_URL: config.build.assetsPublicPath + config.build.assetsSubDirectory,
+      // },
       templateParameters: {
-        BASE_URL: config.build.assetsPublicPath + config.build.assetsSubDirectory,
+        BASE_URL: (()=> {
+          let base = ''
+          if(process.env.NODE_ENV === 'production') {
+            base = config.build.assetsPublicPath + config.build.assetsSubDirectory
+          } else if(process.env.NODE_ENV === 'development') {
+            // base = 'http://172.20.5.2/zhaojp/admin/' + config.build.assetsPublicPath + config.build.assetsSubDirectory
+            // base = 'http://172.20.5.2/zhaojp/admin/' + config.build.assetsPublicPath + config.build.assetsSubDirectory
+            base = config.build.assetsPublicPath + config.build.assetsSubDirectory
+          } else {
+            base = config.build.assetsPublicPath + config.build.assetsSubDirectory
+          }
+            return base
+        })()
       },
       minify: {
         removeComments: true,
