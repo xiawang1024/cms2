@@ -9,15 +9,16 @@
         placeholder="请输入标签/标题/内容"
         prefix-icon="el-icon-search"
         clearable
-        @change="search"
+       
       />
+      <el-button size="mini" type="primary" @click="search(searchKv)">查询</el-button>
       <el-button size="mini" type="primary" @click="handleAdd">新增</el-button>
     </div>
     <el-table :data="allGroup" >            
       <el-table-column prop="id" label="id"/>
       <el-table-column prop="tenantId" label="tenantId"/>
       <el-table-column prop="description" label="description"/>
-      <el-table-column prop="url" label="url"/>           
+      <el-table-column prop="tag" label="tag"/>           
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="prime" @click="handleEdite(scope.$index, scope.row)">修改</el-button>
@@ -43,13 +44,36 @@
         <el-form-item label="租户">
           <el-input v-model="tenant.description"/>
         </el-form-item>
-        <el-form-item label="路径">
-          <el-input v-model="tenant.url"/>
+        <el-form-item label="sort">
+          <el-input v-model="tenant.sort"/>
+        </el-form-item>
+        <el-form-item label="tag">
+          <el-input v-model="tenant.tag"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="mini" @click="Visible = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="handleEdite()">确 定</el-button>
+        <el-button size="mini" type="primary" @click="handleEditeSave()">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog :visible.sync="addGroupVisible" title="添加配置组">
+      <el-form :model="addGroup">
+        <el-form-item label="租户id">
+          <el-input v-model="addGroup.tenantId"/>
+        </el-form-item>
+        <el-form-item label="租户">
+          <el-input v-model="addGroup.description"/>
+        </el-form-item>        
+        <el-form-item label="sort">
+          <el-input v-model="addGroup.sort"/>
+        </el-form-item>
+        <el-form-item label="tag">
+          <el-input v-model="addGroup.tag"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="Visible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="handleAdd()">确 定</el-button>
       </div>
     </el-dialog>
         
@@ -57,39 +81,62 @@
 </template>
 
 <script>
-import {getAllGroup,groupSave} from "@/api/cms/KvGroup.js"
+import {getAllGroup,groupSave,deleteGroup,addGroupRequest,getAppDetail} from "@/api/cms/KvGroup.js"
+// import { resolve } from 'q';
+// import { resolve } from 'q';
 // import Tinymce from "@/components/Tinymce";
 export default {
     // components: { Tinymce },
     data(){
         return {
-            searchKv:'开封电视台',
+            searchKv:"",
             tenant:{
+              kvGroupId:'',
+              description:'',
+              sort:'',
+              tag:''
                 // "id": 1112657532821835776,
                 // "tenantId": "56",
                 // "description": "开封电视台",
                 // "url": "www.baidu.com",
                 // "createTime": "2019-04-01T10:06:43.000+0000"
             },
+            addGroup:{
+              tenantId:'',
+              description:'',
+              sort:'',
+              tag:''
+
+
+            },
             Visible: false,
+            addGroupVisible:false,
             allGroup:[],
             pageNum: 1, // 分页当前页
-            pageSize: 10,
+            pageSize: 100,
             totalCount: 0,
 
         }
     },
     created(){
+        this.getTableData() 
+    },
+    methods:{
+
+      //获取所有列表
+      getTableData(){
         var _this=this
         return new Promise((resolve,reject)=>{
            
-            getAllGroup(1,10,{
-                'description': "",
-                'tenantId': "",
-                 'url': ""
-                 })
+            getAllGroup(_this.pageNum,_this.pageSize,{
+                "description": "",
+                "id": "",
+                "sort": "",
+                "tag": "",
+                "tenantId": ""})
             .then((response)=>{
-            console.log(response.data.result.content)
+            console.log(response.data.result)
+            _this.totalCount=response.data.result.totalElements
             _this.allGroup=response.data.result.content
              resolve()
             })
@@ -98,12 +145,54 @@ export default {
             })
            
         })
-        
-    },
-    methods:{
-        search(){},
-        handleAdd(){
+      },
 
+
+      //根据配置组id检索
+        search(id){
+          var _this=this
+          return new Promise((resolve,reject)=>{
+            getAppDetail(id)
+            .then((response)=>{
+              console.log(response.data.result)
+              if(response.data.code==0){
+                 _this.allGroup=[response.data.result]
+              }else{
+                alert("搜索失败")
+              }
+              
+              resolve()
+            })
+            .catch((reject)=>{
+              console.log(reject)
+            })
+          })
+        },
+        handleAdd(){
+          this.addGroupVisible=true
+          if(this.addGroup.tenantId==""||this.addGroup.tenantId==null){
+            return false
+          }
+           if(this.addGroup.description==""||this.addGroup.description==null){
+            return false
+          }
+          var _this=this
+          return new Promise((resolve,reject)=>{
+            addGroupRequest(_this.addGroup)
+            .then((response)=>{
+              console.log(response)
+              _this.addGroupVisible=false
+              _this.$message({                       
+                        type: 'success',
+                        message: '修改成功!'
+                       });
+              resolve()
+            })
+            .catch((reject)=>{
+              console.log(reject)
+              alert("请稍后再试！")
+            })
+          })
         },
         //查看详情
         handleSerch(id,des){
@@ -122,24 +211,44 @@ export default {
             //调用模态框
             this.Visible=true;
             this.tenant=b;
-            //发送保存请求
+            console.log(b)
+            
+        },
+        //修改保存、发送保存请求
+        handleEditeSave(){
             var _this=this
+            console.log(_this.tenant.id)
+            
             return new Promise((resolve,reject)=>{
                 groupSave(_this.tenant)
                 .then((response)=>{
                     console.log(response)
+                    if(response.data.code==0){
+                       _this.Visible=false;
+                      this.$message({                       
+                        type: 'success',
+                        message: '修改成功!'
+                       });
+                    }else{
+                      this.$message({
+                        type: 'error',
+                        message: '修改失败，请稍后再试!'
+                       });
+                    }
                     resolve();
+                   
                 })
                 .catch((reject)=>{
-                    console.log(reject)
+                    console.log(reject)                   
+                     this.$message({
+                        type: 'error',
+                        message: '修改失败，请稍后再试!'
+                       });
                 })
-            })
-          
-            
+                 })
         },
         //删除组
         handleDelete(a,b){
-                // var _this=this;
                 // console.log(b)
                 this.$confirm('此操作将永久删除该组, 是否继续?', '提示', {
                 confirmButtonText: '确定',
@@ -148,10 +257,29 @@ export default {
                 }).then(() => {
                     
                      console.log("111")
-                    this.$message({
+                     console.log(b.id)
+                    new Promise((resolve,reject)=>{
+                    deleteGroup(b.id)
+                    .then((response)=>{
+                      console.log(response)
+                      if(response.data.code==0){
+                        this.$message({
                         type: 'success',
                         message: '删除成功!'
-                    });
+                       });
+                      }else{
+                        this.$message({
+                        type: 'error',
+                        message: '删除失败，请稍后再试!'
+                       });
+                      }
+                      
+                      resolve();
+                    })
+                    .catch((reject)=>{
+                      console.log(reject)
+                    })
+                })  
                 }).catch(() => {
                         this.$message({
                         type: 'info',
