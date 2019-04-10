@@ -1,6 +1,9 @@
 <template>
   <div class="relatedDocuments-wrap">
-    <el-table :data="tableData" style="width: 100%">
+    <div class="save-btn">
+      <el-button type="primary" size="small" @click="saveHandelRelation">保存</el-button>
+    </div>
+    <el-table :data="tableData" style="width: 100%" highlight-current-row>
       <el-table-column prop="articleTitle" label="标题" min-width="200" show-overflow-tooltip/>
       <el-table-column prop="articleType" label="类型">
         <template slot-scope="scope">
@@ -32,48 +35,27 @@
       <el-table-column prop="modifyTime" label="修改时间" width="200"/>
       <el-table-column align="right">
         <template slot="header" slot-scope="scope">
-          <el-button type="text" @click="handleAdd">添加</el-button>/
-          <el-button type="text" style="color:#f95757" @click="handleAutoGet">自动获取</el-button>
+          <el-button type="text" @click="handleAdd">添加</el-button>
+          <!-- <el-button type="text" style="color:#f95757" @click="handleAutoGet">自动获取</el-button> -->
         </template>
         <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">移除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="dialogVisible" title="选择相关文章">
-      <el-row :gutter="10">
-        <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
-          <el-tree
-            ref="websitTree"
-            :data="treeData"
-            :highlight-current="true"
-            :check-on-click-node="true"
-            @node-click="handleNodeClick"
-          />
-        </el-col>
-        <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
-          <el-table :data="tableData" style="width: 100%">
-            <el-table-column type="selection" width="55"/>
-            <el-table-column prop="title" label="标题"/>
-            <el-table-column prop="belongColumn" label="所属栏目"/>
-            <el-table-column prop="releaseTime" label="发布时间"/>
-            <el-table-column prop="author" label="发布时间"/>
-          </el-table>
-        </el-col>
-      </el-row>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
+    <document-dialog :dialog-visible.sync = "dialogVisible" @getChoosed = "getChoosed" :list="tableData"/>
   </div>
 </template>
 <script>
 import { TreeData } from './mockData.js'
 import { mapGetters } from 'vuex'
-import { getRelationDoc } from '@/api/cms/article'
+import { getRelationDoc, saveRelationDoc } from '@/api/cms/article'
+import documentDialog from './relationComponents/documentDialog.vue'
 export default {
   name: 'RelatedDocuments',
+  components: {
+    documentDialog
+  },
   props: {
     activeName: {
       default: '',
@@ -102,6 +84,32 @@ export default {
     
   },
   methods: {
+    // 保存选择文章
+    saveHandelRelation() {
+      console.log(this.tableData, 'tableData')
+      let articleIdList = []
+      if(this.tableData.length) {
+        this.tableData.forEach((ele) => {
+          articleIdList.push(ele.articleId)
+        })
+      } else {
+        articleIdList = []
+      }
+      return new Promise((resolve, reject) => {
+        saveRelationDoc(this.contextMenu.docId, { articleIdList: articleIdList })
+          .then((response) => {
+            this.$message.success('保存成功')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    // 获取选中的文章
+    getChoosed(list) {
+      this.tableData = this.tableData.concat(list)
+    },
     tagsChange(tags) {
       let tagName = ''
       if(tags && tags.length) {
@@ -119,12 +127,6 @@ export default {
         getRelationDoc(id)
           .then((response) => {
             this.tableData = response.data.result ? response.data.result : []
-            // _this.docInformation = response.data.result
-            // _this.formData =  response.data.result
-            // _this.formData.contentVideosList = _this.differenceFile(response.data.result.articleAttachmentsList, 'VIDEO')
-            // _this.formData.contentImagesList = _this.differenceFile(response.data.result.articleAttachmentsList, 'IMG')
-            // _this.formData.contentAudioList = _this.differenceFile(response.data.result.articleAttachmentsList, 'AUDIO')
-            // _this.formData.articleAttachmentsList = _this.differenceFile(response.data.result.articleAttachmentsList, 'OTHER')
             resolve()
           })
           .catch((error) => {
@@ -135,15 +137,18 @@ export default {
     handleAdd() {
       this.dialogVisible = true
     },
-    handleNodeClick() {
-      this.changeOptionalData()
-    },
-    changeOptionalData() {
-      console.log('假装改变一下数据')
-    },
-    handleAutoGet() {},
+    // handleAutoGet() {},
     handleEdit() {},
-    handleDelete() {}
+    handleDelete(index, row) {
+      this.$confirm('确定删除该文章吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.tableData.splice(index, 1)
+      }).catch(() => { 
+      })
+    }
   }
 }
 </script>
@@ -151,8 +156,12 @@ export default {
 .el-button + .el-button {
   margin-left: 0px;
 }
-
+</style>
+<style lang="scss">
 .relatedDocuments-wrap {
+  .save-btn{
+    text-align: right;
+  }
 }
 </style>
 

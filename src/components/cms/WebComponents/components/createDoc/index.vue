@@ -7,11 +7,10 @@
       <el-tab-pane label="图片和附件" name="picturesAndAccessories">
         <PicturesAndAccessories :prop-information="docInformation" :active-name="activeName" @docInfor="docInfor"/>
       </el-tab-pane>
-      <el-tab-pane label="相关文档" name="relatedDocuments">
+      <el-tab-pane label="相关文档" name="relatedDocuments" v-if="contextMenu.docId">
         <RelatedDocuments :active-name="activeName"/>
       </el-tab-pane>
     </el-tabs>
-    <!-- {{ treeTags }} -->
   </div>
 </template>
 <script>
@@ -33,7 +32,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['treeTags'])
+    ...mapGetters(['treeTags', 'contextMenu'])
   },
   methods: {
     docInfor(val) {
