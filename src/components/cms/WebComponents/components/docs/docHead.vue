@@ -193,7 +193,7 @@ export default {
           this.$store.dispatch('setContextMenu', {id: '12', label: '文档列表'})
           break
         case '6':
-          this.$store.dispatch('setContextMenu', {id: '13', label: '内容片段'})
+          this.$store.dispatch('setContextMenu', {id: '10', label: '栏目水印'})
           break
         case '7':
           this.$store.dispatch('setContextMenu', {id: '15', label: '模板'})

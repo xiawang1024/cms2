@@ -167,3 +167,45 @@ export function saveRelationDoc(id, data) {
     data
   })
 }
+/**
+ * 栏目图片组
+ */
+// 栏目下的图片组
+export function columnImageList(queryObj, pageNo, pageSize) {
+  return request({
+    url: '/cms/picGroup/page?pageNo=' + pageNo + '&pageSize=' + pageSize,
+    method: 'post',
+    data: queryObj
+  })
+}
+// 新增栏目组
+export function createImageList(data) {
+  return request({
+    url: `/cms/picGroup`,
+    method: 'post',
+    data
+  })
+}
+// 获取图片组详情
+export function getImageListInfor(id) {
+  return request({
+    url: `/cms/picGroup/${id}`,
+    method: 'get',
+  })
+}
+// 修改图片组
+export function editImageList(data) {
+  return request({
+    url: `/cms/picGroup`,
+    method: 'put',
+    data
+  })
+}
+// 删除图片组
+export function deleteImageList(data) {
+  return request({
+    url: `/cms/picGroup`,
+    method: 'delete',
+    data
+  })
+}
