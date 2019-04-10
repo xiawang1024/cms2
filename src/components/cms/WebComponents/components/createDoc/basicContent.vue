@@ -158,7 +158,11 @@ export default {
             _this.otherSettings[0].items[0].options = _this.tagList
             _this.imagesSeting[0].items[6].options = _this.tagList
             _this.reproduceSetting[0].items[3].options = _this.tagList
-            _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList)
+            let obj = {};
+            _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList).reduce((cur,next) => {
+              obj[next.label] ? "" : obj[next.label] = true && cur.push(next);
+              return cur
+            }, [])
             if(_this.tagList.length) {
               console.log()
             } else {
@@ -205,7 +209,7 @@ export default {
               _this.sourceList = response.data.result.details.map((ele) => {
                 return {
                   label: ele.dictDetailName,
-                  value: ele.dictDetailId
+                  value: ele.dictDetailName
                 }
               })
               _this.imagesSeting[0].items[2].options = _this.sourceList
