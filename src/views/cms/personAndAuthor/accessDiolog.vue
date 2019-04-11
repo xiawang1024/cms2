@@ -10,8 +10,7 @@
         :data="treeData"
         show-checkbox
         node-key="id"
-        :default-expanded-keys="[2, 3]"
-        :default-checked-keys="[5]"
+        :default-checked-keys="defaultCheck"
         :check-on-click-node="true"
         :props="defaultProps"/>
       <span slot="footer" class="dialog-footer">
@@ -22,7 +21,7 @@
   </div>
 </template>
 <script>
-import { setDataAccess } from '@/api/cms/dataAccess'
+import { setDataAccess, getDataAccess } from '@/api/cms/dataAccess'
 export default {
   props: {
     dialogVisible: {
@@ -47,10 +46,37 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'label'
+      },
+      defaultCheck: []
+    }
+  },
+  watch: {
+    dialogVisible(val) {
+      if(val) {
+        // this.defaultCheck = []
+        if(this.$refs.tree) {
+          this.$refs.tree.setCheckedKeys([])
+        }
+        this.getUserAccess(this.userInfor.userId)
       }
     }
   },
   methods: {
+    getUserAccess(userId) {
+      return new Promise((resolve, reject) => {
+        getDataAccess(userId)
+          .then((response) => {
+            this.$refs.tree.setCheckedKeys(['1108265560111714304'])
+            // this.$message.success('操作成功')
+            // this.$emit('update:dialogVisible', false)
+            // this.$emit('handelSuccess')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
     handleClose() {
       this.$emit('update:dialogVisible', false)
     },

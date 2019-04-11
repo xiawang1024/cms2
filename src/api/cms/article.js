@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 //新增
 //查询文章列表
-export function documentList(queryObj, pageNo, pageSize, sortBy='topFlag', order='asc') {
+export function documentList(queryObj, pageNo, pageSize, sortBy='topFlag', order='asc,desc,desc') {
   return request({
-    url: '/cms/article/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + ',createTime&order=' + order,
+    url: '/cms/article/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + ',seqNo,createTime&order=' + order,
     method: 'post',
     data: queryObj
   })
@@ -206,6 +206,14 @@ export function deleteImageList(data) {
   return request({
     url: `/cms/picGroup`,
     method: 'delete',
+    data
+  })
+}
+// 文章拖拽
+export function articalSort(data) {
+  return request({
+    url: `/cms/article/sort`,
+    method: 'post',
     data
   })
 }

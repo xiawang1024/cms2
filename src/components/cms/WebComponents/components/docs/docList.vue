@@ -6,15 +6,15 @@
       :highlight-current-row="true"
       tooltip-effect="dark"
       style="width: 100%"
-      size="small"
+      size="mini"
       @selection-change="handleSelectionChange"
       @row-click="rowClick"
       :row-class-name="tableRowClassName"
     >
       <!-- :default-sort="{prop: 'publishTime', order: 'descending'}" -->
       <el-table-column type="selection" width="55"/>
-      <el-table-column fixed prop="articleId" label="ID/序号" width="150" show-overflow-tooltip/>
-      <el-table-column fixed prop="articleTitle" label="标题" min-width="300" show-overflow-tooltip>
+      <el-table-column prop="articleId" label="ID/序号" width="150" show-overflow-tooltip/>
+      <el-table-column prop="articleTitle" label="标题" min-width="300" show-overflow-tooltip>
         <template slot-scope="scope">
           <span v-if="checkAuth('cms:article:stick')" class="titleClick" @click="editDoc(scope.row.articleId)">{{ scope.row.articleTitle }}</span>
           <span v-else>{{ scope.row.articleTitle }}</span>
@@ -86,8 +86,10 @@
 </template>
 
 <script>
-import { deleteDocument, topDocument} from '@/api/cms/article'
+import { deleteDocument, topDocument, articalSort} from '@/api/cms/article'
 import reviewDialog from './review'
+import Sortable from 'sortablejs'
+import { mapGetters } from 'vuex'
 export default {
   components: {
     reviewDialog
@@ -104,10 +106,55 @@ export default {
     return {
       multipleSelection: [],
       dialogVisible: false,
-      documentInfor: {}
+      documentInfor: {},
+      oldList: [],
+      newList: [],
     }
   },
+  computed: {
+    ...mapGetters(['treeTags'])
+  },
+  watch: {
+    tableData: function(val) {
+      this.oldList = val.map(v => v.articleId)
+      this.newList = this.oldList.slice()
+      this.$nextTick(() => {
+        this.setSort()
+      })
+    }
+  },
+  
   methods: {
+    // 文章排序
+    articalSort(data) {
+      return new Promise((resolve, reject) => {
+        articalSort(data)
+          .then((response) => {
+            this.$message.success('排序成功')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    setSort() {
+      const el = this.$refs.multipleTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
+      this.sortable = Sortable.create(el, {
+        // ghostClass: 'sortable-ghost',
+        setData: function(dataTransfer) {
+        },
+        onEnd: evt => {
+          const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
+          this.newList.splice(evt.newIndex, 0, tempIndex)
+          let params = {
+            articleIdList: this.newList,
+            // channelId: this.treeTags[this.treeTags.length - 1].id
+          }
+          this.articalSort(params)
+        }
+      })
+    },
     // 点击行
     rowClick(row) {
       if(row) {
@@ -254,6 +301,11 @@ export default {
 }
 </script>
 <style lang="scss">
+.sortable-ghost{
+  opacity: .8;
+  color: #fff!important;
+  background: #42b983!important;
+}
 .fa-icon{
   width:15px;
   height:15px;

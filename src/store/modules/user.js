@@ -68,7 +68,7 @@ const user = {
         loginByUsername(username, userInfo.password)
           .then((response) => {
             const data = response.data
-            console.log(data)
+            console.log(data, 'data111')
             commit('SET_TOKEN', data.access_token)
             setAuth(data)
 

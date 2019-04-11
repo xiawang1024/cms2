@@ -101,6 +101,7 @@ import ThemePicker from '@/components/public/ThemePicker'
 import SysType from './sysType.vue'
 import { fetchDictByDictName} from "@/api/cms/dict"
 
+
 export default {
   components: {
     SysType,
@@ -114,7 +115,6 @@ export default {
     ...mapGetters(['sidebar', 'name', 'avatar', 'device', 'siteName'])
   },
   mounted() {
-    console.log('login')
     this.fetchDict()
   },
   methods: {

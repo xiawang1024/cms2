@@ -169,17 +169,20 @@ export default {
     },
     submitSave(data) {
       let choosed = []
-      if(this.$refs.choosedList.tableData.length) {
-        this.$refs.choosedList.tableData.forEach((ele) => {
-          choosed.push({ articleId: ele.articleId })
+      // if(this.$refs.choosedList.tableData.length) {
+      //   this.$refs.choosedList.tableData.forEach((ele) => {
+      //     choosed.push({ articleId: ele.articleId })
+      //   })
+      // }
+      if(this.$refs.choosedList.newList.length) {
+        this.$refs.choosedList.newList.forEach((ele) => {
+          choosed.push({ articleId: ele })
         })
       }
       data.details = choosed
       data.channelId = this.treeTags[this.treeTags.length - 1].id
       delete data.list
       data.tagIds = data.tagIds.join(',')
-      console.log(data)
-      console.log(this.formData)
       if(this.title == '创建文档列表') {
         return new Promise((resolve, reject) => {
           createDefineArticle(data)
