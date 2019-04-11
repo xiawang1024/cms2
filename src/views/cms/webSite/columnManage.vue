@@ -163,6 +163,8 @@ export default {
         columnList(_this.searchData, _this.pageNum, _this.pageSize)
           .then((response) => {
             _this.tableData = response.data.result.content
+            console.log(" _this.tableData _this.tableData")
+            console.log(_this.tableData )
             _this.totalCount = response.data.result.total
             resolve()
           })

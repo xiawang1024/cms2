@@ -88,6 +88,7 @@ request.interceptors.request.use(
              * 更新auth
              */
               setAuth(data)
+              
               /**
              * 执行数组里的函数 重新发起被挂起的请求
              */

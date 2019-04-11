@@ -3,7 +3,7 @@
     <div class="topdiv">
       <div class="topdivLeft">爆料列表</div>
       <div class="topdivRight">
-        <el-button @click="reloadlist" icon="el-icon-refresh" type="primary">刷新</el-button>
+        <el-button icon="el-icon-refresh" type="primary">刷新</el-button>
       </div>
     </div>
 
@@ -13,30 +13,22 @@
         :class="[activeClass0 == 0 ? 'activeClass0':'','auditBtns','auditBtnAll']"
       >
         全部申请(
-        <span
-          class="auditBtnSpan"
-        >{{ discloseStatenum[0]+discloseStatenum[1]+discloseStatenum[2] }}</span> )
+        <span class="auditBtnSpan">1000</span> )
       </div>
       <div
         @click="auditBtnsClik(1,$event)"
         :class="[activeClass0 == 1 ? 'activeClass0':'','auditBtns','auditBtnOrder']"
       >
         待审核(
-        <span class="auditBtnSpan">{{ discloseStatenum[0] }}</span> )
+        <span class="auditBtnSpan">1000</span> )
       </div>
-      <div
-        @click="auditBtnsClik(2,$event)"
-        :class="[activeClass0 == 2 ? 'activeClass0':'','auditBtns','auditBtnOrder']"
-      >
+      <div @click="auditBtnsClik(2,$event)" :class="[activeClass0 == 2 ? 'activeClass0':'','auditBtns','auditBtnOrder']">
         已通过(
-        <span class="auditBtnSpan">{{ discloseStatenum[1] }}</span> )
+        <span class="auditBtnSpan">1000</span> )
       </div>
-      <div
-        @click="auditBtnsClik(3,$event)"
-        :class="[activeClass0 == 3 ? 'activeClass0':'','auditBtns','auditBtnOrder']"
-      >
+      <div @click="auditBtnsClik(3,$event)" :class="[activeClass0 == 3 ? 'activeClass0':'','auditBtns','auditBtnOrder']">
         已拒绝(
-        <span class="auditBtnSpan">{{ discloseStatenum[2] }}</span> )
+        <span class="auditBtnSpan">1000</span> )
       </div>
     </div>
 
@@ -52,130 +44,129 @@
       >添加</el-button>
     </div>
 
-    <el-table
-      ref="multipleTable"
-      :header-cell-style="{color:'#000'}"
-      :data="tableData"
-      style="width: 100%"
-    >
+    <el-table ref="multipleTable" :header-cell-style="{color:'#000'}" :data="tableData" style="width: 100%">
       <el-table-column align="center" type="selection"/>
-      <el-table-column align="center" prop="breakingName" label="标题" show-overflow-tooltip/>
-      <el-table-column align="center" prop="newsOrigin" label="线索来源">
+      <el-table-column align="center" prop="channelName" label="标题" show-overflow-tooltip/>
+
+      <el-table-column align="center" prop="channelCode" label="线索来源"/>
+      <el-table-column align="center" prop="domainName" label="爆料分类"/>
+      <el-table-column align="center" prop="managerUser" label="爆料人"/>
+      <el-table-column align="center" prop="hiddenFlag" label="处理状态">
         <template slot-scope="scope">
-          <span v-if="scope.row.newsOrigin == 0">电话</span>
-          <span v-if="scope.row.newsOrigin == 1">数据接口</span>
-          <span v-if="scope.row.newsOrigin == 2">App</span>
-          <span v-if="scope.row.newsOrigin == 3">网站</span>
-          <span v-if="scope.row.newsOrigin == 4">小程序</span>
-          <span v-if="scope.row.newsOrigin == 5">其他</span>
+          <span v-if="scope.row.hiddenFlag == 1">待处理</span>
+          <span v-else>已通过</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" prop="breakingType" label="爆料分类"/>
-
-      <el-table-column align="center" prop="breakingPeople" label="爆料人"/>
-      <el-table-column align="center" prop="auditStatus" label="处理状态">
-        <template slot-scope="scope">
-          <span v-if="scope.row.auditStatus == 0">待处理</span>
-          <span v-if="scope.row.auditStatus == 1">已通过</span>
-          <span v-if="scope.row.auditStatus == 2">已拒绝</span>
-        </template>
-      </el-table-column>·
-      <el-table-column align="center" prop="breakingTime" label="爆料时间"/>
+      <el-table-column align="center" prop="modifyTime" label="爆料时间"/>
 
       <el-table-column align="center" label="操作" width="150">
         <template v-if="checkAuth('cms:channel:operation')" slot-scope="scope">
-          <el-button @click="columnAddEdit('discloseAudit',scope.row.id)" type="text">审核</el-button>
+          <el-button type="text">审核</el-button>
           <el-button
             type="text"
             v-if="checkAuth('cms:channel:delete')"
-            @click="columnAddEdit('columnAddEdit',scope.row.id)"
+            @click="columnDel(scope.row)"
           >编辑</el-button>
-          <el-button type="text" @click="columnAddEdit('discloseView',scope.row.id)">查看详情</el-button>
+          <el-button type="text" @click="columnAddEdit('discloseView')">查看详情</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <div class="bottomdiv">
+      <div class="btmdivleft">
+        <div class="choose">
+          <el-checkbox size="medium" @change="allchooses" v-model="allchoose">全选</el-checkbox>
+        </div>
+        <div class="operate">
+          <template>
+            <el-select size="mini" v-model="operateVal" placeholder="批量操作">
+              <el-option
+                v-for="item in options1"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"/>
+            </el-select>
+          </template>
 
-    <el-pagination
-      :current-page="pageNum"
-      :page-sizes="[15]"
-      :page-size="pageSize"
-      :total="totalCount"
-      background
-      class="pagination"
-      layout="total, sizes, prev, pager, next, jumper"
-      style="float: right"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
+        </div>
+        <el-button class="confirm" size="mini">确定</el-button>
+        
+      </div>
+      <div class="btmright">
+        <el-pagination
+          :current-page="pageNum"
+          :page-sizes="[100]"
+          :page-size="pageSize"
+          :total="totalCount"
+          background
+          class="pagination"
+          layout="total, sizes, prev, pager, next, jumper"
+          style="float: right"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 // import { fetchDictByDictName } from '@/api/cms/dict'
-import {
-  discloseList,
-  discloseState,
-  discloseClassify
-} from "@/api/newsCommand/disclose.js";
-import {  deleteColumn } from "@/api/cms/columnManage";
+import { columnList, deleteColumn } from "@/api/cms/columnManage";
 import mixins from "@/components/cms/mixins";
 export default {
   name: "ColumnManage",
   mixins: [mixins],
   data() {
     return {
-      allchoose: false,
-      options1: [
-        {
-          value: "选项1",
-          label: "审核"
-        },
-        {
-          value: "选项2",
-          label: "删除"
-        },
-        {
-          value: "选项3",
-          label: "其他"
-        }
-      ],
-      operateVal: "",
+      allchoose:false,
+        options1: [{
+          value: '选项1',
+          label: '审核'
+        }, {
+          value: '选项2',
+          label: '删除'
+        }, {
+          value: '选项3',
+          label: '其他'
+        }],
+        operateVal:'',
       activeClass0: 0,
       tableData: [],
       pageNum: 1,
-      pageSize: 15,
+      pageSize: 100,
       totalCount: 0,
       searchSettings: [
         {
-          label: "爆料名称",
-          name: "breakingName",
-          placeholder: "爆料名称",
+          label: "输入搜索",
+          name: "shuruselect",
+          placeholder: "服务单号",
           visible: true,
-          type: "text"
+          options: [],
+          type: "cascader"
         },
-        {
+         {
           label: "爆料时间",
-          name: "breakingTime",
+          name: "discloseTime",
           placeholder: "请选择时间",
           visible: true,
           options: [],
           type: "date"
         },
-
+             
         {
           label: "状态",
-          name: "auditStatus",
+          name: "chulistate",
           placeholder: "全部",
           visible: true,
           type: "select",
           options: [
             {
-              label: "待审核",
+              label: "待处理",
               value: 0
             },
             {
-              label: "已通过",
+              label: "已处理",
               value: 1
             },
             {
@@ -184,7 +175,7 @@ export default {
             }
           ]
         },
-        {
+            {
           label: "申请时间",
           name: "applyforTime",
           placeholder: "请选择时间",
@@ -213,8 +204,7 @@ export default {
               value: 2
             }
           ]
-        },
-        {
+        },         {
           label: "处理时间",
           name: "manageTime",
           placeholder: "请选择时间",
@@ -223,65 +213,60 @@ export default {
           type: "date"
         }
       ],
-      searchData: {},
-      discloseClassifyNum: [], //爆料分类接口获取
-      discloseStatenum: [], //爆料状态数值
-      uplistdata:{
-          breakingName: "",
-          breakingTime: "",
-          auditStatus: "",
-          pageNo: 1,
-          pageSize:15
-        }
+      searchData: {}
     };
   },
   watch: {
     $route(val) {
-      this.uplistdata.assign(this.searchData);
-      this.columnList(this.uplistdata);
+      console.log(val);
+      this.columnList();
+      this.columnSearchList();
     }
   },
   mounted() {
-    // 获取爆料分类
-    this.discloseClassify();
-    this.discloseState(0);
-    this.discloseState(1);
-    this.discloseState(2);
+    this.columnList();
   },
-  created() {},
+  created() {
+    this.columnSearchList();
+  },
   methods: {
-    reloadlist() {
-      this.activeClass0 = 0;
-      this.$router.replace({
-        path: "/newCommand/manageClue/addDisclose"
-      });
-      this.$router.replace({
-        path: "/newCommand/manageClue/discloseList"
-      });
-    },
-    allchooses() {
-      var _this = this;
-      if (this.allchoose) {
-        this.tableData.forEach(row => {
-          _this.$refs.multipleTable.toggleRowSelection(row, true);
-        });
-      } else {
-        this.tableData.forEach(row => {
-          _this.$refs.multipleTable.toggleRowSelection(row, false);
-        });
+    allchooses(){
+      var _this=this
+      if(this.allchoose){
+    this.tableData.forEach(row => {
+            _this.$refs.multipleTable.toggleRowSelection(row, true);
+          });
+
+      }else{
+            this.tableData.forEach(row => {
+     _this.$refs.multipleTable.toggleRowSelection(row, false);
+
+          });
       }
     },
     auditBtnsClik(num, e) {
       //  e.target 点击的元素  e.currentTarget是绑定事件元素
+      console.log(e);
+      console.log(num);
       this.activeClass0 = num;
-      // 初始化搜索信息
-     
-      if (num != 0){
-        this.uplistdata.auditStatus=num-1
-      }
-      this.columnList(this.uplistdata);
     },
-
+    columnSearchList() {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        columnList({}, 1, 1000)
+          .then(response => {
+            this.$nextTick(() => {
+              _this.searchSettings[0].options = _this.toTree(
+                response.data.result.content
+              );
+            });
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
     channelNameChange(val) {
       let arr = [];
       if (val) {
@@ -298,80 +283,27 @@ export default {
         return true;
       }
     },
-    // 搜索方法传入公共组件 searchData
     searchItem(searchData) {
-      console.log("搜索条件");
-      console.log(searchData);
-      if("auditStatus" in searchData){
-         this.activeClass0=searchData.auditStatus+1
-      }else{
-        this.activeClass0=0
-      }
       this.searchData = searchData;
-      if( "breakingTime" in this.searchData){
-        console.log(this.searchData.breakingTime)
-         console.log((this.searchData.breakingTime).getFullYear()+"-"+((this.searchData.breakingTime).getMonth()+1)+"-"+(this.searchData.breakingTime).getDate())
+      if (this.searchData.channelName && this.searchData.channelName.length) {
+        this.searchData.channelName = this.searchData.channelName[
+          this.searchData.channelName.length - 1
+        ];
+      } else {
+        this.searchData.channelName = "";
       }
       this.pageNum = 1;
-      let res = {
-        pageNo: this.pageNum,
-        pageSize: this.pageSize
-      };
-      res=Object.assign(this.searchData,res);
-      this.columnList(res);
+      this.columnList();
     },
-    // table列表数据
-    columnList(res) {
+    columnList() {
       var _this = this;
       return new Promise((resolve, reject) => {
-        discloseList(res)
+        columnList(_this.searchData, _this.pageNum, _this.pageSize)
           .then(response => {
-            let content = response.data.result.content;
-            content.forEach((element, idnex) => {
-              element.breakingType =
-                _this.discloseClassify[element.breakingType].typeName;
-            });
-            _this.tableData = content;
+            _this.tableData = response.data.result.content;
+            console.log("_this.tableData_this.tableData_this.tableData");
             console.log(_this.tableData);
             _this.totalCount = response.data.result.total;
-
-            resolve();
-          })
-          .catch(error => {
-            reject(error);
-          });
-      });
-    },
-    // 搜索分类接口
-    discloseClassify(callback) {
-      var _this = this;
-      return new Promise((resolve, reject) => {
-        discloseClassify({}, 1, 1000)
-          .then(response => {
-            _this.discloseClassify = response.data.result;
-          })
-          .then(() => {
-            // 初始化搜索信息
-            let res = {
-              breakingName: "",
-              breakingTime: "",
-              pageNo: _this.pageNum,
-              pageSize: _this.pageSize
-            };
-            _this.columnList(res);
-          });
-      })
-    },
-    /**
-     * 查询审核状态0:待审核 1：已通过 2：已拒绝
-     *  */
-
-    discloseState(num) {
-      var _this = this;
-      return new Promise((resolve, reject) => {
-        discloseState(num)
-          .then(response => {
-            _this.discloseStatenum[num] = response.data.result;
             resolve();
           })
           .catch(error => {
@@ -400,45 +332,20 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize = val;
-      let res = {
-        breakingName: "",
-        breakingTime: "",
-        auditStatus: null,
-        pageNo: this.pageNum,
-        pageSize: this.pageSize
-      };
-      this.columnList(res);
+      this.columnList();
     },
     handleCurrentChange(val) {
       this.pageNum = val;
-      let res = {
-        breakingName: "",
-        breakingTime: "",
-        auditStatus: null,
-        pageNo: this.pageNum,
-        pageSize: this.pageSize
-      };
-      this.columnList(res);
+      this.columnList();
     },
-    columnAddEdit(handelType, id) {
-      if (handelType == "addDisclose" || handelType == "columnAddEdit") {
+    columnAddEdit(handelType) {
+      if (handelType == "addDisclose") {
         this.$router.push({
-          path:
-            "/newCommand/manageClue/addDisclose?Disclose=" +
-            handelType +
-            "&id=" +
-            id
+          path: "/newCommand/manageClue/addDisclose"
         });
-      } else if (
-        handelType == "discloseView" ||
-        handelType == "discloseAudit"
-      ) {
+      } else if (handelType == "discloseView") {
         this.$router.push({
-          path:
-            "/newCommand/manageClue/discloseDetails?Disclose=" +
-            handelType +
-            "&id=" +
-            id
+          path: "/newCommand/manageClue/discloseDetails"
         });
       }
     },
@@ -491,16 +398,24 @@ export default {
 </script>
 
 <style lang='scss'>
-.confirm {
+.confirm{
   height: 28px;
   margin-left: 10px;
 }
-.operate {
-  width: 122px;
-  margin-left: 10px;
+.operate{
+width: 122px;
+    margin-left: 10px;
 }
-
-.choose {
+.btmdivleft{
+  display: flex;
+  align-items:center;
+}
+.bottomdiv{
+      display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.choose{
   padding-left: 16px;
 }
 .topdiv {
@@ -528,7 +443,7 @@ export default {
   width: 5px;
   height: 24px;
   content: "";
-  background: #409eff;
+  background: #409EFF;
 }
 .auditBtn {
   height: 80px;
@@ -555,7 +470,7 @@ export default {
   font-size: 14px;
 }
 .activeClass0 {
-  background-color: #409eff;
+  background-color: #409EFF;
   color: white;
   .auditBtnSpan {
     color: white;
@@ -575,6 +490,7 @@ export default {
     margin-bottom: 20px;
   }
   .el-table {
+
     .space-holder {
       width: 2px;
       height: 20px;

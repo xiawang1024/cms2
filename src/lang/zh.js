@@ -132,11 +132,11 @@ export default {
     //------新闻指挥---------------------
     manageClue: '线索管理',
     discloseList: '爆料列表',
-    addDisclose: '添加爆料',
+    addDisclose: '添加修改爆料',
     discloseDetails:'爆料详情',
     hotNews: '热点新闻',
     commandDispatch: '指挥调度',
-    allTask: '所以任务',
+    allTask: '所有任务',
     myTask: '我的任务',
     manuscriptClue: '稿件管理',
     myManuscript: '我的稿件',

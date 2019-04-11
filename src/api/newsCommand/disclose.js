@@ -1,0 +1,80 @@
+import request from '@/utils/request'
+import QS from "qs"
+//查询爆料列表
+
+export function discloseList(params) {
+  return request({
+    url: '/cmsnews/breakingNews/queryBreakingNews',
+    method: 'get',
+    params:params
+  })
+}
+
+
+/**
+ * 查询审核状态0:待审核 1：已通过 2：`已拒绝
+ *  */ 
+export function discloseState(num) {
+  return request({
+    url: '/cmsnews/breakingNews/getAuditStatusCount?auditStatus='+num,
+    method: 'get',
+  })
+}
+
+/**
+ * 修改审核状态0：待审核 1：审核通过 2：拒绝
+ *  */ 
+export function amendDiscloseState(data) {
+  return request({
+    url: '/cmsnews/breakingNews/updateAuditStatus',
+    method: 'post',
+    data:data
+  })
+}
+// 爆料分类列表
+export function discloseClassify() {
+  return request({
+    url: '/cmsnews/auditConfig/findBreakeingType',
+    method: 'post',
+  })
+}
+// 修改爆料
+export function editDisclose(queryObj) {
+  return request({
+    url: '/cmsnews/breakingNews/updteBareakingNews',
+    method: 'post',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    data:QS.stringify(queryObj)
+  })
+}
+//add爆料
+export function createDisclose(data) {
+  return request({
+    url: '/cmsnews/breakingNews/saveBreakingNews',
+    method: 'post',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    data:QS.stringify(data)
+  })
+}
+
+//删除爆料
+export function deleteDisclose(id) {
+  return request({
+    url: '/breakingNews/deleteBreakingNews'+id,
+    method: 'post',
+   
+  })
+}
+
+
+
+// 获取爆料详情
+export function discloseInfor(id) {
+  return request({
+    url: '/breakingNews/getBreakingNewsById' + id,
+    method: 'get'
+  })
+}
+
+
+
