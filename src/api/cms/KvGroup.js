@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 // import baseUrl from '@/config/base-url'
 // import QS from "qs"
-// let  Cpath='http://172.20.5.103:50350/kvconfig'
-let Cpath="http://192.168.0.105:8089"
+let  Cpath='http://172.20.5.103:50350/kvconfig'
+// let Cpath="http://192.168.0.105:8089"
 
 //配置组管理
 //分页条件检索应用

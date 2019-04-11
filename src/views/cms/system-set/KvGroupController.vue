@@ -40,6 +40,12 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
+    
+    <el-dialog :visible.sync="dialogVisible" title="dialogTitle">
+      <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" label-width="80px" :btn-loading = "isLoading" @selectChange="selectChange"/>
+    </el-dialog>
+
+
     <el-dialog :visible.sync="Visible" title="修改配置组">
       <el-form :model="tenant">
         <el-form-item label="租户">
@@ -59,7 +65,7 @@
     </el-dialog>
     <el-dialog :visible.sync="addGroupVisible" title="添加配置组">
       <el-form :model="addGroup">
-        <el-form-item label="租户id">
+        <el-form-item label="teantId">
           <el-input v-model="addGroup.tenantId"/>
         </el-form-item>
         <el-form-item label="租户">
@@ -154,7 +160,9 @@ export default {
                 "tag": "",
                 "tenantId": ""
             },
-            termSearchDialogVisible:false
+            termSearchDialogVisible:false,
+            dialogTitle:'检索',
+            dialogVisible:false,
 
 
         }
@@ -174,6 +182,7 @@ export default {
             _this.totalCount=response.data.result.totalElements
             _this.allGroup=response.data.result.content
             _this.termSearchDialogVisible=false
+            _this.backButtonVisible=false;
              resolve()
             })
             .catch((reject)=>{
@@ -182,7 +191,7 @@ export default {
            
         })
       },
-
+      
 
       //根据配置组id检索
         search(id){
@@ -206,8 +215,8 @@ export default {
           })
         },
         backDetail(){
-          this.getTableData()
-          this.backButtonVisible=false;
+          this.getTableData(this.defaultData)
+          
           this.searchKv=''
         },
         handleSearch(){

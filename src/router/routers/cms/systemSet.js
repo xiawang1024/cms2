@@ -135,7 +135,7 @@ const systemSet = {
       component: () => import(`@/${path}/KvGroupController`),
       name: 'KvGroupController',
       meta: { title: 'KvGroupController', icon: 'kvGroup', role: 'cms' },
-      hidden: true
+      
     },
     {
       /**
