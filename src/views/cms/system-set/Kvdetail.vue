@@ -8,10 +8,12 @@
         placeholder="id查询"
         prefix-icon="el-icon-search"
         clearable
+        @keyup.enter.native="search"
         @change="search"
       />
-      <el-button size="mini" type="primary" @click="handleSearch">条件检索</el-button>
-      <el-button size="mini" type="primary" @click="handleAdd">添加配置组属性</el-button>
+      <el-button size="mini" type="primary" v-show="backButtonVisible" @click="backDetail">返回</el-button>
+      <el-button size="mini" type="primary" @click="handleSearch">检索</el-button>
+      <el-button size="mini" type="primary" @click="handleAdd">添加</el-button>
     </div>
     <el-table :data="appDetail">
       <el-table-column type="expand">
@@ -38,7 +40,7 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog :visible.sync="addGroupAttributeVisible" title="添加配置组属性">
+    <el-dialog :visible.sync="dialogVisible" :title="dialogTitle">
       <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" label-width="80px" :btn-loading = "isLoading" @selectChange="selectChange"/>
     </el-dialog>
     <el-dialog :visible.sync="searchGroupAttributeVisible" title="条件检索">
@@ -132,9 +134,11 @@ export default {
               valueType:'',
               value:''
             } ,
-            addGroupAttributeVisible:false,
+            dialogVisible:false,
+            dialogTitle:'添加配置组',
+            // addGroupAttributeVisible:false,
             searchGroupAttributeVisible:false,
-            editGroupAttributeVisible:false,
+            // editGroupAttributeVisible:false,
             searchGroupAttribute:{
               groupId:'',
               description:'',
@@ -148,7 +152,7 @@ export default {
             formData: {},
             formSettings: [
               {
-                label:'添加配置组属性',
+                // label:'添加配置组属性',
                 items: [
                   {
                     label: '租户描述',
@@ -207,7 +211,7 @@ export default {
                     hidden: true
                     },
                     {
-                     label: '日期',
+                    label: '日期',
                     name: 'valuedate',
                     type: 'date',
                     placeholder: '请选择日期',
@@ -233,7 +237,9 @@ export default {
               }
             ],
             isLoading: false,
-            selectRow:''
+            selectRow:'',
+            requestType:'add',
+            backButtonVisible:false
 
 
 
@@ -245,6 +251,7 @@ export default {
     created() {
             // this.description=this.$route.query.des
             this.getList()
+           
     },
     methods: {
       selectChange(val) {
@@ -278,7 +285,9 @@ export default {
       submitSave(row){
          //获取表单数据
          console.log(row, 'row')
-         this.addGroupAttribute.description=row.description;
+        
+        if(this.requestType=='add'){
+          this.addGroupAttribute.description=row.description;
          this.addGroupAttribute.name=row.name;
          this.addGroupAttribute.valueType=row.valueType;
          if(this.selectRow==3){
@@ -296,8 +305,37 @@ export default {
          if(this.selectRow==7){
            this.addGroupAttribute.value=row.valuetext
          }
+
+          this.addAttribute();
+        }else if(this.requestType=='edit'){
+             this.editGroupAttribute.description=row.description;
+            this.editGroupAttribute.name=row.name;
+            this.editGroupAttribute.valueType=row.valueType;
+         if(this.selectRow==3){
+           this.editGroupAttribute.value=row.valuetext
+         }
+         if(this.selectRow==4){
+           this.editGroupAttribute.value=row.valuenumber
+         }
+         if(this.selectRow==5){
+           this.editGroupAttribute.value=row.valuedate
+         }
+         if(this.selectRow==6){
+           this.editGroupAttribute.value=row.valuearr[0].url
+         }
+         if(this.selectRow==7){
+           this.editGroupAttribute.value=row.valuetext
+         }
+
+
+          this.editAttribute();
+
+
+        }
         
-        this.addAttribute();
+
+
+
       },
        getList(){
         var _this=this
@@ -322,23 +360,45 @@ export default {
             })
         },
         search(){
-            var _this=this
+          var patt=/\d{19}/;
+          var _this=this
+
+          if(patt.test(this.searchAttributeById)){
+            this.totalCount=0
             return new Promise((resolve,reject)=>{
               getGroupAttributeBykvFieldId(_this.searchAttributeById)
               .then((response)=>{
                 console.log(response)
                 _this.appDetail=[response.data.result]
-
+                _this.totalCount=1;
+                _this.backButtonVisible=true;
               })
               .catch((reject)=>{
                 console.log(reject)
               })
             })
+          }else if(_this.searchAttributeById==''||_this.searchAttributeById==null){
+            return null
+          }else{
+            _this.$message({
+              type: 'error',
+              message: '请输入19位数字id!'
+            }
+             
+            )
+          }
+           
+        },
+        backDetail(){
+          this.getList()
+          this.backButtonVisible=false;
         },
           // 新增
         handleAdd(){
-          this.addGroupAttributeVisible=true;
-          this.addGroupAttribute.groupId=this.$route.query.userid
+          this.dialogVisible=true;
+          this.addGroupAttribute.groupId=this.$route.query.userid;
+           this.requestType='add';
+           this.dialogTitle='添加配置组'
         },
         addAttribute(){
            console.log(this.addGroupAttribute)
@@ -350,7 +410,7 @@ export default {
             .then((response)=>{
                console.log(response)
               if(response.data.code==0){
-                  this.addGroupAttributeVisible=false;
+                  this.dialogVisible=false;
                         this.$message({
                         type: 'success',
                         message: '添加成功!'
@@ -397,7 +457,9 @@ export default {
         },
         handleEdit(a,b){
           console.log(b)
-           this.editGroupAttributeVisible=true;
+           this.dialogVisible=true;
+           this.requestType='edit';
+           this.dialogTitle='编辑配置组'
            this.editGroupAttribute=b
         },
         editAttribute(){
@@ -413,11 +475,11 @@ export default {
                         message: '更新成功!'
                        });
               }
-               this.editGroupAttributeVisible=false;
+               this.dialogVisible=false;
             })
             .catch((reject)=>{
               console.log(reject)
-               this.editGroupAttributeVisible=false;
+               this.dialogVisible=false;
             })
           })
 

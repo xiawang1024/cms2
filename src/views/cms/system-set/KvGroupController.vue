@@ -6,12 +6,13 @@
         size="mini"
         v-model="searchKv"
         class="search-input"
-        placeholder="请输入标签/标题/内容"
+        placeholder="请输入id"
         prefix-icon="el-icon-search"
         clearable
-       
+        @keyup.enter.native="search(searchKv)"
       />
-      <el-button size="mini" type="primary" @click="search(searchKv)">查询</el-button>
+      <el-button size="mini" type="primary" v-show="backButtonVisible" @click="backDetail">返回</el-button>
+      <el-button size="mini" type="primary" @click="handleSearch">检索</el-button>
       <el-button size="mini" type="primary" @click="handleAdd">新增</el-button>
     </div>
     <el-table :data="allGroup" >            
@@ -76,6 +77,29 @@
         <el-button size="mini" type="primary" @click="handleAdd()">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog :visible.sync="termSearchDialogVisible" title="条件检索">
+      <el-form :model="searchData">
+        <el-form-item label="租户id">
+          <el-input v-model="searchData.id"/>
+        </el-form-item>
+        <el-form-item label="tenantId">
+          <el-input v-model="searchData.tenantId"/>
+        </el-form-item>
+        <el-form-item label="租户描述">
+          <el-input v-model="searchData.description"/>
+        </el-form-item>        
+        <el-form-item label="sort">
+          <el-input v-model="searchData.sort"/>
+        </el-form-item>
+        <el-form-item label="tag">
+          <el-input v-model="searchData.tag"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="termSearchDialogVisible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="termSearch">确 定</el-button>
+      </div>
+    </el-dialog>
         
   </div>
 </template>
@@ -115,29 +139,41 @@ export default {
             pageNum: 1, // 分页当前页
             pageSize: 100,
             totalCount: 0,
-
-        }
-    },
-    created(){
-        this.getTableData() 
-    },
-    methods:{
-
-      //获取所有列表
-      getTableData(){
-        var _this=this
-        return new Promise((resolve,reject)=>{
-           
-            getAllGroup(_this.pageNum,_this.pageSize,{
+            backButtonVisible:false,
+            defaultData:{
                 "description": "",
                 "id": "",
                 "sort": "",
                 "tag": "",
-                "tenantId": ""})
+                "tenantId": ""
+            },
+            searchData:{
+                "description": "",
+                "id": "",
+                "sort": "",
+                "tag": "",
+                "tenantId": ""
+            },
+            termSearchDialogVisible:false
+
+
+        }
+    },
+    created(){
+        this.getTableData(this.defaultData) 
+    },
+    methods:{
+      //获取所有列表
+      getTableData(obj){
+        var _this=this
+        return new Promise((resolve,reject)=>{
+           
+            getAllGroup(_this.pageNum,_this.pageSize,obj)
             .then((response)=>{
             console.log(response.data.result)
             _this.totalCount=response.data.result.totalElements
             _this.allGroup=response.data.result.content
+            _this.termSearchDialogVisible=false
              resolve()
             })
             .catch((reject)=>{
@@ -157,6 +193,7 @@ export default {
               console.log(response.data.result)
               if(response.data.code==0){
                  _this.allGroup=[response.data.result]
+                 _this.backButtonVisible=true;
               }else{
                 alert("搜索失败")
               }
@@ -168,6 +205,20 @@ export default {
             })
           })
         },
+        backDetail(){
+          this.getTableData()
+          this.backButtonVisible=false;
+          this.searchKv=''
+        },
+        handleSearch(){
+          this.termSearchDialogVisible=true;
+
+          
+        },
+        termSearch(){
+          this.getTableData(this.searchData) 
+        },
+
         handleAdd(){
           this.addGroupVisible=true
           if(this.addGroup.tenantId==""||this.addGroup.tenantId==null){
@@ -186,6 +237,7 @@ export default {
                         type: 'success',
                         message: '修改成功!'
                        });
+              _this.getTableData() 
               resolve()
             })
             .catch((reject)=>{
@@ -249,6 +301,7 @@ export default {
         },
         //删除组
         handleDelete(a,b){
+          var _this=this
                 // console.log(b)
                 this.$confirm('此操作将永久删除该组, 是否继续?', '提示', {
                 confirmButtonText: '确定',
@@ -267,6 +320,7 @@ export default {
                         type: 'success',
                         message: '删除成功!'
                        });
+                        _this.getTableData() 
                       }else{
                         this.$message({
                         type: 'error',
