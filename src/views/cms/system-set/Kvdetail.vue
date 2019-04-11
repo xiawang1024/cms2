@@ -15,7 +15,7 @@
       <el-button size="mini" type="primary" @click="handleSearch">检索</el-button>
       <el-button size="mini" type="primary" @click="handleAdd">添加</el-button>
     </div>
-    <el-table :data="appDetail">
+    <el-table :data="appDetail" >
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
@@ -31,7 +31,7 @@
       <el-table-column prop="name" label="name"/>
       <el-table-column prop="valueType" label="valueType"/>
       <el-table-column prop="value" label="value"/>
-      <el-table-column prop="createTime" label="createTime"/>
+      <el-table-column prop="createTime" label="createTime" :formatter="formatDate" />
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="prime" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -254,6 +254,11 @@ export default {
            
     },
     methods: {
+      formatDate(row){
+          let date=row.createTime.replace('T'," ")
+          date=date.replace('.000+0000','')
+          return date
+      },
       selectChange(val) {
         var _this=this
         console.log(val, 'val')

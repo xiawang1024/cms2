@@ -28,7 +28,7 @@ export function groupSave(obj) {
 export function addGroupRequest(obj) {
   
  return request({
-   url: Cpath+'/kvgroup/addKVGroup?tenantId='+obj.id+'&description='+obj.description+'&sort='+obj.sort+'&tag='+obj.tag,
+   url: Cpath+'/kvgroup/addKVGroup?tenantId='+obj.tenantId+'&description='+obj.description+'&sort='+obj.sort+'&tag='+obj.tag,
    method: 'post',
  })
 }
