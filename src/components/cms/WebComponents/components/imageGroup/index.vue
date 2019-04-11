@@ -176,12 +176,12 @@ export default {
             name: 'description',
             type: 'textarea',
           },
-          {
-            label: '设为封面',
-            name: 'coverBool',
-            type: 'switch',
-            hidden: false
-          },
+          // {
+          //   label: '设为封面',
+          //   name: 'coverBool',
+          //   type: 'switch',
+          //   hidden: false
+          // },
           {
             label: '',
             name: 'btn',
@@ -208,9 +208,11 @@ export default {
   methods: {
     submitSave(data) {
       data.channelId = this.treeTags[this.treeTags.length - 1].id
+      console.log(data, 'data1')
       if(data.details && data.details.length) {
         data.details.forEach((ele) => {
-          ele.picUrl = ele.url
+          ele.picUrl = ele.url,
+          ele.picName = ele.name
         })
       }
       if(this.title == '新增') {
@@ -257,7 +259,7 @@ export default {
     setFile() {
       this.filedetail.desc = this.$refs.formSetting.formModel.desc
       this.filedetail.title = this.$refs.formSetting.formModel.title
-      this.filedetail.coverBool = this.$refs.formSetting.formModel.coverBool
+      // this.filedetail.coverBool = this.$refs.formSetting.formModel.coverBool
       this.filedetail.description = this.$refs.formSetting.formModel.description
       this.$message.success('保存成功')
     },
@@ -314,9 +316,11 @@ export default {
         getImageListInfor(row.picGroupId)
           .then((response) => {
             this.formData = response.data.result
+            this.formData.tagIdsList = response.data.result.tagIdsList ? response.data.result.tagIdsList : []
             if(this.formData.details && this.formData.details.length) {
               this.formData.details.forEach((ele) => {
                 ele.url = ele.picUrl
+                ele.name = ele.picName
               })
             }
             this.picGroupId = response.data.result.picGroupId

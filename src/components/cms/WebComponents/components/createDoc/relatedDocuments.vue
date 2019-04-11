@@ -15,7 +15,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="belongColumn" label="所属栏目" show-overflow-tooltip/>
+      <el-table-column prop="channelName" label="所属栏目" show-overflow-tooltip/>
       <el-table-column prop="articleStatus" label="状态" width="80">
         <template slot-scope="scope">
           <span v-if="scope.row.articleStatus == 0">新稿</span>

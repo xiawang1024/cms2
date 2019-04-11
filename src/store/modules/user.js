@@ -4,10 +4,22 @@
 
 import { loginByUsername, logout, getUserInfo } from '@/api/login'
 import { UserCurrent } from '@/api/user/user'
-import { getAuth, setAuth, removeAuth } from '@/utils/auth'
+import { getAuth, setAuth, removeAuth, setBaseInfor } from '@/utils/auth'
 import { sha1 } from '@/utils/index'
 import router from '@/router'
-
+// 获取当前用户
+var getCurrentInfor = function() {
+  return new Promise((resolve, reject) => {
+    UserCurrent()
+      .then((response) => {
+        setBaseInfor(response.data.result)
+        resolve()
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 const user = {
   state: {
     token: getAuth(),
@@ -68,10 +80,9 @@ const user = {
         loginByUsername(username, userInfo.password)
           .then((response) => {
             const data = response.data
-            console.log(data, 'data111')
             commit('SET_TOKEN', data.access_token)
             setAuth(data)
-
+            getCurrentInfor()
             resolve()
           })
           .catch((error) => {
@@ -79,7 +90,6 @@ const user = {
           })
       })
     },
-
     // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {

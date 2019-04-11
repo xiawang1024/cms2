@@ -66,7 +66,7 @@ export default {
       return new Promise((resolve, reject) => {
         getDataAccess(userId)
           .then((response) => {
-            this.$refs.tree.setCheckedKeys(['1108265560111714304'])
+            // this.$refs.tree.setCheckedKeys(['1108265560111714304'])
             // this.$message.success('操作成功')
             // this.$emit('update:dialogVisible', false)
             // this.$emit('handelSuccess')

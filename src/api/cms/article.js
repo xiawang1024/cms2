@@ -64,7 +64,21 @@ export function publishDocumentMore(data) {
     data: data
   })
 }
-
+// 复制到
+export function copyTo(articleId,channelId) {
+  return request({
+    url: `/cms/article/copy/${articleId}/${channelId}`,
+    method: 'get'
+  })
+}
+// 移动到
+export function moveTo(articleId,channelId) {
+  return request({
+    url: `/cms/article/move/${articleId}/${channelId}`,
+    method: 'get'
+  })
+}
+// 引用到
 // 获取文章详情
 export function documentInfor(id) {
   return request({

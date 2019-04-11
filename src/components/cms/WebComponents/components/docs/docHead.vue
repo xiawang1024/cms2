@@ -94,7 +94,7 @@
       </el-input>
       <!-- <el-button type="primary" size="small"  @click="searchData">搜索</el-button> -->
     </div>
-    <handel-dialog :dialog-visible.sync="dialogVisible" :title="title" :multiple-list = "multipleList" @handelSuccess = "handelSuccess"/>
+    <handel-dialog :dialog-visible.sync="dialogVisible" :title="title" :multiple-list = "multipleList" :document-ids ="documentIds" @handelSuccess = "handelSuccess"/>
   </div>
 </template>
 <script>
@@ -105,7 +105,6 @@ import {
   typeOptions,
   statusOptions
 } from './mockData.js'
-// import choosedDialog from './choosedDialog.vue'
 import handelDialog from './handelDialog'
 import { deleteDocumentMore, cancelDocumentMore, publishDocumentMore } from '@/api/cms/article'
 import { mapGetters } from 'vuex'
@@ -236,6 +235,18 @@ export default {
           this.title = '删除'
           // this.dialogVisible = true
           this.deleteMore(this.documentIds.join(','))
+          break
+        case '5':
+          this.title = '复制到'
+          this.dialogVisible = true
+          break
+        case '6':
+          this.title = '移动到'
+          this.dialogVisible = true
+          break
+         case '7':
+          this.title = '引用到'
+          this.dialogVisible = true
           break 
         default: 
           break

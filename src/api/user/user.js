@@ -77,7 +77,14 @@ export function UserCurrent() {
     method: 'GET'
   })
 }
-
+// 修改当前用户密码
+export function resetPassword(data) {
+  return request({
+    url: '/userb/user/changeuserpwd',
+    method: 'POST',
+    data
+  })
+}
 /**
  *  disableFlag 用户可用状态更新
  * @param data  对象，用户对象

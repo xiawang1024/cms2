@@ -1,5 +1,6 @@
 import store from 'store'
 const StorageName = 'hnDt_token'
+const BaseInfor = 'BaseInfor'
 
 /**
  * set token
@@ -9,7 +10,10 @@ export const setAuth = (auth) => {
   setTokenExpireTime(auth)
   store.set(StorageName, auth)
 }
-
+export const setBaseInfor = (data) => {
+  console.log('setBaseInfor')
+  store.set(BaseInfor, data)
+}
 /**
  * get token
  */
@@ -19,7 +23,11 @@ export const getAuth = () => {
 /**
  * remove token
  */
-export const removeAuth = () => store.remove(StorageName)
+export const removeAuth = () => {
+  store.remove(StorageName)
+  store.remove(BaseInfor)
+  store.remove('shouye')
+}
 /**
  *获取刷新 token
  */
