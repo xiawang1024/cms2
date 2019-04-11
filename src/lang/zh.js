@@ -88,6 +88,7 @@ export default {
     backTask: '后台任务',
     personAndAuthor: '人员和权限',
     permissionGroup: '权限分组',
+    userCenter: '个人中心',
     permissionGroupEdit: '分组新增或修改',
     character: '角色设定',
     characterEdit: '角色新增或修改',

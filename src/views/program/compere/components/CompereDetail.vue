@@ -55,6 +55,7 @@ import { fetchChannelAll } from '@/api/program/channel'
 import { fetchCompere, createCompere } from '@/api/program/compere'
 import MDinput from '@/components/MDinput'
 import Vue from 'vue'
+import baseUrl from '@/config/base-url'
 
 const defaultForm = {
   compereId: '',      // 主播Id
@@ -117,7 +118,7 @@ export default {
         this.channel_name = JSON.parse(response.data.result.compereInfo).channel_name
         this.desc = JSON.parse(response.data.result.compereInfo).desc
         this.logo = JSON.parse(response.data.result.compereInfo).logo
-        this.imgSrc = process.env.BASE_API + this.logo
+        this.imgSrc = baseUrl.DOWN_URL + this.logo
         this.loading = false
 
       }).catch(err => {
@@ -167,7 +168,7 @@ export default {
       this.$router.go(-1)
     },
     uploadUrl() {
-        var url = "http://172.20.5.4:55030/basefile/upload" // 文件服务地址
+        var url = baseUrl.UP_URL+"program" // 文件服务地址
         return url
     },
     handleRemove(file, fileList) {//移除图片
@@ -192,7 +193,7 @@ export default {
       },
       handleAvatarSuccess(res, file) {//图片上传成功
         this.logo = file.response.result.filePath
-        this.imgSrc = file.response.result.fileUrl + this.logo
+        this.imgSrc = baseUrl.DOWN_URL + this.logo
       },
       imgUploadError(err, file, fileList){//图片上传失败调用
         this.$message.error('上传图片失败!')

@@ -14,7 +14,7 @@ export const currentDoc = [
   {
     id: '4',
     label: '删除'
-  },
+  }
   // {
   //   id: '5',
   //   label: '复制到'
@@ -32,16 +32,16 @@ export const currentDoc = [
 export const currentColumn = [
   // {
   //   id: '1',
-  //   label: '发布栏目首页'
-  // },
-  // {
-  //   id: '2',
-  //   label: '指定范围重新发布'
+  //   label: '栏目首页'
   // },
   {
     id: '3',
     label: '修改栏目'
   },
+  // {
+  //   id: '2',
+  //   label: '建立子栏目'
+  // },
   // {
   //   id: '4',
   //   label: '栏目图片'
@@ -52,19 +52,11 @@ export const currentColumn = [
   // },
   // {
   //   id: '6',
-  //   label: '自定义内容片断'
+  //   label: '栏目水印'
   // },
   // {
   //   id: '7',
   //   label: '模板'
-  // },
-  // {
-  //   id: '8',
-  //   label: '管理评论'
-  // },
-  // {
-  //   id: '9',
-  //   label: '废件箱'
   // },
   // {
   //   id: '10',

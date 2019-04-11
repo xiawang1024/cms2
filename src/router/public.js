@@ -33,6 +33,20 @@ const constantRouterMap = [
     component: () => import('@/views/public/errorPage/401'),
     hidden: true
   },
+  {
+    path: '/userSetting',
+    component: Layout,
+    name: 'userSetting',
+    hidden: true,
+    children: [
+      {
+        path: '/userSetting/userCenter',
+        name: 'userCenter',
+        component: () => import('@/views/public/userCenter'),
+        meta: { title: 'userCenter', icon: 'permissionGroup', role: '' }
+      }
+    ]
+  },
   // {
   //   path: '',
   //   redirect: 'cms/systemSet/siteSet',

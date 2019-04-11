@@ -134,7 +134,8 @@ const systemSet = {
       path: 'KvGroupController',
       component: () => import(`@/${path}/KvGroupController`),
       name: 'KvGroupController',
-      meta: { title: 'KvGroupController', icon: 'bee', role: 'cms' },
+      meta: { title: 'KvGroupController', icon: 'kvGroup', role: 'cms' },
+      hidden: true
     },
     {
       /**
@@ -143,7 +144,7 @@ const systemSet = {
       path: 'Kvdetail',
       component: () => import(`@/${path}/Kvdetail`),
       name: 'Kvdetail',
-      meta: { title: 'Kvdetail', icon: 'bee', role: 'cms' },
+      meta: { title: 'Kvdetail', icon: 'kvGroup', role: 'cms' },
       hidden: true
     }
   ]

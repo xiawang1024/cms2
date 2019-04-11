@@ -78,12 +78,16 @@
 </template>
   <script>
   import {columnList} from "@/api/cms/columnManage.js"
-  import {getRuler,getCloumRule,getFullRuleSend,currentuser} from "@/api/cms/beeClect.js"
-  import baseUrl from '@/config/base-url'
-  let cpath=baseUrl['BASE_URL'].split(":");
-  let  Cpath=cpath[0].toString()+':'+cpath[1].toString()
-  //生产地址
-  // let  Cpath='http://192.168.25.148'
+  import {getRuler,
+          getCloumRule,
+          getFullRuleSend,
+          currentuser,
+          testRequest,
+          saveRequest,
+          wxTestRequest,
+          wxSaveRequest,
+          // getRuleById
+          } from "@/api/cms/beeClect.js"
   export default {
       name:'Form',
       data(){
@@ -190,35 +194,16 @@
                           reject(error)
                       })
                   }) 
-
-
-                // this.$.ajax({
-                // type:"POST",
-                // url:Cpath+":19080/content-grab/newslist/getAllRuleById",
-                // data:{
-                //     "ruleid" : this.selectRule,
-                // },
-                // success:(data)=> {
-                //     if(data.status=="success"){
-                //         return this.res=data.data;
-                        
-                //     }else {
-                //         this.res=this.saveRes;
-                //         // alert(data.data);
-                //     }
-                // },
-                // error:function (data) {
-                //     alert("请求失败");
-                // }
-                // });
             },
           
         },      
       created(){   
-  
+              //获取全部已有规则
               this.getFullRule();  
+              //获取当前用户信息
               this.getcurrentuser(); 
-               
+
+               //获取栏目列表信息
                 var _this = this
                    return new Promise((resolve, reject) => {
                      columnList({},1,1000)
@@ -233,17 +218,6 @@
                           reject(error)
                       })
                   })  
-                
-                  /***
-                    获取用户id ，租户id
-                    http://172.20.5.4:53010/userb/user/currentuser
-                    Request Method: GET
-                    保存请求添加这两个参数
-                    clientLicenseId: "hnr1"
-                    userName: "hnr1"
-                   */ 
-
-
       },
       
       methods:{
@@ -254,8 +228,7 @@
               return new Promise((resolve,reject)=>{
                 currentuser()
                 .then((response)=>{
-                
-                console.log(response)
+                // console.log(response)
                 _this.clientLicenseId=response.data.result.clientLicenseId;
                 _this.userName=response.data.result.userName;
                   resolve();
@@ -322,29 +295,6 @@
                        console.log(reject)
                    })
               })
-             
-            //   this.$.ajax({
-            //           type:"POST",
-            //           url:Cpath+":19080/content-grab/newslist/getAllRuleByClumnId",
-            //           data:{
-            //               "clumnid" :this.selectCloum,
-            //           },
-            //           success:(data)=> {
-            //               if(data.status=="success"){
-            //                   return this.ruleContent=data.data;                          
-            //               }else {
-            //                   if(this.selectCloum==""){
-            //                        this.res=this.saveRes;
-            //                   }else{
-            //                       this.res={}
-                                 
-            //                   }
-            //               }
-            //           },
-            //           error:function (data) {
-            //               alert("请求失败");
-            //           }
-            //       });
             },
   
           check(){
@@ -396,78 +346,57 @@
                 return new Promise((resolve,reject)=>{
                     getFullRuleSend({})
                     .then((response)=>{
-                        //  console.log(response)
+                         
                         if(response.data.status=="success"){                           
                                _this.fullRule=response.data.data;  
                           }else {
                               alert(response.data);
                           }
+                          resolve()
                     })
                     .catch((reject)=>{
                          alert("请求失败");
                     })
                 })
-
-
-
-            //   this.$.ajax({
-            //           type:"GET",
-            //           url:Cpath+":19080/content-grab/newslist/getallrule",
-                      
-            //           success:(data)=> {
-            //               if(data.status=="success"){
-            //                   console.log(data.data)
-            //                   return this.fullRule=data.data;
-                             
-  
-            //               }else {
-            //                   alert(data.data);
-            //               }
-            //           },
-            //           error:function (data) {
-            //               alert("请求失败");
-            //           }
-            //       });
           },
           test(){
               let flag=this.check();
               if(flag){
-                  this.loading=true;  
-                  this.$.ajax({
-                      type:"POST",
-                          url:Cpath+":19080/content-grab/newslist/getnewslist",
-                          data:{
-                              "column" : this.res.clumnId,
-                              "newslisturl":this.res.newsListUrl,
-                              "newslisturlrule":this.res.newsListUrlRule,
-                              "newslisttitle":this.res.newsListTitle,
-                              "titleurl":this.res.titleUrl,
-                              "newslistrule":this.res.newsListRule,
-                              "newsrule":this.res.newsRule,
-                              "titlerule":this.res.titleRule,
-                              "contentrule":this.res.contentRule,
-                              "formrule":this.res.formRule,
-                              "encoding":this.res.encoding,
-                              "clientLicenseId":this.clientLicenseId,
-                              "userName":this.userName,
-                          },
-                          // dataType: "json",
-                          success:(data)=> {
-                              if(data.status=="success"){
-                                  // alert(data.data.title);
-                                  this.loading=false;
-                                  this.testData=data.data;
+                  this.loading=true; 
+                  var sendData={
+                     "column" : this.res.clumnId,
+                      "newslisturl":this.res.newsListUrl,
+                      "newslisturlrule":this.res.newsListUrlRule,
+                      "newslisttitle":this.res.newsListTitle,
+                      "titleurl":this.res.titleUrl,
+                      "newslistrule":this.res.newsListRule,
+                      "newsrule":this.res.newsRule,
+                      "titlerule":this.res.titleRule,
+                      "contentrule":this.res.contentRule,
+                      "formrule":this.res.formRule,
+                      "encoding":this.res.encoding,
+                      "clientLicenseId":this.clientLicenseId,
+                      "userName":this.userName,
+                  }
+                  var _this=this
+                  return new Promise((resolve,reject)=>{
+                    testRequest(sendData)
+                    .then((response)=>{
+                       if(response.data.status=="success"){
+                                  _this.loading=false;
+                                  _this.testData=response.data.data;
                               
                               }else {
-                                  this.loading=false;
+                                  _this.loading=false;
                                   alert("请求失败")
                               }
-                          },
-                          error:(data)=> {
-                              this.loading=false;
-                              alert(data);
-                          }
-                  });
+                      resolve();
+                    })
+                    .catch((reject)=>{
+                      _this.loading=false;
+                        alert(reject);
+                    })
+                  })
               }
               
           },
@@ -479,39 +408,41 @@
               let flag=this.check();        
               if(flag){
                   this.loading=true;
-                
-                  this.$.ajax({
-                      type:"POST",            
-                      url:Cpath+":19080/content-grab/newslist/saverule",
-                      data:{
-                        
-                            "id":this.res.id,
-                        //   "id":this.selectRule,
-                          "column" : this.res.clumnId,
-                          "newslisturl":this.res.newsListUrl,
-                          "newslisturlrule":this.res.newsListUrlRule,
-                          "newslisttitle":this.res.newsListTitle,
-                          "titleurl":this.res.titleUrl,
-                          "newslistrule":this.res.newsListRule,
-                          "newsrule":this.res.newsRule,
-                          "titlerule":this.res.titleRule,
-                          "contentrule":this.res.contentRule,
-                          "formrule":this.res.formRule,
-                          "encoding":this.res.encoding,
-                           "clientLicenseId":this.clientLicenseId,
-                           "userName":this.userName,
+                  var sendData={
+                        "id":this.res.id,
+                        "column" : this.res.clumnId,
+                        "newslisturl":this.res.newsListUrl,
+                        "newslisturlrule":this.res.newsListUrlRule,
+                        "newslisttitle":this.res.newsListTitle,
+                        "titleurl":this.res.titleUrl,
+                        "newslistrule":this.res.newsListRule,
+                        "newsrule":this.res.newsRule,
+                        "titlerule":this.res.titleRule,
+                        "contentrule":this.res.contentRule,
+                        "formrule":this.res.formRule,
+                        "encoding":this.res.encoding,
+                          "clientLicenseId":this.clientLicenseId,
+                          "userName":this.userName,
+                  }
+                  var _this=this
 
-                      },
-                      success:(data)=> {
-                          this.loading=false;
-                          alert("成功");
-                          this.getRule();
-                      },
-                      error:(data)=> {
-                          this.loading=false;
+                  return new Promise((resolve,reject)=>{
+                    saveRequest(sendData)
+                    .then((response)=>{
+                       _this.loading=false;
+                      // console.log(response.data)
+                      if(response.data.status=="success"){
+                         alert("成功");
+                          _this.getRule();
+                      } 
+                      resolve()    
+                    })
+                    .catch((reject)=>{
+                      console.log(reject)
+                       _this.loading=false;
                           alert("失败");
-                      }
-                  });
+                    })
+                  })
               } 
           
           },
@@ -519,41 +450,62 @@
               let flag=this.check();        
               if(flag){
                   this.loading=true;
-                  this.$.ajax({
-                      type:"POST",            
-                      url:Cpath+":19080/content-grab/newslist/saverule",
-                      data:{
-                          "id":'',
-                          "column" : this.res.clumnId,
-                          "newslisturl":this.res.newsListUrl,
-                          "newslisturlrule":this.res.newsListUrlRule,
-                          "newslisttitle":this.res.newsListTitle,
-                          "titleurl":this.res.titleUrl,
-                          "newslistrule":this.res.newsListRule,
-                          "newsrule":this.res.newsRule,
-                          "titlerule":this.res.titleRule,
-                          "contentrule":this.res.contentRule,
-                          "formrule":this.res.formRule,
-                          "encoding":this.res.encoding,
-                          "clientLicenseId":this.clientLicenseId,
-                           "userName":this.userName,
-                      },
-                      success:(data)=> {
-                          this.loading=false;
-                          alert("成功");
-                          this.getRule();
-                      },
-                      error:(data)=> {
-                          this.loading=false;
+                  var sendData={
+                     "id":'',
+                      "column" : this.res.clumnId,
+                      "newslisturl":this.res.newsListUrl,
+                      "newslisturlrule":this.res.newsListUrlRule,
+                      "newslisttitle":this.res.newsListTitle,
+                      "titleurl":this.res.titleUrl,
+                      "newslistrule":this.res.newsListRule,
+                      "newsrule":this.res.newsRule,
+                      "titlerule":this.res.titleRule,
+                      "contentrule":this.res.contentRule,
+                      "formrule":this.res.formRule,
+                      "encoding":this.res.encoding,
+                      "clientLicenseId":this.clientLicenseId,
+                        "userName":this.userName,
+                  }
+                  var _this=this
+                  return new Promise((resolve,reject)=>{
+                    saveRequest(sendData)
+                    .then((response)=>{
+                       _this.loading=false;
+                      // console.log(response.data)
+                      if(response.data.status=="success"){
+                         alert("成功");
+                          _this.getRule();
+                      } 
+                      resolve()    
+                    })
+                    .catch((reject)=>{
+                      console.log(reject)
+                       _this.loading=false;
                           alert("失败");
-                      }
-                  });
+                    })
+                  })
               } 
           },
           choice(e){
               this.checkRuleId=e;
               this.res=this.fullRule[e];
               this.saveRes=this.res;
+              //发送请求获取全部规则信息
+              //--------------------------
+              // var _this=this
+              // return new Promise((resolve,reject)=>{
+              //   getRuleById()
+              //   .then((response)=>{
+              //     console.log(response.data)
+              //     //完成赋值操作++
+              //   })
+              //   .catch((reject)=>{
+              //     console.log(reject)
+              //   })
+              // })
+
+
+              //-------------------------
               this.selectCloum="";
               this.selectRule="";            
             //   console.log(e);
@@ -585,52 +537,58 @@
                   if(this.weChatId==""||this.weChatId==null){
                   alert("微信号不能为空！");
                   return false;
-              }
-                  this.loading=true;           
-                  this.$.ajax({
-                      type:"POST",
-                          url:Cpath+":19080/content-grab/wechatarticle/testwechat?number="+this.weChatId,
-                          success:(data)=> {
-                              if(data.status=="success"){
-                                  this.loading=false;
-                                  this.wxData=data.data;
+                  }
+                  this.loading=true; 
+                  
+                  var _this=this
+                  return new Promise((resolve,reject)=>{
+                    wxTestRequest(_this.weChatId)
+                    .then((response)=>{
+                      // console.log(response)
+                       if(response.data.status=="success"){
+                                  _this.loading=false;
+                                  _this.wxData=response.data.data;
                                 //    console.log( this.wxData)
                               }else {
-                                  this.loading=false;
+                                  _this.loading=false;
                                   alert("请求失败")
                               }
-                          },
-                          error:(data)=> {
-                              this.loading=false;
-                              alert(data);
-                          }
-                  });
-              
-          },
+                      resolve()
+                    })
+                    .catch((reject)=>{
+                      console.log(reject)
+                      _this.loading=false;
+                              alert(reject);
+                    })
+                  })
+                  },
           wxsave(){
                let flag=this.wxcheck();
               if(flag){
-                  this.loading=true;           
-                  this.$.ajax({
-                      type:"POST",
-                          url:Cpath+":19080/content-grab/wechatarticle/saveWechatRule?number="+this.wxData.wechatNumber+"&name="+this.wxData.wechatName,
-                          success:(data)=> {
-                              if(data.status=="success"){
+                  this.loading=true;   
+                  var _this=this
+
+                  return new Promise((resolve,reject)=>{
+                    wxSaveRequest(_this.wxData.wechatNumber,_this.wxData.wechatName)
+                    .then((response)=>{
+                      // console.log(response.data)
+                      if(response.data.status=="success"){
                               
-                                  this.loading=false;
+                                  _this.loading=false;
                                 //   console.log(data)
                                  alert("保存成功")
                               
                               }else {
-                                  this.loading=false;
+                                  _this.loading=false;
                                   alert("请求失败")
                               }
-                          },
-                          error:(data)=> {
-                              this.loading=false;
-                              alert(data);
-                          }
-                  });
+                      resolve()
+                    })
+                    .catch((reject)=>{
+                      _this.loading=false;
+                      alert(reject);
+                    })
+                  })
               }
           }
   
