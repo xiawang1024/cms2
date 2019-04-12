@@ -37,18 +37,53 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination :total="totalCount"/>
+    <pagination :total="totalCount" @sizeChange="sizeChange" @pageChange="pageChange"/>
     <v-page :visible.sync="handelCheck" @goBack="goBack">
       <h3 slot="title">{{ title }}</h3>
       <template slot="content">
         <!-- 详情页组件 -->
-        <!-- <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave">
-          <template slot="list">
+        <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave">
+          <template slot="chooseColumn">
             <div class="choosed-list">
-              <choosed-list ref="choosedList" :details-list = "detailsList"/>
+              <el-select v-model="value5" multiple placeholder="请选择">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"/>
+              </el-select>
+              <el-cascader
+                :options="options1"
+                v-model="selectedOptions"
+              />
+              <!-- <choosed-list ref="choosedList" :details-list = "detailsList"/> -->
             </div>
           </template>
-        </v-form> -->
+          <template slot="chooseColumnTest">
+            <div class="choosed-list">
+              <div class="define-select">
+                <el-tag size="small" closable>小型标签</el-tag>
+                <el-tag size="small" closable>小型标签</el-tag>
+                <el-tag size="small" closable>小型标签</el-tag>
+                <el-tag size="small" closable>小型标签</el-tag>
+              </div>
+              <!-- <el-select v-model="value5" multiple placeholder="请选择">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+               <el-cascader
+                :options="options1"
+                v-model="selectedOptions"
+               >
+              </el-cascader> -->
+              <!-- <choosed-list ref="choosedList" :details-list = "detailsList"/> -->
+            </div>
+          </template>
+        </v-form>
       </template>
     </v-page>
   </div>
@@ -98,7 +133,102 @@ export default {
       searchData: {},
       // 新增
       title: '审核设置',
-      handelCheck: false
+      handelCheck: false,
+      formSettings: [
+        {
+          items: [
+            {
+              label: '配置名称：',
+              name: 'settingName',
+              type: 'text',
+              valueType: 'string',
+              placeholder: '请输入配置名称',
+            },
+            {
+              label: '选择栏目',
+              name: 'chooseColumn',
+              type: 'slot',
+              valueType: 'string',
+              placeholder: '',
+            },
+            {
+              label: '选择栏目',
+              name: 'chooseColumnTest',
+              type: 'slot',
+              valueType: 'string',
+              placeholder: '',
+            },
+            {
+              label: '开启文章多级审核',
+              name: 'openCheck',
+              type: 'switch',
+              activeValue: '1',
+              placeholder: '',
+            },
+            {
+              label: '审核方式',
+              name: 'checkType',
+              type: 'text',
+              valueType: 'string',
+              placeholder: '',
+            },
+            {
+              label: '审批人设置',
+              name: 'checkType',
+              type: 'text',
+              valueType: 'string',
+              placeholder: '',
+            }
+          ]
+        }
+      ],
+      formData: {},
+      options: [{
+        value: '选项1',
+        label: '黄金糕'
+      }, {
+        value: '选项2',
+        label: '双皮奶'
+      }, {
+        value: '选项3',
+        label: '蚵仔煎'
+      }, {
+        value: '选项4',
+        label: '龙须面'
+      }, {
+        value: '选项5',
+        label: '北京烤鸭'
+      }],
+      options1: [
+        {
+          value: 'zhinan',
+          label: '指南',
+          children: [
+            {
+              value: 'shejiyuanze',
+             label: '设计原则',
+            }
+          ]
+        },
+        {
+          value: 'zujian',
+          label: '组件',
+          children: [
+            {
+              value: 'basic',
+              label: 'Basic',
+              children: [
+                {
+                  value: 'layout',
+                  label: 'Layout 布局'
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      value5: [],
+      selectedOptions: []
     }
   },
   watch:{
@@ -120,11 +250,25 @@ export default {
 
     },
     addCheck() {
+      this.title = "添加配置"
       this.handelCheck = true
     },
     editCheck() {
+     this.title = "编辑配置"
      this.handelCheck = true
     },
+    sizeChange(val) {
+      this.pageSize = val
+      this.columnList()
+    },
+    pageChange(val) {
+      this.pageNum = val
+      this.columnList()
+    },
+    submitSave() {
+
+    },
+
     columnSearchList() {
       var _this = this
       return new Promise((resolve, reject) => {
@@ -269,6 +413,26 @@ export default {
    margin: 30px;
   .tool-bar {
     margin-top:22px;
+  }
+  .define-select {
+    width: 100%;
+    -webkit-appearance: none;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    font-size: inherit;
+    line-height: 32px;
+    outline: 0;
+    padding: 0 15px;
+    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    width: 100%;
+    cursor: pointer;
   }
 }
 </style>
