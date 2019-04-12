@@ -12,6 +12,7 @@
             <el-button type="text" size="mini" @click="() => updateTreeNodeDialog(node, data)">更新</el-button>
             <el-button type="text" size="mini" @click="() => removeTreeNode(node, data)">删除</el-button>
             <el-button type="text" size="mini" @click="() => updatePermissionNodeDialog(node, data)">权限</el-button>
+            <el-button type="text" size="mini" @click="() => relUserInfoNodeDialog(node, data)">用户</el-button>
           </span>
         </span>
       </el-tree>
@@ -39,6 +40,12 @@
         </permissiongroup>
       </div>
     </el-dialog>
+    <!-- 角色包含用户 弹窗组件 -->
+    <el-dialog :visible.sync="dialogUserShowVisible" title="角色用户依赖管理">
+      <el-table :data="dialogUserShowTableData" size="mini" stripe style="width: 100%; ">
+        <el-table-column prop="userName" label="用户名"/>
+      </el-table>
+    </el-dialog>
     <!-- 允许当前页面被其他组件依赖，依赖的过程中，允许具名slot，保证明确的节点被插入到当前组件中 -->
     <slot name="fotter-slot"/>
   </div>
@@ -49,6 +56,7 @@
 import PapSearch from '@/components/pap/search/index'
 import ButtonGroup from '@/components/pap/button-group/index'
 import { RoleList, RoleCreate, RoleUpdate, RoleDelete, RolePerissionRelSave, RolePermissionRelPermissionByRoleId } from '@/api/user/role'
+import { UserRoleRelUserInfoByRoleId } from '@/api/user/user'
 import ElFormRenderer from '@/components/el-form-renderer'
 import permissiongroup from '@/views/user/permissiongroup'
 
@@ -117,6 +125,9 @@ export default {
         {name: '搜索', auth: 'ROLE:LIST', click: 'list-click', icon: 'el-icon-search'},
       ],
       dialogPermissionManagerTreeButtonFlag: false,
+      // 角色包含用户
+      dialogUserShowVisible: false,
+      dialogUserShowTableData: [],
       filename: ''
       /* eslint-disable */
     }
@@ -157,6 +168,27 @@ export default {
       // 确保弹窗提交按钮是创建
       this.dialogSubmitUrlType = 'CREATE'
       this.dialogFormVisible = true
+    },
+    relUserInfoNodeDialog (node, data) {
+      console.log(node, data)
+      var _this = this
+      var currentRoleId = data.roleId
+      _this.dialogUserShowTableData = []
+      _this.dialogUserShowVisible = true
+      _this.$nextTick(function () {
+        return new Promise((resolve, reject) => {
+          // 查询出来用户下属的角色信息
+          UserRoleRelUserInfoByRoleId(currentRoleId).then(async res => {
+            console.log(res)
+            if (res.data.result !== null && res.data.result.length > 0) {
+              _this.dialogUserShowTableData = res.data.result
+            }
+          }).catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+        })
+      })
     },
     removeTreeNode (node, data) {
       console.log(node, data)

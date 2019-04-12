@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h3>配置组管理</h3>
+  <div class="kvBox">
+    
     <div class="tool-bar">
       <el-input
         size="mini"
@@ -12,17 +12,19 @@
         @keyup.enter.native="search(searchKv)"
       />
       <el-button size="mini" type="primary" v-show="backButtonVisible" @click="backDetail">返回</el-button>
-      <el-button size="mini" type="primary" @click="handleSearch">检索</el-button>
-      <el-button size="mini" type="primary" @click="handleAdd">新增</el-button>
+      <el-button size="mini" type="primary" @click="commentForm(3,'b')">检索</el-button>
+      <el-button size="mini" type="primary" @click="commentForm(1,'b')">新增</el-button>
     </div>
     <el-table :data="allGroup" >            
       <el-table-column prop="id" label="id"/>
       <el-table-column prop="tenantId" label="tenantId"/>
       <el-table-column prop="description" label="description"/>
-      <el-table-column prop="tag" label="tag"/>           
+      <el-table-column prop="tag" label="tag"/>
+      <el-table-column prop="sort" label="sort"/>            
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="prime" @click="handleEdite(scope.$index, scope.row)">修改</el-button>
+          <el-button size="mini" type="prime" @click="commentForm(2, scope.row)">编辑</el-button>
+          
           <el-button size="mini" type="warning" @click="handleSerch(scope.row.id,scope.row.description)">详情</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
@@ -40,77 +42,17 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-    <el-dialog :visible.sync="Visible" title="修改配置组">
-      <el-form :model="tenant">
-        <el-form-item label="租户">
-          <el-input v-model="tenant.description"/>
-        </el-form-item>
-        <el-form-item label="sort">
-          <el-input v-model="tenant.sort"/>
-        </el-form-item>
-        <el-form-item label="tag">
-          <el-input v-model="tenant.tag"/>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="Visible = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="handleEditeSave()">确 定</el-button>
-      </div>
+    
+    <el-dialog :visible.sync="dialogVisible" :title="handleType">
+      <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" label-width="80px" :btn-loading = "isLoading"/>
     </el-dialog>
-    <el-dialog :visible.sync="addGroupVisible" title="添加配置组">
-      <el-form :model="addGroup">
-        <el-form-item label="租户id">
-          <el-input v-model="addGroup.tenantId"/>
-        </el-form-item>
-        <el-form-item label="租户">
-          <el-input v-model="addGroup.description"/>
-        </el-form-item>        
-        <el-form-item label="sort">
-          <el-input v-model="addGroup.sort"/>
-        </el-form-item>
-        <el-form-item label="tag">
-          <el-input v-model="addGroup.tag"/>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="Visible = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="handleAdd()">确 定</el-button>
-      </div>
-    </el-dialog>
-    <el-dialog :visible.sync="termSearchDialogVisible" title="条件检索">
-      <el-form :model="searchData">
-        <el-form-item label="租户id">
-          <el-input v-model="searchData.id"/>
-        </el-form-item>
-        <el-form-item label="tenantId">
-          <el-input v-model="searchData.tenantId"/>
-        </el-form-item>
-        <el-form-item label="租户描述">
-          <el-input v-model="searchData.description"/>
-        </el-form-item>        
-        <el-form-item label="sort">
-          <el-input v-model="searchData.sort"/>
-        </el-form-item>
-        <el-form-item label="tag">
-          <el-input v-model="searchData.tag"/>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="termSearchDialogVisible = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="termSearch">确 定</el-button>
-      </div>
-    </el-dialog>
-        
   </div>
 </template>
 
 <script>
 import {getAllGroup,groupSave,deleteGroup,addGroupRequest,getAppDetail} from "@/api/cms/KvGroup.js"
-// import { resolve } from 'q';
-// import { resolve } from 'q';
-// import Tinymce from "@/components/Tinymce";
+
 export default {
-    // components: { Tinymce },
     data(){
         return {
             searchKv:"",
@@ -119,25 +61,18 @@ export default {
               description:'',
               sort:'',
               tag:''
-                // "id": 1112657532821835776,
-                // "tenantId": "56",
-                // "description": "开封电视台",
-                // "url": "www.baidu.com",
-                // "createTime": "2019-04-01T10:06:43.000+0000"
-            },
+                    },
             addGroup:{
               tenantId:'',
               description:'',
               sort:'',
               tag:''
-
-
             },
             Visible: false,
             addGroupVisible:false,
             allGroup:[],
             pageNum: 1, // 分页当前页
-            pageSize: 100,
+            pageSize: 10,
             totalCount: 0,
             backButtonVisible:false,
             defaultData:{
@@ -154,18 +89,208 @@ export default {
                 "tag": "",
                 "tenantId": ""
             },
-            termSearchDialogVisible:false
+            dialogTitle:'新增',
+            dialogVisible:false,
+            formData: {},
+            formSettings: [
+              {
+                items: [
+                  {
+                    label: '租户描述',
+                    name: 'description',
+                    type: 'text',
+                    required: true,
+                    placeholder: '请输入描述'
+                  },
+                  {
+                    label: 'sort',
+                    name: 'sort',
+                    type: 'text',
+                    required: true,
+                    // valueType:'number',
+                    placeholder: '请输入数字'
+                    
+                  },{
+                    label: 'tag',
+                    name: 'tag',
+                    type: 'text',
+                    required: true,
+                    placeholder: '请输入tag'
+                  },
+                  {
+                    label: 'tenantId',
+                    name: 'tenantId',
+                    type: 'text',
+                    required: true,
+                    placeholder: '请输入字母或者数字！',
+                    // rule: [{
+                    //       validator: this.checkTenantId,
+                    //     }, {
+                    //       required: true,
+                    //       trigger: 'blur'
+                    //     }],
+                    hidden:true
+                  },
+                  {
+                    label:'id',
+                    name: 'id',
+                    type: 'text',
+                    required: true,
+                    valueType:'number', 
+                    placeholder: '请输入id',
+                    hidden:true
 
-
+                  }
+                ]
+              }
+            ],
+            isLoading: false,
+            handleType:""
         }
     },
     created(){
-        this.getTableData(this.defaultData) 
+      var _this=this
+        this.getTableData(_this.defaultData) 
+        console.log(this.defaultData,'duhz')
     },
     methods:{
+        //通用对话框
+        commentForm(a,b){
+          this.dialogVisible=true;
+          if(a==1){
+            this.handleType="新增"
+            this.formData={}
+            this.formSettings[0].items[3].hidden=false
+            this.formSettings[0].items[4].hidden=true
+
+            //新增
+
+
+          }else if(a==2){
+            //修改
+            console.log(b,'b')
+            this.handleType="修改"
+            this.formData={}
+            
+            this.formSettings[0].items[3].hidden=true
+            this.formSettings[0].items[4].hidden=true
+            this.formData=b
+            console.log(this.formData,'formdate')
+
+          }else if(a==3){
+            //检索
+            this.handleType="检索"
+            this.formData={}
+             this.formSettings[0].items.forEach((item)=>{
+               item.required=false;
+             })
+            this.formSettings[0].items[3].hidden=false
+            this.formSettings[0].items[4].hidden=false
+
+
+          }
+
+        },
+        // checkTenantId(rule, value, callback){
+        //    var patt=/^[A-Za-z0-9]+$/;
+        //      console.log(value,"value")
+        //   if (!patt.test(value)) {
+        //  return callback(new Error('请输入字母或者数字'))
+        //      }else{
+        //        return callback()
+        //      }
+        // },
+      submitSave(row){
+        var _this=this
+        console.log(row,'row')
+        let sendPass=true;
+          if(this.handleType=="新增"){
+            //新增接口
+             console.log(this.addGroup.tenantId,'赋值前')
+             let patt=/^[A-Za-z0-9]+$/;
+             if(!patt.test(row.tenantId)){
+               console.log('校验')
+               sendPass=false;
+               return  _this.$message({                       
+                        type: 'error',
+                        message: '请在tenantId栏目输入字母或者数字!'
+                       });
+
+             }
+             let patt1=/^[0-9]+$/;
+             if(!patt1.test(row.sort)){
+               console.log('校验')
+               sendPass=false;
+               return  _this.$message({                       
+                        type: 'error',
+                        message: '请在sort栏目输入数字!'
+                       });
+
+             }
+            if(sendPass){
+              this.addGroup={
+              tenantId:row.tenantId,
+              description:row.description,
+              sort:row.sort,
+              tag:row.tag
+              }
+              console.log(this.addGroup.tenantId,'赋值后')
+             this.handleAdd(this.addGroup)
+            }
+          }else if(this.handleType=="修改"){
+            //修改接口
+               let patt=/^[0-9]+$/;
+             if(!patt.test(row.id)){
+               console.log('校验')
+               sendPass=false;
+               return  _this.$message({                       
+                        type: 'error',
+                        message: '请在tenantId栏目输入字母或者数字!'
+                       });
+
+             }
+             let patt1=/^[0-9]+$/;
+             if(!patt1.test(row.sort)){
+               console.log('校验')
+               sendPass=false;
+               return  _this.$message({                       
+                        type: 'error',
+                        message: '请在sort栏目输入数字!'
+                       });
+
+             }
+            if(sendPass){
+                _this.tenant={
+                description:row.description,
+                sort:row.sort,
+                tag:row.tag,
+                id:row.id
+              };
+              this.handleEditeSave();
+            }
+
+          }else if(this.handleType=="检索"){
+            
+            if(sendPass){
+                this.searchData={
+                tenantId:row.tenantId,
+                description:row.description,
+                sort:row.sort,
+                tag:row.tag,
+                id: row.id
+              }
+              this.getTableData(this.searchData)
+              _this.backButtonVisible=true;
+            }
+          }
+      },
+
+
+
       //获取所有列表
       getTableData(obj){
-        var _this=this
+        var _this=this;
+        console.log(_this.pageNum,'页面')
         return new Promise((resolve,reject)=>{
            
             getAllGroup(_this.pageNum,_this.pageSize,obj)
@@ -173,7 +298,7 @@ export default {
             console.log(response.data.result)
             _this.totalCount=response.data.result.totalElements
             _this.allGroup=response.data.result.content
-            _this.termSearchDialogVisible=false
+            _this.dialogVisible=false;
              resolve()
             })
             .catch((reject)=>{
@@ -206,38 +331,22 @@ export default {
           })
         },
         backDetail(){
-          this.getTableData()
+          this.getTableData(this.defaultData)
           this.backButtonVisible=false;
           this.searchKv=''
         },
-        handleSearch(){
-          this.termSearchDialogVisible=true;
-
-          
-        },
-        termSearch(){
-          this.getTableData(this.searchData) 
-        },
-
-        handleAdd(){
-          this.addGroupVisible=true
-          if(this.addGroup.tenantId==""||this.addGroup.tenantId==null){
-            return false
-          }
-           if(this.addGroup.description==""||this.addGroup.description==null){
-            return false
-          }
+        handleAdd(obj){
           var _this=this
           return new Promise((resolve,reject)=>{
-            addGroupRequest(_this.addGroup)
+            addGroupRequest(obj)
             .then((response)=>{
               console.log(response)
-              _this.addGroupVisible=false
+              _this.dialogVisible=false
               _this.$message({                       
                         type: 'success',
-                        message: '修改成功!'
+                        message: '添加成功!'
                        });
-              _this.getTableData() 
+              _this.getTableData(_this.defaultData) 
               resolve()
             })
             .catch((reject)=>{
@@ -262,25 +371,26 @@ export default {
         handleEdite(a,b){
             //调用模态框
             this.Visible=true;
-            this.tenant=b;
+            // this.tenant=b;
             console.log(b)
             
         },
         //修改保存、发送保存请求
         handleEditeSave(){
             var _this=this
-            console.log(_this.tenant.id)
+            console.log(_this.tenant.id,'ttttt')
             
             return new Promise((resolve,reject)=>{
                 groupSave(_this.tenant)
                 .then((response)=>{
                     console.log(response)
                     if(response.data.code==0){
-                       _this.Visible=false;
+                       _this.dialogVisible=false;
                       this.$message({                       
                         type: 'success',
                         message: '修改成功!'
                        });
+                        _this.getTableData(this.defaultData) 
                     }else{
                       this.$message({
                         type: 'error',
@@ -320,7 +430,7 @@ export default {
                         type: 'success',
                         message: '删除成功!'
                        });
-                        _this.getTableData() 
+                        _this.getTableData(_this.defaultData) 
                       }else{
                         this.$message({
                         type: 'error',
@@ -346,11 +456,11 @@ export default {
         //分页处理
         handleSizeChange(val) {
         this.pageSize = val;
-        this.getTableData();
+        this.getTableData(this.defaultData);
         },
         handleCurrentChange(val) {
         this.pageNum = val;
-        this.getTableData();
+        this.getTableData(this.defaultData);
         }
     }
 }
@@ -360,7 +470,9 @@ export default {
   margin-top: 5px;
   margin-left: 0px;
 }
-
+.kvBox{
+   margin: 30px;
+}
 .helpdoc-container {
   margin: 30px;
 }
@@ -370,7 +482,8 @@ export default {
 }
 
 .search-input {
-  width: auto;
+  /* width: auto; */
+  width:200px;
 }
 .fenyeDiv {
   margin-top: 30px;
