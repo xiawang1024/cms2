@@ -47,7 +47,7 @@
       <el-button
         type="primary"
         v-if="checkAuth('cms:channel:add')"
-        @click="columnAddEdit('addDisclose')"
+        @click="columnAddEdit('addDisclose','')"
         size="small"
       >添加</el-button>
     </div>
@@ -76,16 +76,20 @@
       <el-table-column align="center" prop="breakingPeople" label="爆料人"/>
       <el-table-column align="center" prop="auditStatus" label="处理状态">
         <template slot-scope="scope">
-          <span v-if="scope.row.auditStatus == 0">待处理</span>
-          <span v-if="scope.row.auditStatus == 1">已通过</span>
-          <span v-if="scope.row.auditStatus == 2">已拒绝</span>
+          <span class="colred" v-if="scope.row.auditStatus == 0">待处理</span>
+          <span class="colgreen" v-if="scope.row.auditStatus == 1">已通过</span>
+          <span class="colblue" v-if="scope.row.auditStatus == 2">已拒绝</span>
         </template>
       </el-table-column>·
       <el-table-column align="center" prop="breakingTime" label="爆料时间"/>
 
       <el-table-column align="center" label="操作" width="150">
         <template v-if="checkAuth('cms:channel:operation')" slot-scope="scope">
-          <el-button @click="columnAddEdit('discloseAudit',scope.row.id)" type="text">审核</el-button>
+          <el-button
+            v-if="scope.row.auditStatus==0"
+            @click="columnAddEdit('discloseAudit',scope.row.id)"
+            type="text"
+          >审核</el-button>
           <el-button
             type="text"
             v-if="checkAuth('cms:channel:delete')"
@@ -118,7 +122,7 @@ import {
   discloseState,
   discloseClassify
 } from "@/api/newsCommand/disclose.js";
-import {  deleteColumn } from "@/api/cms/columnManage";
+import { deleteColumn } from "@/api/cms/columnManage";
 import mixins from "@/components/cms/mixins";
 export default {
   name: "ColumnManage",
@@ -225,20 +229,20 @@ export default {
       ],
       searchData: {},
       discloseClassifyNum: [], //爆料分类接口获取
-      discloseStatenum: [], //爆料状态数值
-      uplistdata:{
-          breakingName: "",
-          breakingTime: "",
-          auditStatus: "",
-          pageNo: 1,
-          pageSize:15
-        }
+      discloseStatenum: [999,999,999], //爆料状态数值
+      uplistdata: {
+        breakingName: "",
+        breakingTime: "",
+        auditStatus: "",
+        pageNo: 1,
+        pageSize: 15
+      }
     };
   },
   watch: {
     $route(val) {
-      this.uplistdata.assign(this.searchData);
-      this.columnList(this.uplistdata);
+      // this.uplistdata.assign(this.searchData);
+      // this.columnList(this.uplistdata);
     }
   },
   mounted() {
@@ -253,10 +257,7 @@ export default {
     reloadlist() {
       this.activeClass0 = 0;
       this.$router.replace({
-        path: "/newCommand/manageClue/addDisclose"
-      });
-      this.$router.replace({
-        path: "/newCommand/manageClue/discloseList"
+        path: "/newCommand/manageClue/discloseList?time=" + new Date().getTime()
       });
     },
     allchooses() {
@@ -275,10 +276,15 @@ export default {
       //  e.target 点击的元素  e.currentTarget是绑定事件元素
       this.activeClass0 = num;
       // 初始化搜索信息
-     
-      if (num != 0){
-        this.uplistdata.auditStatus=num-1
+      // 点击顶部按钮清空搜索条件 不然页数搜索附带条件
+      this.searchData = {};
+
+      if (num != 0) {
+        this.uplistdata.auditStatus = num - 1;
+      } else {
+        this.uplistdata.auditStatus = "";
       }
+      console.log(this.auditStatus);
       this.columnList(this.uplistdata);
     },
 
@@ -302,24 +308,33 @@ export default {
     searchItem(searchData) {
       console.log("搜索条件");
       console.log(searchData);
-      if("auditStatus" in searchData){
-         this.activeClass0=searchData.auditStatus+1
-      }else{
-        this.activeClass0=0
+      if ("auditStatus" in searchData) {
+        this.activeClass0 = searchData.auditStatus + 1;
+      } else {
+        this.activeClass0 = 0;
       }
       this.searchData = searchData;
-      if( "breakingTime" in this.searchData){
-        console.log(this.searchData.breakingTime)
-         console.log((this.searchData.breakingTime).getFullYear()+"-"+((this.searchData.breakingTime).getMonth()+1)+"-"+(this.searchData.breakingTime).getDate())
+      if ("breakingTime" in this.searchData) {
+        console.log(this.searchData.breakingTime);
+        this.searchData.breakingTime =this.timeFormat(this.searchData.breakingTime)
       }
       this.pageNum = 1;
-      let res = {
-        pageNo: this.pageNum,
-        pageSize: this.pageSize
-      };
-      res=Object.assign(this.searchData,res);
+      let res = {};
+      let uplistdata02 = Object.assign({}, this.uplistdata);
+      let searchData02 = Object.assign({}, this.searchData);
+      res = Object.assign(uplistdata02, searchData02);
+      console.log(this.uplistdata);
       this.columnList(res);
     },
+       add0(m){return m<10?'0'+m:m },
+ timeFormat(timestamp){
+  //timestamp是整数，否则要parseInt转换,不会出现少个0的情况
+    var time = new Date(timestamp);
+    var year = time.getFullYear();
+    var month = time.getMonth()+1;
+    var date = time.getDate();
+    return year+'-'+this.add0(month)+'-'+this.add0(date);
+},
     // table列表数据
     columnList(res) {
       var _this = this;
@@ -329,7 +344,7 @@ export default {
             let content = response.data.result.content;
             content.forEach((element, idnex) => {
               element.breakingType =
-                _this.discloseClassify[element.breakingType].typeName;
+                _this.discloseClassify[element.breakingType - 1].typeName;
             });
             _this.tableData = content;
             console.log(_this.tableData);
@@ -360,7 +375,7 @@ export default {
             };
             _this.columnList(res);
           });
-      })
+      });
     },
     /**
      * 查询审核状态0:待审核 1：已通过 2：已拒绝
@@ -371,7 +386,11 @@ export default {
       return new Promise((resolve, reject) => {
         discloseState(num)
           .then(response => {
-            _this.discloseStatenum[num] = response.data.result;
+            _this.$nextTick(function() {
+              // vm.$el.textContent === 'new message' // true
+              _this.discloseStatenum[num] = response.data.result;
+            });
+
             resolve();
           })
           .catch(error => {
@@ -426,7 +445,7 @@ export default {
           path:
             "/newCommand/manageClue/addDisclose?Disclose=" +
             handelType +
-            "&id=" +
+            "&discloseId=" +
             id
         });
       } else if (
@@ -437,7 +456,7 @@ export default {
           path:
             "/newCommand/manageClue/discloseDetails?Disclose=" +
             handelType +
-            "&id=" +
+            "&discloseId=" +
             id
         });
       }
@@ -594,6 +613,15 @@ export default {
         padding: 0px;
       }
     }
+  }
+  .colblue {
+    color: #409eff;
+  }
+  .colgreen {
+    color: #67c23a;
+  }
+  .colred {
+    color: #f56c6c;
   }
 }
 </style>

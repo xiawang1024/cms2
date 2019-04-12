@@ -5,7 +5,7 @@ import QS from "qs"
 export function discloseList(params) {
   return request({
     url: '/cmsnews/breakingNews/queryBreakingNews',
-    method: 'get',
+    method: 'post',
     params:params
   })
 }
@@ -24,11 +24,11 @@ export function discloseState(num) {
 /**
  * 修改审核状态0：待审核 1：审核通过 2：拒绝
  *  */ 
-export function amendDiscloseState(data) {
+export function amendDiscloseState(params) {
   return request({
     url: '/cmsnews/breakingNews/updateAuditStatus',
     method: 'post',
-    data:data
+    params:params
   })
 }
 // 爆料分类列表
@@ -60,7 +60,7 @@ export function createDisclose(data) {
 //删除爆料
 export function deleteDisclose(id) {
   return request({
-    url: '/breakingNews/deleteBreakingNews'+id,
+    url: '/cmsnews/breakingNews/deleteBreakingNews'+id,
     method: 'post',
    
   })
@@ -71,7 +71,7 @@ export function deleteDisclose(id) {
 // 获取爆料详情
 export function discloseInfor(id) {
   return request({
-    url: '/breakingNews/getBreakingNewsById' + id,
+    url: '/cmsnews/breakingNews/getBreakingNewsById?id=' + id,
     method: 'get'
   })
 }

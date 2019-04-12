@@ -35,10 +35,17 @@ const cms = {
   treeTags: (state) => state.cms.tags,
   contextMenu: (state) => state.cms.contextMenu
 }
+/**
+ * newCommand
+ */
+const newCommand = {
+  discloseClassify: (state) => state.newCommand.discloseClassify,
 
+}
 const getters = {
   ...app,
   ...userInfo,
-  ...cms
+  ...cms,
+  ...newCommand
 }
 export default getters

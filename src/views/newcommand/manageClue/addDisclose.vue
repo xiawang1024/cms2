@@ -1,6 +1,12 @@
 <template>
   <div class="addbaoliao">
-    <v-form ref="vform" :form-settings="formSettings" @save="submitSave" :btn-loading="isLoading">
+    <v-form
+      ref="vform"
+      :form-data="formData"
+      :form-settings="formSettings"
+      @save="submitSave"
+      :btn-loading="isLoading"
+    >
       <template slot="isScale">
         <div>
           <el-checkbox v-model="imageSetting.isScaleChecked">是否缩放</el-checkbox>
@@ -38,14 +44,17 @@
 // const Upload = _ => import('@/components/cms/Upload/upload')
 import {
   createDisclose,
-  editDisclose
-
+  editDisclose,
+  discloseInfor,
+  discloseClassify
 } from "@/api/newsCommand/disclose.js";
 export default {
   name: "ColumnHandel",
 
   data() {
     return {
+      formData: {},
+      discloseId: "",
       formSettings: [
         {
           items: [
@@ -64,7 +73,7 @@ export default {
               placeholder: "请选择分类",
               options: [
                 {
-                  label: "交通事故",
+                  label: "交通事故111",
                   value: "1",
                   numberNo: 1,
                   id: "1"
@@ -191,29 +200,28 @@ export default {
         height: "",
         width: ""
       },
-      tijiaodata:''
+      tijiaodata: ""
     };
   },
   mounted() {
-  
- 
-    this.isEdit=this.getUrlParam("Disclose")=="Disclose"?false:true;
+    
+    this.discloseClassify();
+
+    if(this.$route.query.Disclose == "addDisclose"){
+      this.isEdit=false
+    }else{
+        this.isEdit=true
+    }
+
+    if (this.isEdit) {
+      this.discloseId =this.$route.query.discloseId;
+      this.discloseInfor(this.discloseId);
+    }
   },
   methods: {
-    getUrlParam(string){
 
-	//构造一个含有目标参数的正则表达式对象
-	var reg = new RegExp("(^|&)" + string + "=([^&]*)(&|$)");
-	//匹配目标参数
-	var r = window.location.search.substr(1).match(reg);
-	//返回参数值
-	if (r != null) return unescape(r[2]);
-	return null;
-
-    },
     // 添加爆料
     CreateDisclose(res) {
-    
       return new Promise((resolve, reject) => {
         createDisclose(res)
           .then(response => {
@@ -227,11 +235,42 @@ export default {
     },
     // 修改爆料
     editDisclose(res) {
-     
       return new Promise((resolve, reject) => {
         editDisclose(res)
           .then(response => {
             console.log(response);
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+
+    // 搜索分类接口
+    discloseClassify() {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        discloseClassify().then(response => {
+          
+          console.log(response.data.result)
+          console.log(_this.formSettings[0].items[1].options)
+        _this.formSettings[0].items[1].options=response.data.result.map((ele) => {
+                return {
+                  label: ele.typeName,
+                  value: ele.numberNo
+                }
+              })
+        });
+      });
+    },
+    // 爆料详情
+    discloseInfor(res) {
+      return new Promise((resolve, reject) => {
+        discloseInfor(res)
+          .then(response => {
+            console.log(response);
+            this.formData = response.data.result;
             resolve();
           })
           .catch(error => {
@@ -253,62 +292,87 @@ export default {
       this.$refs[formName].resetFields();
     },
     gotoListPage(context) {
-      context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {
-        if (context.isActive(context.$route)) {
-          console.log(visitedViews)
-          const latestView = visitedViews.slice(-1)[0]
-          if (latestView) {
-            context.$router.push(latestView)
-          } else {
-            context.$router.push('/')
+      context.$store
+        .dispatch("delView", this.$route)
+        .then(({ visitedViews }) => {
+          if (context.isActive(context.$route)) {
+            console.log(visitedViews);
+            const latestView = visitedViews.slice(-1)[0];
+            if (latestView) {
+              context.$router.push(latestView);
+            } else {
+              context.$router.push("/");
+            }
           }
-        }
-      })
-
+        });
     },
+   add0(m){return m<10?'0'+m:m },
+ timeFormat(timestamp){
+  //timestamp是整数，否则要parseInt转换,不会出现少个0的情况
+    var time = new Date(timestamp);
+    var year = time.getFullYear();
+    var month = time.getMonth()+1;
+    var date = time.getDate();
+    var hours = time.getHours();
+    var minutes = time.getMinutes();
+    var seconds = time.getSeconds();
+    return year+'-'+this.add0(month)+'-'+this.add0(date)+' '+this.add0(hours)+':'+this.add0(minutes)+':'+this.add0(seconds);
+},
     isActive(route) {
-      return route.path === this.$route.path
+      return route.path === this.$route.path;
     },
     submitSave(formData1) {
-      let _this=this
+      let _this = this;
       console.log("form提交的数据");
       console.log(formData1);
-      this.tijiaodata=formData1
+      console.log(formData1.breakingTime)
+      formData1.breakingTime=this.timeFormat(formData1.breakingTime)
+      this.tijiaodata = formData1;
       this.isLoading = true;
 
       if (this.isEdit) {
-
-      return new Promise((resolve, reject) => {
-        createDisclose(formData1)
-          .then(response => {
-            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            console.log(response);
-             _this.gotoListPage(_this)
-            resolve();
-          })
-          .catch(error => {
-            reject(error);
-          });
-      })
-
+        return new Promise((resolve, reject) => {
+          let newformData1=formData1
+          newformData1.id=_this.discloseId
+          newformData1.newsOrigin=0
+                    let hnrToken=localStorage.getItem("hnDt_token")
+            newformData1.hnrToken=hnrToken
+           editDisclose(newformData1)
+            .then(response => {
+              _this.$message({
+                showClose: true,
+                message: "恭喜你，编辑操作成功!",
+                type: "success"
+              });
+              console.log(response);
+              _this.gotoListPage(_this);
+              resolve();
+            })
+            .catch(error => {
+              reject(error);
+            });
+        });
       } else {
-      
-      return new Promise((resolve, reject) => {
-        editDisclose(formData1)
-          .then(response => {
-              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
- _this.gotoListPage(_this)
-            console.log(response);
-            resolve();
-          })
-          .catch(error => {
-            reject(error);
-          });
-      })
-
+     
+        return new Promise((resolve, reject) => {
+           let hnrToken=localStorage.getItem("hnDt_token")
+            formData1.hnrToken=hnrToken
+          createDisclose(formData1)
+            .then(response => {
+              _this.$message({
+                showClose: true,
+                message: "恭喜你，添加操作成功!",
+                type: "success"
+              });
+              _this.gotoListPage(_this);
+              console.log(response);
+              resolve();
+            })
+            .catch(error => {
+              reject(error);
+            });
+        });
       }
-
-
     }
   }
 };

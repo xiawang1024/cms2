@@ -6,6 +6,7 @@ import permission from './modules/permission'
 import tagsView from './modules/tagsView'
 import user from './modules/user'
 import getters from './getters'
+import newCommand from './modules/newCommand'
 
 import cms from './modules/cms'
 
@@ -18,7 +19,8 @@ const store = new Vuex.Store({
     permission,
     tagsView,
     user,
-    cms
+    cms,
+    newCommand
   },
   getters
 })
