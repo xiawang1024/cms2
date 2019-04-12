@@ -41,7 +41,7 @@
     </el-table>
   
     <el-dialog :visible.sync="dialogVisible" :title="dialogTitle">
-      <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" label-width="80px" :btn-loading = "isLoading" @selectChange="selectChange" @selectChangeS="selectChangeS"/>
+      <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" label-width="130px" :btn-loading = "isLoading" @selectChange="selectChange" @selectChangeS="selectChangeS"/>
     </el-dialog>
     <el-pagination
       class="fenyeDiv"
@@ -110,13 +110,13 @@
                   // label:'添加配置组属性',
                   items: [
                     {
-                      label: '租户描述',
+                      label: '配置组属性描述',
                       name: 'description',
                       type: 'text',
                       valueType: 'string',
                       disabled: false,
                       required: true,
-                      placeholder: '请输入来源名称'
+                      placeholder: '请输入配置组属性描述'
                     },
                     {
                       label: 'name',
@@ -421,14 +421,14 @@
              for(let i=0;i<3;i++){
             _this.formSettings[0].items[i].hidden=false;
             }
-            for(let i=4;i<12;i++){
+            for(let i=3;i<12;i++){
             _this.formSettings[0].items[i].hidden=true;
             }
             this.formData={}
             this.dialogVisible=true;
             this.addGroupAttribute.groupId=this.$route.query.userid;
              this.requestType='add';
-             this.dialogTitle='添加配置组'
+             this.dialogTitle='添加配置组属性'
             
           },
           addAttribute(){
@@ -516,7 +516,7 @@
             this.formData={}
              this.dialogVisible=true;
              this.requestType='edit';
-             this.dialogTitle='编辑配置组'
+             this.dialogTitle='编辑配置组属性'
              this.editGroupAttribute=b
             
           },
@@ -615,7 +615,8 @@
     text-align: right;
   }
   .search-input {
-    width: auto;
+    /* width: auto; */
+    width:200px;
   }
       .text {
       font-size: 14px;

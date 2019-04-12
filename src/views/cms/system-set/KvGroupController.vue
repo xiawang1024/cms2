@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h3>配置组管理</h3>
+  <div class="kvBox">
+    
     <div class="tool-bar">
       <el-input
         size="mini"
@@ -23,7 +23,7 @@
       <el-table-column prop="sort" label="sort"/>            
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="prime" @click="commentForm(2, scope.row)">修改</el-button>
+          <el-button size="mini" type="prime" @click="commentForm(2, scope.row)">编辑</el-button>
           
           <el-button size="mini" type="warning" @click="handleSerch(scope.row.id,scope.row.description)">详情</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -470,7 +470,9 @@ export default {
   margin-top: 5px;
   margin-left: 0px;
 }
-
+.kvBox{
+   margin: 30px;
+}
 .helpdoc-container {
   margin: 30px;
 }
@@ -480,7 +482,8 @@ export default {
 }
 
 .search-input {
-  width: auto;
+  /* width: auto; */
+  width:200px;
 }
 .fenyeDiv {
   margin-top: 30px;
