@@ -116,6 +116,13 @@ export function UserRoleRelRoleInfoByUserId(userId) {
   })
 }
 
+export function UserRoleRelUserInfoByRoleId(roleId) {
+  return request({
+    url: '/userb/userrolerel/userinfobyroleid/' + roleId,
+    method: 'GET'
+  })
+}
+
 /**
  *  名称是否重复
  * @param organizationCode
