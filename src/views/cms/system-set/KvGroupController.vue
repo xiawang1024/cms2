@@ -19,7 +19,8 @@
       <el-table-column prop="id" label="id"/>
       <el-table-column prop="tenantId" label="tenantId"/>
       <el-table-column prop="description" label="description"/>
-      <el-table-column prop="tag" label="tag"/>           
+      <el-table-column prop="tag" label="tag"/>
+      <el-table-column prop="sort" label="sort"/>            
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="prime" @click="commentForm(2, scope.row)">修改</el-button>
@@ -50,11 +51,8 @@
 
 <script>
 import {getAllGroup,groupSave,deleteGroup,addGroupRequest,getAppDetail} from "@/api/cms/KvGroup.js"
-// import { resolve } from 'q';
-// import { resolve } from 'q';
-// import Tinymce from "@/components/Tinymce";
+
 export default {
-    // components: { Tinymce },
     data(){
         return {
             searchKv:"",
@@ -63,19 +61,12 @@ export default {
               description:'',
               sort:'',
               tag:''
-                // "id": 1112657532821835776,
-                // "tenantId": "56",
-                // "description": "开封电视台",
-                // "url": "www.baidu.com",
-                // "createTime": "2019-04-01T10:06:43.000+0000"
-            },
+                    },
             addGroup:{
               tenantId:'',
               description:'',
               sort:'',
               tag:''
-
-
             },
             Visible: false,
             addGroupVisible:false,
@@ -100,13 +91,10 @@ export default {
             },
             dialogTitle:'新增',
             dialogVisible:false,
-
-             formData: {},
+            formData: {},
             formSettings: [
               {
-                // label:'添加配置组属性',
                 items: [
-                  
                   {
                     label: '租户描述',
                     name: 'description',
@@ -119,7 +107,9 @@ export default {
                     name: 'sort',
                     type: 'text',
                     required: true,
-                    placeholder: '请输入sort'
+                    // valueType:'number',
+                    placeholder: '请输入数字'
+                    
                   },{
                     label: 'tag',
                     name: 'tag',
@@ -132,7 +122,13 @@ export default {
                     name: 'tenantId',
                     type: 'text',
                     required: true,
-                    placeholder: '请输入tenantId',
+                    placeholder: '请输入字母或者数字！',
+                    // rule: [{
+                    //       validator: this.checkTenantId,
+                    //     }, {
+                    //       required: true,
+                    //       trigger: 'blur'
+                    //     }],
                     hidden:true
                   },
                   {
@@ -140,22 +136,22 @@ export default {
                     name: 'id',
                     type: 'text',
                     required: true,
+                    valueType:'number', 
                     placeholder: '请输入id',
                     hidden:true
 
                   }
                 ]
-                
               }
             ],
             isLoading: false,
             handleType:""
-
-
         }
     },
     created(){
-        this.getTableData(this.defaultData) 
+      var _this=this
+        this.getTableData(_this.defaultData) 
+        console.log(this.defaultData,'duhz')
     },
     methods:{
         //通用对话框
@@ -195,53 +191,106 @@ export default {
           }
 
         },
+        // checkTenantId(rule, value, callback){
+        //    var patt=/^[A-Za-z0-9]+$/;
+        //      console.log(value,"value")
+        //   if (!patt.test(value)) {
+        //  return callback(new Error('请输入字母或者数字'))
+        //      }else{
+        //        return callback()
+        //      }
+        // },
       submitSave(row){
         var _this=this
         console.log(row,'row')
+        let sendPass=true;
           if(this.handleType=="新增"){
             //新增接口
-             console.log(this.addGroup.tenantId,'复制钱')
-            this.addGroup={
+             console.log(this.addGroup.tenantId,'赋值前')
+             let patt=/^[A-Za-z0-9]+$/;
+             if(!patt.test(row.tenantId)){
+               console.log('校验')
+               sendPass=false;
+               return  _this.$message({                       
+                        type: 'error',
+                        message: '请在tenantId栏目输入字母或者数字!'
+                       });
+
+             }
+             let patt1=/^[0-9]+$/;
+             if(!patt1.test(row.sort)){
+               console.log('校验')
+               sendPass=false;
+               return  _this.$message({                       
+                        type: 'error',
+                        message: '请在sort栏目输入数字!'
+                       });
+
+             }
+            if(sendPass){
+              this.addGroup={
               tenantId:row.tenantId,
               description:row.description,
               sort:row.sort,
               tag:row.tag
               }
-              console.log(this.addGroup.tenantId,'复制后')
-            this.handleAdd(this.addGroup)
+              console.log(this.addGroup.tenantId,'赋值后')
+             this.handleAdd(this.addGroup)
+            }
           }else if(this.handleType=="修改"){
             //修改接口
-            _this.tenant={
-              description:row.description,
-              sort:row.sort,
-              tag:row.tag,
-              id:row.id
-            };
-            this.handleEditeSave();
+               let patt=/^[0-9]+$/;
+             if(!patt.test(row.id)){
+               console.log('校验')
+               sendPass=false;
+               return  _this.$message({                       
+                        type: 'error',
+                        message: '请在tenantId栏目输入字母或者数字!'
+                       });
+
+             }
+             let patt1=/^[0-9]+$/;
+             if(!patt1.test(row.sort)){
+               console.log('校验')
+               sendPass=false;
+               return  _this.$message({                       
+                        type: 'error',
+                        message: '请在sort栏目输入数字!'
+                       });
+
+             }
+            if(sendPass){
+                _this.tenant={
+                description:row.description,
+                sort:row.sort,
+                tag:row.tag,
+                id:row.id
+              };
+              this.handleEditeSave();
+            }
 
           }else if(this.handleType=="检索"){
-            //检索接口
-            this.searchData={
-              tenantId:row.tenantId,
-              description:row.description,
-              sort:row.sort,
-              tag:row.tag,
-              id: row.id
+            
+            if(sendPass){
+                this.searchData={
+                tenantId:row.tenantId,
+                description:row.description,
+                sort:row.sort,
+                tag:row.tag,
+                id: row.id
+              }
+              this.getTableData(this.searchData)
+              _this.backButtonVisible=true;
             }
-            this.getTableData(this.searchData)
-            _this.backButtonVisible=true;
-
-
           }
-
-
       },
 
 
 
       //获取所有列表
       getTableData(obj){
-        var _this=this
+        var _this=this;
+        console.log(_this.pageNum,'页面')
         return new Promise((resolve,reject)=>{
            
             getAllGroup(_this.pageNum,_this.pageSize,obj)
@@ -341,6 +390,7 @@ export default {
                         type: 'success',
                         message: '修改成功!'
                        });
+                        _this.getTableData(this.defaultData) 
                     }else{
                       this.$message({
                         type: 'error',
