@@ -60,12 +60,23 @@
             </div>
           </template>
           <template slot="chooseColumnTest">
-            <div class="choosed-list">
+            <div class="choosed-list" @click="columnCounter">
               <div class="define-select">
+                <!-- <el-tag size="small" closable>小型标签</el-tag>
                 <el-tag size="small" closable>小型标签</el-tag>
                 <el-tag size="small" closable>小型标签</el-tag>
-                <el-tag size="small" closable>小型标签</el-tag>
-                <el-tag size="small" closable>小型标签</el-tag>
+                <el-tag size="small" closable>小型标签</el-tag> -->
+
+                <span class="define-right" @click="isArrowExtend">
+                  <span>
+                    <i class="el-icon-arrow-down" :class="{ 'el-up': arrowExtend}"/>
+                  </span>
+                </span>
+                <transition name="fade">
+                  <div class="tree-data" v-if="arrowExtend">
+                    <column-tree :tree-data="treeData" @getChoosed="getChoosed"/>
+                  </div>
+                </transition>
               </div>
               <!-- <el-select v-model="value5" multiple placeholder="请选择">
                 <el-option
@@ -92,16 +103,19 @@
 <script>
 // import { fetchDictByDictName } from '@/api/cms/dict'
 import { columnList, deleteColumn } from '@/api/cms/columnManage'
-import mixins from '@/components/cms/mixins'
 import Pagination from '@/common/Pagination'
+import mixins from '@/components/cms/mixins'
+import columnTree from './columnTree'
 export default {
   name: 'ColumnManage',
   components: {
-    Pagination
+    Pagination,
+    columnTree
   },
   mixins: [mixins],
   data() {
     return {
+      arrowExtend: false,
       tableData: [],
       pageNum: 1,
       pageSize: 10,
@@ -228,7 +242,9 @@ export default {
         }
       ],
       value5: [],
-      selectedOptions: []
+      selectedOptions: [],
+      treeData: [],
+      tagList: []
     }
   },
   watch:{
@@ -245,6 +261,10 @@ export default {
     this.columnSearchList()
   },
   methods: {
+    getChoosed(val) {
+      console.log(val)
+      this.tagList = val
+    },
     // 返回
     goBack() {
 
@@ -252,10 +272,12 @@ export default {
     addCheck() {
       this.title = "添加配置"
       this.handelCheck = true
+      this.columnSearchList()
     },
     editCheck() {
      this.title = "编辑配置"
      this.handelCheck = true
+     this.columnSearchList()
     },
     sizeChange(val) {
       this.pageSize = val
@@ -266,23 +288,13 @@ export default {
       this.columnList()
     },
     submitSave() {
-
     },
-
-    columnSearchList() {
-      var _this = this
-      return new Promise((resolve, reject) => {
-        columnList({}, 1, 1000)
-          .then((response) => {
-            this.$nextTick(() => {
-              _this.searchSettings[0].options = _this.toTree(response.data.result.content)
-            })
-            resolve()
-          })
-          .catch((error) => {
-            reject(error)
-          })
-      })
+    columnCounter(e) {
+      // if(this.arrowExtend) {
+      //   this.arrowExtend = false
+      // } else {
+      //   this.arrowExtend = true
+      // }
     },
     channelNameChange(val) {
       let arr = []
@@ -403,19 +415,52 @@ export default {
         this.columnDelFeatch(row)
       }).catch(() => {
       })
+    },
+    columnSearchList() {
+      return new Promise((resolve, reject) => {
+        columnList({}, 1, 1000)
+          .then((response) => {
+            // this.$nextTick(() => {
+            //   // _this.searchSettings[0].options = _this.toTree(response.data.result.content)
+            // })
+            this.treeData = this.toTree(response.data.result.content)
+            console.log( this.treeData )
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    isArrowExtend() {
+      if(this.arrowExtend) {
+        this.arrowExtend = false
+      } else {
+        this.arrowExtend = true
+      }
+      console.log(this.arrowExtend)
     }
   }
 }
 </script>
 
 <style lang='scss'>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 .check-setting {
+  .form-section {
+    overflow: visible;
+  }
    margin: 30px;
   .tool-bar {
     margin-top:22px;
   }
   .define-select {
-    width: 100%;
+    min-height: 32px;
     -webkit-appearance: none;
     background-color: #fff;
     background-image: none;
@@ -432,7 +477,51 @@ export default {
     -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
     transition: border-color .2s cubic-bezier(.645,.045,.355,1);
     width: 100%;
-    cursor: pointer;
+    // cursor: pointer;
+    position: relative;
+    .define-right {
+      position: absolute;
+      cursor: pointer;
+      right:5px;
+      width: 25px;
+      height: 100%;
+      color: #c0c4cc;
+      font-weight: 400;
+      text-align: center;
+      transition: transform .3s,-webkit-transform .3s;
+      .el-icon-arrow-down {
+        font-size: 14px;
+        // transform: rotateZ(180deg);
+        transform: rotateZ(0);
+        transition: transform .3s,-webkit-transform .3s;
+        // transform: rotateZ(0);
+      }
+      .el-up {
+        font-size: 14px;
+        transform: rotateZ(180deg);
+      
+        transition: transform .3s,-webkit-transform .3s;
+      }
+    }
+    .tree-data{
+      width:100%;
+      position: absolute;
+      top:32px;;
+      left:0;
+      border: 1px solid #dcdfe6;
+      width:100%;
+      z-index: 100;
+      height: 300px;
+      border: 1px solid #e4e7ed;
+      border-radius: 4px;
+      background-color: #fff;
+      -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+      box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      margin: 5px 0;
+      transition: transform .3s,-webkit-transform .3s;
+    }
   }
 }
 </style>
