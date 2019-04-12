@@ -6,6 +6,7 @@ export function documentList(queryObj, pageNo, pageSize, sortBy='topFlag', order
     url: '/cms/article/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + ',seqNo,createTime&order=' + order,
     method: 'post',
     data: queryObj
+    // requestBodyType: 'formData'
   })
 }
 // 修改文章
