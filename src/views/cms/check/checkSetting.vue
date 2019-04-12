@@ -62,6 +62,7 @@
           <template slot="chooseColumnTest">
             <div class="choosed-list" @click="columnCounter">
               <div class="define-select">
+                <el-tag class="tag-list" size="small" closable v-for="(ele, index) in tagList" :key="index" @close="closeTag(index, ele)">{{ ele.channelName }}</el-tag>
                 <!-- <el-tag size="small" closable>小型标签</el-tag>
                 <el-tag size="small" closable>小型标签</el-tag>
                 <el-tag size="small" closable>小型标签</el-tag>
@@ -74,7 +75,7 @@
                 </span>
                 <transition name="fade">
                   <div class="tree-data" v-if="arrowExtend">
-                    <column-tree :tree-data="treeData" @getChoosed="getChoosed"/>
+                    <column-tree ref="columnTree" :tree-data="treeData" :arrow-extend="arrowExtend" @getChoosed="getChoosed" :tag-list="tagList"/>
                   </div>
                 </transition>
               </div>
@@ -261,6 +262,10 @@ export default {
     this.columnSearchList()
   },
   methods: {
+    closeTag(index, ele) {
+      this.tagList.splice(index, 1)
+      this.$refs.columnTree.$refs.tree.setCheckedNodes(this.tagList)
+    },
     getChoosed(val) {
       console.log(val)
       this.tagList = val
@@ -503,10 +508,13 @@ export default {
         transition: transform .3s,-webkit-transform .3s;
       }
     }
+    .tag-list{
+      margin-right: 5px;
+    }
     .tree-data{
       width:100%;
       position: absolute;
-      top:32px;;
+      top:100%;
       left:0;
       border: 1px solid #dcdfe6;
       width:100%;

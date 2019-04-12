@@ -19,21 +19,17 @@
 import { setDataAccess, getDataAccess } from '@/api/cms/dataAccess'
 export default {
   props: {
-    dialogVisible: {
-      default: false,
-      type: Boolean
-    },
     treeData: {
       default: ()=> {
         return []
       },
       type: Array
     },
-    userInfor: {
+    tagList: {
       default: ()=> {
-        return {}
+        return []
       },
-      type: Object
+      type: Array
     }
   },
   data() {
@@ -47,25 +43,20 @@ export default {
     }
   },
   computed: {
-    // getChecked() {
-    //   console.log(this.$refs.tree, '$refs')
-    //   return this.$refs.tree.getCheckedNodes
-    // },
   },
   watch: {
     filterText(val) {
       this.$refs.tree.filter(val);
     },
-    dialogVisible(val) {
-      if(val) {
-        // this.defaultCheck = []
-        if(this.$refs.tree) {
-          this.$refs.tree.setCheckedKeys([])
-        }
-        this.getUserAccess(this.userInfor.userId)
-      }
-    },
-
+  },
+  mounted() {
+    let checkedArr = []
+    if(this.tagList.length) {
+      this.tagList.forEach((ele) => {
+        checkedArr.push(ele.id)
+      })
+    }
+    this.defaultCheck = checkedArr
   },
   methods: {
     checkChange(val) {
@@ -115,6 +106,6 @@ export default {
           })
       })
     }
-  }
+  },
 }
 </script>
