@@ -45,23 +45,7 @@
         <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave">
           <template slot="chooseColumn">
             <div class="choosed-list">
-              <el-select v-model="value5" multiple placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"/>
-              </el-select>
-              <el-cascader
-                :options="options1"
-                v-model="selectedOptions"
-              />
-              <!-- <choosed-list ref="choosedList" :details-list = "detailsList"/> -->
-            </div>
-          </template>
-          <template slot="chooseColumnTest">
-            <div class="choosed-list" @click="columnCounter">
-              <div class="define-select">
+              <!-- <div class="define-select">
                 <el-tag class="tag-list" size="small" closable v-for="(ele, index) in tagList" :key="index" @close="closeTag(index, ele)">{{ ele.channelName }}</el-tag>
                 <span class="define-right" @click="isArrowExtend">
                   <span>
@@ -73,94 +57,26 @@
                     <column-tree ref="columnTree" :tree-data="treeData" :arrow-extend="arrowExtend" @getChoosed="getChoosed" :tag-list="tagList"/>
                   </div>
                 </transition>
-              </div>
-              <!-- <div class="el-cascalder-define-choose">
-                <div class="tag-container">
+              </div> -->
+              <div class="el-cascalder-define-choose" @click.stop="toggleMenu">
+                <div class="tag-container" ref="tags">
                   <el-tag class="tag-list" size="small" closable v-for="(ele, index) in tagList" :key="index" @close="closeTag(index, ele)">{{ ele.channelName }}</el-tag>
                 </div>
-                <div class="input-define" @click="isArrowExtend">
-                  <el-input class="input-define-inner" type="text" readonly="readonly" autocomplete="off" @blur="inputBlur()" @focus="inputFocus()" :class="{ 'is-focus': arrowExtend}"/>
-                  <span class="right-suffix">
+                <div class="input-define">
+                  <input class="input-define-inner" type="text" ref="reference" readonly="readonly" autocomplete="off" @blur="inputBlur" @focus="inputFocus" :class="{ 'is-focus': visible}">
+                  <span class="right-suffix" @click.stop="toggleMenu">
                     <span class="right-suffix-inner">
-                      <i class="el-icon-arrow-down" :class="{ 'el-up': arrowExtend}"></i>
+                      <i class="el-icon-arrow-down" :class="{ 'el-up': visible}"/>
                     </span>
                   </span>
                 </div>
                 <transition name="fade">
-                  <div class="tree-data" v-if="arrowExtend">
+                  <div class="tree-data" v-show="visible">
                     <column-tree ref="columnTree" :tree-data="treeData" :arrow-extend="arrowExtend" @getChoosed="getChoosed" :tag-list="tagList"/>
                   </div>
                 </transition>
-              </div> -->
-              <!-- <el-select v-model="value5" multiple placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-               <el-cascader
-                :options="options1"
-                v-model="selectedOptions"
-               >
-              </el-cascader> -->
-              <!-- <choosed-list ref="choosedList" :details-list = "detailsList"/> -->
-            </div>
-            <!-- element-ui -->
-            <div>
-              <div class="el-select">
-                <div class="el-select__tags">
-                  哦都共瑞特热特热特瑞特热他偶尔特肉太热特日托热i天热呕吐i热透热贴
-                </div>
-                <!-- <div class="el-select__tags">
-                  <el-tag
-                    v-for="item in selected"
-                    :key="getValueKey(item)"
-                    :closable="!selectDisabled"
-                    :size="collapseTagSize"
-                    :hit="item.hitState"
-                    type="info"
-                    @close="deleteTag($event, item)"
-                    disable-transitions>
-                    <span class="el-select__tags-text">{{ item.currentLabel }}</span>
-                  </el-tag>
-                </div> -->
-                <el-input type="text"/>
               </div>
             </div>
-            <!-- <el-input
-              ref="reference"
-              v-model="selectedLabel"
-              type="text"
-              :placeholder="currentPlaceholder"
-              :name="name"
-              :id="id"
-              :autocomplete="autoComplete || autocomplete"
-              :size="selectSize"
-              :disabled="selectDisabled"
-              :readonly="readonly"
-              :validate-event="false"
-              :class="{ 'is-focus': visible }"
-              @focus="handleFocus"
-              @blur="handleBlur"
-              @keyup.native="debouncedOnInputChange"
-              @keydown.native.down.stop.prevent="navigateOptions('next')"
-              @keydown.native.up.stop.prevent="navigateOptions('prev')"
-              @keydown.native.enter.prevent="selectOption"
-              @keydown.native.esc.stop.prevent="visible = false"
-              @keydown.native.tab="visible = false"
-              @paste.native="debouncedOnInputChange"
-              @mouseenter.native="inputHovering = true"
-              @mouseleave.native="inputHovering = false">
-              <template slot="prefix" v-if="$slots.prefix">
-                <slot name="prefix"></slot>
-              </template>
-              <template slot="suffix">
-                <i v-show="!showClose" :class="['el-select__caret', 'el-input__icon', 'el-icon-' + iconClass]"></i>
-                <i v-if="showClose" class="el-select__caret el-input__icon el-icon-circle-close" @click="handleClearClick"></i>
-              </template>
-            </el-input> -->
           </template>
         </v-form>
       </template>
@@ -234,13 +150,6 @@ export default {
               placeholder: '',
             },
             {
-              label: '选择栏目',
-              name: 'chooseColumnTest',
-              type: 'slot',
-              valueType: 'string',
-              placeholder: '',
-            },
-            {
               label: '开启文章多级审核',
               name: 'openCheck',
               type: 'switch',
@@ -265,61 +174,22 @@ export default {
         }
       ],
       formData: {},
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      options1: [
-        {
-          value: 'zhinan',
-          label: '指南',
-          children: [
-            {
-              value: 'shejiyuanze',
-             label: '设计原则',
-            }
-          ]
-        },
-        {
-          value: 'zujian',
-          label: '组件',
-          children: [
-            {
-              value: 'basic',
-              label: 'Basic',
-              children: [
-                {
-                  value: 'layout',
-                  label: 'Layout 布局'
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      value5: [],
-      selectedOptions: [],
       treeData: [],
-      tagList: []
+      tagList: [],
+      visible: false
     }
   },
   watch:{
-    '$route'(val){
-      console.log(val)
-      this.columnList()
-      this.columnSearchList()
+    // '$route'(val){
+    //   this.columnList()
+    //   this.columnSearchList()
+    // },
+    tagList(val) {
+      console.log(val, 'val1111')
+      this.resetInputHeight()
+    },
+    visible(val) {
+      console.log(val, 'visibal')
     }
   },
   mounted() {
@@ -329,18 +199,46 @@ export default {
     this.columnSearchList()
   },
   methods: {
+    toggleMenu() {
+      if (this.visible) {
+        this.visible = false
+      } else {
+        this.visible = true;
+        // (this.$refs.input || this.$refs.reference).focus();
+      }
+    },
+    resetInputHeight() {
+      this.$nextTick(() => {
+        if (!this.$refs.reference) return;
+        let inputChildNodes = this.$refs.reference
+        let input = inputChildNodes
+        const tags = this.$refs.tags;
+        const sizeInMap = 32;
+        input.style.height = this.tagList.length === 0
+          ? sizeInMap + 'px'
+          : Math.max(
+            tags ? (tags.clientHeight + (tags.clientHeight > sizeInMap ? 6 : 0)) : 0,
+            sizeInMap
+          ) + 'px';
+      });
+    },
     inputFocus() {
-      this.arrowExtend = true
+      if(this.arrowExtend) {
+        this.arrowExtend = false
+      } else {
+        this.arrowExtend = true
+      }
     },
     inputBlur() {
-      this.arrowExtend = false
+      // this.visible = false
+      // (this.$refs.input || this.$refs.reference).focus();
     },
     closeTag(index, ele) {
       this.tagList.splice(index, 1)
       this.$refs.columnTree.$refs.tree.setCheckedNodes(this.tagList)
     },
     getChoosed(val) {
-      console.log(val)
+      console.log(val, 'choosed')
       this.tagList = val
     },
     // 返回
@@ -366,39 +264,17 @@ export default {
       this.columnList()
     },
     submitSave() {
-    },
-    columnCounter(e) {
-      // if(this.arrowExtend) {
-      //   this.arrowExtend = false
-      // } else {
-      //   this.arrowExtend = true
-      // }
-    },
-    channelNameChange(val) {
-      let arr = []
-      if(val) {
-        arr = val.split(',').concat([''])
-      } else {
-        arr = []
-      }
-      return arr
-    },
-    checkAuth (authKey) {
-      if (this.$store.getters.authorities.indexOf(authKey) === -1) {
-        return false
-      } else {
-        return true
-      }
+      console.log(this.arrowExtend, 'this.arrowExtend = true')
     },
     searchItem(searchData) {
-      this.searchData = searchData
-      if(this.searchData.channelName && this.searchData.channelName.length) {
-        this.searchData.channelName = this.searchData.channelName[this.searchData.channelName.length - 1]
-      } else {
-        this.searchData.channelName = ''
-      }
-      this.pageNum = 1
-      this.columnList()
+      // this.searchData = searchData
+      // if(this.searchData.channelName && this.searchData.channelName.length) {
+      //   this.searchData.channelName = this.searchData.channelName[this.searchData.channelName.length - 1]
+      // } else {
+      //   this.searchData.channelName = ''
+      // }
+      // this.pageNum = 1
+      // this.columnList()
     },
     columnList() {
       var _this = this
@@ -460,37 +336,13 @@ export default {
         }
       })
     },
-    extendsWord(row) {
-      this.$router.push({
-        path: '/cms/website/extendsWord',
-        query: {
-          channelId: row.channelId
-        }
-      })
-    },
-    tagSetting(row) {
-      this.$router.push({
-        path: '/cms/website/tagSetting',
-        query: {
-          channelId: row.channelId
-        }
-      })
-    },
-    waterSetting(row) {
-      this.$router.push({
-        path: '/cms/website/waterSetting',
-        query: {
-          channelId: row.channelId
-        }
-      })
-    },
     columnDel(row) {
       this.$confirm('此操作将永久删除该栏目, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.columnDelFeatch(row)
+        // this.columnDelFeatch(row)
       }).catch(() => {
       })
     },
@@ -509,14 +361,6 @@ export default {
             reject(error)
           })
       })
-    },
-    isArrowExtend() {
-      if(this.arrowExtend) {
-        this.arrowExtend = false
-      } else {
-        this.arrowExtend = true
-      }
-      console.log(this.arrowExtend)
     }
   }
 }
@@ -552,12 +396,15 @@ export default {
     line-height: normal;
     white-space: normal;
     z-index: 1;
-    // top: 20px;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    .tag-list{
+      margin-left: 3px;
+      margin-right: 3px;
+    }
   }
   .input-define{
     position: relative;
@@ -576,7 +423,7 @@ export default {
       color: #606266;
       display: inline-block;
       font-size: inherit;
-      line-height: 40px;
+      line-height: 32px;
       outline: none;
       transition: border-color .2s cubic-bezier(.645,.045,.355,1);
       width: 100%;
@@ -603,7 +450,7 @@ export default {
         pointer-events: all;
         i {
           width: 25px;
-          line-height: 40px;
+          line-height: 32px;
           cursor: pointer;
           transform: rotateZ(0);
           transition: transform .3s,-webkit-transform .3s;
@@ -632,72 +479,72 @@ export default {
   .tool-bar {
     margin-top:22px;
   }
-  .define-select {
-    min-height: 32px;
-    -webkit-appearance: none;
-    background-color: #fff;
-    background-image: none;
-    border-radius: 4px;
-    border: 1px solid #dcdfe6;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    color: #606266;
-    display: inline-block;
-    font-size: inherit;
-    line-height: 32px;
-    outline: 0;
-    padding: 0 15px;
-    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
-    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
-    width: 100%;
-    // cursor: pointer;
-    position: relative;
-    .define-right {
-      position: absolute;
-      cursor: pointer;
-      right:5px;
-      width: 25px;
-      height: 100%;
-      color: #c0c4cc;
-      font-weight: 400;
-      text-align: center;
-      transition: transform .3s,-webkit-transform .3s;
-      .el-icon-arrow-down {
-        font-size: 14px;
-        // transform: rotateZ(180deg);
-        transform: rotateZ(0);
-        transition: transform .3s,-webkit-transform .3s;
-        // transform: rotateZ(0);
-      }
-      .el-up {
-        font-size: 14px;
-        transform: rotateZ(180deg);
+  // .define-select {
+  //   min-height: 32px;
+  //   -webkit-appearance: none;
+  //   background-color: #fff;
+  //   background-image: none;
+  //   border-radius: 4px;
+  //   border: 1px solid #dcdfe6;
+  //   -webkit-box-sizing: border-box;
+  //   box-sizing: border-box;
+  //   color: #606266;
+  //   display: inline-block;
+  //   font-size: inherit;
+  //   line-height: 32px;
+  //   outline: 0;
+  //   padding: 0 15px;
+  //   -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+  //   transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+  //   width: 100%;
+  //   // cursor: pointer;
+  //   position: relative;
+  //   .define-right {
+  //     position: absolute;
+  //     cursor: pointer;
+  //     right:5px;
+  //     width: 25px;
+  //     height: 100%;
+  //     color: #c0c4cc;
+  //     font-weight: 400;
+  //     text-align: center;
+  //     transition: transform .3s,-webkit-transform .3s;
+  //     .el-icon-arrow-down {
+  //       font-size: 14px;
+  //       // transform: rotateZ(180deg);
+  //       transform: rotateZ(0);
+  //       transition: transform .3s,-webkit-transform .3s;
+  //       // transform: rotateZ(0);
+  //     }
+  //     .el-up {
+  //       font-size: 14px;
+  //       transform: rotateZ(180deg);
       
-        transition: transform .3s,-webkit-transform .3s;
-      }
-    }
-    .tag-list{
-      margin-right: 5px;
-    }
-    .tree-data{
-      width:100%;
-      position: absolute;
-      top:100%;
-      left:0;
-      border: 1px solid #dcdfe6;
-      width:100%;
-      z-index: 100;
-      height: 300px;
-      border: 1px solid #e4e7ed;
-      border-radius: 4px;
-      background-color: #fff;
-      -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-      box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
-      margin: 5px 0;
-      transition: transform .3s,-webkit-transform .3s;
-    }
-  }
+  //       transition: transform .3s,-webkit-transform .3s;
+  //     }
+  //   }
+  //   .tag-list{
+  //     margin-right: 5px;
+  //   }
+  //   .tree-data{
+  //     width:100%;
+  //     position: absolute;
+  //     top:100%;
+  //     left:0;
+  //     border: 1px solid #dcdfe6;
+  //     width:100%;
+  //     z-index: 100;
+  //     height: 300px;
+  //     border: 1px solid #e4e7ed;
+  //     border-radius: 4px;
+  //     background-color: #fff;
+  //     -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  //     box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  //     -webkit-box-sizing: border-box;
+  //     box-sizing: border-box;
+  //     margin: 5px 0;
+  //     transition: transform .3s,-webkit-transform .3s;
+  //   }
+  // }
 }
 </style>
