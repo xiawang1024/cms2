@@ -6,7 +6,6 @@
       :form-settings="formSettings"
       @save="submitSave"
       :btn-loading="isLoading"
-     
     >
       <template slot="isScale">
         <div>
@@ -337,7 +336,8 @@ export default {
           let newformData1 = formData1;
           newformData1.id = _this.discloseId;
           newformData1.newsOrigin = 0;
-          let hnrToken = localStorage.getItem("hnDt_token");
+          let hnrToken = JSON.parse(localStorage.getItem("hnDt_token"));
+          hnrToken = hnrToken.access_token;
           newformData1.hnrToken = hnrToken;
           editDisclose(newformData1)
             .then(response => {
@@ -355,7 +355,8 @@ export default {
         });
       } else {
         return new Promise((resolve, reject) => {
-          let hnrToken = localStorage.getItem("hnDt_token");
+          let hnrToken = JSON.parse(localStorage.getItem("hnDt_token"));
+          hnrToken = hnrToken.access_token;
           formData1.hnrToken = hnrToken;
           formData1.newsOrigin = 0;
           createDisclose(formData1)

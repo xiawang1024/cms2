@@ -382,8 +382,7 @@ return 'height:70px'
         discloseState(num)
           .then(response => {
             _this.$nextTick(function() {
-              // vm.$el.textContent === 'new message' // true
-              _this.discloseStatenum[num] = response.data.result;
+              this.$set(_this.discloseStatenum,num,response.data.result)
             });
 
             resolve();
