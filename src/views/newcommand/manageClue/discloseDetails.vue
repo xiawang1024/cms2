@@ -1,12 +1,12 @@
 <template>
   <div>
-    <el-container class="elcontainer">
-      <div class="topdiv">
-        <div class="topdivLeft">爆料详情</div>
-        <div class="topdivRight">
-          <el-button size="mini" @click="godiscloselist" icon="el-icon-refresh" type="primary">返回</el-button>
-        </div>
+    <div class="topdiv">
+      <div class="topdivLeft">爆料详情</div>
+      <div class="topdivRight">
+        <el-button size="mini" @click="godiscloselist" icon="el-icon-back" type="primary">返回</el-button>
       </div>
+    </div>
+    <el-container class="elcontainer">
       <el-header class="elheader">爆料详情</el-header>
       <el-main class="elmain1">
         <div class="biaoge">
@@ -39,7 +39,7 @@
               <div class="leftdiv">爆料分类</div>
             </el-col>
             <el-col :span="19">
-              <div class="rightdiv"> {{ formData.breakingType }} </div>
+              <div class="rightdiv">{{ formData.breakingType }}</div>
             </el-col>
           </el-row>
 
@@ -149,8 +149,7 @@ export default {
     // ...mapGetters(['discloseClassify'])
   },
   mounted() {
-    this.discloseId = this.$route.query.discloseId
-    
+    this.discloseId = this.$route.query.discloseId;
 
     this.discloseInfor(this.discloseId);
   },
@@ -160,10 +159,17 @@ export default {
         .dispatch("delView", this.$route)
         .then(({ visitedViews }) => {
           if (context.isActive(context.$route)) {
-            console.log(visitedViews);
             const latestView = visitedViews.slice(-1)[0];
             if (latestView) {
-              context.$router.push(latestView);
+              if (latestView.path == "/newCommand/manageClue/discloseList") {
+                context.$router.push(latestView);
+              } else {
+                this.$router.replace({
+                  path:
+                    "/newCommand/manageClue/discloseList?time=" +
+                    new Date().getTime()
+                });
+              }
             } else {
               context.$router.push("/");
             }
@@ -171,9 +177,7 @@ export default {
         });
     },
     godiscloselist() {
-      this.$router.replace({
-        path: "/newCommand/manageClue/discloseList?time=" + new Date().getTime()
-      });
+      this.gotoListPage(this);
     },
     isActive(route) {
       return route.path === this.$route.path;
@@ -185,7 +189,6 @@ export default {
       return new Promise((resolve, reject) => {
         discloseInfor(res)
           .then(response => {
-            console.log(response);
             _this.formData = response.data.result;
             _this.auditStatus = _this.formData.auditStatus;
             _this.discloseClassify();
@@ -204,13 +207,10 @@ export default {
         discloseClassify().then(response => {
           // let optionslist=this.discloseClassify
           _this.searchlist = response.data.result;
-            _this.$nextTick(() => {
-               _this.formData.breakingType =
-            _this.searchlist[_this.formData.breakingType - 1].typeName;
-            console.log(_this.formData.breakingType)
-      })
-
-            console.log( _this.formData)
+          _this.$nextTick(() => {
+            _this.formData.breakingType =
+              _this.searchlist[_this.formData.breakingType - 1].typeName;
+          });
         });
       });
     },
@@ -246,10 +246,9 @@ export default {
       });
     },
     amendDiscloseStateBtn(num) {
-      let hnrToken=localStorage.getItem("hnDt_token")
-      console.log(hnrToken)
+      let hnrToken = localStorage.getItem("hnDt_token");
       let queryObj = {
-        hnrToken:hnrToken,
+        hnrToken: hnrToken,
         id: this.discloseId,
         auditStatus: num
       };
@@ -279,11 +278,11 @@ export default {
   text-align: right;
   box-sizing: border-box;
   padding: 0 15px;
+  border-right: 1px solid rgba(228, 228, 228, 1);
 }
 
 .rightdiv {
   padding-left: 15px;
-  border-left: 1px solid rgba(228, 228, 228, 1);
 }
 .biaoge {
   box-sizing: border-box;
