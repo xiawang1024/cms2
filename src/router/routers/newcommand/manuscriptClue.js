@@ -1,11 +1,9 @@
 import Layout from '@/views/layout/Layout'
-
 import {
   newcommandPath
 } from '../config'
 // 组件所在位置
 const path = `views/${newcommandPath}/manuscriptClue`
-
 console.log(path)
 // TODO:左侧菜单 稿件管理
 const manuscriptClue = {
@@ -16,7 +14,6 @@ const manuscriptClue = {
     icon: 'manuscriptClue',
     role: 'cms'
   },
- 
   name: 'manuscriptClue',
   children: [{
       /**
@@ -29,8 +26,6 @@ const manuscriptClue = {
         title: 'myManuscript',
         icon: 'myManuscript',
     role: 'cms'
-
-        
       },
       redirect: '/newCommand/manageClue/discloseList', 
     },
@@ -45,7 +40,6 @@ const manuscriptClue = {
         title: 'pendingManuscript',
         icon: 'pendingManuscript',
     role: 'cms'
-
       },
       redirect: '/newCommand/manageClue/discloseList', 
     },
@@ -60,12 +54,9 @@ const manuscriptClue = {
         title: 'commonManuscript',
         icon: 'commonManuscript',
     role: 'cms'
-
       },
       redirect: '/newCommand/manageClue/discloseList', 
     },
-
   ]
 }
-
 export default manuscriptClue

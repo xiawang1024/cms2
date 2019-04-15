@@ -1,11 +1,9 @@
 import Layout from '@/views/layout/Layout'
-
 import {
   newcommandPath
 } from '../config'
 // 组件所在位置
 const path = `views/${newcommandPath}/commandDispatch`
-
 console.log(path)
 // TODO:左侧菜单 指挥调度
 const commandDispatch = {
@@ -15,7 +13,6 @@ const commandDispatch = {
     title: 'commandDispatch',
     icon: 'commandDispatch',
     role: 'cms'
-
   },
   name: 'commandDispatch',
   children: [{
@@ -30,7 +27,6 @@ const commandDispatch = {
         title: 'allTask',
         icon: 'allTask',
     role: 'cms'
-
       }
     },
     {
@@ -45,13 +41,8 @@ const commandDispatch = {
         title: 'myTask',
         icon: 'myTask',
     role: 'cms'
-
       },
-
     },
-
-
   ]
 }
-
 export default commandDispatch
