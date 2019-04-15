@@ -1,11 +1,9 @@
 import Layout from '@/views/layout/Layout'
-
 import {
   newcommandPath
 } from '../config'
 // 组件所在位置
 const path = `views/${newcommandPath}/fileClue`
-
 console.log(path)
 // TODO:左侧菜单 文件管理
 const webSite = {
@@ -15,8 +13,8 @@ const webSite = {
   meta: {
     title: 'filesClue',
     icon: 'filesClue',
+    role: 'cms'
   },
-
   children: [{
     /**
      * 文件管理
@@ -27,11 +25,11 @@ const webSite = {
     meta: {
       title: 'filesClue',
       icon: 'filesClue',
+      role: 'cms'
     },
     redirect: '/newCommand/manageClue/discloseList', 
     hidden: true
   }
 ]
 }
-
 export default webSite

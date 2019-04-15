@@ -1,5 +1,5 @@
 module.exports = {
-  NODE_ENV: '"production"',
+  NODE_ENV: '"sit"',
   ENV_CONFIG: '"sit"',
-  BASE_API: '"https://api-sit"'
+  BASE_API: '"http://gw.c1.dxhmt.cn"'
 }

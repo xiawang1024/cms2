@@ -39,7 +39,6 @@
     </v-form>
   </div>
 </template>
-
 <script>
 // const Upload = _ => import('@/components/cms/Upload/upload')
 import {
@@ -50,7 +49,6 @@ import {
 } from "@/api/newsCommand/disclose.js";
 export default {
   name: "ColumnHandel",
-
   data() {
     return {
       formData: {},
@@ -191,7 +189,6 @@ export default {
           ]
         }
       ],
-
       routeQuery: {},
       isEdit: true,
       isLoading: false,
@@ -205,13 +202,11 @@ export default {
   },
   mounted() {
     this.discloseClassify();
-
     if (this.$route.query.Disclose == "addDisclose") {
       this.isEdit = false;
     } else {
       this.isEdit = true;
     }
-
     if (this.isEdit) {
       this.discloseId = this.$route.query.discloseId;
       this.discloseInfor(this.discloseId);
@@ -242,7 +237,6 @@ export default {
           });
       });
     },
-
     // 搜索分类接口
     discloseClassify() {
       var _this = this;
@@ -272,7 +266,6 @@ export default {
           });
       });
     },
-
     gotoListPage(context) {
       context.$store
         .dispatch("delView", this.$route)
@@ -324,13 +317,11 @@ export default {
         this.add0(seconds)
       );
     },
-
     submitSave(formData1) {
       let _this = this;
       formData1.breakingTime = this.timeFormat(formData1.breakingTime);
       this.tijiaodata = formData1;
       this.isLoading = true;
-
       if (this.isEdit) {
         return new Promise((resolve, reject) => {
           let newformData1 = formData1;
@@ -378,7 +369,6 @@ export default {
   }
 };
 </script>
-
 <style lang="scss" scoped>
 // .addbaoliao {
 //   width: 700px;

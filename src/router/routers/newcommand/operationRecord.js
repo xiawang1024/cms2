@@ -1,11 +1,9 @@
 import Layout from '@/views/layout/Layout'
-
 import {
   newcommandPath
 } from '../config'
 // 组件所在位置
 const path = `views/${newcommandPath}/operationRecord`
-
 console.log(path)
 // TODO:左侧菜单 操作记录
 const operationRecord = {
@@ -14,8 +12,8 @@ const operationRecord = {
   meta: {
     title: 'operationsRecord',
     icon: 'docSource',
+    role: 'cms'
   },
-
   children: [{
     /**
      * 操作记录
@@ -31,5 +29,4 @@ const operationRecord = {
     hidden:true
   }]
 }
-
 export default operationRecord
