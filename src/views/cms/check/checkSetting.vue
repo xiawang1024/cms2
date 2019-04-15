@@ -63,22 +63,35 @@
             <div class="choosed-list" @click="columnCounter">
               <div class="define-select">
                 <el-tag class="tag-list" size="small" closable v-for="(ele, index) in tagList" :key="index" @close="closeTag(index, ele)">{{ ele.channelName }}</el-tag>
-                <!-- <el-tag size="small" closable>小型标签</el-tag>
-                <el-tag size="small" closable>小型标签</el-tag>
-                <el-tag size="small" closable>小型标签</el-tag>
-                <el-tag size="small" closable>小型标签</el-tag> -->
-
                 <span class="define-right" @click="isArrowExtend">
                   <span>
                     <i class="el-icon-arrow-down" :class="{ 'el-up': arrowExtend}"/>
                   </span>
-                </span>
+                </span> 
                 <transition name="fade">
                   <div class="tree-data" v-if="arrowExtend">
                     <column-tree ref="columnTree" :tree-data="treeData" :arrow-extend="arrowExtend" @getChoosed="getChoosed" :tag-list="tagList"/>
                   </div>
                 </transition>
               </div>
+              <!-- <div class="el-cascalder-define-choose">
+                <div class="tag-container">
+                  <el-tag class="tag-list" size="small" closable v-for="(ele, index) in tagList" :key="index" @close="closeTag(index, ele)">{{ ele.channelName }}</el-tag>
+                </div>
+                <div class="input-define" @click="isArrowExtend">
+                  <el-input class="input-define-inner" type="text" readonly="readonly" autocomplete="off" @blur="inputBlur()" @focus="inputFocus()" :class="{ 'is-focus': arrowExtend}"/>
+                  <span class="right-suffix">
+                    <span class="right-suffix-inner">
+                      <i class="el-icon-arrow-down" :class="{ 'el-up': arrowExtend}"></i>
+                    </span>
+                  </span>
+                </div>
+                <transition name="fade">
+                  <div class="tree-data" v-if="arrowExtend">
+                    <column-tree ref="columnTree" :tree-data="treeData" :arrow-extend="arrowExtend" @getChoosed="getChoosed" :tag-list="tagList"/>
+                  </div>
+                </transition>
+              </div> -->
               <!-- <el-select v-model="value5" multiple placeholder="请选择">
                 <el-option
                   v-for="item in options"
@@ -94,6 +107,60 @@
               </el-cascader> -->
               <!-- <choosed-list ref="choosedList" :details-list = "detailsList"/> -->
             </div>
+            <!-- element-ui -->
+            <div>
+              <div class="el-select">
+                <div class="el-select__tags">
+                  哦都共瑞特热特热特瑞特热他偶尔特肉太热特日托热i天热呕吐i热透热贴
+                </div>
+                <!-- <div class="el-select__tags">
+                  <el-tag
+                    v-for="item in selected"
+                    :key="getValueKey(item)"
+                    :closable="!selectDisabled"
+                    :size="collapseTagSize"
+                    :hit="item.hitState"
+                    type="info"
+                    @close="deleteTag($event, item)"
+                    disable-transitions>
+                    <span class="el-select__tags-text">{{ item.currentLabel }}</span>
+                  </el-tag>
+                </div> -->
+                <el-input type="text"/>
+              </div>
+            </div>
+            <!-- <el-input
+              ref="reference"
+              v-model="selectedLabel"
+              type="text"
+              :placeholder="currentPlaceholder"
+              :name="name"
+              :id="id"
+              :autocomplete="autoComplete || autocomplete"
+              :size="selectSize"
+              :disabled="selectDisabled"
+              :readonly="readonly"
+              :validate-event="false"
+              :class="{ 'is-focus': visible }"
+              @focus="handleFocus"
+              @blur="handleBlur"
+              @keyup.native="debouncedOnInputChange"
+              @keydown.native.down.stop.prevent="navigateOptions('next')"
+              @keydown.native.up.stop.prevent="navigateOptions('prev')"
+              @keydown.native.enter.prevent="selectOption"
+              @keydown.native.esc.stop.prevent="visible = false"
+              @keydown.native.tab="visible = false"
+              @paste.native="debouncedOnInputChange"
+              @mouseenter.native="inputHovering = true"
+              @mouseleave.native="inputHovering = false">
+              <template slot="prefix" v-if="$slots.prefix">
+                <slot name="prefix"></slot>
+              </template>
+              <template slot="suffix">
+                <i v-show="!showClose" :class="['el-select__caret', 'el-input__icon', 'el-icon-' + iconClass]"></i>
+                <i v-if="showClose" class="el-select__caret el-input__icon el-icon-circle-close" @click="handleClearClick"></i>
+              </template>
+            </el-input> -->
           </template>
         </v-form>
       </template>
@@ -262,6 +329,12 @@ export default {
     this.columnSearchList()
   },
   methods: {
+    inputFocus() {
+      this.arrowExtend = true
+    },
+    inputBlur() {
+      this.arrowExtend = false
+    },
     closeTag(index, ele) {
       this.tagList.splice(index, 1)
       this.$refs.columnTree.$refs.tree.setCheckedNodes(this.tagList)
@@ -450,6 +523,101 @@ export default {
 </script>
 
 <style lang='scss'>
+.el-cascalder-define-choose{
+  .tree-data{
+    width:100%;
+    position: absolute;
+    top:100%;
+    left:0;
+    border: 1px solid #dcdfe6;
+    width:100%;
+    z-index: 100;
+    height: 300px;
+    border: 1px solid #e4e7ed;
+    border-radius: 4px;
+    background-color: #fff;
+    -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 5px 0;
+    transition: transform .3s,-webkit-transform .3s;
+  }
+  width:100%;
+  display: inline-block;
+  position: relative;
+  .tag-container{
+    width:100%;
+    position: absolute;
+    line-height: normal;
+    white-space: normal;
+    z-index: 1;
+    // top: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .input-define{
+    position: relative;
+    font-size: 14px;
+    display: block;
+    width: 100%;
+    .input-define-inner{
+      // height: 40px;
+      padding-right: 30px;
+      -webkit-appearance: none;
+      background-color: #fff;
+      background-image: none;
+      border-radius: 4px;
+      border: 1px solid #dcdfe6;
+      box-sizing: border-box;
+      color: #606266;
+      display: inline-block;
+      font-size: inherit;
+      line-height: 40px;
+      outline: none;
+      transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+      width: 100%;
+      // border-color: #409eff;
+      cursor: pointer;
+      &:focus{
+        border-color: #409eff;
+      }
+    }
+    .is-focus {
+      border-color: #409eff;
+    }
+    .right-suffix{
+      position: absolute;
+      height: 100%;
+      right: 5px;
+      top: 0;
+      text-align: center;
+      color: #c0c4cc;
+      transition: all .3s;
+      pointer-events: none;
+      z-index: 99;
+      .right-suffix-inner{
+        pointer-events: all;
+        i {
+          width: 25px;
+          line-height: 40px;
+          cursor: pointer;
+          transform: rotateZ(0);
+          transition: transform .3s,-webkit-transform .3s;
+        }
+        .el-up {
+          font-size: 14px;
+          transform: rotateZ(180deg);
+          transition: transform .3s,-webkit-transform .3s;
+        }
+      }
+    }
+  }
+}
+
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
 }

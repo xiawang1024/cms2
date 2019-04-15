@@ -98,6 +98,14 @@ export default {
             value: 1          
           }
         ]
+      },
+      {
+        label: '栏目名称',
+        name: 'channelName',
+        placeholder: '请输入栏目名称',
+        visible: true,
+        options: [],
+        type: 'cascader'
       }],
       searchData: {}
     }
