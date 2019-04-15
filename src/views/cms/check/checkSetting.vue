@@ -78,6 +78,17 @@
               </div>
             </div>
           </template>
+          <template slot="checkPeopleSet">
+            <div class="check-people-set">
+              <div style="height: 300px;">
+                <el-steps direction="vertical" :active="1">
+                  <el-step title="步骤 1"/>
+                  <el-step title="步骤 2"/>
+                  <el-step title="步骤 3" description="这是一段很长很长很长的描述性文字"/>
+                </el-steps>
+              </div>
+            </div>
+          </template>
         </v-form>
       </template>
     </v-page>
@@ -165,9 +176,8 @@ export default {
             },
             {
               label: '审批人设置',
-              name: 'checkType',
-              type: 'text',
-              valueType: 'string',
+              name: 'checkPeopleSet',
+              type: 'slot',
               placeholder: '',
             }
           ]
