@@ -20,7 +20,7 @@
             <el-form-item style="margin-bottom: 40px; margin-left: 20px;" prop="channelId">
               <span style="color: #F56C6C">所属频率</span>
               <el-select v-model="postForm.channelId" @change="selectGet" placeholder="请选择所属频率">
-                <el-option v-for="item in this.channelOptions" :key="item.channel_id" :label="item.channel_name" :value="item.channel_id"/>
+                <el-option v-for="item in channelOptions" :key="item.channel_id" :label="item.channel_name" :value="item.channel_id"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -165,7 +165,7 @@
 <script>
 import { fetchChannelAll } from '@/api/program/channel'
 import { fetchColumnNames } from '@/api/program/column'
-import { fetchProgram, createProgram, fetchProgramInfo } from '@/api/program/program'
+import { fetchProgram, createProgram } from '@/api/program/program'
 import MDinput from '@/components/MDinput'
 import Vue from 'vue'
 
@@ -196,7 +196,7 @@ export default {
       bind (el, binding) {
         // 获取滚动页面DOM
         let SCROLL_DOM = el.querySelector('.el-select-dropdown .el-select-dropdown__wrap')
-        let scrollPosition = 0
+        // let scrollPosition = 0
         SCROLL_DOM.addEventListener('scroll', function () {
           /**
             * scrollHeight 获取元素内容高度(只读)

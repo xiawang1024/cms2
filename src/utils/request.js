@@ -3,6 +3,7 @@ import { Message } from 'element-ui'
 import baseUrl from '@/config/base-url'
 import { getAuth, setAuth, getRefreshToken, isTokenExpired, isNotGetTokenApi, isRefreshTokenExpired, removeAuth } from './auth.js'
 import { refreshToken } from '@/api/login'
+import qs from 'qs' // 序列化表单数据
 // console.log(baseUrl, 'baseUrl')
 const request = axios.create({
   baseURL: baseUrl.BASE_URL || '/',
@@ -113,6 +114,19 @@ request.interceptors.request.use(
           })
         })
         return retry
+      }
+      if(config.method !== 'get') {
+        if(config.requestBodyType && config.requestBodyType === 'formData') {
+          config.data = qs.stringify(config.data)
+          config.headers = {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }
+      } else {
+        // config.data = JSON.stringify(config.data)
+        // config.headers = {
+        //   'Content-Type': 'application/json;charset=utf-8'
+        // }
       }
       return config
     } else {

@@ -181,7 +181,7 @@ export default {
       // }
       switch(command) {
         case '2':
-          this.$store.dispatch('setContextMenu', {id: '4', label: '建立子栏目'})
+          this.$store.dispatch('setContextMenu', {id: '5', label: '建立子栏目'})
           break;
         case '3':
           this.$store.dispatch('setContextMenu', {id: '4', label: '修改栏目'})
