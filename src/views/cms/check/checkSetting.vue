@@ -80,11 +80,59 @@
           </template>
           <template slot="checkPeopleSet">
             <div class="check-people-set">
-              <div style="height: 300px;">
-                <el-steps direction="vertical" :active="1">
-                  <el-step title="步骤 1"/>
-                  <el-step title="步骤 2"/>
-                  <el-step title="步骤 3" description="这是一段很长很长很长的描述性文字"/>
+              <div>
+                <el-steps >
+                  <el-step title="">
+                    <template slot="title">
+                      <div>
+                        本人
+                      </div>
+                    </template>
+                    <template slot="description">
+                      <div>
+                        一级审核为本人
+                      </div>
+                    </template>
+                    <template slot="icon">
+                      <div>
+                        <icon name="user-alt"/>
+                      </div>
+                    </template>
+                  </el-step>
+                  <el-step title="">
+                    <template slot="title">
+                      <div>
+                        <el-button type="text" size="medium">添加</el-button>
+                      </div>
+                    </template>
+                    <template slot="description">
+                      <div>
+                        serwewr
+                      </div>
+                    </template>
+                    <template slot="icon">
+                      <div>
+                        <icon name="user-alt"/>
+                      </div>
+                    </template>
+                  </el-step>
+                  <el-step title="" description="">
+                    <template slot="title">
+                      <div>
+                        <el-button type="text" size="medium">添加</el-button>
+                      </div>
+                    </template>
+                    <template slot="description">
+                      <div>
+                        serwewr
+                      </div>
+                    </template>
+                    <template slot="icon">
+                      <div>
+                        <icon name="user-alt"/>
+                      </div>
+                    </template>
+                  </el-step>
                 </el-steps>
               </div>
             </div>
@@ -377,6 +425,17 @@ export default {
 </script>
 
 <style lang='scss'>
+.check-people-set{
+  .el-step{
+    .el-step__icon{
+      width: 50px;
+      height: 50px;
+    }
+    .el-step__line{
+      top:23px;
+    }
+  }
+};
 .el-cascalder-define-choose{
   .tree-data{
     width:100%;
