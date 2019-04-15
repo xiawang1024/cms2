@@ -131,7 +131,7 @@ export default {
     editProgram: '编辑节目单',
     createProgram: '创建节目单',
     //------新闻指挥---------------------
-    manageClue: '线索管理',
+    manageClue: '爆料管理',
     discloseList: '爆料列表',
     addDisclose: '添加修改爆料',
     discloseDetails:'爆料详情',
@@ -147,7 +147,8 @@ export default {
     liveClue: '直播管理',
     liveList: '直播列表',
     connectionList: '通话列表',
-    operationsRecord: '操作记录'
+    operationsRecord: '操作记录',
+  
 
 
   },

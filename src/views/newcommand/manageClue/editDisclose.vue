@@ -1,6 +1,12 @@
 <template>
   <div class="addbaoliao">
-    <v-form ref="vform" :model="formModel" :form-settings="formSettings" @save="submitSave" :btn-loading="isLoading">
+    <v-form
+      ref="vform"
+      :model="formModel"
+      :form-settings="formSettings"
+      @save="submitSave"
+      :btn-loading="isLoading"
+    >
       <template slot="isScale">
         <div>
           <el-checkbox v-model="imageSetting.isScaleChecked">是否缩放</el-checkbox>
@@ -42,7 +48,7 @@ export default {
   // components: { Upload },
   data() {
     return {
-         formModel: null,
+      formModel: null,
       formSettings: [
         {
           items: [
@@ -140,7 +146,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 // .addbaoliao {
 //   width: 700px;
 //   margin: 0 auto;

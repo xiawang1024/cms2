@@ -1,13 +1,13 @@
 <template>
-  <div>
-    <div class="topdiv">
+  <div class="disclisedetails">
+    <!-- <div class="topdiv">
       <div class="topdivLeft">爆料详情</div>
       <div class="topdivRight">
         <el-button size="mini" @click="godiscloselist" icon="el-icon-back" type="primary">返回</el-button>
       </div>
-    </div>
+    </div> -->
     <el-container class="elcontainer">
-      <el-header class="elheader">爆料详情</el-header>
+      <!-- <el-header class="elheader">爆料详情</el-header> -->
       <el-main class="elmain1">
         <div class="biaoge">
           <el-row>
@@ -118,8 +118,8 @@
         </div>
       </el-main>
       <el-main v-if="auditStatus==0" class="elmain3">
-        <el-button @click="amendDiscloseStateBtn(1)" type="primary">审核通过</el-button>
-        <el-button @click="amendDiscloseStateBtn(2)" type="danger">审核拒绝</el-button>
+        <el-button size="small" @click="amendDiscloseStateBtn(1)" type="primary">审核通过</el-button>
+        <el-button size="small" @click="amendDiscloseStateBtn(2)" type="danger">审核拒绝</el-button>
       </el-main>
     </el-container>
     <!-- <div>{{discloseClassify}}</div> -->
@@ -150,7 +150,6 @@ export default {
   },
   mounted() {
     this.discloseId = this.$route.query.discloseId;
-
     this.discloseInfor(this.discloseId);
   },
   methods: {
@@ -274,11 +273,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.disclisedetails{
 .leftdiv {
   text-align: right;
   box-sizing: border-box;
   padding: 0 15px;
   border-right: 1px solid rgba(228, 228, 228, 1);
+  font-weight: 600;
 }
 
 .rightdiv {
@@ -298,16 +299,16 @@ export default {
 .el-row:last-child {
   border-bottom: 1px solid rgba(228, 228, 228, 1);
 }
-.el-container {
-  margin: 0 auto;
-  width: 80%;
-  border: 1px solid rgba(228, 228, 228, 1);
-  margin-top: 30px;
+.elcontainer {
+  width:700px;
+  // border: 1px solid rgba(228, 228, 228, 1);
+  // margin-top: 30px;
   font-family: "微软雅黑";
   font-weight: 400;
   font-style: normal;
   font-size: 12px;
   color: #666666;
+  display: block;
 }
 .el-header {
   background: rgba(243, 243, 243, 1);
@@ -367,4 +368,6 @@ export default {
 .colred {
   color: #f56c6c;
 }
+}
+
 </style>

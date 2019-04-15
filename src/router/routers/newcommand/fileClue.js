@@ -11,22 +11,25 @@ console.log(path)
 const webSite = {
   path: `/${newcommandPath}/fileClue`,
   component: Layout,
+  redirect: '/newCommand/manageClue/discloseList', 
   meta: {
-    title: 'fileClue',
+    title: 'filesClue',
     icon: 'filesClue',
   },
-  name: 'fileClue',
+
   children: [{
     /**
      * 文件管理
      */
-    path: 'filesClue',
+    path: '',
     component: () => import(`@/${path}/filesClue`),
     name: 'filesClue',
     meta: {
       title: 'filesClue',
       icon: 'filesClue',
-    }
+    },
+    redirect: '/newCommand/manageClue/discloseList', 
+    hidden: true
   }
 ]
 }

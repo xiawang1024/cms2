@@ -1,11 +1,11 @@
 <template>
-  <div class="column-manage">
-    <div class="topdiv">
+  <div class="column-manages">
+    <!-- <div class="topdiv">
       <div class="topdivLeft">爆料列表</div>
       <div class="topdivRight">
         <el-button @click="reloadlist" icon="el-icon-refresh" type="primary">刷新</el-button>
       </div>
-    </div>
+    </div> -->
 
     <div class="auditBtn">
       <div
@@ -48,7 +48,7 @@
         type="primary"
         v-if="checkAuth('cms:channel:add')"
         @click="columnAddEdit('addDisclose','')"
-     
+        size="small"
       >添加爆料</el-button>
     </div>
 
@@ -57,12 +57,10 @@
       :header-cell-style="{color:'#000'}"
       :data="tableData"
       style="width: 100%"
-      fit
-      border
       :row-style="rowstyle">
       >
-      <el-table-column min-width="250" align="center" prop="breakingName" label="标题" show-overflow-tooltip/>
-      <el-table-column width="120" align="center" prop="newsOrigin" label="线索来源">
+      <el-table-column min-width="300" align="left" prop="breakingName" label="标题" show-overflow-tooltip/>
+      <el-table-column min-width="100" align="left" prop="newsOrigin" label="线索来源">
         <template slot-scope="scope">
           <span v-if="scope.row.newsOrigin == 0">电话</span>
           <span v-if="scope.row.newsOrigin == 1">数据接口</span>
@@ -73,43 +71,43 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="150" align="center" prop="breakingType" label="爆料分类"/>
+      <el-table-column min-width="100" align="left" prop="breakingType" label="爆料分类"/>
 
-      <el-table-column width="120" align="center" prop="breakingPeople" label="爆料人"/>
-      <el-table-column width="120" align="center" prop="auditStatus" label="处理状态">
+      <el-table-column min-width="100" align="left" prop="breakingPeople" label="爆料人"/>
+      <el-table-column min-width="100" align="left" prop="auditStatus" label="处理状态">
         <template slot-scope="scope">
           <span class="colyellow" v-if="scope.row.auditStatus == 0">待处理</span>
           <span class="colgreen" v-if="scope.row.auditStatus == 1">已通过</span>
           <span class="colred" v-if="scope.row.auditStatus == 2">已拒绝</span>
         </template>
       </el-table-column>·
-      <el-table-column width="220" align="center" prop="breakingTime" label="爆料时间"/>
+      <el-table-column min-width="220" align="left" prop="breakingTime" label="爆料时间"/>
 
-      <el-table-column width="270" align="center" label="操作">
+      <el-table-column min-width="220" align="left" label="操作">
         <template v-if="checkAuth('cms:channel:operation')" slot-scope="scope">
-          <div style="text-align:right">
-
-          
+          <div style="text-align:left">
             <el-button
-              v-if="scope.row.auditStatus==0"
-              @click="columnAddEdit('discloseAudit',scope.row.id)"
-              type="danger"
-              icon="el-icon-setting"
+              type="success"
+             
               size="mini"
-            >审核</el-button>
+              @click="columnAddEdit('discloseView',scope.row.id)"
+            >查看</el-button>
             <el-button
               type="primary"
-              icon="el-icon-edit"
+             
               size="mini"
               v-if="checkAuth('cms:channel:delete')"
               @click="columnAddEdit('columnAddEdit',scope.row.id)"
             >编辑</el-button>
             <el-button
-              type="success"
-              icon="el-icon-view"
+              v-if="scope.row.auditStatus==0"
+              @click="columnAddEdit('discloseAudit',scope.row.id)"
+              type="danger"
+             
               size="mini"
-              @click="columnAddEdit('discloseView',scope.row.id)"
-            >查看</el-button>
+            >审核</el-button>
+
+
           </div>
         </template>
       </el-table-column>
@@ -258,6 +256,7 @@ export default {
     $route(val) {
       // this.uplistdata.assign(this.searchData);
       // this.columnList(this.uplistdata);
+      this.reloadlist()
     }
   },
   mounted() {
@@ -460,7 +459,9 @@ return 'height:70px'
 };
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
+
+.column-manages {
 .confirm {
   height: 28px;
   margin-left: 10px;
@@ -501,17 +502,17 @@ return 'height:70px'
   background: #409eff;
 }
 .auditBtn {
-  height: 80px;
+
   display: flex;
   align-items: center;
-  width: 600px;
+  width: 520px;
   justify-content: space-between;
 }
 .auditBtns {
   cursor: pointer;
-  width: 135px;
-  height: 40px;
-  line-height: 40px;
+  width: 113px;
+  height: 32px;
+  line-height: 32px;
   background: inherit;
   background-color: white;
   font-family: "微软雅黑";
@@ -536,12 +537,10 @@ return 'height:70px'
 .auditBtnSpan {
   color: rgb(240, 72, 68);
 }
-.column-manage {
+
+
   margin: 30px;
-  .tool-bar {
-    margin-top: 22px;
-     margin-bottom: 22px;
-  }
+
   .pagination {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -575,6 +574,9 @@ return 'height:70px'
   }
   .colred {
     color: #f56c6c;
+  }
+  .el-card__header{
+    padding-bottom: 0px;
   }
 }
 </style>

@@ -1,380 +1,581 @@
 <template>
-  <div class="colunm-add-edit">
-    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" :btn-loading = "isLoading">
-      <template slot="isScale">
-        <div>
-          <el-checkbox v-model="imageSetting.isScaleChecked">是否缩放</el-checkbox>
-          <el-input
-            v-if="imageSetting.isScaleChecked"
-            v-model="imageSetting.width"
-            style="width:10em"
-            type="number"
-            maxlength="3"
-            step="10"
-            max="100"
-            min="0"
-          >
-            <template slot="prepend">宽</template>
-          </el-input>
-          <el-input
-            v-if="imageSetting.isScaleChecked"
-            v-model="imageSetting.height"
-            style="width:10em"
-            type="number"
-            maxlength="3"
-            step="10"
-            max="100"
-            min="0"
-          >
-            <template slot="prepend">高</template>
-          </el-input>
-        </div>
-      </template>
-    </v-form>
+  <div class="column-manages">
+    <!-- <div class="topdiv">
+      <div class="topdivLeft">爆料列表</div>
+      <div class="topdivRight">
+        <el-button @click="reloadlist" icon="el-icon-refresh" type="primary">刷新</el-button>
+      </div>
+    </div> -->
+
+    <div class="auditBtn">
+      <div
+        @click="auditBtnsClik(0,$event)"
+        :class="[activeClass0 == 0 ? 'activeClass0':'','auditBtns','auditBtnAll']"
+      >
+        全部申请(
+        <span
+          class="auditBtnSpan"
+        >{{ discloseStatenum[0]+discloseStatenum[1]+discloseStatenum[2] }}</span> )
+      </div>
+      <div
+        @click="auditBtnsClik(1,$event)"
+        :class="[activeClass0 == 1 ? 'activeClass0':'','auditBtns','auditBtnOrder']"
+      >
+        待审核(
+        <span class="auditBtnSpan">{{ discloseStatenum[0] }}</span> )
+      </div>
+      <div
+        @click="auditBtnsClik(2,$event)"
+        :class="[activeClass0 == 2 ? 'activeClass0':'','auditBtns','auditBtnOrder']"
+      >
+        已通过(
+        <span class="auditBtnSpan">{{ discloseStatenum[1] }}</span> )
+      </div>
+      <div
+        @click="auditBtnsClik(3,$event)"
+        :class="[activeClass0 == 3 ? 'activeClass0':'','auditBtns','auditBtnOrder']"
+      >
+        已拒绝(
+        <span class="auditBtnSpan">{{ discloseStatenum[2] }}</span> )
+      </div>
+    </div>
+
+    <div class="el-card__header">
+      <v-search :search-settings="searchSettings" @search="searchItem"/>
+    </div>
+    <div class="tool-bar">
+      <el-button
+        type="primary"
+        v-if="checkAuth('cms:channel:add')"
+        @click="columnAddEdit('addDisclose','')"
+        size="small"
+      >添加爆料</el-button>
+    </div>
+
+    <el-table
+      ref="multipleTable"
+      :header-cell-style="{color:'#000'}"
+      :data="tableData"
+      style="width: 100%"
+      :row-style="rowstyle">
+      >
+      <el-table-column min-width="300" align="left" prop="breakingName" label="标题" show-overflow-tooltip/>
+      <el-table-column min-width="100" align="left" prop="newsOrigin" label="线索来源">
+        <template slot-scope="scope">
+          <span v-if="scope.row.newsOrigin == 0">电话</span>
+          <span v-if="scope.row.newsOrigin == 1">数据接口</span>
+          <span v-if="scope.row.newsOrigin == 2">App</span>
+          <span v-if="scope.row.newsOrigin == 3">网站</span>
+          <span v-if="scope.row.newsOrigin == 4">小程序</span>
+          <span v-if="scope.row.newsOrigin == 5">其他</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column min-width="100" align="left" prop="breakingType" label="爆料分类"/>
+
+      <el-table-column min-width="100" align="left" prop="breakingPeople" label="爆料人"/>
+      <el-table-column min-width="100" align="left" prop="auditStatus" label="处理状态">
+        <template slot-scope="scope">
+          <span class="colyellow" v-if="scope.row.auditStatus == 0">待处理</span>
+          <span class="colgreen" v-if="scope.row.auditStatus == 1">已通过</span>
+          <span class="colred" v-if="scope.row.auditStatus == 2">已拒绝</span>
+        </template>
+      </el-table-column>·
+      <el-table-column min-width="220" align="left" prop="breakingTime" label="爆料时间"/>
+
+      <el-table-column min-width="220" align="left" label="操作">
+        <template v-if="checkAuth('cms:channel:operation')" slot-scope="scope">
+          <div style="text-align:left">
+            <el-button
+              type="success"
+             
+              size="mini"
+              @click="columnAddEdit('discloseView',scope.row.id)"
+            >查看</el-button>
+            <el-button
+              type="primary"
+             
+              size="mini"
+              v-if="checkAuth('cms:channel:delete')"
+              @click="columnAddEdit('columnAddEdit',scope.row.id)"
+            >编辑</el-button>
+            <el-button
+              v-if="scope.row.auditStatus==0"
+              @click="columnAddEdit('discloseAudit',scope.row.id)"
+              type="danger"
+             
+              size="mini"
+            >审核</el-button>
+
+
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <el-pagination
+      :current-page="pageNum"
+      :page-sizes="[15]"
+      :page-size="pageSize"
+      :total="totalCount"
+      background
+      class="pagination"
+      layout="total, sizes, prev, pager, next, jumper"
+      style="float: right"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
 <script>
-// const Upload = _ => import('@/components/cms/Upload/upload')
-import { columnInfor, addColumn, editColumn, isColumnRepet } from '@/api/cms/columnManage'
-import { fetchDictByDictName } from '@/api/cms/dict'
-import { fetchComponentList } from '@/api/cms/component'
+// import { fetchDictByDictName } from '@/api/cms/dict'
+import {
+  discloseList,
+  discloseState,
+  discloseClassify
+} from "@/api/newsCommand/disclose.js";
+import { deleteColumn } from "@/api/cms/columnManage";
+import mixins from "@/components/cms/mixins";
 export default {
-  name: 'ColumnHandel',
-  // components: { Upload },
-  props: {
-    data: {
-      type: Object,
-      default: function() {
-        return {}
-      }
-    }
-  },
+  name: "ColumnManage",
+  mixins: [mixins],
   data() {
     return {
-      formSettings: [
+      allchoose: false,
+      options1: [
         {
-          items: [
-            {
-              label: '父级栏目',
-              name: 'parentChannelNames',
-              type: 'text',
-              valueType: 'string',
-              placeholder: '',
-              disabled: true
-            },
-            {
-              label: '栏目编码',
-              name: 'channelCode',
-              type: 'text',
-              required: true,
-              rule: [{
-                validator: this.checkColumnRepet,
-              }, {
-                required: true,
-                trigger: 'blur'
-              }],
-              placeholder: '请输入栏目编码'
-            },
-            {
-              label: '位置排序',
-              name: 'seqNo',
-              type: 'text',
-              placeholder: '请输入排序',
-              hidden: true
-            },
-            {
-              label: '访问域名',
-              name: 'domainName',
-              type: 'text',
-              placeholder: '请输入访问域名',
-              hidden: true
-            },
-            // {
-            //   label:'存放位置',
-            //   name: 'domainPath',
-            //   type:'text',
-            //   placeholder: '请输入存放位置',
-            //   hidden: true
-            // },
-            {
-              label: '创建人员',
-              name: 'createUser',
-              type: 'text',
-              placeholder: '请输入创建人员',
-              disabled: true,
-              hidden: true
-            },
-            {
-              label: '正常显示',
-              name: 'hiddenFlag',
-              activeValue: 0,
-              inactiveValue: 1,
-              activeColor: '#13ce66',
-              value: 0,
-              type: 'switch',
-              hidden: true
-            },{
-              label: '其他数据',
-              name: 'extra',
-              type: 'textarea',
-              placeholder: '请输入其他数据',
-              hidden: true
-            },{
-              label:'管理人员',
-              name: 'managerUser',
-              type:'text',
-              placeholder: '请输入管理员',
-              hidden: true
-            }
-            ,{
-              label:'栏目名称',
-              name:'channelName',
-              type:'text',
-              required: true,
-              placeholder: '请输入栏目名称'
-            },
-            {
-              label: '栏目类型',
-              name: 'categoryId',
-              type: 'select',
-              options: [],
-              placeholder: '请选择',
-              hidden: true
-            },
-            {
-              label: '栏目图标',
-              name: 'iconUrl',
-              type: 'img',
-              limit: 1,
-              tip: '建议图片大小：1080*1642，图片大小不超过100K',
-              hidden: true
-           },
-           {
-              label:'关键字',
-              name:'keywordName',
-              type:'text',
-              placeholder: '请输入关键字',
-              hidden: true
-           },{
-              label:'栏目描述',
-              name:'descriptionRemark',
-              type:'textarea',
-              placeholder: '请输入栏目描述',
-              hidden: true
-            }
-          ]
+          value: "选项1",
+          label: "审核"
+        },
+        {
+          value: "选项2",
+          label: "删除"
+        },
+        {
+          value: "选项3",
+          label: "其他"
         }
       ],
-      formData: {},
-      routeQuery: {},
-      isEdit: false,
-      isLoading: false,
-      imageSetting: {
-        isScaleChecked: false,
-        height: '',
-        width: ''
+      operateVal: "",
+      activeClass0: 0,
+      tableData: [],
+      pageNum: 1,
+      pageSize: 15,
+      totalCount: 0,
+      searchSettings: [
+        {
+          label: "爆料名称",
+          name: "breakingName",
+          placeholder: "爆料名称",
+          visible: true,
+          type: "text"
+        },
+        {
+          label: "爆料时间",
+          name: "breakingTime",
+          placeholder: "请选择时间",
+          visible: true,
+          options: [],
+          type: "date"
+        },
+
+        {
+          label: "状态",
+          name: "auditStatus",
+          placeholder: "全部",
+          visible: true,
+          type: "select",
+          options: [
+            {
+              label: "待审核",
+              value: 0
+            },
+            {
+              label: "已通过",
+              value: 1
+            },
+            {
+              label: "已拒绝",
+              value: 2
+            }
+          ]
+        },
+        {
+          label: "申请时间",
+          name: "applyforTime",
+          placeholder: "请选择时间",
+          visible: false,
+          options: [],
+          type: "date"
+        },
+
+        {
+          label: "操作人员",
+          name: "chulistate",
+          placeholder: "全部",
+          visible: false,
+          type: "select",
+          options: [
+            {
+              label: "待处理",
+              value: 0
+            },
+            {
+              label: "已处理",
+              value: 1
+            },
+            {
+              label: "已拒绝",
+              value: 2
+            }
+          ]
+        },
+        {
+          label: "处理时间",
+          name: "manageTime",
+          placeholder: "请选择时间",
+          visible: false,
+          options: [],
+          type: "date"
+        }
+      ],
+      searchData: {},
+      discloseClassifyNum: [], //爆料分类接口获取
+      discloseStatenum: [999, 999, 999], //爆料状态数值
+      uplistdata: {
+        breakingName: "",
+        breakingTime: "",
+        auditStatus: "",
+        pageNo: 1,
+        pageSize: 15
       }
+    };
+  },
+  watch: {
+    $route(val) {
+      // this.uplistdata.assign(this.searchData);
+      // this.columnList(this.uplistdata);
     }
   },
   mounted() {
-    this.routeQuery = this.$route.query
-    this.isEdit = Boolean((!this.routeQuery.isAdd || this.routeQuery.isAdd === 'false') && this.routeQuery.channelId)
-    this.getColumnInfor()
-    this.fetchComponentList()
-    this.getColumns()
+    // 获取爆料分类
+    this.discloseClassify();
+    this.discloseState(0);
+    this.discloseState(1);
+    this.discloseState(2);
   },
+  created() {},
   methods: {
-    // 栏目编码是否重复
-    checkColumnRepet(rule, value, callback) {
-      if (!value) {
-        return callback(new Error('请输入栏目编码'))
-      }
-      let columnCode = this.$refs.vform.getData('channelCode')
-      if(this.isEdit && (columnCode == this.formData.channelCode)) {
-        callback()
-      } else {
-        return new Promise((resolve, reject) => {
-          isColumnRepet(columnCode)
-            .then((response) => {
-              // _this.componentList = response.data.result.content
-              if(response.data.result) {
-                callback()
-              } else {
-                callback(new Error('栏目编码不能重复'))
-              }
-              resolve()
-            })
-            .catch((error) => {
-              reject(error)
-            })
-        })
-      }
+    rowstyle(){
+return 'height:70px'
     },
-    // 查询栏目类型
-    getColumns() {
-      var _this = this
-      return new Promise((resolve, reject) => {
-        fetchDictByDictName('栏目类型')
-          .then((response) => {
-            if (response.data.result.details && response.data.result.details.length) {
-              _this.formSettings[0].items[10].options = response.data.result.details.map((ele) => {
-                return {
-                  label: ele.dictDetailName,
-                  value: ele.dictDetailValue
-                }
-              })
-            }
-            resolve()
-          })
-          .catch((error) => {
-            reject(error)
-          })
-      })
+    reloadlist() {
+      this.activeClass0 = 0;
+      this.$router.replace({
+        path: "/newCommand/manageClue/discloseList?time=" + new Date().getTime()
+      });
     },
-    fetchComponentList() {
-      var _this = this
-      var componentObjTmp = {
-      }
-      return new Promise((resolve, reject) => {
-        fetchComponentList(componentObjTmp, 1, 100)
-          .then((response) => {
-            _this.componentList = response.data.result.content
-            resolve()
-          })
-          .catch((error) => {
-            reject(error)
-          })
-      })
-    },
-    getColumnInfor() {
-      var _this = this
-      return new Promise((resolve, reject) => {
-        columnInfor(_this.routeQuery.channelId)
-          .then((response) => {
-            if(_this.isEdit) {
-              _this.formData = response.data.result
-              if(_this.formData.iconUrl) {
-                _this.formData.iconUrl = [{
-                  url: _this.formData.iconUrl
-                }]
-              } else {
-                _this.formData.iconUrl = []
-              }
-              _this.formSettings[0].items[2].hidden =false
-              _this.formSettings[0].items[3].hidden =false
-              _this.formSettings[0].items[5].hidden =false
-              _this.formSettings[0].items[6].hidden =false
-              _this.formSettings[0].items[7].hidden =false
-              _this.formSettings[0].items[8].hidden =false
-              _this.formSettings[0].items[9].hidden =false
-              _this.formSettings[0].items[10].hidden =false
-              _this.formSettings[0].items[11].hidden =false
-              _this.formSettings[0].items[12].hidden =false
-            } else {
-              _this.formData = {
-                parentChannelNames: response.data.result.channelName,
-                hiddenFlag: 0
-              }
-            }
-            resolve()
-          })
-          .catch((error) => {
-            reject(error)
-          })
-      })
-    },
-    submitSave(formData) {
-      this.isLoading = true
-      var _this = this
-      let iconUrlArray = []
-      if(formData.iconUrl.length) {
-        formData.iconUrl.forEach(ele => {
-          iconUrlArray.push(ele.url)
-        })
-      }
-      formData.iconUrl = iconUrlArray.length ? iconUrlArray.join(',') : ''
-      if (!this.isEdit) {
-        formData.parentChannelId = _this.routeQuery.channelId ? _this.routeQuery.channelId : ''
-        if(!formData.parentChannelId) {
-          delete formData.parentChannelId
-        }
-        return new Promise((resolve, reject) => {
-          addColumn(formData)
-            .then((response) => {
-              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-              // 快速添加
-              // _this.gotoListPage(_this)
-              this.formData = {
-                parentChannelNames: formData.parentChannelNames
-              }
-              resolve()
-              _this.isLoading = false
-            })
-            .catch((error) => {
-              _this.isLoading = false
-              reject(error)
-            })
-        })
-      } else {
-        console.log(formData, 'formData')
-        formData.parentChannelId = _this.formData.parentChannelId ? _this.formData.parentChannelId : ''
-        formData.stampSetting = _this.formData.stampSetting
-        formData.tagRule = _this.formData.tagRule
-        formData.templateIds = _this.formData.templateIds
-        formData.extFieldsList = _this.formData.extFieldsList
-        if(!formData.parentChannelId) {
-          delete formData.parentChannelId
-        }
-        return new Promise((resolve, reject) => {
-          formData.channelId = _this.routeQuery.channelId
-          console.log(_this.formData, 1111)
-          editColumn(formData)
-            .then((response) => {
-              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-              _this.gotoListPage(_this)
-              _this.isLoading = false
-              resolve()
-            })
-            .catch((error) => {
-              reject(error)
-              _this.isLoading = false
-            })
-        })
-      }
-    },
-    isActive(route) {
-      return route.path === this.$route.path
-    },
-    gotoListPage(context) {
-      context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {
-        if (context.isActive(context.$route)) {
-          const latestView = visitedViews.slice(-1)[0]
-          if (latestView) {
-            context.$router.push(latestView)
-          } else {
-            context.$router.push('/')
-          }
-        }
-      })
 
+    checkAuth(authKey) {
+      if (this.$store.getters.authorities.indexOf(authKey) === -1) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    // 搜索方法传入公共组件 searchData
+    searchItem(searchData) {
+      if ("auditStatus" in searchData) {
+        this.activeClass0 = searchData.auditStatus + 1;
+      } else {
+        this.activeClass0 = 0;
+      }
+      this.searchData = searchData;
+      if ("breakingTime" in this.searchData) {
+        this.searchData.breakingTime = this.timeFormat(
+          this.searchData.breakingTime
+        );
+      }
+      this.pageNum = 1;
+      let res = {};
+      let uplistdata02 = Object.assign({}, this.uplistdata);
+      let searchData02 = Object.assign({}, this.searchData);
+      res = Object.assign(uplistdata02, searchData02);
+      this.columnList(res);
+    },
+    add0(m) {
+      return m < 10 ? "0" + m : m;
+    },
+    timeFormat(timestamp) {
+      //timestamp是整数，否则要parseInt转换,不会出现少个0的情况
+      var time = new Date(timestamp);
+      var year = time.getFullYear();
+      var month = time.getMonth() + 1;
+      var date = time.getDate();
+      return year + "-" + this.add0(month) + "-" + this.add0(date);
+    },
+    // table列表数据
+    columnList(res) {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        discloseList(res)
+          .then(response => {
+            let content = response.data.result.content;
+            content.forEach((element, idnex) => {
+              element.breakingType =
+                _this.discloseClassify[element.breakingType - 1].typeName;
+            });
+            _this.tableData = content;
+            _this.totalCount = response.data.result.total;
+
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+    // 搜索分类接口
+    discloseClassify(callback) {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        discloseClassify({}, 1, 1000)
+          .then(response => {
+            _this.discloseClassify = response.data.result;
+          })
+          .then(() => {
+            // 初始化搜索信息
+            let res = {
+              breakingName: "",
+              breakingTime: "",
+              pageNo: _this.pageNum,
+              pageSize: _this.pageSize
+            };
+            _this.columnList(res);
+          });
+      });
+    },
+    auditBtnsClik(num, e) {
+      //  e.target 点击的元素  e.currentTarget是绑定事件元素
+      this.activeClass0 = num;
+      // 初始化搜索信息
+      // 点击顶部按钮清空搜索条件 不然页数搜索附带条件
+      this.searchData = {};
+
+      if (num != 0) {
+        this.uplistdata.auditStatus = num - 1;
+      } else {
+        this.uplistdata.auditStatus = "";
+      }
+      console.log(this.auditStatus);
+      this.columnList(this.uplistdata);
+    },
+    /**
+     * 查询审核状态0:待审核 1：已通过 2：已拒绝
+     *  */
+
+    discloseState(num) {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        discloseState(num)
+          .then(response => {
+            _this.$nextTick(function() {
+              // vm.$el.textContent === 'new message' // true
+              _this.discloseStatenum[num] = response.data.result;
+            });
+
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+    columnDelFeatch(row) {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        deleteColumn({ channelId: row.channelId })
+          .then(response => {
+            _this.columnList();
+            if (response.data.code === 0) {
+              _this.$message.success("操作成功！");
+            } else {
+              _this.$message.success(response.data.msg);
+            }
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+    handleSizeChange(val) {
+      this.pageSize = val;
+      let res = {
+        breakingName: "",
+        breakingTime: "",
+        auditStatus: null,
+        pageNo: this.pageNum,
+        pageSize: this.pageSize
+      };
+      this.columnList(res);
+    },
+    handleCurrentChange(val) {
+      this.pageNum = val;
+      let res = {
+        breakingName: "",
+        breakingTime: "",
+        auditStatus: null,
+        pageNo: this.pageNum,
+        pageSize: this.pageSize
+      };
+      this.columnList(res);
+    },
+    columnAddEdit(handelType, id) {
+      if (handelType == "addDisclose" || handelType == "columnAddEdit") {
+        this.$router.push({
+          path:
+            "/newCommand/manageClue/addDisclose?Disclose=" +
+            handelType +
+            "&discloseId=" +
+            id
+        });
+      } else if (
+        handelType == "discloseView" ||
+        handelType == "discloseAudit"
+      ) {
+        this.$router.push({
+          path:
+            "/newCommand/manageClue/discloseDetails?Disclose=" +
+            handelType +
+            "&discloseId=" +
+            id
+        });
+      }
     }
   }
-}
+};
 </script>
 
-<style lang="scss">
-.colunm-add-edit {
+<style lang='scss' scoped>
+
+.column-manages {
+.confirm {
+  height: 28px;
+  margin-left: 10px;
+}
+.operate {
+  width: 122px;
+  margin-left: 10px;
+}
+
+.choose {
+  padding-left: 16px;
+}
+.topdiv {
+  display: flex;
+  justify-content: space-between;
+  background: rgba(243, 243, 243, 1);
+  align-items: center;
+  height: 60px;
+  box-sizing: border-box;
+  padding: 0 18px;
+}
+.topdivLeft {
+  position: relative;
+  font-family: "微软雅黑";
+  font-weight: 400;
+  font-style: normal;
+  color: #999999;
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+.topdivLeft::before {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 5px;
+  height: 24px;
+  content: "";
+  background: #409eff;
+}
+.auditBtn {
+
+  display: flex;
+  align-items: center;
+  width: 520px;
+  justify-content: space-between;
+}
+.auditBtns {
+  cursor: pointer;
+  width: 113px;
+  height: 32px;
+  line-height: 32px;
+  background: inherit;
+  background-color: white;
+  font-family: "微软雅黑";
+  font-weight: 400;
+  font-style: normal;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(228, 228, 228, 1);
+  border-radius: 4px;
+  text-align: center;
+  font-size: 14px;
+
+}
+.activeClass0 {
+  background-color: #409eff;
+  color: white;
+  .auditBtnSpan {
+    color: white;
+  }
+}
+
+.auditBtnSpan {
+  color: rgb(240, 72, 68);
+}
+
+
   margin: 30px;
-  .el-form {
-    .el-select {
-      .el-input {
-        width: 185px !important;
+
+  .pagination {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .el-table {
+    .space-holder {
+      width: 2px;
+      height: 20px;
+      background-color: #67c23a;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+    .space-length {
+      width: 10px;
+      height: 20px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    tr {
+      td {
+        padding: 0px;
       }
     }
-    .el-input-group__prepend {
-      padding: 0 10px;
-    }
+  }
+  .colyellow {
+    color: #e6a23c;
+  }
+  .colgreen {
+    color: #67c23a;
+  }
+  .colred {
+    color: #f56c6c;
+  }
+  .el-card__header{
+    padding-bottom: 0px;
   }
 }
 </style>

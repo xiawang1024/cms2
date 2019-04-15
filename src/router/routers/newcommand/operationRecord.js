@@ -8,26 +8,28 @@ const path = `views/${newcommandPath}/operationRecord`
 
 console.log(path)
 // TODO:左侧菜单 操作记录
-const webSite = {
+const operationRecord = {
   path: `/${newcommandPath}/operationRecord`,
   component: Layout,
   meta: {
-    title: 'operationRecord',
-    icon: 'webSite',
+    title: 'operationsRecord',
+    icon: 'docSource',
   },
-  name: 'operationRecord',
+
   children: [{
     /**
      * 操作记录
      */
-    path: 'operationsRecord',
-    component: () => import(`@/${path}/operationsRecord`),
-    name: 'operationsRecord',
+    path: '',
+    // component: () => import(`@/${path}/operationsRecord`),
+    name: 'operationRecord',
     meta: {
       title: 'operationsRecord',
       icon: 'docSource',
-    }
+    },
+    redirect: '/newCommand/manageClue/discloseList', 
+    hidden:true
   }]
 }
 
-export default webSite
+export default operationRecord

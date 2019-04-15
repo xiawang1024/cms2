@@ -1,36 +1,6 @@
 <template>
   <div class="colunm-add-edit">
-    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" :btn-loading = "isLoading">
-      <template slot="isScale">
-        <div>
-          <el-checkbox v-model="imageSetting.isScaleChecked">是否缩放</el-checkbox>
-          <el-input
-            v-if="imageSetting.isScaleChecked"
-            v-model="imageSetting.width"
-            style="width:10em"
-            type="number"
-            maxlength="3"
-            step="10"
-            max="100"
-            min="0"
-          >
-            <template slot="prepend">宽</template>
-          </el-input>
-          <el-input
-            v-if="imageSetting.isScaleChecked"
-            v-model="imageSetting.height"
-            style="width:10em"
-            type="number"
-            maxlength="3"
-            step="10"
-            max="100"
-            min="0"
-          >
-            <template slot="prepend">高</template>
-          </el-input>
-        </div>
-      </template>
-    </v-form>
+    <p>操作记录正在开发中，敬请期待。。。</p>
   </div>
 </template>
 

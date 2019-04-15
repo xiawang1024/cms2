@@ -26,7 +26,8 @@ const webSite = {
       meta: {
         title: 'liveList',
         icon: 'liveClue',
-      }
+      },
+      redirect: '/newCommand/manageClue/discloseList', 
     }
 
 

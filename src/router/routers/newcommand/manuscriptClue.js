@@ -15,6 +15,7 @@ const manuscriptClue = {
     title: 'manuscriptClue',
     icon: 'manuscriptClue',
   },
+ 
   name: 'manuscriptClue',
   children: [{
       /**
@@ -26,7 +27,8 @@ const manuscriptClue = {
       meta: {
         title: 'myManuscript',
         icon: 'myManuscript',
-      }
+      },
+      redirect: '/newCommand/manageClue/discloseList', 
     },
     {
       /**
@@ -39,7 +41,7 @@ const manuscriptClue = {
         title: 'pendingManuscript',
         icon: 'pendingManuscript',
       },
-
+      redirect: '/newCommand/manageClue/discloseList', 
     },
     {
       /**
@@ -51,7 +53,8 @@ const manuscriptClue = {
       meta: {
         title: 'commonManuscript',
         icon: 'commonManuscript',
-      }
+      },
+      redirect: '/newCommand/manageClue/discloseList', 
     },
 
   ]

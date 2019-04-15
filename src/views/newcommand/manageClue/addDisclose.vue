@@ -6,7 +6,7 @@
       :form-settings="formSettings"
       @save="submitSave"
       :btn-loading="isLoading"
-      :size-chicun="medium" 
+     
     >
       <template slot="isScale">
         <div>
@@ -273,18 +273,7 @@ export default {
           });
       });
     },
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          return false;
-        }
-      });
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
+
     gotoListPage(context) {
       context.$store
         .dispatch("delView", this.$route)
@@ -339,7 +328,6 @@ export default {
 
     submitSave(formData1) {
       let _this = this;
-
       formData1.breakingTime = this.timeFormat(formData1.breakingTime);
       this.tijiaodata = formData1;
       this.isLoading = true;
@@ -369,6 +357,7 @@ export default {
         return new Promise((resolve, reject) => {
           let hnrToken = localStorage.getItem("hnDt_token");
           formData1.hnrToken = hnrToken;
+          formData1.newsOrigin = 0;
           createDisclose(formData1)
             .then(response => {
               _this.$message({
@@ -389,7 +378,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 // .addbaoliao {
 //   width: 700px;
 //   margin: 0 auto;
