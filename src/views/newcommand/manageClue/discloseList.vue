@@ -54,7 +54,7 @@
       :header-cell-style="{color:'#000'}"
       :data="tableData"
       style="width: 100%"
-      :row-style="rowstyle">
+      size="mini">
       >
       <el-table-column min-width="300" align="left" prop="breakingName" label="标题" show-overflow-tooltip/>
       <el-table-column min-width="100" align="left" prop="newsOrigin" label="线索来源">
@@ -253,9 +253,7 @@ export default {
   },
   created() {},
   methods: {
-    rowstyle(){
-return 'height:70px'
-    },
+
     reloadlist() {
       this.activeClass0 = 0;
       this.$router.replace({
