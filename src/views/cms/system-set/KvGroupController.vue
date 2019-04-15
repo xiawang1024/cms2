@@ -6,7 +6,7 @@
         size="mini"
         v-model="searchKv"
         class="search-input"
-        placeholder="请输入id"
+        placeholder="请输入查询id"
         prefix-icon="el-icon-search"
         clearable
         @keyup.enter.native="search(searchKv)"
@@ -17,10 +17,10 @@
     </div>
     <el-table :data="allGroup" >            
       <el-table-column prop="id" label="id"/>
-      <el-table-column prop="tenantId" label="tenantId"/>
-      <el-table-column prop="description" label="description"/>
-      <el-table-column prop="tag" label="tag"/>
-      <el-table-column prop="sort" label="sort"/>            
+      <el-table-column prop="tenantId" label="租户ID"/>
+      <el-table-column prop="description" label="描述"/>
+      <el-table-column prop="tag" label="标签"/>
+      <el-table-column prop="sort" label="排序"/>            
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="prime" @click="commentForm(2, scope.row)">编辑</el-button>
@@ -103,7 +103,7 @@ export default {
                     placeholder: '请输入描述'
                   },
                   {
-                    label: 'sort',
+                    label: '排序',
                     name: 'sort',
                     type: 'text',
                     required: true,
@@ -111,14 +111,14 @@ export default {
                     placeholder: '请输入数字'
                     
                   },{
-                    label: 'tag',
+                    label: '标签',
                     name: 'tag',
                     type: 'text',
                     required: true,
-                    placeholder: '请输入tag'
+                    placeholder: '请输入标签'
                   },
                   {
-                    label: 'tenantId',
+                    label: '租户ID',
                     name: 'tenantId',
                     type: 'text',
                     required: true,
@@ -169,7 +169,7 @@ export default {
           }else if(a==2){
             //修改
             console.log(b,'b')
-            this.handleType="修改"
+            this.handleType="编辑"
             this.formData={}
             
             this.formSettings[0].items[3].hidden=true

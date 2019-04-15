@@ -5,7 +5,7 @@
         size="mini"
         v-model="searchAttributeById"
         class="search-input"
-        placeholder="id查询"
+        placeholder="请输入查询id"
         prefix-icon="el-icon-search"
         clearable
         @keyup.enter.native="search"
@@ -26,12 +26,11 @@
         </template>
       </el-table-column>
       <el-table-column prop="id" label="id"/>
-      <el-table-column prop="groupId" label="groupId"/>
-      <el-table-column prop="description" label="description"/>
-      <el-table-column prop="name" label="name"/>
-      <el-table-column prop="valueType" label="valueType"/>
-      <el-table-column prop="value" label="value"/>
-      <el-table-column prop="createTime" label="createTime" :formatter="formatDate" />
+      <el-table-column prop="description" label="描述"/>
+      <el-table-column prop="name" label="名字"/>
+      <el-table-column prop="valueType" label="字段类型" :formatter="formatValueType" />
+      <el-table-column prop="value" label="值"/>
+      <el-table-column prop="createTime" label="创建时间" :formatter="formatDate" />
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="prime" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -119,11 +118,11 @@
                       placeholder: '请输入配置组属性描述'
                     },
                     {
-                      label: 'name',
+                      label: '名字',
                       name: 'name',
                       type: 'text',
                       required: true,
-                      placeholder: '请输入name'
+                      placeholder: '请输入字母或者数字'
                     },{
                       label: '选择类型',
                       name: 'valueType',
@@ -168,7 +167,7 @@
                       {
                       label: '日期',
                       name: 'valuedate',
-                      type: 'date',
+                      type: 'datetime',
                       placeholder: '请选择日期',
                       hidden: true
                       },
@@ -182,18 +181,18 @@
                     },
                     {
                      label: 'JSON代码',
-                      name: 'valuetext',
+                      name: 'valueJson',
                       type: 'textarea',
                       placeholder: '请输入代码',
                       hidden: true
                     },
                      {
-                    label: 'groupId',
+                    label: '租户ID',
                     name: 'groupIdS',
                     type: 'text',
                     valueType: 'string',
                     disabled: false,
-                    placeholder: '请输入groupId',
+                    placeholder: '请输入租户ID',
                      hidden: true
                   }, {
                     label: '租户描述',
@@ -204,12 +203,12 @@
                     placeholder: '请输入租户描述',
                      hidden: true
                   }, {
-                    label: 'name',
+                    label: '名字',
                     name: 'nameS',
                     type: 'text',
                     valueType: 'string',
                     disabled: false,
-                    placeholder: '请输入name',
+                    placeholder: '请输入字母或者数字',
                      hidden: true
                   }, {
                       label: '选择类型',
@@ -260,9 +259,28 @@
             date=date.replace('.000+0000','')
             return date
         },
+        formatValueType(row){
+                let date='';
+                if(row.valueType==0){
+                  date="文本"
+                    }
+                if(row.valueType==1){
+                  date="数值"
+                }
+                if(row.valueType==2){
+                  date="日期"
+                }
+                if(row.valueType==3){
+                  date="文件"
+                }
+                if(row.valueType==4){
+                  date="JSON字段"
+                }
+          return date
+         },
         selectChange(val) {
           var _this=this
-          console.log(val, 'val')
+          // console.log(val, 'val')
           for(let i=3;i<8;i++){
             _this.formSettings[0].items[i].hidden=true;
            
@@ -296,26 +314,46 @@
         submitSave(row){
            //获取表单数据
            console.log(row, 'row')
-            console.log(this.requestType,'requestType')
+            // console.log(this.requestType,'requestType')
           if(this.requestType=='add'){
             this.addGroupAttribute.description=row.description;
            this.addGroupAttribute.name=row.name;
            this.addGroupAttribute.valueType=row.valueType;
            if(this.selectRow==3){
              this.addGroupAttribute.value=row.valuetext
+             if(this.addGroupAttribute.value==''||this.addGroupAttribute.value==null){
+               return this.$message({
+                 type: 'error',
+                  message: '文本不能为空！'
+               })
+             }
            }
            if(this.selectRow==4){
-             this.addGroupAttribute.value=row.valuenumber
+             this.addGroupAttribute.value=row.valuenumber;
+              if(this.addGroupAttribute.value==''||this.addGroupAttribute.value==null){
+               return this.$message({
+                 type: 'error',
+                  message: '数字不能为空！'
+               })
+             }
            }
            if(this.selectRow==5){
-             this.addGroupAttribute.value=row.valuedate
+
+              this.addGroupAttribute.value=this.moment(row.valuedate).format('YYYY-MM-DD HH:mm:ss')
+              console.log(this.editGroupAttribute,'tianjiariqi')
+              if(this.addGroupAttribute.value==''||this.addGroupAttribute.value==null){
+               return this.$message({
+                 type: 'error',
+                  message: '日期不能为空！'
+               })
+             }
            }
            if(this.selectRow==6){
              this.addGroupAttribute.value=row.valuearr[0].url
            }
            if(this.selectRow==7){
   
-             this.addGroupAttribute.value=encodeURI(row.valuetext)
+             this.addGroupAttribute.value=encodeURI(row.valueJson)
              if(this.addGroupAttribute.value==''||this.addGroupAttribute.value==null){
                return this.$message({
                  type: 'error',
@@ -326,23 +364,51 @@
   
             this.addAttribute();
           }else if(this.requestType=='edit'){
-               this.editGroupAttribute.description=row.description;
-              this.editGroupAttribute.name=row.name;
-              this.editGroupAttribute.valueType=row.valueType;
+                      this.editGroupAttribute.description=row.description;
+                      this.editGroupAttribute.name=row.name;
+                      this.editGroupAttribute.valueType=row.valueType;
+                      
+
            if(this.selectRow==3){
-             this.editGroupAttribute.value=row.valuetext
+             this.editGroupAttribute.value=row.valuetext;
+             if(this.editGroupAttribute.value==''||this.editGroupAttribute.value==null){
+               return this.$message({
+                 type: 'error',
+                  message: '文本不能为空！'
+               })
+             }
            }
            if(this.selectRow==4){
-             this.editGroupAttribute.value=row.valuenumber
+             this.editGroupAttribute.value=row.valuenumber;
+             if(this.editGroupAttribute.value==''||this.editGroupAttribute.value==null){
+               return this.$message({
+                 type: 'error',
+                  message: '数字不能为空！'
+               })
+             }
            }
            if(this.selectRow==5){
-             this.editGroupAttribute.value=row.valuedate
-           }
+
+             this.editGroupAttribute.value=this.moment(row.valuedate).format('YYYY-MM-DD HH:mm:ss');
+             console.log(this.editGroupAttribute,'bianjiariqi')
+             if(this.editGroupAttribute.value==	'Invalid date'||this.editGroupAttribute.value==null){
+               return this.$message({
+                 type: 'error',
+                  message: '日期不能为空！'
+               })
+             }
+          }
            if(this.selectRow==6){
              this.editGroupAttribute.value=row.valuearr[0].url
            }
            if(this.selectRow==7){
-             this.editGroupAttribute.value=row.valuetext
+             this.editGroupAttribute.value=row.valueJson;
+              if(this.editGroupAttribute.value==''||this.editGroupAttribute.value==null){
+               return this.$message({
+                 type: 'error',
+                message: '请输入JSON字段'
+               })
+             }
            }
   
   
@@ -372,7 +438,7 @@
                 //调用根据id请求接口
                   getAllField(_this.pageNum,_this.pageSize,data)
                   .then((response)=>{
-                      console.log(response)
+                      // console.log(response)
                       _this.appDetail=response.data.result.content
                       _this.totalCount=response.data.result.totalElements
                   })
@@ -447,6 +513,7 @@
                          });
                          _this.getList()
                 }else{
+
                   if(response.data.result.message=="该数据不符合json格式"){
                     this.$message({
                           type: 'error',
@@ -455,7 +522,7 @@
                   }else{
                     this.$message({
                           type: 'error',
-                          message: '添加失败，请稍后再试!'
+                          message: response.data.result.message
                          });
                   }
   
@@ -512,13 +579,37 @@
             for(let i=3;i<12;i++){
             _this.formSettings[0].items[i].hidden=true;
             }
-            console.log(b)
+            console.log(b.valueType)
             this.formData={}
-             this.dialogVisible=true;
+             this.formData={
+                        description:b.description,
+                        name:b.name,
+                        valueType:b.valueType,
+                        // value:b.value
+                      }
+             this.selectChange(b.valueType)
+              if(b.valueType=='0'){
+                this.formData.valuetext=b.value
+              }
+              if(b.valueType=='1'){
+                this.formData.valuenumber=b.value
+              }
+              if(b.valueType=='2'){
+                this.formData.valuedate=b.value
+              }
+              if(b.valueType=='3'){
+                // this.formData.valuearr=b.value
+              }
+              if(b.valueType=='4'){
+                this.formData.valueJson=b.value
+              }
+
+
              this.requestType='edit';
              this.dialogTitle='编辑配置组属性'
-             this.editGroupAttribute=b
-            
+             this.editGroupAttribute.id=b.id
+            //  this.editGroupAttribute=b
+            this.dialogVisible=true;
           },
           editAttribute(){
             //更新属性组修改
@@ -532,6 +623,7 @@
                           type: 'success',
                           message: '更新成功!'
                          });
+                         _this.getList()
                 }
                  this.dialogVisible=false;
               })
