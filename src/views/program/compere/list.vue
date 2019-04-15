@@ -1,15 +1,14 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
-      <el-select v-model="listQuery.type" :placeholder="$t('table.type')" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in compereTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
-      </el-select>
-      <el-input :placeholder="$t('table.content')" v-model="listQuery.content" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
+  <div class="compere-manage">
+    <div class="el-card__header">
+      <v-search :search-settings="searchSettings" @search="searchItem"/>
+    </div>
+    <div class="tool-bar">
       <router-link :to="'/program/compere/create'">
-        <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">{{ $t('table.add') }}</el-button>
+        <el-button v-waves type="primary" size="small">{{ $t('table.add') }}</el-button>
       </router-link>
     </div>
+    
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
@@ -41,7 +40,18 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <el-pagination
+      :current-page="searchData.page"
+      :page-sizes="[20,50,100]"
+      :page-size="searchData.limit"
+      :total="totalCount"
+      background
+      class="pagination"
+      layout="total, sizes, prev, pager, next, jumper"
+      style="float: right"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
 
   </div>
 </template>
@@ -51,11 +61,6 @@ import { fetchList, removeCompere } from '@/api/program/compere'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
-const compereTypeOptions = [
-  { key: 'ID', display_name: 'ID' },
-  { key: 'name', display_name: '主播名称' }
-]
-
 export default {
   name: 'CompereList',
   components: { Pagination },
@@ -63,16 +68,39 @@ export default {
   data() {
     return {
       list: null,
-      total: 0,
+      totalCount: 0,
       listLoading: false,
-      listQuery: {
+      searchSettings: [{
+        label: '类型',
+        name: 'type',
+        placeholder: '类型',
+        visible: true,
+        options: [],
+        type: 'select',
+        options: [
+          {
+            label: 'ID',
+            value: 'ID'         
+          },
+          {
+            label: '主播名称',
+            value: 'name'         
+          }
+        ]
+      }, {
+        label: '内容',
+        name: 'content',
+        placeholder: '内容',
+        visible: true,
+        type: 'text'
+      }],
+      searchData: {
         page: 1,
         limit: 20,
         type: undefined,
         content: undefined,
         userId: this.$store.getters.tenantId
-      },
-      compereTypeOptions
+      }
     }
   },
   watch:{
@@ -86,7 +114,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      fetchList(this.searchData).then(response => {
         this.list = response.data.result.content
         this.total = response.data.result.totalElements
         this.listLoading = false
@@ -97,7 +125,6 @@ export default {
       this.$confirm('确认删除该记录吗?', '提示', {
         type: 'warning'
       }).then(() => {
-        console.log(row.compereId)
         this.listLoading = true
         removeCompere(row.compereId).then((res) => {
           this.listLoading = false
@@ -112,21 +139,39 @@ export default {
 
       });
     },
+    searchItem(searchData) {
+      this.searchData.type = searchData.type
+      this.searchData.content = searchData.content
+      this.getList()
+    },
+
     handleFilter() {
-      this.listQuery.page = 1
+      this.searchData.page = 1
       this.getList()
     },
     handleSizeChange(val) {
-      this.listQuery.limit = val
-      this.getList()
+      this.searchData.limit = val
+      this.getList()``
     },
     handleCurrentChange(val) {
-      this.listQuery.page = val
+      this.searchData.page = val
       this.getList()
     }
   }
 }
 </script>
+<style lang='scss'>
+.compere-manage {
+  margin:30px;
+  .tool-bar {
+    margin-top:22px;
+  }
+  .pagination {
+    margin-top:20px;
+    margin-bottom:20px;
+  }
+}
+</style>
 
 <style scoped>
 .edit-input {

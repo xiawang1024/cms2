@@ -1,13 +1,16 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
-      <el-select v-model="listQuery.type" :placeholder="$t('table.type')" clearable class="filter-item" style="width: 130px">
+  <div class="channel-manage">
+    <div class="el-card__header">
+      <!-- <el-select v-model="listQuery.type" :placeholder="$t('table.type')" clearable class="filter-item" style="width: 130px">
         <el-option v-for="item in channelTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
       </el-select>
-      <el-input :placeholder="$t('table.content')" v-model="listQuery.content" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
+      <el-input :placeholder="$t('table.content')" v-model="listQuery.content" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/> -->
+      <v-search :search-settings="searchSettings" @search="searchItem"/>
+    </div>
+      <!-- <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button> -->
+    <div class="tool-bar">
       <router-link :to="'/program/channel/create'">
-        <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit">{{ $t('table.add') }}</el-button>
+        <el-button v-waves type="primary" size="small">{{ $t('table.add') }}</el-button>
       </router-link>
     </div>
 
@@ -62,8 +65,20 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      :current-page="searchData.page"
+      :page-sizes="[20,50,100]"
+      :page-size="searchData.limit"
+      :total="totalCount"
+      background
+      class="pagination"
+      layout="total, sizes, prev, pager, next, jumper"
+      style="float: right"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <!-- <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" /> -->
 
   </div>
 </template>
@@ -73,10 +88,10 @@ import { fetchList, removeChannel, updateVod, updateChannel } from '@/api/progra
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
-const channelTypeOptions = [
-  { key: 'ID', display_name: 'ID' },
-  { key: 'name', display_name: '频率名称' }
-]
+// const channelTypeOptions = [
+//   { key: 'ID', display_name: 'ID' },
+//   { key: 'name', display_name: '频率名称' }
+// ]
 
 export default {
   name: 'ChannelList',
@@ -124,16 +139,46 @@ export default {
   data() {
     return {
       list: null,
-      total: 0,
+      totalCount: 0,
       listLoading: false,
-      listQuery: {
+      searchSettings: [{
+        label: '类型',
+        name: 'type',
+        placeholder: '类型',
+        visible: true,
+        options: [],
+        type: 'select',
+        options: [
+          {
+            label: 'ID',
+            value: 'ID'         
+          },
+          {
+            label: '频率名称',
+            value: 'name'         
+          }
+        ]
+      }, {
+        label: '内容',
+        name: 'content',
+        placeholder: '内容',
+        visible: true,
+        type: 'text'
+      }],
+      // listQuery: {
+      //   page: 1,
+      //   limit: 20,
+      //   type: undefined,
+      //   content: undefined,
+      //   userId: this.$store.getters.tenantId
+      // },
+      searchData: {
         page: 1,
         limit: 20,
         type: undefined,
         content: undefined,
-        userId: this.$store.getters.tenantId     //登陆用户先默认1
-      },
-      channelTypeOptions
+        userId: this.$store.getters.tenantId
+      }
     }
   },
   watch:{
@@ -147,9 +192,9 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      fetchList(this.searchData).then(response => {
         this.list = response.data.result.content
-        this.total = response.data.result.totalElements
+        this.totalCount = response.data.result.totalElements
         this.listLoading = false
       })
     },
@@ -166,6 +211,11 @@ export default {
         }).catch(() => {
 
         });
+    },
+    searchItem(searchData) {
+      this.searchData.type = searchData.type
+      this.searchData.content = searchData.content
+      this.getList()
     },
     // 删除频率信息
     remove(row) {
@@ -207,20 +257,32 @@ export default {
     },
 
     handleFilter() {
-      this.listQuery.page = 1
+      this.searchData.page = 1
       this.getList()
     },
     handleSizeChange(val) {
-      this.listQuery.limit = val
-      this.getList()
+      this.searchData.limit = val
+      this.getList()``
     },
     handleCurrentChange(val) {
-      this.listQuery.page = val
+      this.searchData.page = val
       this.getList()
     }
   }
 }
 </script>
+<style lang='scss'>
+.channel-manage {
+  margin:30px;
+  .tool-bar {
+    margin-top:22px;
+  }
+  .pagination {
+    margin-top:20px;
+    margin-bottom:20px;
+  }
+}
+</style>
 
 <style scoped>
 .edit-input {
