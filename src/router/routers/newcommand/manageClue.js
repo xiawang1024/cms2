@@ -37,6 +37,7 @@ const manageClue = {
     meta: {
       title: 'addDisclose',
       icon: 'addDisclose',
+    role: 'cms'
      
     },
     hidden: true
@@ -50,6 +51,7 @@ const manageClue = {
     meta: {
       title: 'discloseDetails',
       icon: 'discloseDetails',
+    role: 'cms'
      
     },
     hidden: true

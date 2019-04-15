@@ -15,6 +15,7 @@ const webSite = {
   meta: {
     title: 'filesClue',
     icon: 'filesClue',
+    role: 'cms'
   },
 
   children: [{
@@ -27,6 +28,7 @@ const webSite = {
     meta: {
       title: 'filesClue',
       icon: 'filesClue',
+      role: 'cms'
     },
     redirect: '/newCommand/manageClue/discloseList', 
     hidden: true

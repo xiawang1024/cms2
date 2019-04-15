@@ -14,6 +14,7 @@ const manuscriptClue = {
   meta: {
     title: 'manuscriptClue',
     icon: 'manuscriptClue',
+    role: 'cms'
   },
  
   name: 'manuscriptClue',
@@ -27,6 +28,9 @@ const manuscriptClue = {
       meta: {
         title: 'myManuscript',
         icon: 'myManuscript',
+    role: 'cms'
+
+        
       },
       redirect: '/newCommand/manageClue/discloseList', 
     },
@@ -40,6 +44,8 @@ const manuscriptClue = {
       meta: {
         title: 'pendingManuscript',
         icon: 'pendingManuscript',
+    role: 'cms'
+
       },
       redirect: '/newCommand/manageClue/discloseList', 
     },
@@ -53,6 +59,8 @@ const manuscriptClue = {
       meta: {
         title: 'commonManuscript',
         icon: 'commonManuscript',
+    role: 'cms'
+
       },
       redirect: '/newCommand/manageClue/discloseList', 
     },

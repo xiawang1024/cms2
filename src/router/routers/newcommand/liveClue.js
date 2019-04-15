@@ -14,6 +14,7 @@ const webSite = {
   meta: {
     title: 'liveClue',
     icon: 'liveClue',
+    role: 'cms'
   },
   name: 'liveClue',
   children: [{
@@ -26,6 +27,7 @@ const webSite = {
       meta: {
         title: 'liveList',
         icon: 'liveClue',
+        role: 'cms'
       },
       redirect: '/newCommand/manageClue/discloseList', 
     }

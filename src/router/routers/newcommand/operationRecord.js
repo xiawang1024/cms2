@@ -14,6 +14,7 @@ const operationRecord = {
   meta: {
     title: 'operationsRecord',
     icon: 'docSource',
+    role: 'cms'
   },
 
   children: [{
