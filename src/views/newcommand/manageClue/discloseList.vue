@@ -48,8 +48,8 @@
         type="primary"
         v-if="checkAuth('cms:channel:add')"
         @click="columnAddEdit('addDisclose','')"
-        size="small"
-      >添加</el-button>
+     
+      >添加爆料</el-button>
     </div>
 
     <el-table
@@ -57,10 +57,12 @@
       :header-cell-style="{color:'#000'}"
       :data="tableData"
       style="width: 100%"
-    >
-      <el-table-column align="center" type="selection"/>
-      <el-table-column align="center" prop="breakingName" label="标题" show-overflow-tooltip/>
-      <el-table-column align="center" prop="newsOrigin" label="线索来源">
+      fit
+      border
+      :row-style="rowstyle">
+      >
+      <el-table-column min-width="250" align="center" prop="breakingName" label="标题" show-overflow-tooltip/>
+      <el-table-column width="120" align="center" prop="newsOrigin" label="线索来源">
         <template slot-scope="scope">
           <span v-if="scope.row.newsOrigin == 0">电话</span>
           <span v-if="scope.row.newsOrigin == 1">数据接口</span>
@@ -71,31 +73,44 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" prop="breakingType" label="爆料分类"/>
+      <el-table-column width="150" align="center" prop="breakingType" label="爆料分类"/>
 
-      <el-table-column align="center" prop="breakingPeople" label="爆料人"/>
-      <el-table-column align="center" prop="auditStatus" label="处理状态">
+      <el-table-column width="120" align="center" prop="breakingPeople" label="爆料人"/>
+      <el-table-column width="120" align="center" prop="auditStatus" label="处理状态">
         <template slot-scope="scope">
-          <span class="colred" v-if="scope.row.auditStatus == 0">待处理</span>
+          <span class="colyellow" v-if="scope.row.auditStatus == 0">待处理</span>
           <span class="colgreen" v-if="scope.row.auditStatus == 1">已通过</span>
-          <span class="colblue" v-if="scope.row.auditStatus == 2">已拒绝</span>
+          <span class="colred" v-if="scope.row.auditStatus == 2">已拒绝</span>
         </template>
       </el-table-column>·
-      <el-table-column align="center" prop="breakingTime" label="爆料时间"/>
+      <el-table-column width="220" align="center" prop="breakingTime" label="爆料时间"/>
 
-      <el-table-column align="center" label="操作" width="150">
+      <el-table-column width="270" align="center" label="操作">
         <template v-if="checkAuth('cms:channel:operation')" slot-scope="scope">
-          <el-button
-            v-if="scope.row.auditStatus==0"
-            @click="columnAddEdit('discloseAudit',scope.row.id)"
-            type="text"
-          >审核</el-button>
-          <el-button
-            type="text"
-            v-if="checkAuth('cms:channel:delete')"
-            @click="columnAddEdit('columnAddEdit',scope.row.id)"
-          >编辑</el-button>
-          <el-button type="text" @click="columnAddEdit('discloseView',scope.row.id)">查看详情</el-button>
+          <div style="text-align:right">
+
+          
+            <el-button
+              v-if="scope.row.auditStatus==0"
+              @click="columnAddEdit('discloseAudit',scope.row.id)"
+              type="danger"
+              icon="el-icon-setting"
+              size="mini"
+            >审核</el-button>
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              size="mini"
+              v-if="checkAuth('cms:channel:delete')"
+              @click="columnAddEdit('columnAddEdit',scope.row.id)"
+            >编辑</el-button>
+            <el-button
+              type="success"
+              icon="el-icon-view"
+              size="mini"
+              @click="columnAddEdit('discloseView',scope.row.id)"
+            >查看</el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -229,7 +244,7 @@ export default {
       ],
       searchData: {},
       discloseClassifyNum: [], //爆料分类接口获取
-      discloseStatenum: [999,999,999], //爆料状态数值
+      discloseStatenum: [999, 999, 999], //爆料状态数值
       uplistdata: {
         breakingName: "",
         breakingTime: "",
@@ -254,49 +269,16 @@ export default {
   },
   created() {},
   methods: {
+    rowstyle(){
+return 'height:70px'
+    },
     reloadlist() {
       this.activeClass0 = 0;
       this.$router.replace({
         path: "/newCommand/manageClue/discloseList?time=" + new Date().getTime()
       });
     },
-    allchooses() {
-      var _this = this;
-      if (this.allchoose) {
-        this.tableData.forEach(row => {
-          _this.$refs.multipleTable.toggleRowSelection(row, true);
-        });
-      } else {
-        this.tableData.forEach(row => {
-          _this.$refs.multipleTable.toggleRowSelection(row, false);
-        });
-      }
-    },
-    auditBtnsClik(num, e) {
-      //  e.target 点击的元素  e.currentTarget是绑定事件元素
-      this.activeClass0 = num;
-      // 初始化搜索信息
-      // 点击顶部按钮清空搜索条件 不然页数搜索附带条件
-      this.searchData = {};
 
-      if (num != 0) {
-        this.uplistdata.auditStatus = num - 1;
-      } else {
-        this.uplistdata.auditStatus = "";
-      }
-      console.log(this.auditStatus);
-      this.columnList(this.uplistdata);
-    },
-
-    channelNameChange(val) {
-      let arr = [];
-      if (val) {
-        arr = val.split(",").concat([""]);
-      } else {
-        arr = [];
-      }
-      return arr;
-    },
     checkAuth(authKey) {
       if (this.$store.getters.authorities.indexOf(authKey) === -1) {
         return false;
@@ -306,8 +288,6 @@ export default {
     },
     // 搜索方法传入公共组件 searchData
     searchItem(searchData) {
-      console.log("搜索条件");
-      console.log(searchData);
       if ("auditStatus" in searchData) {
         this.activeClass0 = searchData.auditStatus + 1;
       } else {
@@ -315,26 +295,28 @@ export default {
       }
       this.searchData = searchData;
       if ("breakingTime" in this.searchData) {
-        console.log(this.searchData.breakingTime);
-        this.searchData.breakingTime =this.timeFormat(this.searchData.breakingTime)
+        this.searchData.breakingTime = this.timeFormat(
+          this.searchData.breakingTime
+        );
       }
       this.pageNum = 1;
       let res = {};
       let uplistdata02 = Object.assign({}, this.uplistdata);
       let searchData02 = Object.assign({}, this.searchData);
       res = Object.assign(uplistdata02, searchData02);
-      console.log(this.uplistdata);
       this.columnList(res);
     },
-       add0(m){return m<10?'0'+m:m },
- timeFormat(timestamp){
-  //timestamp是整数，否则要parseInt转换,不会出现少个0的情况
-    var time = new Date(timestamp);
-    var year = time.getFullYear();
-    var month = time.getMonth()+1;
-    var date = time.getDate();
-    return year+'-'+this.add0(month)+'-'+this.add0(date);
-},
+    add0(m) {
+      return m < 10 ? "0" + m : m;
+    },
+    timeFormat(timestamp) {
+      //timestamp是整数，否则要parseInt转换,不会出现少个0的情况
+      var time = new Date(timestamp);
+      var year = time.getFullYear();
+      var month = time.getMonth() + 1;
+      var date = time.getDate();
+      return year + "-" + this.add0(month) + "-" + this.add0(date);
+    },
     // table列表数据
     columnList(res) {
       var _this = this;
@@ -347,7 +329,6 @@ export default {
                 _this.discloseClassify[element.breakingType - 1].typeName;
             });
             _this.tableData = content;
-            console.log(_this.tableData);
             _this.totalCount = response.data.result.total;
 
             resolve();
@@ -377,6 +358,21 @@ export default {
           });
       });
     },
+    auditBtnsClik(num, e) {
+      //  e.target 点击的元素  e.currentTarget是绑定事件元素
+      this.activeClass0 = num;
+      // 初始化搜索信息
+      // 点击顶部按钮清空搜索条件 不然页数搜索附带条件
+      this.searchData = {};
+
+      if (num != 0) {
+        this.uplistdata.auditStatus = num - 1;
+      } else {
+        this.uplistdata.auditStatus = "";
+      }
+      console.log(this.auditStatus);
+      this.columnList(this.uplistdata);
+    },
     /**
      * 查询审核状态0:待审核 1：已通过 2：已拒绝
      *  */
@@ -404,7 +400,6 @@ export default {
         deleteColumn({ channelId: row.channelId })
           .then(response => {
             _this.columnList();
-            console.log(321);
             if (response.data.code === 0) {
               _this.$message.success("操作成功！");
             } else {
@@ -460,50 +455,6 @@ export default {
             id
         });
       }
-    },
-    columnTemplate(row) {
-      this.$router.push({
-        path: "/cms/website/columnTemplate",
-        query: {
-          channelId: row.channelId,
-          parentChannelId: row.parentChannelId
-        }
-      });
-    },
-    extendsWord(row) {
-      this.$router.push({
-        path: "/cms/website/extendsWord",
-        query: {
-          channelId: row.channelId
-        }
-      });
-    },
-    tagSetting(row) {
-      this.$router.push({
-        path: "/cms/website/tagSetting",
-        query: {
-          channelId: row.channelId
-        }
-      });
-    },
-    waterSetting(row) {
-      this.$router.push({
-        path: "/cms/website/waterSetting",
-        query: {
-          channelId: row.channelId
-        }
-      });
-    },
-    columnDel(row) {
-      this.$confirm("此操作将永久删除该栏目, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.columnDelFeatch(row);
-        })
-        .catch(() => {});
     }
   }
 };
@@ -569,9 +520,10 @@ export default {
   border-width: 1px;
   border-style: solid;
   border-color: rgba(228, 228, 228, 1);
-  border-radius: 0px;
+  border-radius: 4px;
   text-align: center;
   font-size: 14px;
+
 }
 .activeClass0 {
   background-color: #409eff;
@@ -588,6 +540,7 @@ export default {
   margin: 30px;
   .tool-bar {
     margin-top: 22px;
+     margin-bottom: 22px;
   }
   .pagination {
     margin-top: 20px;
@@ -614,8 +567,8 @@ export default {
       }
     }
   }
-  .colblue {
-    color: #409eff;
+  .colyellow {
+    color: #e6a23c;
   }
   .colgreen {
     color: #67c23a;

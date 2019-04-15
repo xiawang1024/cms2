@@ -6,6 +6,7 @@
       :form-settings="formSettings"
       @save="submitSave"
       :btn-loading="isLoading"
+      :size-chicun="medium" 
     >
       <template slot="isScale">
         <div>
@@ -204,28 +205,25 @@ export default {
     };
   },
   mounted() {
-    
     this.discloseClassify();
 
-    if(this.$route.query.Disclose == "addDisclose"){
-      this.isEdit=false
-    }else{
-        this.isEdit=true
+    if (this.$route.query.Disclose == "addDisclose") {
+      this.isEdit = false;
+    } else {
+      this.isEdit = true;
     }
 
     if (this.isEdit) {
-      this.discloseId =this.$route.query.discloseId;
+      this.discloseId = this.$route.query.discloseId;
       this.discloseInfor(this.discloseId);
     }
   },
   methods: {
-
     // 添加爆料
     CreateDisclose(res) {
       return new Promise((resolve, reject) => {
         createDisclose(res)
           .then(response => {
-            console.log(response);
             resolve();
           })
           .catch(error => {
@@ -238,7 +236,6 @@ export default {
       return new Promise((resolve, reject) => {
         editDisclose(res)
           .then(response => {
-            console.log(response);
             resolve();
           })
           .catch(error => {
@@ -252,15 +249,14 @@ export default {
       var _this = this;
       return new Promise((resolve, reject) => {
         discloseClassify().then(response => {
-          
-          console.log(response.data.result)
-          console.log(_this.formSettings[0].items[1].options)
-        _this.formSettings[0].items[1].options=response.data.result.map((ele) => {
-                return {
-                  label: ele.typeName,
-                  value: ele.numberNo
-                }
-              })
+          _this.formSettings[0].items[1].options = response.data.result.map(
+            ele => {
+              return {
+                label: ele.typeName,
+                value: ele.numberNo
+              };
+            }
+          );
         });
       });
     },
@@ -269,7 +265,6 @@ export default {
       return new Promise((resolve, reject) => {
         discloseInfor(res)
           .then(response => {
-            console.log(response);
             this.formData = response.data.result;
             resolve();
           })
@@ -283,7 +278,6 @@ export default {
         if (valid) {
           alert("submit!");
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
@@ -296,55 +290,74 @@ export default {
         .dispatch("delView", this.$route)
         .then(({ visitedViews }) => {
           if (context.isActive(context.$route)) {
-            console.log(visitedViews);
             const latestView = visitedViews.slice(-1)[0];
             if (latestView) {
-              context.$router.push(latestView);
+              if (latestView.path == "/newCommand/manageClue/discloseList") {
+                context.$router.push(latestView);
+              } else {
+                this.$router.replace({
+                  path:
+                    "/newCommand/manageClue/discloseList?time=" +
+                    new Date().getTime()
+                });
+              }
             } else {
               context.$router.push("/");
             }
           }
         });
     },
-   add0(m){return m<10?'0'+m:m },
- timeFormat(timestamp){
-  //timestamp是整数，否则要parseInt转换,不会出现少个0的情况
-    var time = new Date(timestamp);
-    var year = time.getFullYear();
-    var month = time.getMonth()+1;
-    var date = time.getDate();
-    var hours = time.getHours();
-    var minutes = time.getMinutes();
-    var seconds = time.getSeconds();
-    return year+'-'+this.add0(month)+'-'+this.add0(date)+' '+this.add0(hours)+':'+this.add0(minutes)+':'+this.add0(seconds);
-},
     isActive(route) {
       return route.path === this.$route.path;
     },
+    add0(m) {
+      return m < 10 ? "0" + m : m;
+    },
+    timeFormat(timestamp) {
+      //timestamp是整数，否则要parseInt转换,不会出现少个0的情况
+      var time = new Date(timestamp);
+      var year = time.getFullYear();
+      var month = time.getMonth() + 1;
+      var date = time.getDate();
+      var hours = time.getHours();
+      var minutes = time.getMinutes();
+      var seconds = time.getSeconds();
+      return (
+        year +
+        "-" +
+        this.add0(month) +
+        "-" +
+        this.add0(date) +
+        " " +
+        this.add0(hours) +
+        ":" +
+        this.add0(minutes) +
+        ":" +
+        this.add0(seconds)
+      );
+    },
+
     submitSave(formData1) {
       let _this = this;
-      console.log("form提交的数据");
-      console.log(formData1);
-      console.log(formData1.breakingTime)
-      formData1.breakingTime=this.timeFormat(formData1.breakingTime)
+
+      formData1.breakingTime = this.timeFormat(formData1.breakingTime);
       this.tijiaodata = formData1;
       this.isLoading = true;
 
       if (this.isEdit) {
         return new Promise((resolve, reject) => {
-          let newformData1=formData1
-          newformData1.id=_this.discloseId
-          newformData1.newsOrigin=0
-                    let hnrToken=localStorage.getItem("hnDt_token")
-            newformData1.hnrToken=hnrToken
-           editDisclose(newformData1)
+          let newformData1 = formData1;
+          newformData1.id = _this.discloseId;
+          newformData1.newsOrigin = 0;
+          let hnrToken = localStorage.getItem("hnDt_token");
+          newformData1.hnrToken = hnrToken;
+          editDisclose(newformData1)
             .then(response => {
               _this.$message({
                 showClose: true,
                 message: "恭喜你，编辑操作成功!",
                 type: "success"
               });
-              console.log(response);
               _this.gotoListPage(_this);
               resolve();
             })
@@ -353,10 +366,9 @@ export default {
             });
         });
       } else {
-     
         return new Promise((resolve, reject) => {
-           let hnrToken=localStorage.getItem("hnDt_token")
-            formData1.hnrToken=hnrToken
+          let hnrToken = localStorage.getItem("hnDt_token");
+          formData1.hnrToken = hnrToken;
           createDisclose(formData1)
             .then(response => {
               _this.$message({
@@ -365,7 +377,6 @@ export default {
                 type: "success"
               });
               _this.gotoListPage(_this);
-              console.log(response);
               resolve();
             })
             .catch(error => {
