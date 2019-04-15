@@ -2,7 +2,6 @@
 let BASE_URL = ' http://gw.test.dianzhenkeji.com' // 测试地址
 let UP_URL = 'http://fupload.test.dianzhenkeji.com:55030/basefile/upload?fileRefId='
 let DOWN_URL = 'http://cmsres.test.dianzhenkeji.com'
-// console.log(process.env, 'process')
 if (process.env.NODE_ENV) {
   if (process.env.NODE_ENV == 'development') {
     BASE_URL = ' http://gw.test.dianzhenkeji.com' // 测试地址
