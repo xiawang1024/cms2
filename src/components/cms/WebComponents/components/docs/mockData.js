@@ -38,10 +38,10 @@ export const currentColumn = [
     id: '3',
     label: '修改栏目'
   },
-  // {
-  //   id: '2',
-  //   label: '建立子栏目'
-  // },
+  {
+    id: '2',
+    label: '建立子栏目'
+  },
   // {
   //   id: '4',
   //   label: '栏目图片'

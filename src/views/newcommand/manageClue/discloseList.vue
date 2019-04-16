@@ -6,7 +6,6 @@
         <el-button @click="reloadlist" icon="el-icon-refresh" type="primary">刷新</el-button>
       </div>
     </div> -->
-
     <div class="auditBtn">
       <div
         @click="auditBtnsClik(0,$event)"
@@ -39,7 +38,6 @@
         <span class="auditBtnSpan">{{ discloseStatenum[2] }}</span> )
       </div>
     </div>
-
     <div class="el-card__header">
       <v-search :search-settings="searchSettings" @search="searchItem"/>
     </div>
@@ -51,13 +49,12 @@
         size="small"
       >添加爆料</el-button>
     </div>
-
     <el-table
       ref="multipleTable"
       :header-cell-style="{color:'#000'}"
       :data="tableData"
       style="width: 100%"
-      :row-style="rowstyle">
+      size="mini">
       >
       <el-table-column min-width="300" align="left" prop="breakingName" label="标题" show-overflow-tooltip/>
       <el-table-column min-width="100" align="left" prop="newsOrigin" label="线索来源">
@@ -70,9 +67,7 @@
           <span v-if="scope.row.newsOrigin == 5">其他</span>
         </template>
       </el-table-column>
-
       <el-table-column min-width="100" align="left" prop="breakingType" label="爆料分类"/>
-
       <el-table-column min-width="100" align="left" prop="breakingPeople" label="爆料人"/>
       <el-table-column min-width="100" align="left" prop="auditStatus" label="处理状态">
         <template slot-scope="scope">
@@ -82,19 +77,16 @@
         </template>
       </el-table-column>·
       <el-table-column min-width="220" align="left" prop="breakingTime" label="爆料时间"/>
-
       <el-table-column min-width="220" align="left" label="操作">
         <template v-if="checkAuth('cms:channel:operation')" slot-scope="scope">
           <div style="text-align:left">
             <el-button
               type="success"
-             
               size="mini"
               @click="columnAddEdit('discloseView',scope.row.id)"
             >查看</el-button>
             <el-button
               type="primary"
-             
               size="mini"
               v-if="checkAuth('cms:channel:delete')"
               @click="columnAddEdit('columnAddEdit',scope.row.id)"
@@ -103,16 +95,12 @@
               v-if="scope.row.auditStatus==0"
               @click="columnAddEdit('discloseAudit',scope.row.id)"
               type="danger"
-             
               size="mini"
             >审核</el-button>
-
-
           </div>
         </template>
       </el-table-column>
     </el-table>
-
     <el-pagination
       :current-page="pageNum"
       :page-sizes="[15]"
@@ -127,7 +115,6 @@
     />
   </div>
 </template>
-
 <script>
 // import { fetchDictByDictName } from '@/api/cms/dict'
 import {
@@ -179,7 +166,6 @@ export default {
           options: [],
           type: "date"
         },
-
         {
           label: "状态",
           name: "auditStatus",
@@ -209,7 +195,6 @@ export default {
           options: [],
           type: "date"
         },
-
         {
           label: "操作人员",
           name: "chulistate",
@@ -268,16 +253,13 @@ export default {
   },
   created() {},
   methods: {
-    rowstyle(){
-return 'height:70px'
-    },
+
     reloadlist() {
       this.activeClass0 = 0;
       this.$router.replace({
         path: "/newCommand/manageClue/discloseList?time=" + new Date().getTime()
       });
     },
-
     checkAuth(authKey) {
       if (this.$store.getters.authorities.indexOf(authKey) === -1) {
         return false;
@@ -329,7 +311,6 @@ return 'height:70px'
             });
             _this.tableData = content;
             _this.totalCount = response.data.result.total;
-
             resolve();
           })
           .catch(error => {
@@ -363,7 +344,6 @@ return 'height:70px'
       // 初始化搜索信息
       // 点击顶部按钮清空搜索条件 不然页数搜索附带条件
       this.searchData = {};
-
       if (num != 0) {
         this.uplistdata.auditStatus = num - 1;
       } else {
@@ -375,17 +355,14 @@ return 'height:70px'
     /**
      * 查询审核状态0:待审核 1：已通过 2：已拒绝
      *  */
-
     discloseState(num) {
       var _this = this;
       return new Promise((resolve, reject) => {
         discloseState(num)
           .then(response => {
             _this.$nextTick(function() {
-              // vm.$el.textContent === 'new message' // true
-              _this.discloseStatenum[num] = response.data.result;
+              this.$set(_this.discloseStatenum,num,response.data.result)
             });
-
             resolve();
           })
           .catch(error => {
@@ -458,9 +435,7 @@ return 'height:70px'
   }
 };
 </script>
-
 <style lang='scss' scoped>
-
 .column-manages {
 .confirm {
   height: 28px;
@@ -470,7 +445,6 @@ return 'height:70px'
   width: 122px;
   margin-left: 10px;
 }
-
 .choose {
   padding-left: 16px;
 }
@@ -502,7 +476,6 @@ return 'height:70px'
   background: #409eff;
 }
 .auditBtn {
-
   display: flex;
   align-items: center;
   width: 520px;
@@ -524,7 +497,6 @@ return 'height:70px'
   border-radius: 4px;
   text-align: center;
   font-size: 14px;
-
 }
 .activeClass0 {
   background-color: #409eff;
@@ -533,14 +505,10 @@ return 'height:70px'
     color: white;
   }
 }
-
 .auditBtnSpan {
   color: rgb(240, 72, 68);
 }
-
-
   margin: 30px;
-
   .pagination {
     margin-top: 20px;
     margin-bottom: 20px;
