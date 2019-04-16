@@ -5,7 +5,7 @@
     </div>
     <div class="tool-bar">
       <router-link :to="'/program/program/create'">
-        <el-button v-waves type="primary" size="samll">{{ $t('table.add') }}</el-button>
+        <el-button v-waves type="primary" size="small">{{ $t('table.add') }}</el-button>
       </router-link>
     </div>
     
@@ -169,6 +169,25 @@ export default {
   .pagination {
     margin-top:20px;
     margin-bottom:20px;
+  }
+  .el-table {
+    // td, th{
+    //   padding:0;
+    // }
+    .space-holder {
+      width: 2px;
+      height: 20px;
+      background-color: #67C23A;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+    .space-length{
+      width: 10px;
+      height: 20px;
+      display: inline-block;
+      vertical-align: middle;
+    }
   }
 }
 </style>
