@@ -1,8 +1,8 @@
 <template>
   <div class="check-setting">
-    <div class="el-card__header">
+    <!-- <div class="el-card__header">
       <v-search :search-settings="searchSettings" @search="searchItem"/>
-    </div>
+    </div> -->
     <div class="tool-bar">
       <el-button type="primary" size="small" @click="addCheck">添加</el-button>
     </div>
@@ -45,19 +45,6 @@
         <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave">
           <template slot="chooseColumn">
             <div class="choosed-list">
-              <!-- <div class="define-select">
-                <el-tag class="tag-list" size="small" closable v-for="(ele, index) in tagList" :key="index" @close="closeTag(index, ele)">{{ ele.channelName }}</el-tag>
-                <span class="define-right" @click="isArrowExtend">
-                  <span>
-                    <i class="el-icon-arrow-down" :class="{ 'el-up': arrowExtend}"/>
-                  </span>
-                </span> 
-                <transition name="fade">
-                  <div class="tree-data" v-if="arrowExtend">
-                    <column-tree ref="columnTree" :tree-data="treeData" :arrow-extend="arrowExtend" @getChoosed="getChoosed" :tag-list="tagList"/>
-                  </div>
-                </transition>
-              </div> -->
               <div class="el-cascalder-define-choose" @click.stop="toggleMenu">
                 <div class="tag-container" ref="tags">
                   <el-tag class="tag-list" size="small" closable v-for="(ele, index) in tagList" :key="index" @close="closeTag(index, ele)">{{ ele.channelName }}</el-tag>
@@ -70,9 +57,9 @@
                     </span>
                   </span>
                 </div>
-                <transition name="fade">
+                <transition name="el-zoom-in-top">
                   <div class="tree-data" v-show="visible">
-                    <column-tree ref="columnTree" :tree-data="treeData" :arrow-extend="arrowExtend" @getChoosed="getChoosed" :tag-list="tagList"/>
+                    <column-tree ref="columnTree" :tree-data="treeData" @getChoosed="getChoosed" :tag-list="tagList"/>
                   </div>
                 </transition>
               </div>
@@ -84,52 +71,70 @@
                 <el-steps >
                   <el-step title="">
                     <template slot="title">
-                      <div>
+                      <div class="title fz">
                         本人
                       </div>
                     </template>
                     <template slot="description">
-                      <div>
+                      <div class="pl-5">
                         一级审核为本人
                       </div>
                     </template>
                     <template slot="icon">
-                      <div>
-                        <icon name="user-alt"/>
+                      <div class="title-icon">
+                        <icon name="user-alt" scale="1.2"/>
                       </div>
                     </template>
                   </el-step>
                   <el-step title="">
                     <template slot="title">
-                      <div>
-                        <el-button type="text" size="medium">添加</el-button>
+                      <div class="title">
+                        <el-button type="text" size="medium" @click="addFirst">添加</el-button>
                       </div>
                     </template>
                     <template slot="description">
+                      <div class="pl-5">
+                        请选择二级审核相关人员
+                      </div>
                       <div>
-                        serwewr
+                        <el-tag
+                          :key="tag"
+                          v-for="tag in firstChoosedPeople"
+                          closable
+                          @close="firstTagClose(tag)">
+                          {{ tagChangeToName(tag) }}
+                        </el-tag>
                       </div>
                     </template>
                     <template slot="icon">
-                      <div>
-                        <icon name="user-alt"/>
+                      <div class="title-icon">
+                        <icon name="user-alt" scale="1.2"/>
                       </div>
                     </template>
                   </el-step>
                   <el-step title="" description="">
                     <template slot="title">
-                      <div>
-                        <el-button type="text" size="medium">添加</el-button>
+                      <div class="title">
+                        <el-button type="text" size="medium" @click="addSecond">添加</el-button>
                       </div>
                     </template>
                     <template slot="description">
+                      <div class="pl-5">
+                        请选择三级审核相关人员
+                      </div>
                       <div>
-                        serwewr
+                        <el-tag
+                          :key="tag"
+                          v-for="tag in secondChoosedPeople"
+                          closable
+                          @close="secondTagClose(tag)">
+                          {{ tagChangeToName(tag) }}
+                        </el-tag>
                       </div>
                     </template>
                     <template slot="icon">
-                      <div>
-                        <icon name="user-alt"/>
+                      <div class="title-icon">
+                        <icon name="user-alt" scale="1.2"/>
                       </div>
                     </template>
                   </el-step>
@@ -140,20 +145,28 @@
         </v-form>
       </template>
     </v-page>
+    <add-people ref="peopleFirstDialog" :dialog-visible.sync="firstDialogVisible" @peopleList="firstPeopleList"/>
+    <add-second ref="peopleSecondDialog" :dialog-visible.sync="secondDialogVisible" @peopleList="secondPeopleList"/>
   </div>
 </template>
 
 <script>
 // import { fetchDictByDictName } from '@/api/cms/dict'
 import { columnList, deleteColumn } from '@/api/cms/columnManage'
+import { addCheck } from '@/api/cms/check'
 import Pagination from '@/common/Pagination'
 import mixins from '@/components/cms/mixins'
 import columnTree from './columnTree'
+import addPeople from './addPeople'
+import addSecond from './addSecond'
+import store from 'store'
 export default {
   name: 'ColumnManage',
   components: {
     Pagination,
-    columnTree
+    columnTree,
+    addPeople,
+    addSecond
   },
   mixins: [mixins],
   data() {
@@ -163,30 +176,6 @@ export default {
       pageNum: 1,
       pageSize: 10,
       totalCount: 0,
-      searchSettings: [{
-        label: '栏目名称',
-        name: 'channelName',
-        placeholder: '请输入栏目名称',
-        visible: true,
-        options: [],
-        type: 'cascader'
-      }, {
-        label: '状态',
-        name: 'hiddenFlag',
-        placeholder: '请选择',
-        visible: true,
-        type: 'select',
-        options: [
-          {
-            label: '显示',
-            value: 0          
-          },
-          {
-            label: '隐藏',
-            value: 1          
-          }
-        ]
-      }],
       searchData: {},
       // 新增
       title: '审核设置',
@@ -196,7 +185,7 @@ export default {
           items: [
             {
               label: '配置名称：',
-              name: 'settingName',
+              name: 'configName',
               type: 'text',
               valueType: 'string',
               placeholder: '请输入配置名称',
@@ -210,17 +199,19 @@ export default {
             },
             {
               label: '开启文章多级审核',
-              name: 'openCheck',
+              name: 'multiAudit',
               type: 'switch',
-              activeValue: '1',
+              activeValue: '0',
+              inactiveValue: '1',
               placeholder: '',
             },
             {
               label: '审核方式',
-              name: 'checkType',
-              type: 'text',
+              name: 'auditType',
+              type: 'switch',
               valueType: 'string',
-              placeholder: '',
+              activeValue: '0',
+              inactiveValue: '1',
             },
             {
               label: '审批人设置',
@@ -234,20 +225,18 @@ export default {
       formData: {},
       treeData: [],
       tagList: [],
-      visible: false
+      visible: false,
+      firstDialogVisible: false,
+      secondDialogVisible: false,
+      firstChoosedPeople: [],
+      secondChoosedPeople: []
     }
   },
   watch:{
-    // '$route'(val){
-    //   this.columnList()
-    //   this.columnSearchList()
-    // },
     tagList(val) {
-      console.log(val, 'val1111')
       this.resetInputHeight()
     },
     visible(val) {
-      console.log(val, 'visibal')
     }
   },
   mounted() {
@@ -257,12 +246,35 @@ export default {
     this.columnSearchList()
   },
   methods: {
+    tagChangeToName(tag) {
+      console.log(this.$refs.peopleFirstDialog.options)
+      let tagName = (this.$refs.peopleFirstDialog.options || this.$refs.peopleSecondDialog.options).find((ele) => {
+        return ele.value === tag
+      })
+      return tagName.label
+    },
+    firstTagClose(tag) {
+      this.firstChoosedPeople.splice(this.firstChoosedPeople.indexOf(tag), 1);
+    },
+    secondTagClose(tag) {
+      this.secondChoosedPeople.splice(this.secondChoosedPeople.indexOf(tag), 1);
+    },
+    firstPeopleList(val) {
+      this.firstChoosedPeople = val
+    },
+    secondPeopleList(val) {
+     this.secondChoosedPeople = val
+    },
+    addFirst() {
+      this.firstDialogVisible = true
+    },
+    addSecond() {
+      this.secondDialogVisible = true
+    },
     toggleMenu() {
-      if (this.visible) {
-        this.visible = false
-      } else {
-        this.visible = true;
-        // (this.$refs.input || this.$refs.reference).focus();
+      this.visible = !this.visible
+      if(this.visible) {
+        (this.$refs.input || this.$refs.reference).focus();
       }
     },
     resetInputHeight() {
@@ -288,6 +300,7 @@ export default {
       }
     },
     inputBlur() {
+      console.log('111')
       // this.visible = false
       // (this.$refs.input || this.$refs.reference).focus();
     },
@@ -296,7 +309,7 @@ export default {
       this.$refs.columnTree.$refs.tree.setCheckedNodes(this.tagList)
     },
     getChoosed(val) {
-      console.log(val, 'choosed')
+      console.log(222)
       this.tagList = val
     },
     // 返回
@@ -306,6 +319,7 @@ export default {
     addCheck() {
       this.title = "添加配置"
       this.handelCheck = true
+      this.tagList = []
       this.columnSearchList()
     },
     editCheck() {
@@ -321,18 +335,26 @@ export default {
       this.pageNum = val
       this.columnList()
     },
-    submitSave() {
-      console.log(this.arrowExtend, 'this.arrowExtend = true')
-    },
-    searchItem(searchData) {
-      // this.searchData = searchData
-      // if(this.searchData.channelName && this.searchData.channelName.length) {
-      //   this.searchData.channelName = this.searchData.channelName[this.searchData.channelName.length - 1]
-      // } else {
-      //   this.searchData.channelName = ''
-      // }
-      // this.pageNum = 1
-      // this.columnList()
+    // 添加审核
+    submitSave(data) {
+      console.log(store.get('hnDt_token'))
+      data.twoAuditors = this.firstChoosedPeople.join(',')
+      data.threeAuditors = this.secondChoosedPeople.join(',')
+      data.auditType = 1
+      let columns = this.tagList.map((ele) => {
+        return ele.channelId
+      })
+      data.columns = columns.join(',')
+      // data.hnrToken = store.get('hnDt_token').access_token
+      return new Promise((resolve, reject) => {
+        addCheck(data)
+          .then((response) => {
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     },
     columnList() {
       var _this = this
@@ -375,25 +397,6 @@ export default {
       this.pageNum = val
       this.columnList()
     },
-    columnAddEdit(handelType, type, channelId) {
-      this.$router.push({
-        path: '/cms/website/columnHandel',
-        query: {
-          isAdd: handelType,
-          isFather: type === 'father',
-          channelId: channelId
-        }
-      })
-    },
-    columnTemplate(row) {
-      this.$router.push({
-        path: '/cms/website/columnTemplate',
-        query: {
-          channelId: row.channelId,
-          parentChannelId: row.parentChannelId
-        }
-      })
-    },
     columnDel(row) {
       this.$confirm('此操作将永久删除该栏目, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -408,11 +411,7 @@ export default {
       return new Promise((resolve, reject) => {
         columnList({}, 1, 1000)
           .then((response) => {
-            // this.$nextTick(() => {
-            //   // _this.searchSettings[0].options = _this.toTree(response.data.result.content)
-            // })
             this.treeData = this.toTree(response.data.result.content)
-            console.log( this.treeData )
             resolve()
           })
           .catch((error) => {
@@ -428,11 +427,26 @@ export default {
 .check-people-set{
   .el-step{
     .el-step__icon{
-      width: 50px;
-      height: 50px;
+      width:40px;
+      height: 40px;
     }
     .el-step__line{
-      top:23px;
+      top:20px;
+    }
+    .title-icon{
+      padding-top:4px;
+    }
+    .title{
+      padding-left:5px;
+      &.fz{
+        font-size: 14px;
+      }
+    }
+    .el-tag{
+      margin:3px;
+    }
+    .pl-5{
+      padding-left:5px;
     }
   }
 };
