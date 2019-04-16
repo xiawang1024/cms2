@@ -37,9 +37,9 @@
         <template slot-scope="scope">
           <el-button size="small" v-waves type="success" 
                      v-if="JSON.parse(scope.row.channelInfo).vod_set == 0"
-                     @click="changeVodStatus(scope.row, '1')" icon="el-icon-check">{{ $t('table.open') }}</el-button>
+                     @click="changeVodStatus(scope.row, '1')">{{ $t('table.open') }}</el-button>
           <el-button size="small" v-waves type="danger" 
-                     v-else @click="changeVodStatus(scope.row, '0')" icon="el-icon-close">{{ $t('table.close') }}</el-button>
+                     v-else @click="changeVodStatus(scope.row, '0')">{{ $t('table.close') }}</el-button>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.status')" class-name="status-col" width="100">
@@ -51,16 +51,16 @@
       <el-table-column align="center" :label="$t('table.actions')" width="300">
         <template slot-scope="scope">
           <router-link :to="'/program/channel/edit/'+scope.row.channelId">
-            <el-button type="primary" size="small" v-waves icon="el-icon-edit">{{ $t('table.edit') }}</el-button>
+            <el-button type="primary" size="small" v-waves>{{ $t('table.edit') }}</el-button>
           </router-link>
           <el-button type="warning" size="small" v-if="scope.row.status == 1"
-                     @click="handleDel(scope.row, 0)" v-waves icon="el-icon-close">{{ $t('table.disable') }}
+                     @click="handleDel(scope.row, 0)" v-waves>{{ $t('table.disable') }}
           </el-button>
           <el-button type="success" size="small" v-waves v-else
-                     @click="handleDel(scope.row, 1)" icon="el-icon-check">{{ $t('table.enable') }}
+                     @click="handleDel(scope.row, 1)">{{ $t('table.enable') }}
           </el-button>
           <el-button type="danger" size="small" style="margin-left: 0px"
-                     @click="remove(scope.row)" v-waves icon="el-icon-close">{{ $t('table.delete') }}
+                     @click="remove(scope.row)" v-waves>{{ $t('table.delete') }}
           </el-button>
         </template>
       </el-table-column>

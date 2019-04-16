@@ -32,9 +32,9 @@
       <el-table-column align="center" :label="$t('table.actions')" width="200">
         <template slot-scope="scope">
           <router-link :to="'/program/program/edit/'+scope.row.programlistId">
-            <el-button v-waves type="primary" size="small" icon="el-icon-edit">{{ $t('table.edit') }}</el-button>
+            <el-button v-waves type="primary" size="small">{{ $t('table.edit') }}</el-button>
           </router-link>
-          <el-button v-waves type="danger" size="small" @click="handleDel(scope.$index, scope.row)" icon="el-icon-delete">{{ $t('table.delete') }}
+          <el-button v-waves type="danger" size="small" @click="handleDel(scope.$index, scope.row)">{{ $t('table.delete') }}
           </el-button>
         </template>
       </el-table-column>
