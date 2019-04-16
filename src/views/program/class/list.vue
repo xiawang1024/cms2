@@ -1,39 +1,39 @@
 <template>
   <div class="class-manage">
-      <div class="el-card__header">
-        <v-search :search-settings="searchSettings" @search="searchItem"/>
-      </div>
-      <div class="tool-bar">
-        <router-link :to="'/program/class/create'">
-          <el-button v-waves type="primary" size="small">{{ $t('table.add') }}</el-button>
-        </router-link>
-      </div>
+    <div class="el-card__header">
+      <v-search :search-settings="searchSettings" @search="searchItem"/>
+    </div>
+    <div class="tool-bar">
+      <router-link :to="'/program/class/create'">
+        <el-button v-waves type="primary" size="small">{{ $t('table.add') }}</el-button>
+      </router-link>
+    </div>
 
     <el-table v-loading="listLoading" :data="list" fit highlight-current-row size="small" style="width: 100%">
-      <el-table-column align="center" label="ID" width="80">
+      <el-table-column label="ID" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.classid }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="类目名称">
+      <el-table-column label="类目名称">
         <template slot-scope="scope">
           <span>{{ scope.row.classname }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="父级类目">
+      <el-table-column label="父级类目">
         <template slot-scope="scope">
           <span>{{ scope.row.parentid }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('table.actions')" width="200">
+      <el-table-column :label="$t('table.actions')" width="200">
         <template slot-scope="scope">
           <router-link :to="'/program/class/edit/'+scope.row.classid">
-            <el-button v-waves type="primary" size="small">{{ $t('table.edit') }}</el-button>
+            <el-button v-waves type="primary" size="mini">{{ $t('table.edit') }}</el-button>
           </router-link>
-          <el-button v-waves type="danger" size="small" @click="handleDel(scope.$index, scope.row)" >{{ $t('table.delete') }}
+          <el-button v-waves type="danger" size="mini" @click="handleDel(scope.$index, scope.row)" >{{ $t('table.delete') }}
           </el-button>
         </template>
       </el-table-column>
@@ -74,7 +74,6 @@ export default {
         name: 'type',
         placeholder: '类型',
         visible: true,
-        options: [],
         type: 'select',
         options: [
           {
