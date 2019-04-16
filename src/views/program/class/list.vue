@@ -9,7 +9,7 @@
         </router-link>
       </div>
 
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table v-loading="listLoading" :data="list" fit highlight-current-row size="small" style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.classid }}</span>
