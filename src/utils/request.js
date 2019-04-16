@@ -117,9 +117,9 @@ request.interceptors.request.use(
       if(config.method !== 'get') {
         if(config.requestBodyType && config.requestBodyType === 'formData') {
           config.data = qs.stringify(config.data)
-          config.headers = {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
+          // config.headers = {
+          //   'Content-Type': 'application/x-www-form-urlencoded'
+          // }
         }
       } else {
         // config.data = JSON.stringify(config.data)

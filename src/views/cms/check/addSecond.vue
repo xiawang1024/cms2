@@ -46,8 +46,7 @@ export default {
   },
   methods: {
     confirm() {
-      // this.$emit('update:dialogVisible', false)
-      console.log(this.choosedPeople)
+      this.$emit('update:dialogVisible', false)
       this.$emit('peopleList', this.choosedPeople)
     },
     handleClose() {

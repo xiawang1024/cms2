@@ -6,34 +6,20 @@
     <div class="tool-bar">
       <el-button type="primary" size="small" @click="addCheck">添加</el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%" highlight-current-row size="mini">
-      <el-table-column prop="channelName" label="配置名称" min-width="250" show-overflow-tooltip>
+    <el-table :data="tableData" style="width: 100%" highlight-current-row size="small">
+      <el-table-column prop="configName" label="配置名称" min-width="250" show-overflow-tooltip/>
+      <!-- <el-table-column prop="channelCode" label="排序" min-width="80"/> -->
+      <el-table-column prop="multiAudit" label="是否启用">
         <template slot-scope="scope">
-          <!-- <div>
-            <span v-for= "(group) in channelNameChange(scope.row.parentChannelNames)" :key="group" class="space-length"/>
-            <span v-for= "(ele, index) in channelNameChange(scope.row.parentChannelNames)" :key="index" class="space-holder"/>
-            <span>{{ scope.row.parentChannelNames }}</span>
-            <span>{{ scope.row.channelName }}</span>
-          </div> -->
-        </template>
-      </el-table-column>
-      <el-table-column prop="channelCode" label="排序" min-width="80"/>
-      <el-table-column prop="hiddenFlag" label="是否启用">
-        <template slot-scope="scope">
-          <span v-if="scope.row.hiddenFlag == 1">隐藏</span>
+          <span v-if="scope.row.multiAudit ==0">启用</span>
           <span v-else>显示</span>
         </template>
       </el-table-column>
-      <el-table-column prop="parentChannelId" label="添加时间" width="100">
-        <template slot-scope="scope">
-          <span v-if="scope.row.parentChannelId == '-1'">是</span>
-          <span v-else>否</span>
-        </template>
-      </el-table-column>
+      <el-table-column prop="createTime" label="添加时间" width="220"/>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button type="text" @click="editCheck(scope.rwo)">编辑</el-button>
-          <el-button type="text" @click="columnDel(scope.row)">删除</el-button>
+          <el-button size="mini" type="primary" @click="editCheck(scope.row)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="checkDel(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -152,14 +138,14 @@
 
 <script>
 // import { fetchDictByDictName } from '@/api/cms/dict'
-import { columnList, deleteColumn } from '@/api/cms/columnManage'
-import { addCheck } from '@/api/cms/check'
+import { columnList } from '@/api/cms/columnManage'
+import { addCheck, getCheckList, deleteCheck, getCheckInfor} from '@/api/cms/check'
 import Pagination from '@/common/Pagination'
 import mixins from '@/components/cms/mixins'
 import columnTree from './columnTree'
 import addPeople from './addPeople'
 import addSecond from './addSecond'
-import store from 'store'
+
 export default {
   name: 'ColumnManage',
   components: {
@@ -229,7 +215,9 @@ export default {
       firstDialogVisible: false,
       secondDialogVisible: false,
       firstChoosedPeople: [],
-      secondChoosedPeople: []
+      secondChoosedPeople: [],
+      // 栏目原始数据
+      treeDataOrigin: []
     }
   },
   watch:{
@@ -240,7 +228,7 @@ export default {
     }
   },
   mounted() {
-    this.columnList()
+    this.getCheckList()
   },
   created() {
     this.columnSearchList()
@@ -309,12 +297,10 @@ export default {
       this.$refs.columnTree.$refs.tree.setCheckedNodes(this.tagList)
     },
     getChoosed(val) {
-      console.log(222)
       this.tagList = val
     },
     // 返回
     goBack() {
-
     },
     addCheck() {
       this.title = "添加配置"
@@ -322,33 +308,42 @@ export default {
       this.tagList = []
       this.columnSearchList()
     },
-    editCheck() {
+    editCheck(row) {
      this.title = "编辑配置"
      this.handelCheck = true
      this.columnSearchList()
+     this.getCheckInfor(row)
+
     },
     sizeChange(val) {
       this.pageSize = val
-      this.columnList()
+      this.getCheckList()
     },
     pageChange(val) {
       this.pageNum = val
-      this.columnList()
+      this.getCheckList()
     },
-    // 添加审核
-    submitSave(data) {
-      console.log(store.get('hnDt_token'))
-      data.twoAuditors = this.firstChoosedPeople.join(',')
-      data.threeAuditors = this.secondChoosedPeople.join(',')
-      data.auditType = 1
-      let columns = this.tagList.map((ele) => {
-        return ele.channelId
-      })
-      data.columns = columns.join(',')
-      // data.hnrToken = store.get('hnDt_token').access_token
+    // 查看详情
+    getCheckInfor(row) {
       return new Promise((resolve, reject) => {
-        addCheck(data)
+        getCheckInfor(row.id)
           .then((response) => {
+            this.formData = response.data.result
+            let channelList = response.data.result.columns ? response.data.result.columns.split(',') : []
+            let getTag = []
+            if(channelList.length) {
+              channelList.forEach((channel) => {
+                console.log(channel)
+                this.treeDataOrigin.forEach((tree) => {
+                  console.log(tree)
+                  if(channel == tree.channelId) {
+                    getTag.push(tree)
+                  }
+                })
+              })
+            }
+            this.tagList = getTag
+            console.log(this.tagList, 'tagList')
             resolve()
           })
           .catch((error) => {
@@ -356,10 +351,33 @@ export default {
           })
       })
     },
-    columnList() {
+    // 添加审核
+    submitSave(data) {
+      console.log(this.tagList)
+      data.twoAuditors = this.firstChoosedPeople.join(',')
+      data.threeAuditors = this.secondChoosedPeople.join(',')
+      let columns = this.tagList.map((ele) => {
+        return ele.channelId
+      })
+      data.columns = columns.join(',')
+      return new Promise((resolve, reject) => {
+        addCheck(data)
+          .then((response) => {
+            this.$message.success('添加成功')
+            this.handelCheck = false
+            this.pageNum = 1
+            this.getCheckList()
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    getCheckList() {
       var _this = this
       return new Promise((resolve, reject) => {
-        columnList(_this.searchData, _this.pageNum, _this.pageSize)
+        getCheckList(this.pageNum, this.pageSize)
           .then((response) => {
             _this.tableData = response.data.result.content
             _this.totalCount = response.data.result.total
@@ -370,40 +388,28 @@ export default {
           })
       })
     },
-    columnDelFeatch(row) {
-      var _this = this
-      return new Promise((resolve, reject) => {
-        deleteColumn({ channelId: row.channelId })
-          .then((response) => {
-            _this.columnList()
-            console.log(321)
-            if (response.data.code === 0) {
-              _this.$message.success('操作成功！')
-            } else {
-              _this.$message.success(response.data.msg)
-            }
-            resolve()
-          })
-          .catch((error) => {
-            reject(error)
-          })
-      })
-    },
-    handleSizeChange(val) {
-      this.pageSize = val
-      this.columnList()
-    },
-    handleCurrentChange(val) {
-      this.pageNum = val
-      this.columnList()
-    },
-    columnDel(row) {
-      this.$confirm('此操作将永久删除该栏目, 是否继续?', '提示', {
+    checkDel(row) {
+      this.$confirm('是否删除该条设置?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         // this.columnDelFeatch(row)
+        let params = {
+          id: row.id
+        }
+        return new Promise((resolve, reject) => {
+          deleteCheck(params)
+            .then((response) => {
+              this.$message.success('删除成功')
+              this.pageNum = 1
+              this.getCheckList()
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+            })
+        })
       }).catch(() => {
       })
     },
@@ -412,6 +418,7 @@ export default {
         columnList({}, 1, 1000)
           .then((response) => {
             this.treeData = this.toTree(response.data.result.content)
+            this.treeDataOrigin = response.data.result.content
             resolve()
           })
           .catch((error) => {
