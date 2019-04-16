@@ -15,7 +15,8 @@ const user = {
     avatar: 'http://www.hndt.com/podcast/976/1131/res/EEghUGNE.jpg?1511506999379',
     authorities: [],
     sysList: ['0', '1', '2', '3','4'],
-    sysType: '0',
+    // sysType: '0',
+    sysType: window.sessionStorage.getItem('sysType') || '0',
     setting: {
       articlePlatform: []
     },
@@ -45,6 +46,7 @@ const user = {
       state.sysList = sysList
     },
     SET_SYS_TYPE: (state, sysType) => {
+      window.sessionStorage.setItem('sysType', sysType)
       state.sysType = sysType
     },
     SET_TENANT_ID: (state, tenantId) => {
