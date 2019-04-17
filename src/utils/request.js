@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
+import { Message, Loading } from 'element-ui'
 import baseUrl from '@/config/base-url'
 import { getAuth, setAuth, getRefreshToken, isTokenExpired, isNotGetTokenApi, isRefreshTokenExpired, removeAuth } from './auth.js'
 import { refreshToken } from '@/api/login'
@@ -10,6 +10,63 @@ const request = axios.create({
   // baseURL: 'http://172.20.5.4:53010',
   timeout: 10000
 })
+
+
+const requestLoading = (() => {
+  const loadingStack = new Map()
+
+  // function openLoading(loadingConfig, baseURL, url) {
+  //   if (url && !url.match('http')) {
+  //     url = baseURL + url
+  //   }
+  //   if (loadingStack.has(url)) {
+  //     return
+  //   }
+  //   // closeLoading(url)
+  //   loadingStack.set(url, Loading.service({
+  //     target: loadingConfig.target ||
+  //       '.tabs>.el-tabs__content .el-tab-pane:not([aria-hidden])',
+  //     lock: true,
+  //     text: loadingConfig.text || '加载中...',
+  //     spinner: loadingConfig.spinner || 'el-icon-loading',
+  //     background: `rgba(255,255,255,${loadingConfig.background || 0.7})`
+  //   }))
+  // }
+
+  // function closeLoading(url) {
+  //   if (loadingStack.has(url) && loadingStack.get(url).close) {
+  //     loadingStack.get(url).close()
+  //     loadingStack.delete(url)
+  //   }
+  // }
+  
+  function openLoading(loadingConfig, baseURL, url) {
+    if (url && !url.match('http')) {
+      url = baseURL + url
+    }
+    if (loadingStack.has(url)) {
+      return
+    }
+    // closeLoading(url)
+    loadingStack.set(url, Loading.service({
+      target: '.el-tabs__content .el-tab-pane:not([aria-hidden])',
+      lock: true,
+      text: '加载中...',
+      spinner: 'el-icon-loading',
+      background: `rgba(255,255,255,${0.7})`
+    }))
+  }
+
+  function closeLoading(url) {
+      console.log(loadingStack, 'loadingStack')
+      loadingStack.get(url).close()
+      loadingStack.delete(url)
+    }
+  return {
+    open: openLoading,
+    close: closeLoading
+  }
+})()
 
 /**
  * 是否有请求正在刷新token
@@ -127,8 +184,10 @@ request.interceptors.request.use(
         //   'Content-Type': 'application/json;charset=utf-8'
         // }
       }
+      requestLoading.open(config.loadingConfig, config.baseURL, config.url)
       return config
     } else {
+      requestLoading.open(config.loadingConfig, config.baseURL, config.url)
       /**
        * 未登录直接返回配置信息
        */
@@ -146,6 +205,8 @@ request.interceptors.request.use(
  */
 request.interceptors.response.use(
   (res) => {
+    console.log(res, 'response')
+    requestLoading.close(res.config.url)
     return res
   },
   (error) => {
