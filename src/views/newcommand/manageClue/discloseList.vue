@@ -1,5 +1,7 @@
 <template>
+
   <div class="column-manages">
+
     <!-- <div class="topdiv">
       <div class="topdivLeft">爆料列表</div>
       <div class="topdivRight">
@@ -124,6 +126,7 @@ import {
 } from "@/api/newsCommand/disclose.js";
 import { deleteColumn } from "@/api/cms/columnManage";
 import mixins from "@/components/cms/mixins";
+
 export default {
   name: "ColumnManage",
   mixins: [mixins],
@@ -227,7 +230,7 @@ export default {
       ],
       searchData: {},
       discloseClassifyNum: [], //爆料分类接口获取
-      discloseStatenum: [999, 999, 999], //爆料状态数值
+      discloseStatenum: [0, 0, 0], //爆料状态数值
       uplistdata: {
         breakingName: "",
         breakingTime: "",

@@ -1,16 +1,16 @@
 
 const newCommand = {
   state: {
-    discloseClassify: []
+    discloseClassifys: []
   },
   mutations: {
-    GET_DISCLOSE_CLASSIFY: (state, discloseClassify) => {
-			state.discloseClassify = discloseClassify
+    GET_DISCLOSE_CLASSIFY: (state, discloseClassifys) => {
+			state.discloseClassifys = discloseClassifys
 		}
   },
   actions: {
-    discloseClassify({ commit }, log) {
-      commit('GET_DISCLOSE_CLASSIFY', log)
+    discloseClassifys({ commit }, discloseClassifys) {
+      commit('GET_DISCLOSE_CLASSIFY', discloseClassifys)
     }
   }
 }
