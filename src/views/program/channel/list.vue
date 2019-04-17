@@ -7,39 +7,39 @@
       <el-input :placeholder="$t('table.content')" v-model="listQuery.content" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/> -->
       <v-search :search-settings="searchSettings" @search="searchItem"/>
     </div>
-      <!-- <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button> -->
+    <!-- <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button> -->
     <div class="tool-bar">
       <router-link :to="'/program/channel/create'">
         <el-button v-waves type="primary" size="small">{{ $t('table.add') }}</el-button>
       </router-link>
     </div>
 
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
-      <el-table-column align="center" label="ID" width="80">
+    <el-table v-loading="listLoading" :data="list" fit highlight-current-row size="small" style="width: 100%">
+      <el-table-column label="ID" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.channelId }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="频率名称">
+      <el-table-column label="频率名称">
         <template slot-scope="scope">
           <span>{{ scope.row.channelName }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="所属类别">
+      <el-table-column label="所属类别">
         <template slot-scope="scope">
           <span>{{ scope.row.classId | classFilter }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="是否点播" width="200">
+      <el-table-column label="是否点播" width="200">
         <template slot-scope="scope">
-          <el-button size="small" v-waves type="success" 
+          <el-button size="mini" v-waves type="success" 
                      v-if="JSON.parse(scope.row.channelInfo).vod_set == 0"
-                     @click="changeVodStatus(scope.row, '1')" icon="el-icon-check">{{ $t('table.open') }}</el-button>
-          <el-button size="small" v-waves type="danger" 
-                     v-else @click="changeVodStatus(scope.row, '0')" icon="el-icon-close">{{ $t('table.close') }}</el-button>
+                     @click="changeVodStatus(scope.row, '1')">{{ $t('table.open') }}</el-button>
+          <el-button size="mini" v-waves type="danger" 
+                     v-else @click="changeVodStatus(scope.row, '0')">{{ $t('table.close') }}</el-button>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.status')" class-name="status-col" width="100">
@@ -48,19 +48,19 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('table.actions')" width="300">
+      <el-table-column :label="$t('table.actions')" width="300">
         <template slot-scope="scope">
           <router-link :to="'/program/channel/edit/'+scope.row.channelId">
-            <el-button type="primary" size="small" v-waves icon="el-icon-edit">{{ $t('table.edit') }}</el-button>
+            <el-button type="primary" size="mini" v-waves>{{ $t('table.edit') }}</el-button>
           </router-link>
-          <el-button type="warning" size="small" v-if="scope.row.status == 1"
-                     @click="handleDel(scope.row, 0)" v-waves icon="el-icon-close">{{ $t('table.disable') }}
+          <el-button type="warning" size="mini" v-if="scope.row.status == 1"
+                     @click="handleDel(scope.row, 0)" v-waves>{{ $t('table.disable') }}
           </el-button>
-          <el-button type="success" size="small" v-waves v-else
-                     @click="handleDel(scope.row, 1)" icon="el-icon-check">{{ $t('table.enable') }}
+          <el-button type="success" size="mini" v-waves v-else
+                     @click="handleDel(scope.row, 1)">{{ $t('table.enable') }}
           </el-button>
-          <el-button type="danger" size="small" style="margin-left: 0px"
-                     @click="remove(scope.row)" v-waves icon="el-icon-close">{{ $t('table.delete') }}
+          <el-button type="danger" size="mini" style="margin-left: 0px"
+                     @click="remove(scope.row)" v-waves>{{ $t('table.delete') }}
           </el-button>
         </template>
       </el-table-column>
@@ -146,7 +146,6 @@ export default {
         name: 'type',
         placeholder: '类型',
         visible: true,
-        options: [],
         type: 'select',
         options: [
           {
