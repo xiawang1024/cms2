@@ -31,7 +31,7 @@
         <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave">
           <template slot="chooseColumn">
             <div class="choosed-list">
-              <div class="el-cascalder-define-choose" @click.stop="toggleMenu">
+              <div class="el-cascalder-define-choose" @click.stop="toggleMenu" v-clickoutside="hide">
                 <div class="tag-container" ref="tags">
                   <el-tag class="tag-list" size="small" closable v-for="(ele, index) in tagList" :key="index" @close="closeTag(index, ele)">{{ ele.channelName }}</el-tag>
                 </div>
@@ -138,6 +138,7 @@
 
 <script>
 // import { fetchDictByDictName } from '@/api/cms/dict'
+import Clickoutside from 'element-ui/src/utils/clickoutside';
 import { columnList } from '@/api/cms/columnManage'
 import { addCheck, getCheckList, deleteCheck, getCheckInfor} from '@/api/cms/check'
 import Pagination from '@/common/Pagination'
@@ -154,6 +155,7 @@ export default {
     addPeople,
     addSecond
   },
+  directives: { Clickoutside },
   mixins: [mixins],
   data() {
     return {
@@ -234,6 +236,9 @@ export default {
     this.columnSearchList()
   },
   methods: {
+    hide() {
+      this.visible = false
+    },
     tagChangeToName(tag) {
       console.log(this.$refs.peopleFirstDialog.options)
       let tagName = (this.$refs.peopleFirstDialog.options || this.$refs.peopleSecondDialog.options).find((ele) => {

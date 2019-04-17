@@ -75,19 +75,28 @@ export default {
   methods: {
     handelConfirm() {
       this.channelId = this.treeTags[this.treeTags.length - 1].id
+      console.log(this.$refs.tree.getCheckedNodes(), 'tree')
+      let choosed = []
+      if(this.$refs.tree.getCheckedNodes().length) {
+        this.$refs.tree.getCheckedNodes().map((ele) => {
+          return ele.channelId
+        })
+      }
       if(!this.documentIds.length) {
         return
       }
       if(this.title == '复制到') {
-        this.copyTo(this.documentIds[0], this.channelId)
+        this.copyTo(this.documentIds[0], choosed.join(','))
       } else if(this.title == '引用到') {
         // this.moveTo(this.channelId, choosedColumn[0])
       } else  if (this.title == '移动到') {
-        this.moveTo(this.documentIds[0], this.channelId)
+        this.moveTo(this.documentIds[0], choosed.join(','))
       }
     },
     //复制到
     copyTo(articleId,channelId) {
+      console.log(articleId, 'articleId')
+      console.log(channelId, 'channelId')
       return new Promise((resolve, reject) => {
         copyTo(articleId,channelId)
           .then((response) => {
