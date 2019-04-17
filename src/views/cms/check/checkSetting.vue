@@ -11,8 +11,8 @@
       <!-- <el-table-column prop="channelCode" label="排序" min-width="80"/> -->
       <el-table-column prop="multiAudit" label="是否启用">
         <template slot-scope="scope">
-          <span v-if="scope.row.multiAudit ==0">启用</span>
-          <span v-else>显示</span>
+          <span v-if="scope.row.multiAudit ==1">启用</span>
+          <span v-else>禁用</span>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="添加时间" width="220"/>
@@ -30,26 +30,7 @@
         <!-- 详情页组件 -->
         <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave">
           <template slot="chooseColumn">
-            <div class="choosed-list">
-              <div class="el-cascalder-define-choose" @click.stop="toggleMenu" v-clickoutside="hide">
-                <div class="tag-container" ref="tags">
-                  <el-tag class="tag-list" size="small" closable v-for="(ele, index) in tagList" :key="index" @close="closeTag(index, ele)">{{ ele.channelName }}</el-tag>
-                </div>
-                <div class="input-define">
-                  <input class="input-define-inner" type="text" ref="reference" readonly="readonly" autocomplete="off" @blur="inputBlur" @focus="inputFocus" :class="{ 'is-focus': visible}">
-                  <span class="right-suffix" @click.stop="toggleMenu">
-                    <span class="right-suffix-inner">
-                      <i class="el-icon-arrow-down" :class="{ 'el-up': visible}"/>
-                    </span>
-                  </span>
-                </div>
-                <transition name="el-zoom-in-top">
-                  <div class="tree-data" v-show="visible">
-                    <column-tree ref="columnTree" :tree-data="treeData" @getChoosed="getChoosed" :tag-list="tagList"/>
-                  </div>
-                </transition>
-              </div>
-            </div>
+            <tree-multiple :tree-data="treeData" :prop-tags="tagList" ref="treeMultiple"/>
           </template>
           <template slot="checkPeopleSet">
             <div class="check-people-set">
@@ -131,8 +112,8 @@
         </v-form>
       </template>
     </v-page>
-    <add-people ref="peopleFirstDialog" :dialog-visible.sync="firstDialogVisible" @peopleList="firstPeopleList"/>
-    <add-second ref="peopleSecondDialog" :dialog-visible.sync="secondDialogVisible" @peopleList="secondPeopleList"/>
+    <add-people ref="peopleFirstDialog" :dialog-visible.sync="firstDialogVisible" :people-options="peopleOptions" :prop-checked="firstChoosedPeople" @peopleList="firstPeopleList"/>
+    <add-second ref="peopleSecondDialog" :dialog-visible.sync="secondDialogVisible" :people-options="peopleOptions" @peopleList="secondPeopleList" :prop-checked="secondChoosedPeople"/>
   </div>
 </template>
 
@@ -140,20 +121,20 @@
 // import { fetchDictByDictName } from '@/api/cms/dict'
 import Clickoutside from 'element-ui/src/utils/clickoutside';
 import { columnList } from '@/api/cms/columnManage'
-import { addCheck, getCheckList, deleteCheck, getCheckInfor} from '@/api/cms/check'
+import { addCheck, getCheckList, deleteCheck, getCheckInfor, editCheck} from '@/api/cms/check'
+import { UserList } from '@/api/user/user'
 import Pagination from '@/common/Pagination'
 import mixins from '@/components/cms/mixins'
-import columnTree from './columnTree'
 import addPeople from './addPeople'
 import addSecond from './addSecond'
-
+import treeMultiple from './treeMultiples'
 export default {
   name: 'ColumnManage',
   components: {
     Pagination,
-    columnTree,
     addPeople,
-    addSecond
+    addSecond,
+    treeMultiple
   },
   directives: { Clickoutside },
   mixins: [mixins],
@@ -172,7 +153,7 @@ export default {
         {
           items: [
             {
-              label: '配置名称：',
+              label: '配置名称',
               name: 'configName',
               type: 'text',
               valueType: 'string',
@@ -189,17 +170,18 @@ export default {
               label: '开启文章多级审核',
               name: 'multiAudit',
               type: 'switch',
-              activeValue: '0',
-              inactiveValue: '1',
-              placeholder: '',
+              activeValue: 1,
+              inactiveValue: 0,
             },
             {
               label: '审核方式',
               name: 'auditType',
               type: 'switch',
               valueType: 'string',
-              activeValue: '0',
-              inactiveValue: '1',
+              activeValue: 1,
+              inactiveValue: 0,
+              activeText: '前置审核',
+              inactiveText: '后置审核'
             },
             {
               label: '审批人设置',
@@ -219,32 +201,48 @@ export default {
       firstChoosedPeople: [],
       secondChoosedPeople: [],
       // 栏目原始数据
-      treeDataOrigin: []
+      treeDataOrigin: [],
+      // 人员数据
+      peopleOptions: [],
+      handelType: 'add',
+      checkId: ''
     }
   },
   watch:{
-    tagList(val) {
-      this.resetInputHeight()
-    },
-    visible(val) {
-    }
   },
   mounted() {
     this.getCheckList()
   },
   created() {
     this.columnSearchList()
+    this.getUserList()
   },
   methods: {
-    hide() {
-      this.visible = false
+    // 获取人员列表
+    getUserList () {
+      return new Promise((resolve, reject) => {
+        UserList({}, 1, 200).then(async res => {
+          this.peopleOptions = res.data.result.content.map((ele) => {
+            return {
+              label: ele.userName,
+              value: ele.userId
+            }
+          })
+          resolve()
+        })
+          .catch(err => {
+            reject(err)
+          })
+      })
     },
     tagChangeToName(tag) {
-      console.log(this.$refs.peopleFirstDialog.options)
-      let tagName = (this.$refs.peopleFirstDialog.options || this.$refs.peopleSecondDialog.options).find((ele) => {
-        return ele.value === tag
-      })
-      return tagName.label
+        let tagName = {}
+        if(this.peopleOptions && this.peopleOptions.length) {
+          tagName = this.peopleOptions.find((ele) => {
+            return ele.value === tag
+          })
+        }
+        return tagName.label
     },
     firstTagClose(tag) {
       this.firstChoosedPeople.splice(this.firstChoosedPeople.indexOf(tag), 1);
@@ -264,46 +262,6 @@ export default {
     addSecond() {
       this.secondDialogVisible = true
     },
-    toggleMenu() {
-      this.visible = !this.visible
-      if(this.visible) {
-        (this.$refs.input || this.$refs.reference).focus();
-      }
-    },
-    resetInputHeight() {
-      this.$nextTick(() => {
-        if (!this.$refs.reference) return;
-        let inputChildNodes = this.$refs.reference
-        let input = inputChildNodes
-        const tags = this.$refs.tags;
-        const sizeInMap = 32;
-        input.style.height = this.tagList.length === 0
-          ? sizeInMap + 'px'
-          : Math.max(
-            tags ? (tags.clientHeight + (tags.clientHeight > sizeInMap ? 6 : 0)) : 0,
-            sizeInMap
-          ) + 'px';
-      });
-    },
-    inputFocus() {
-      if(this.arrowExtend) {
-        this.arrowExtend = false
-      } else {
-        this.arrowExtend = true
-      }
-    },
-    inputBlur() {
-      console.log('111')
-      // this.visible = false
-      // (this.$refs.input || this.$refs.reference).focus();
-    },
-    closeTag(index, ele) {
-      this.tagList.splice(index, 1)
-      this.$refs.columnTree.$refs.tree.setCheckedNodes(this.tagList)
-    },
-    getChoosed(val) {
-      this.tagList = val
-    },
     // 返回
     goBack() {
     },
@@ -311,14 +269,17 @@ export default {
       this.title = "添加配置"
       this.handelCheck = true
       this.tagList = []
-      this.columnSearchList()
+      this.handelType = 'add'
+      this.formData = {}
+      this.firstChoosedPeople = []
+      this.secondChoosedPeople = []
     },
     editCheck(row) {
      this.title = "编辑配置"
      this.handelCheck = true
-     this.columnSearchList()
+     this.handelType = 'edit'
+     this.checkId = row.id
      this.getCheckInfor(row)
-
     },
     sizeChange(val) {
       this.pageSize = val
@@ -330,6 +291,7 @@ export default {
     },
     // 查看详情
     getCheckInfor(row) {
+      this.firstChoosedPeople = []
       return new Promise((resolve, reject) => {
         getCheckInfor(row.id)
           .then((response) => {
@@ -338,9 +300,7 @@ export default {
             let getTag = []
             if(channelList.length) {
               channelList.forEach((channel) => {
-                console.log(channel)
                 this.treeDataOrigin.forEach((tree) => {
-                  console.log(tree)
                   if(channel == tree.channelId) {
                     getTag.push(tree)
                   }
@@ -348,7 +308,8 @@ export default {
               })
             }
             this.tagList = getTag
-            console.log(this.tagList, 'tagList')
+            this.firstChoosedPeople = response.data.result.twoAuditors ? response.data.result.twoAuditors.split(',') : []
+            this.secondChoosedPeople = response.data.result.threeAuditors ? response.data.result.threeAuditors.split(',') : []
             resolve()
           })
           .catch((error) => {
@@ -356,19 +317,42 @@ export default {
           })
       })
     },
-    // 添加审核
+    // 审核提交操作
     submitSave(data) {
-      console.log(this.tagList)
       data.twoAuditors = this.firstChoosedPeople.join(',')
       data.threeAuditors = this.secondChoosedPeople.join(',')
-      let columns = this.tagList.map((ele) => {
+      let columns = this.$refs.treeMultiple.tagList.map((ele) => {
         return ele.channelId
       })
       data.columns = columns.join(',')
+      if(this.handelType === 'add') {
+        this.hanelAddCheck(data)
+      } else {
+        data.id = this.checkId
+        this.handelEditCheck(data)
+      }
+    },
+    hanelAddCheck(data) {
       return new Promise((resolve, reject) => {
         addCheck(data)
           .then((response) => {
             this.$message.success('添加成功')
+            this.handelCheck = false
+            this.pageNum = 1
+            this.getCheckList()
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    handelEditCheck(data) {
+      console.log(data, 'editData')
+      return new Promise((resolve, reject) => {
+        editCheck(data)
+          .then((response) => {
+            this.$message.success('修改成功')
             this.handelCheck = false
             this.pageNum = 1
             this.getCheckList()
@@ -399,7 +383,6 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // this.columnDelFeatch(row)
         let params = {
           id: row.id
         }
@@ -462,110 +445,6 @@ export default {
     }
   }
 };
-.el-cascalder-define-choose{
-  .tree-data{
-    width:100%;
-    position: absolute;
-    top:100%;
-    left:0;
-    border: 1px solid #dcdfe6;
-    width:100%;
-    z-index: 100;
-    height: 300px;
-    border: 1px solid #e4e7ed;
-    border-radius: 4px;
-    background-color: #fff;
-    -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    margin: 5px 0;
-    transition: transform .3s,-webkit-transform .3s;
-  }
-  width:100%;
-  display: inline-block;
-  position: relative;
-  .tag-container{
-    width:100%;
-    position: absolute;
-    line-height: normal;
-    white-space: normal;
-    z-index: 1;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    .tag-list{
-      margin-left: 3px;
-      margin-right: 3px;
-    }
-  }
-  .input-define{
-    position: relative;
-    font-size: 14px;
-    display: block;
-    width: 100%;
-    .input-define-inner{
-      // height: 40px;
-      padding-right: 30px;
-      -webkit-appearance: none;
-      background-color: #fff;
-      background-image: none;
-      border-radius: 4px;
-      border: 1px solid #dcdfe6;
-      box-sizing: border-box;
-      color: #606266;
-      display: inline-block;
-      font-size: inherit;
-      line-height: 32px;
-      outline: none;
-      transition: border-color .2s cubic-bezier(.645,.045,.355,1);
-      width: 100%;
-      // border-color: #409eff;
-      cursor: pointer;
-      &:focus{
-        border-color: #409eff;
-      }
-    }
-    .is-focus {
-      border-color: #409eff;
-    }
-    .right-suffix{
-      position: absolute;
-      height: 100%;
-      right: 5px;
-      top: 0;
-      text-align: center;
-      color: #c0c4cc;
-      transition: all .3s;
-      pointer-events: none;
-      z-index: 99;
-      .right-suffix-inner{
-        pointer-events: all;
-        i {
-          width: 25px;
-          line-height: 32px;
-          cursor: pointer;
-          transform: rotateZ(0);
-          transition: transform .3s,-webkit-transform .3s;
-        }
-        .el-up {
-          font-size: 14px;
-          transform: rotateZ(180deg);
-          transition: transform .3s,-webkit-transform .3s;
-        }
-      }
-    }
-  }
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
 .check-setting {
   .form-section {
     overflow: visible;
@@ -574,72 +453,5 @@ export default {
   .tool-bar {
     margin-top:22px;
   }
-  // .define-select {
-  //   min-height: 32px;
-  //   -webkit-appearance: none;
-  //   background-color: #fff;
-  //   background-image: none;
-  //   border-radius: 4px;
-  //   border: 1px solid #dcdfe6;
-  //   -webkit-box-sizing: border-box;
-  //   box-sizing: border-box;
-  //   color: #606266;
-  //   display: inline-block;
-  //   font-size: inherit;
-  //   line-height: 32px;
-  //   outline: 0;
-  //   padding: 0 15px;
-  //   -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
-  //   transition: border-color .2s cubic-bezier(.645,.045,.355,1);
-  //   width: 100%;
-  //   // cursor: pointer;
-  //   position: relative;
-  //   .define-right {
-  //     position: absolute;
-  //     cursor: pointer;
-  //     right:5px;
-  //     width: 25px;
-  //     height: 100%;
-  //     color: #c0c4cc;
-  //     font-weight: 400;
-  //     text-align: center;
-  //     transition: transform .3s,-webkit-transform .3s;
-  //     .el-icon-arrow-down {
-  //       font-size: 14px;
-  //       // transform: rotateZ(180deg);
-  //       transform: rotateZ(0);
-  //       transition: transform .3s,-webkit-transform .3s;
-  //       // transform: rotateZ(0);
-  //     }
-  //     .el-up {
-  //       font-size: 14px;
-  //       transform: rotateZ(180deg);
-      
-  //       transition: transform .3s,-webkit-transform .3s;
-  //     }
-  //   }
-  //   .tag-list{
-  //     margin-right: 5px;
-  //   }
-  //   .tree-data{
-  //     width:100%;
-  //     position: absolute;
-  //     top:100%;
-  //     left:0;
-  //     border: 1px solid #dcdfe6;
-  //     width:100%;
-  //     z-index: 100;
-  //     height: 300px;
-  //     border: 1px solid #e4e7ed;
-  //     border-radius: 4px;
-  //     background-color: #fff;
-  //     -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-  //     box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-  //     -webkit-box-sizing: border-box;
-  //     box-sizing: border-box;
-  //     margin: 5px 0;
-  //     transition: transform .3s,-webkit-transform .3s;
-  //   }
-  // }
 }
 </style>

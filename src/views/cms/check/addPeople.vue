@@ -7,7 +7,7 @@
       :before-close="handleClose">
       <el-select v-model="choosedPeople" multiple filterable placeholder="请选择">
         <el-option
-          v-for="item in options"
+          v-for="item in peopleOptions"
           :key="item.value"
           :label="item.label"
           :value="item.value"/>
@@ -20,27 +20,46 @@
   </div>
 </template>
 <script>
-import { UserList } from '@/api/user/user'
 export default {
   props: {
     dialogVisible: {
       default: false,
       type: Boolean
+    },
+    peopleOptions: {
+      default: ()=> {
+        return []
+      },
+      type: Array
+    },
+    propChecked: {
+      default: ()=> {
+        return []
+      },
+      type: Array
     }
   },
   data() {
     return {
-      page: 1,
-      pageSize: 100,
       title: '审核人员',
-      options: [],
       choosedPeople: []
     }
   },
   watch: {
     dialogVisible(val) {
-      if(val) {
-        this.getUserList()
+    },
+    propChecked(val) {
+      this.choosedPeople = []
+      if(val && val.length) {
+        let result = []
+        val.forEach((choose) => {
+          result.push(this.peopleOptions.find((ele)=> {
+            return ele.value == choose
+          }))
+        })
+        this.choosedPeople = result.map((ele) => {
+          return ele.value
+        })
       }
     }
   },
@@ -51,27 +70,7 @@ export default {
     },
     handleClose() {
       this.$emit('update:dialogVisible', false)
-    },
-    getUserList () {
-      return new Promise((resolve, reject) => {
-        UserList({}, this.page, this.pageSize).then(async res => {
-          this.options = res.data.result.content.map((ele) => {
-            return {
-              label: ele.userName,
-              value: ele.userId
-            }
-          })
-          // this.total = res.data.result.total
-          // this.tableData = res.data.result.content
-          // 结束
-          resolve()
-        })
-          .catch(err => {
-            console.log('err: ', err)
-            reject(err)
-          })
-      })
-    },
+    }
   }
 }
 </script>

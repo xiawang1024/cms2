@@ -66,6 +66,7 @@ export default {
       return new Promise((resolve, reject) => {
         getDataAccess(userId)
           .then((response) => {
+            this.defaultCheck = response.data.result.channelIdList ? response.data.result.channelIdList : []
             // this.$refs.tree.setCheckedKeys(['1108265560111714304'])
             // this.$message.success('操作成功')
             // this.$emit('update:dialogVisible', false)
