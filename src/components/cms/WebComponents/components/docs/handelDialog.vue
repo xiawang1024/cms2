@@ -74,11 +74,10 @@ export default {
   },
   methods: {
     handelConfirm() {
-      this.channelId = this.treeTags[this.treeTags.length - 1].id
-      console.log(this.$refs.tree.getCheckedNodes(), 'tree')
-      let choosed = []
-      if(this.$refs.tree.getCheckedNodes().length) {
-        this.$refs.tree.getCheckedNodes().map((ele) => {
+      let choosedList = this.$refs.tree.getCheckedNodes()
+      let choosedIds = []
+      if(choosedList.length) {
+        choosedIds = choosedList.map((ele) => {
           return ele.channelId
         })
       }
@@ -86,24 +85,22 @@ export default {
         return
       }
       if(this.title == '复制到') {
-        this.copyTo(this.documentIds[0], choosed.join(','))
+        this.copyTo(this.documentIds.join(','), choosedIds[0])
       } else if(this.title == '引用到') {
-        // this.moveTo(this.channelId, choosedColumn[0])
+        console.log('引用')
       } else  if (this.title == '移动到') {
-        this.moveTo(this.documentIds[0], choosed.join(','))
+        this.moveTo(this.documentIds.join(','), choosedIds[0])
       }
     },
     //复制到
     copyTo(articleId,channelId) {
-      console.log(articleId, 'articleId')
-      console.log(channelId, 'channelId')
       return new Promise((resolve, reject) => {
         copyTo(articleId,channelId)
           .then((response) => {
-            // this.$emit('handelSuccess')
+            this.$emit('handelSuccess')
             this.$emit('update:dialogVisible', false)
             this.$message.success('复制成功')
-            // this.$emit('handelSuccess')
+            this.$emit('handelSuccess')
             resolve()
           })
           .catch((error) => {
