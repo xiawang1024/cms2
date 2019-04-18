@@ -25,6 +25,7 @@ const userInfo = {
   sysType: (state) => state.user.sysType,
   tenantId: (state) => state.user.tenantId,
   siteName: (state) => state.user.siteName,
+  currentInfor: (state) => state.user.currentInfor,
 }
 /**
  * cms

@@ -2,24 +2,24 @@
  * 用户相关
  */
 
-import { loginByUsername, logout, getUserInfo } from '@/api/login'
+import { loginByUsername, logout, getUserInfo, userCurrent } from '@/api/login'
 import { UserCurrent } from '@/api/user/user'
 import { getAuth, setAuth, removeAuth, setBaseInfor } from '@/utils/auth'
 import { sha1 } from '@/utils/index'
 import router from '@/router'
 // 获取当前用户
-var getCurrentInfor = function() {
-  return new Promise((resolve, reject) => {
-    UserCurrent()
-      .then((response) => {
-        setBaseInfor(response.data.result)
-        resolve()
-      })
-      .catch((error) => {
-        reject(error)
-      })
-  })
-}
+// var getCurrentInfor = function() {
+//   return new Promise((resolve, reject) => {
+//     UserCurrent()
+//       .then((response) => {
+//         setBaseInfor(response.data.result)
+//         resolve()
+//       })
+//       .catch((error) => {
+//         reject(error)
+//       })
+//   })
+// }
 const user = {
   state: {
     token: getAuth(),
@@ -31,7 +31,8 @@ const user = {
     setting: {
       articlePlatform: []
     },
-    siteName: '内容发布子系统'
+    siteName: '内容发布子系统',
+    currentInfor: {}
   },
 
   mutations: {
@@ -64,6 +65,9 @@ const user = {
     },
     SET_SITE_NAME: (state, siteName) => {
       state.siteName = siteName
+    },
+    SET_CURRENT_INFOR: (state, currentInfor) => {
+      state.currentInfor = currentInfor
     }
   },
 
@@ -82,7 +86,26 @@ const user = {
             const data = response.data
             commit('SET_TOKEN', data.access_token)
             setAuth(data)
-            getCurrentInfor()
+            // getCurrentInfor()
+            // userCurrent()
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    // 获取当前登陆用户信息
+    GetCurrentInfor({ commit, state }) {
+      setBaseInfor({})
+      return new Promise((resolve, reject) => {
+        userCurrent(state.token)
+          .then((res) => {
+            // commit('SET_TOKEN', '')
+
+            commit('SET_CURRENT_INFOR', res.data.result)
+            setBaseInfor(res.data.result)
+            // removeAuth()
             resolve()
           })
           .catch((error) => {

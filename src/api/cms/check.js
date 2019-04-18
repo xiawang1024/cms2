@@ -39,7 +39,6 @@ export function getCheckList(pageNum, pageSize) {
     url: `/cmsnews/auditConfig/queryAuditConfig?pageNo=${pageNum}&pageSize=${pageSize}`,
     method: 'get',
     loadingConfig: {
-      text: '测试'
     }
   })
 }

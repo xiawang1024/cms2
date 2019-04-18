@@ -50,7 +50,7 @@
       >
         <div class="avatar-wrapper">
           <span class="userName">
-            {{ baseInfor.userName }}
+            {{ Object.assign(baseInfor, currentInfor).userName }}
           </span>
           <!-- <img
             :src="avatar+'?imageView2/1/w/80/h/80'"
@@ -115,7 +115,7 @@ export default {
     ThemePicker
   },
   computed: {
-    ...mapGetters(['sidebar', 'name', 'avatar', 'device', 'siteName']),
+    ...mapGetters(['sidebar', 'name', 'avatar', 'device', 'siteName', 'currentInfor']),
     baseInfor() {
       return store.get('BaseInfor') 
     }

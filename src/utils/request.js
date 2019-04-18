@@ -19,6 +19,9 @@ const requestLoading = (() => {
     if (loadingStack.has(url)) {
       return
     }
+    if(loadingConfig.noLoading) {
+      return
+    }
     loadingStack.set(url, Loading.service({
       target: loadingConfig.target || '.main-container .app-main',
       lock: true,
@@ -30,8 +33,10 @@ const requestLoading = (() => {
 
   function closeLoading(url) {
       console.log(loadingStack, 'loadingStack')
-      loadingStack.get(url).close()
-      loadingStack.delete(url)
+      if(loadingStack.get(url)) {
+        loadingStack.get(url).close()
+        loadingStack.delete(url)
+      }
     }
   return {
     open: openLoading,
