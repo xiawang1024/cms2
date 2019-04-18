@@ -4,56 +4,27 @@ import baseUrl from '@/config/base-url'
 import { getAuth, setAuth, getRefreshToken, isTokenExpired, isNotGetTokenApi, isRefreshTokenExpired, removeAuth } from './auth.js'
 import { refreshToken } from '@/api/login'
 import qs from 'qs' // 序列化表单数据
-// console.log(baseUrl, 'baseUrl')
 const request = axios.create({
   baseURL: baseUrl.BASE_URL || '/',
-  // baseURL: 'http://172.20.5.4:53010',
   timeout: 10000
 })
 
-
+// 请求接口loading页面
 const requestLoading = (() => {
   const loadingStack = new Map()
-
-  // function openLoading(loadingConfig, baseURL, url) {
-  //   if (url && !url.match('http')) {
-  //     url = baseURL + url
-  //   }
-  //   if (loadingStack.has(url)) {
-  //     return
-  //   }
-  //   // closeLoading(url)
-  //   loadingStack.set(url, Loading.service({
-  //     target: loadingConfig.target ||
-  //       '.tabs>.el-tabs__content .el-tab-pane:not([aria-hidden])',
-  //     lock: true,
-  //     text: loadingConfig.text || '加载中...',
-  //     spinner: loadingConfig.spinner || 'el-icon-loading',
-  //     background: `rgba(255,255,255,${loadingConfig.background || 0.7})`
-  //   }))
-  // }
-
-  // function closeLoading(url) {
-  //   if (loadingStack.has(url) && loadingStack.get(url).close) {
-  //     loadingStack.get(url).close()
-  //     loadingStack.delete(url)
-  //   }
-  // }
-  
-  function openLoading(loadingConfig, baseURL, url) {
+  function openLoading(loadingConfig={}, baseURL, url) {
     if (url && !url.match('http')) {
       url = baseURL + url
     }
     if (loadingStack.has(url)) {
       return
     }
-    // closeLoading(url)
     loadingStack.set(url, Loading.service({
-      target: '.el-tabs__content .el-tab-pane:not([aria-hidden])',
+      target: loadingConfig.target || '.main-container .app-main',
       lock: true,
-      text: '加载中...',
+      text: loadingConfig.text || '加载中...',
       spinner: 'el-icon-loading',
-      background: `rgba(255,255,255,${0.7})`
+      background: `rgba(255,255,255,${loadingConfig.background || 0.7})`
     }))
   }
 
@@ -210,12 +181,25 @@ request.interceptors.response.use(
     return res
   },
   (error) => {
-    console.log('err' + error) // for debug
-    // error.massage 提示报错信息
+    requestLoading.close(error.config.url)
+    let msg = ''
+    try {
+      msg =
+        error.response.data.msg ||
+        error.response.data.message ||
+        '请求出错，请稍后再试'
+    } catch (e) {
+      msg = error.message || '请求出错，请稍后再试'
+    }
+    if (msg.match('timeout')) {
+      msg = '请求超时，请稍后再试'
+    }
+    if (msg.match('Network Error')) {
+      msg = '网络异常，请检查本地网络连接'
+    }
     Message({
-      message: error.response.data.error_description,
-      type: 'error',
-      duration: 5 * 1000
+      message: msg,
+      type: 'error'
     })
     return Promise.reject(error)
   }
