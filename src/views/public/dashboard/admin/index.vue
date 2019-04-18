@@ -4,11 +4,20 @@
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <div class="publist-count">
+        <div style="margin-top: 20px">
+          <el-radio-group v-model="radio5" size="small">
+            <el-radio-button label="本日"/>
+            <el-radio-button label="本周" />
+            <el-radio-button label="本月"/>
+          </el-radio-group>
+        </div>
+      </div>
       <line-chart :chart-data="lineChartData" />
     </el-row>
 
     <el-row :gutter="32">
-      <el-col
+      <!-- <el-col
         :xs="24"
         :sm="24"
         :lg="8"
@@ -25,12 +34,9 @@
         <div class="chart-wrapper">
           <pie-chart />
         </div>
-      </el-col>
+      </el-col> -->
       <el-col
-        :xs="24"
-        :sm="24"
-        :lg="8"
-      >
+      > 
         <div class="chart-wrapper">
           <bar-chart />
         </div>
@@ -38,7 +44,7 @@
     </el-row>
 
     <el-row :gutter="8">
-      <el-col
+      <!-- <el-col
         :xs="{span: 24}"
         :sm="{span: 24}"
         :md="{span: 24}"
@@ -57,6 +63,16 @@
         style="margin-bottom:30px;"
       >
         <todo-list />
+      </el-col> -->
+      <el-col
+        :xs="{span: 24}"
+        :sm="{span: 12}"
+        :md="{span: 12}"
+        :lg="{span: 6}"
+        :xl="{span: 6}"
+        style="margin-bottom:30px;"
+      >
+        <box-card />
       </el-col>
       <el-col
         :xs="{span: 24}"
@@ -116,7 +132,8 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineChartData: lineChartData.newVisitis,
+      radio5: ''
     }
   },
   methods: {
