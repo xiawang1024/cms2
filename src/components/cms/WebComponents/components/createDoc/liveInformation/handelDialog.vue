@@ -86,11 +86,12 @@ export default {
     dialogVisible(val) {
       if(val) {
         this.formData = {}
-        this.contentBody = ''
         if(this.liveRow.articleLiveCommentId) {
           this.getInfor()
         }
         // this.getInfor()
+      } else {
+        // this.$refs.editor.destroyTinymce()
       }
     },
     // liveRow(val) {
@@ -110,6 +111,7 @@ export default {
           .then((response) => {
             this.formData = response.data.result
             this.contentBody = response.data.result.articleLiveCommentContent
+            this.$refs.editor.setContent(response.data.result.articleLiveCommentContent)
             resolve()
           })
           .catch((error) => {
