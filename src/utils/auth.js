@@ -20,6 +20,12 @@ export const setBaseInfor = (data) => {
 export const getAuth = () => {
   return store.get(StorageName)
 }
+/** 
+ * 保存全部栏目
+ */
+export const setColumnAll = (colums) => {
+  return store.set('columnsAll', colums)
+}
 /**
  * remove token
  */

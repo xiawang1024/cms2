@@ -68,14 +68,14 @@ export function publishDocumentMore(data) {
 // 复制到
 export function copyTo(articleId,channelId) {
   return request({
-    url: `/cms/article/copy/${articleId}/${channelId}`,
+    url: `/cms/article/copys/${articleId}/${channelId}`,
     method: 'get'
   })
 }
 // 移动到
 export function moveTo(articleId,channelId) {
   return request({
-    url: `/cms/article/move/${articleId}/${channelId}`,
+    url: `/cms/article/moves/${articleId}/${channelId}`,
     method: 'get'
   })
 }

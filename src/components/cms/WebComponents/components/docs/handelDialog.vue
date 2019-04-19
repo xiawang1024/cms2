@@ -97,7 +97,6 @@ export default {
       return new Promise((resolve, reject) => {
         copyTo(articleId,channelId)
           .then((response) => {
-            this.$emit('handelSuccess')
             this.$emit('update:dialogVisible', false)
             this.$message.success('复制成功')
             this.$emit('handelSuccess')
@@ -113,7 +112,7 @@ export default {
       return new Promise((resolve, reject) => {
         moveTo(articleId,channelId)
           .then((response) => {
-            // this.$emit('handelSuccess')
+            this.$emit('handelSuccess')
             this.$message.success('复制成功')
             this.$emit('update:dialogVisible', false)
             // this.$emit('handelSuccess')

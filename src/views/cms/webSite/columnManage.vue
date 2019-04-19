@@ -66,6 +66,7 @@
 // import { fetchDictByDictName } from '@/api/cms/dict'
 import { columnList, deleteColumn } from '@/api/cms/columnManage'
 import mixins from '@/components/cms/mixins'
+import store from 'store'
 export default {
   name: 'ColumnManage',
   mixins: [mixins],
@@ -113,15 +114,16 @@ export default {
   watch:{
     '$route'(val){
       console.log(val)
-      this.columnList()
-      this.columnSearchList()
+      // this.columnList()
+      // this.columnSearchList()
     }
   },
   mounted() {
     this.columnList()
+    this.searchSettings[0].options = store.get('columnsAll')
   },
   created() {
-    this.columnSearchList()
+    // this.columnSearchList()
   },
   methods: {
     columnSearchList() {
