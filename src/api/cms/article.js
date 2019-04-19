@@ -232,3 +232,46 @@ export function articalSort(data) {
     data
   })
 }
+/**直播消息
+ * 
+ * 
+ */
+// 新增直播消息
+export function addLive(data) {
+  return request({
+    url: `/cms/articleLiveComment`,
+    method: 'post',
+    data
+  })
+}
+// 修改直播消息
+export function editLive(data) {
+  return request({
+    url: `/cms/articleLiveComment`,
+    method: 'put',
+    data
+  })
+}
+// 删除直播消息
+export function deleteLive(data) {
+  return request({
+    url: `/cms/articleLiveComment`,
+    method: 'delete',
+    data
+  })
+}
+//直播检索
+export function getLiveList(queryObj, pageNo, pageSize) {
+  return request({
+    url: '/cms/articleLiveComment/page?pageNo=' + pageNo + '&pageSize=' + pageSize,
+    method: 'post',
+    data: queryObj
+  })
+}
+// 直播详情
+export function getLiveInfor(id) {
+  return request({
+    url: `/cms/articleLiveComment/${id}`,
+    method: 'get',
+  })
+}

@@ -7,9 +7,8 @@
       <table-list :list="createdList" @handelSuccess = "getDefineArticleList" @editDoc="handelDoc"/>
     </div>
     <v-page :visible.sync="addPage" @goBack="goBack">
-      <h3 slot="title">{{ title }}</h3>
+      <!-- <h3 slot="title">{{ title }}</h3>
       <template slot="content">
-        <!-- 详情页组件 -->
         <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave">
           <template slot="list">
             <div class="choosed-list">
@@ -17,7 +16,7 @@
             </div>
           </template>
         </v-form>
-      </template>
+      </template> -->
     </v-page>
   </div>
 </template>
