@@ -61,18 +61,9 @@ export default {
     ...mapGetters(['contextMenu', 'choosedColumn', 'columnAll', 'treeTags'])
   },
   watch: {
-    contextMenu(val) {
-      if(val.id == '0') {
-        // this.columnList()
-      }
-    },
     columnAll(val) {
-      console.log(val, 'columnAll11')
       this.tableData = val
       this.barSet()
-    },
-    store() {
-      // console.log(store.get('columnsAll'))
     }
   },
   mounted() {
@@ -130,9 +121,7 @@ export default {
           }
           this.$store.dispatch('setTreeTags', webSiteTags)
           this.$nextTick(() => {
-            console.log('return2')
             if(this.tableData && this.tableData.length) {
-              console.log(document.querySelectorAll('.el-tree-node'))
               if(this.tableData[0].children) {
                 document.querySelectorAll('.el-tree-node')[1].classList.add('is-current')
               } else {
