@@ -8,7 +8,7 @@
       @click=" dialogVisible=true"
     >上传图片
     </el-button>
-    <el-dialog :visible.sync="dialogVisible">
+    <el-dialog :visible.sync="dialogVisible" :modal-append-to-body="false" :append-to-body="true">
       <el-upload
         :multiple="true"
         :file-list="fileList"

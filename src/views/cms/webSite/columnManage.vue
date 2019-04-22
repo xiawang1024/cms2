@@ -153,10 +153,10 @@ export default {
     },
     searchItem(searchData) {
       this.searchData = searchData
-      if(this.searchData.channelName && this.searchData.channelName.length) {
-        this.searchData.channelName = this.searchData.channelName[this.searchData.channelName.length - 1]
+      if(this.searchData.channelId && this.searchData.channelId.length) {
+        this.searchData.channelId = this.searchData.channelId[this.searchData.channelId.length - 1]
       } else {
-        this.searchData.channelName = ''
+        this.searchData.channelId = ''
       }
       this.pageNum = 1
       this.columnList()

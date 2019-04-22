@@ -1,6 +1,5 @@
 <template>
   <div class="column-template-manage">
-    {{ choosedColumn }}
     <div class="el-card__header">
       <v-search :search-settings="searchSettings" @search="searchItem" ref="vSearch"/>
     </div>
@@ -69,7 +68,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['columnAll', 'treeTags', 'contextMenu', 'choosedColumn'])
+    ...mapGetters(['columnAll', 'treeTags', 'contextMenu'])
   },
   watch:{
     columnAll(val) {
@@ -79,7 +78,9 @@ export default {
   mounted() {
     this.columnList()
     this.searchSettings[0].options= this.columnAll.length ? this.columnAll : store.get('columnsAll')
-    // this.$refs.vSearch.setItemData('channelId', ['1083184060169326592'])
+    console.log(this.searchSettings[0].options)
+    console.log(this.treeTags)
+    this.$refs.vSearch.setItemData('channelId', ["1083184060169326592", "1119088832952799232"])
   },
   created() {
     // this.columnSearchList()

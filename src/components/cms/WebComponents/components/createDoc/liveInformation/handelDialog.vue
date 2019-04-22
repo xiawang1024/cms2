@@ -4,12 +4,13 @@
       :visible.sync="dialogVisible"
       :title="title"
       width="40%"
+      top="10vh"
       :before-close="colseMe"
     >
       <v-form ref="liveForm" :form-settings="liveSettings" :form-data="formData" label-width="80px" @save="submitSave">
         <template slot="articleLiveCommentContent">
           <div>
-            <Tinymce ref="editor" :height="300" v-model="contentBody"/>
+            <Tinymce ref="editor" :height="300" v-model="contentBody" v-if="dialogVisible"/>
           </div>
         </template>
       </v-form>
@@ -111,7 +112,7 @@ export default {
           .then((response) => {
             this.formData = response.data.result
             this.contentBody = response.data.result.articleLiveCommentContent
-            this.$refs.editor.setContent(response.data.result.articleLiveCommentContent)
+            // this.$refs.editor.setContent(response.data.result.articleLiveCommentContent)
             resolve()
           })
           .catch((error) => {
@@ -128,7 +129,7 @@ export default {
       if(this.title == '添加') {
         this.addLive(data)
       } else {
-        data.articleLiveCommentId = this.liveInfor.articleLiveCommentId
+        data.articleLiveCommentId = this.liveRow.articleLiveCommentId
         this.editLive(data)
       }
     },
@@ -173,6 +174,9 @@ export default {
   .el-dialog {
     .el-dialog__header{
       border-bottom: 1px solid #ebeef5;
+    }
+    .el-dialog__body{
+      padding-bottom:10px;
     }
   }
 }
