@@ -2,7 +2,7 @@
   // 主体区域
   .main-container {
     min-height: 100%;
-    transition: all 0.3s;
+    transition: all 0.1s !important;
     margin-left: 180px;
     position: relative;
 
@@ -17,7 +17,7 @@
 
   // 侧边栏
   .sidebar-container {
-    transition: all 0.3s;
+    transition: all 0.2s;
     width: 180px !important;
     height: 100%;
     position: absolute;
@@ -29,7 +29,7 @@
     overflow: hidden; //reset element-ui css
 
     .horizontal-collapse-transition {
-      transition: all 0.3s;
+      transition: all 0.1s;
     }
 
     .scrollbar-wrapper {
@@ -70,7 +70,7 @@
   }
 
   .hideSidebar {
-    transition: all .3s;
+    transition: all .1s;
 
     .sidebar-container {
       width: 36px !important;
@@ -81,12 +81,12 @@
     }
 
     .submenu-title-noDropdown {
-      transition: all 0.3s;
+      transition: all 0.1s;
       padding-left: 10px !important;
       position: relative;
 
       .el-tooltip {
-        transition: all 0.3s;
+        transition: all 0.1s;
         padding: 0 10px !important;
       }
     }
@@ -95,7 +95,7 @@
       overflow: hidden;
 
       & > .el-submenu__title {
-        transition: all 0.3s;
+        transition: all 0.1s;
         padding-left: 10px !important;
 
         .el-submenu__icon-arrow {
@@ -121,7 +121,7 @@
 
   .sidebar-container .nest-menu .el-submenu > .el-submenu__title,
   .sidebar-container .el-submenu .el-menu-item {
-    transition: transform .3s;
+    transition: transform .1s;
     min-width: 180px !important;
     // background-color: $subMenuBg !important;
 
@@ -141,13 +141,13 @@
     }
 
     .sidebar-container {
-      transition: transform .3s;
+      transition: transform .1s;
       width: 180px !important;
     }
 
     &.hideSidebar {
       .sidebar-container {
-        transition-duration: .3s;
+        transition-duration: .1s;
         transform: translate3d(-180px, 0, 0);
       }
     }

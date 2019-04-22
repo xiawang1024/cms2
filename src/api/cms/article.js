@@ -1,11 +1,12 @@
 import request from '@/utils/request'
 //新增
 //查询文章列表
-export function documentList(queryObj, pageNo, pageSize, sortBy='topFlag', order='asc') {
+export function documentList(queryObj, pageNo, pageSize, sortBy='topFlag', order='desc,desc,desc') {
   return request({
-    url: '/cms/article/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + ',createTime&order=' + order,
+    url: '/cms/article/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + ',seqNo,createTime&order=' + order,
     method: 'post',
     data: queryObj
+    // requestBodyType: 'formData'
   })
 }
 // 修改文章
@@ -64,7 +65,21 @@ export function publishDocumentMore(data) {
     data: data
   })
 }
-
+// 复制到
+export function copyTo(articleId,channelId) {
+  return request({
+    url: `/cms/article/copys/${articleId}/${channelId}`,
+    method: 'get'
+  })
+}
+// 移动到
+export function moveTo(articleId,channelId) {
+  return request({
+    url: `/cms/article/moves/${articleId}/${channelId}`,
+    method: 'get'
+  })
+}
+// 引用到
 // 获取文章详情
 export function documentInfor(id) {
   return request({
@@ -147,5 +162,116 @@ export function defineDocumentInfor(id) {
   return request({
     url: '/cms/document/' + id,
     method: 'get'
+  })
+}
+/*
+  相关文档
+*/
+// 获取文章下的关联文档
+export function getRelationDoc(id) {
+  return request({
+    url: `/cms/article/relatedarticleshow/${id}`,
+    method: 'post'
+  })
+}
+// 保存文章下的关联文档
+export function saveRelationDoc(id, data) {
+  return request({
+    url: `/cms/article/relatedarticleoperation/${id}`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 栏目图片组
+ */
+// 栏目下的图片组
+export function columnImageList(queryObj, pageNo, pageSize) {
+  return request({
+    url: '/cms/picGroup/page?pageNo=' + pageNo + '&pageSize=' + pageSize,
+    method: 'post',
+    data: queryObj
+  })
+}
+// 新增栏目组
+export function createImageList(data) {
+  return request({
+    url: `/cms/picGroup`,
+    method: 'post',
+    data
+  })
+}
+// 获取图片组详情
+export function getImageListInfor(id) {
+  return request({
+    url: `/cms/picGroup/${id}`,
+    method: 'get',
+  })
+}
+// 修改图片组
+export function editImageList(data) {
+  return request({
+    url: `/cms/picGroup`,
+    method: 'put',
+    data
+  })
+}
+// 删除图片组
+export function deleteImageList(data) {
+  return request({
+    url: `/cms/picGroup`,
+    method: 'delete',
+    data
+  })
+}
+// 文章拖拽
+export function articalSort(data) {
+  return request({
+    url: `/cms/article/sort`,
+    method: 'post',
+    data
+  })
+}
+/**直播消息
+ * 
+ * 
+ */
+// 新增直播消息
+export function addLive(data) {
+  return request({
+    url: `/cms/articleLiveComment`,
+    method: 'post',
+    data
+  })
+}
+// 修改直播消息
+export function editLive(data) {
+  return request({
+    url: `/cms/articleLiveComment`,
+    method: 'put',
+    data
+  })
+}
+// 删除直播消息
+export function deleteLive(data) {
+  return request({
+    url: `/cms/articleLiveComment`,
+    method: 'delete',
+    data
+  })
+}
+//直播检索
+export function getLiveList(queryObj, pageNo, pageSize) {
+  return request({
+    url: '/cms/articleLiveComment/page?pageNo=' + pageNo + '&pageSize=' + pageSize,
+    method: 'post',
+    data: queryObj
+  })
+}
+// 直播详情
+export function getLiveInfor(id) {
+  return request({
+    url: `/cms/articleLiveComment/${id}`,
+    method: 'get',
   })
 }

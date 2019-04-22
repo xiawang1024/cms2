@@ -57,7 +57,7 @@
             </template>
             <!-- switch开关 -->
             <template v-else-if="item.type=='switch'">
-              <el-switch v-model="formModel[item.name]" :active-color="item.activeColor" :inactive-color="item.inactiveColor" :active-value="item.activeValue" :inactive-value="item.inactiveValue" @change="(item.events&&item.events.change)?$emit(item.events.change, formModel[item.name]):null"/>
+              <el-switch v-model="formModel[item.name]" :active-text="item.activeText" :inactive-text="item.inactiveText" :active-color="item.activeColor" :inactive-color="item.inactiveColor" :active-value="item.activeValue" :inactive-value="item.inactiveValue" @change="(item.events&&item.events.change)?$emit(item.events.change, formModel[item.name]):null"/>
             </template>
             <!-- 级联选择器 -->
             <template v-else-if="item.type=='cascader'">

@@ -93,6 +93,7 @@ export default {
     this.destroyTinymce()
   },
   destroyed() {
+    console.log('destory')
     this.destroyTinymce()
   },
   methods: {

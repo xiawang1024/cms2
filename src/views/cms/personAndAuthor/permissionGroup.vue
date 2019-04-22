@@ -1,7 +1,7 @@
 <template>
   <div class="permissionGroup-container">
     <v-search :search-settings="searchSettings" @search="search"/>
-    <el-table :data="tableData" style="width: 100%" highlight-current-row>
+    <el-table :data="tableData" style="width: 100%" size="small" highlight-current-row>
       <el-table-column prop="userCode" label="用户编码"/>
       <el-table-column prop="userName" label="用户名"/>
       <el-table-column prop="enableFlag" label="用户状态">
@@ -17,11 +17,11 @@
       </el-table-column>
     </el-table>
     <pagination :total="total"/>
-    <!-- <access-dialog :dialog-visible.sync="showAccess" :tree-data="treeData" :user-infor="userInfor" @handelSuccess="handelSuccess"/> -->
+    <access-dialog :dialog-visible.sync="showAccess" :tree-data="treeData" :user-infor="userInfor" @handelSuccess="handelSuccess"/>
   </div>
 </template>
 <script>
-// import accessDialog from './accessDiolog'
+import accessDialog from './accessDiolog'
 import { UserList } from '@/api/user/user'
 import { columnList } from '@/api/cms/columnManage'
 import Pagination from '@/common/Pagination'
@@ -30,7 +30,7 @@ export default
  {
   name: 'PermissionGroup',
   components: {
-    // accessDialog,
+    accessDialog,
     Pagination
   },
   mixins: [mixins],

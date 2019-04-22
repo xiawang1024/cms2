@@ -1,15 +1,48 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
+import { Message, Loading } from 'element-ui'
 import baseUrl from '@/config/base-url'
 import { getAuth, setAuth, getRefreshToken, isTokenExpired, isNotGetTokenApi, isRefreshTokenExpired, removeAuth } from './auth.js'
 import { refreshToken } from '@/api/login'
 import qs from 'qs' // 序列化表单数据
-// console.log(baseUrl, 'baseUrl')
 const request = axios.create({
   baseURL: baseUrl.BASE_URL || '/',
-  // baseURL: 'http://172.20.5.4:53010',
   timeout: 10000
 })
+
+// 请求接口loading页面
+const requestLoading = (() => {
+  const loadingStack = new Map()
+  function openLoading(loadingConfig={}, baseURL, url) {
+    if (url && !url.match('http')) {
+      url = baseURL + url
+    }
+    if (loadingStack.has(url)) {
+      return
+    }
+    if(loadingConfig.noLoading) {
+      return
+    }
+    loadingStack.set(url, Loading.service({
+      target: loadingConfig.target || '.main-container .app-main',
+      lock: true,
+      text: loadingConfig.text || '加载中...',
+      spinner: 'el-icon-loading',
+      background: `rgba(255,255,255,${loadingConfig.background || 0.7})`
+    }))
+  }
+
+  function closeLoading(url) {
+      console.log(loadingStack, 'loadingStack')
+      if(loadingStack.get(url)) {
+        loadingStack.get(url).close()
+        loadingStack.delete(url)
+      }
+    }
+  return {
+    open: openLoading,
+    close: closeLoading
+  }
+})()
 
 /**
  * 是否有请求正在刷新token
@@ -118,9 +151,9 @@ request.interceptors.request.use(
       if(config.method !== 'get') {
         if(config.requestBodyType && config.requestBodyType === 'formData') {
           config.data = qs.stringify(config.data)
-          config.headers = {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
+          // config.headers = {
+          //   'Content-Type': 'application/x-www-form-urlencoded'
+          // }
         }
       } else {
         // config.data = JSON.stringify(config.data)
@@ -128,8 +161,10 @@ request.interceptors.request.use(
         //   'Content-Type': 'application/json;charset=utf-8'
         // }
       }
+      requestLoading.open(config.loadingConfig, config.baseURL, config.url)
       return config
     } else {
+      requestLoading.open(config.loadingConfig, config.baseURL, config.url)
       /**
        * 未登录直接返回配置信息
        */
@@ -147,15 +182,30 @@ request.interceptors.request.use(
  */
 request.interceptors.response.use(
   (res) => {
+    console.log(res, 'response')
+    requestLoading.close(res.config.url)
     return res
   },
   (error) => {
-    console.log('err' + error) // for debug
-    // error.massage 提示报错信息
+    requestLoading.close(error.config.url)
+    let msg = ''
+    try {
+      msg =
+        error.response.data.msg ||
+        error.response.data.message ||
+        '请求出错，请稍后再试'
+    } catch (e) {
+      msg = error.message || '请求出错，请稍后再试'
+    }
+    if (msg.match('timeout')) {
+      msg = '请求超时，请稍后再试'
+    }
+    if (msg.match('Network Error')) {
+      msg = '网络异常，请检查本地网络连接'
+    }
     Message({
-      message: error.response.data.error_description,
-      type: 'error',
-      duration: 5 * 1000
+      message: msg,
+      type: 'error'
     })
     return Promise.reject(error)
   }

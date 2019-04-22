@@ -7,3 +7,10 @@ export function setDataAccess(data) {
     data
   })
 }
+// 用户权限获取
+export function getDataAccess(id) {
+  return request({
+    url: `/cms/channelUserRel/show/${id}`,
+    method: 'get'
+  })
+}

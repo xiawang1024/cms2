@@ -7,9 +7,8 @@
       <table-list :list="createdList" @handelSuccess = "getDefineArticleList" @editDoc="handelDoc"/>
     </div>
     <v-page :visible.sync="addPage" @goBack="goBack">
-      <h3 slot="title">{{ title }}</h3>
+      <!-- <h3 slot="title">{{ title }}</h3>
       <template slot="content">
-        <!-- 详情页组件 -->
         <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave">
           <template slot="list">
             <div class="choosed-list">
@@ -17,7 +16,7 @@
             </div>
           </template>
         </v-form>
-      </template>
+      </template> -->
     </v-page>
   </div>
 </template>
@@ -169,17 +168,20 @@ export default {
     },
     submitSave(data) {
       let choosed = []
-      if(this.$refs.choosedList.tableData.length) {
-        this.$refs.choosedList.tableData.forEach((ele) => {
-          choosed.push({ articleId: ele.articleId })
+      // if(this.$refs.choosedList.tableData.length) {
+      //   this.$refs.choosedList.tableData.forEach((ele) => {
+      //     choosed.push({ articleId: ele.articleId })
+      //   })
+      // }
+      if(this.$refs.choosedList.newList.length) {
+        this.$refs.choosedList.newList.forEach((ele) => {
+          choosed.push({ articleId: ele })
         })
       }
       data.details = choosed
       data.channelId = this.treeTags[this.treeTags.length - 1].id
       delete data.list
       data.tagIds = data.tagIds.join(',')
-      console.log(data)
-      console.log(this.formData)
       if(this.title == '创建文档列表') {
         return new Promise((resolve, reject) => {
           createDefineArticle(data)

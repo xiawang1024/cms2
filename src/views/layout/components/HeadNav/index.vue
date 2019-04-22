@@ -49,10 +49,13 @@
         trigger="click"
       >
         <div class="avatar-wrapper">
-          <img
+          <span class="userName">
+            {{ Object.assign(baseInfor, currentInfor).userName }}
+          </span>
+          <!-- <img
             :src="avatar+'?imageView2/1/w/80/h/80'"
             class="user-avatar"
-          >
+          > -->
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -92,7 +95,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
+import store from 'store'
 import ErrorLog from '@/components/public/ErrorLog'
 import Screenfull from '@/components/public/Screenfull'
 import SizeSelect from '@/components/public/SizeSelect'
@@ -100,6 +103,7 @@ import LangSelect from '@/components/public/LangSelect'
 import ThemePicker from '@/components/public/ThemePicker'
 import SysType from './sysType.vue'
 import { fetchDictByDictName} from "@/api/cms/dict"
+
 
 export default {
   components: {
@@ -111,10 +115,12 @@ export default {
     ThemePicker
   },
   computed: {
-    ...mapGetters(['sidebar', 'name', 'avatar', 'device', 'siteName'])
+    ...mapGetters(['sidebar', 'name', 'avatar', 'device', 'siteName', 'currentInfor']),
+    baseInfor() {
+      return store.get('BaseInfor') 
+    }
   },
   mounted() {
-    console.log('login')
     this.fetchDict()
   },
   methods: {
@@ -173,6 +179,8 @@ export default {
     vertical-align: top;
   }
   .right-menu {
+    display: flex;
+    align-items: center;
     height: 100%;
     &:focus {
       outline: none;
@@ -213,6 +221,9 @@ export default {
           right: -20px;
           top: 25px;
           font-size: 12px;
+        }
+        .userName{
+          color: #fff;
         }
       }
     }

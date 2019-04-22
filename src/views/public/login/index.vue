@@ -100,6 +100,8 @@ export default {
         .then(() => {
           this.loading = false
           this.$router.push({ path: this.redirect || '/' })
+          this.$store.dispatch('GetCurrentInfor')
+          this.$store.dispatch('GetColumnAll')
         })
         .catch(() => {
           this.loading = false
