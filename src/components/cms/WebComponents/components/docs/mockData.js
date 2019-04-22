@@ -29,6 +29,7 @@ export const currentDoc = [
   }
 ]
 
+
 export const currentColumn = [
   {
     id: '1',
