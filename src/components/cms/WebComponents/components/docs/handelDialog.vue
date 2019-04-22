@@ -85,11 +85,11 @@ export default {
         return
       }
       if(this.title == '复制到') {
-        this.copyTo(this.documentIds.join(','), choosedIds[0])
+        this.copyTo(this.documentIds.join(','), choosedIds.join(','))
       } else if(this.title == '引用到') {
         console.log('引用')
       } else  if (this.title == '移动到') {
-        this.moveTo(this.documentIds.join(','), choosedIds[0])
+        this.moveTo(this.documentIds.join(','), choosedIds.join(','))
       }
     },
     //复制到

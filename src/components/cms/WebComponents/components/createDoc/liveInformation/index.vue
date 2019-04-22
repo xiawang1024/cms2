@@ -3,18 +3,6 @@
     <div class="add-btn">
       <el-button type="primary" size="small" @click="handelLive">添加</el-button>
     </div>
-    <!-- <v-page :visible.sync="showHandel" @goBack="goBack">
-      <h3 slot="title">{{ title }}</h3>
-      <template slot="content">
-        <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave">
-          <template slot="articleLiveCommentContent">
-            <div>
-              <Tinymce ref="editor" :height="300" v-model="contentBody"/>
-            </div>
-        </template>
-        </v-form>
-      </template>
-    </v-page> -->
     <el-table :data="tableData" style="width: 100%" highlight-current-row size="small">
       <el-table-column prop="articleLiveCommentUser" label="直播人" min-width="100" show-overflow-tooltip/>
       <!-- <el-table-column prop="channelCode" label="排序" min-width="80"/> -->
@@ -46,40 +34,19 @@ export default {
     handelDialog,
     Pagination
   },
+  props: {
+    activeName: {
+      default: '',
+      type: String
+    }
+  },
   data() {
     return {
       pageNum: 1,
       pageSize: 10,
       totalCount: 0,
       showHandel: false,
-      // formSettings: [
-      //   {
-      //     items: [
-      //       {
-      //         label: '直播人',
-      //         name: 'articleLiveCommentUser',
-      //         type: 'text',
-      //         valueType: 'string',
-      //         placeholder: '请输入直播人'
-      //       },
-      //       {
-      //         label: '发布时间',
-      //         name: 'articleLiveCommentTime',
-      //         type: 'select',
-      //         placeholder: '请选择',
-      //         options: []
-      //       },
-      //       {
-      //         label: '直播内容',
-      //         name: 'articleLiveCommentContent',
-      //         type: 'slot',
-      //       }
-      //     ]
-      //   }
-      // ],
-      // formData: {},
       title: '添加',
-      // contentBody: ''
       tableData: [],
       liveRow: {}
     }
@@ -88,6 +55,11 @@ export default {
     ...mapGetters(['treeTags', 'contextMenu'])
   },
   watch: {
+    activeName(val) {
+      if(val == 'liveInformation') {
+        this.getliveList()
+      }
+    }
   },
   mounted() {
     this.getliveList()
@@ -100,7 +72,6 @@ export default {
       this.title = '编辑',
       this.showHandel = true
       this.liveRow = row
-      console.log(row)
     },
     deleteLive(row) {
       this.$confirm('是否删除该直播?', '提示', {
@@ -139,9 +110,8 @@ export default {
     },
     getliveList() {
       return new Promise((resolve, reject) => {
-        getLiveList({}, this.pageNum, this.pageSize)
+        getLiveList({ articleId: this.contextMenu.docId }, this.pageNum, this.pageSize)
           .then((response) => {
-            // _this.createdList = response.data.result.content
             this.tableData = response.data.result.content
             this.totalCount = response.data.result.total
             resolve()

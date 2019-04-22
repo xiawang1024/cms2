@@ -32,7 +32,6 @@ const requestLoading = (() => {
   }
 
   function closeLoading(url) {
-      console.log(loadingStack, 'loadingStack')
       if(loadingStack.get(url)) {
         loadingStack.get(url).close()
         loadingStack.delete(url)
