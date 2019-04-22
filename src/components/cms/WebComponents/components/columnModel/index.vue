@@ -6,7 +6,7 @@
     <div class="tool-bar">
       <el-button type="primary" v-if="checkAuth('cms:channel:add')" @click="columnAddEdit(true, 'father')" size="small">添加</el-button>
     </div>
-    <el-table :data="tableData" style="width:100%" size="small">
+    <el-table :data="tableData" style="width:100%" size="small" highlight-current-row>
       <el-table-column prop="templateName" label="模板名称"/>
       <el-table-column prop="templateType" label="类别"/>
       <el-table-column prop="channelName" label="所属栏目"/>
@@ -76,31 +76,22 @@ export default {
     }
   },
   mounted() {
-    this.columnList()
     this.searchSettings[0].options= this.columnAll.length ? this.columnAll : store.get('columnsAll')
-    console.log(this.searchSettings[0].options)
-    console.log(this.treeTags)
-    this.$refs.vSearch.setItemData('channelId', ["1083184060169326592", "1119088832952799232"])
+    let setDefaultChannel = []
+    this.treeTags.forEach((ele) => {
+      setDefaultChannel.push(ele.id)
+    })
+    this.$refs.vSearch.setItemData('channelId', setDefaultChannel)
+    let searchData = {
+      channelId: setDefaultChannel,
+      templateName: ''
+    }
+    this.columnList(searchData)
   },
   created() {
     // this.columnSearchList()
   },
   methods: {
-    // columnSearchList() {
-    //   var _this = this
-    //   return new Promise((resolve, reject) => {
-    //     columnList({}, 1, 1000)
-    //       .then((response) => {
-    //         this.$nextTick(() => {
-    //           _this.searchSettings[0].options = _this.toTree(response.data.result.content)
-    //         })
-    //         resolve()
-    //       })
-    //       .catch((error) => {
-    //         reject(error)
-    //       })
-    //   })
-    // },
     channelNameChange(val) {
       let arr = []
       if(val) {
@@ -119,18 +110,18 @@ export default {
     },
     searchItem(searchData) {
       this.searchData = searchData
-      if(this.searchData.channelName && this.searchData.channelName.length) {
-        this.searchData.channelName = this.searchData.channelName[this.searchData.channelName.length - 1]
-      } else {
-        this.searchData.channelName = ''
-      }
       this.pageNum = 1
-      this.columnList()
+      this.columnList(searchData)
     },
-    columnList() {
+    columnList(searchData) {
+      console.log(searchData, 'searchData')
       var _this = this
+      let searchResult = {
+        channelId: searchData.channelId ? searchData.channelId[searchData.channelId.length - 1] : '',
+        templateName: searchData.templateName
+      }
       return new Promise((resolve, reject) => {
-        fetchList(_this.searchData, _this.pageNum, _this.pageSize)
+        fetchList(searchResult, this.pageNum, this.pageSize)
           .then((response) => {
             _this.tableData = response.data.result.content
             _this.totalCount = response.data.result.total
@@ -162,21 +153,21 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize = val
-      this.columnList()
+      this.columnList(this.searchData)
     },
     handleCurrentChange(val) {
       this.pageNum = val
-      this.columnList()
+      this.columnList(this.searchData)
     },
     columnAddEdit(handelType, type, channelId) {
-      this.$router.push({
-        path: '/cms/website/columnHandel',
-        query: {
-          isAdd: handelType,
-          isFather: type === 'father',
-          channelId: channelId
-        }
-      })
+      // this.$router.push({
+      //   path: '/cms/website/columnHandel',
+      //   query: {
+      //     isAdd: handelType,
+      //     isFather: type === 'father',
+      //     channelId: channelId
+      //   }
+      // })
     },
     columnTemplate(row) {
       this.$router.push({

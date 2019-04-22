@@ -78,7 +78,6 @@ export default {
     },
     addViewTags() {
       const { name } = this.$route
-      console.log(this.$route, 'this.$route')
       if (name) {
         this.$store.dispatch('addView', this.$route)
       }
