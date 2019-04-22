@@ -42,7 +42,6 @@
               <div class="rightdiv">{{ formData.breakingType }}</div>
             </el-col>
           </el-row>
-
           <el-row>
             <el-col :span="5">
               <div class="leftdiv">爆料人</div>
@@ -59,7 +58,6 @@
               <div class="rightdiv">{{ formData.breakingPhone }}</div>
             </el-col>
           </el-row>
-
           <el-row>
             <el-col :span="5">
               <div class="leftdiv">爆料内容</div>
@@ -70,7 +68,6 @@
           </el-row>
         </div>
       </el-main>
-
       <el-main class="elmain2">
         <div class="biaoge">
           <el-row>
@@ -125,10 +122,8 @@
     <!-- <div>{{discloseClassify}}</div> -->
   </div>
 </template>
-
 <script>
 // import { mapGetters } from 'vuex'
-
 import {
   amendDiscloseState,
   discloseClassify,
@@ -136,7 +131,6 @@ import {
 } from "@/api/newsCommand/disclose.js";
 export default {
   name: "DisclosDetails",
-
   data() {
     return {
       formData: {},
@@ -181,7 +175,6 @@ export default {
     isActive(route) {
       return route.path === this.$route.path;
     },
-
     // 爆料详情
     discloseInfor(res) {
       var _this = this;
@@ -271,7 +264,6 @@ export default {
   }
 };
 </script>
-
 <style lang="scss" scoped>
 .disclisedetails{
 .leftdiv {
@@ -281,7 +273,6 @@ export default {
   border-right: 1px solid rgba(228, 228, 228, 1);
   font-weight: 600;
 }
-
 .rightdiv {
   padding-left: 15px;
 }
@@ -289,7 +280,6 @@ export default {
   box-sizing: border-box;
   padding: 15px;
 }
-
 .el-row {
   border: 1px solid rgba(228, 228, 228, 1);
   border-bottom: none;
@@ -320,7 +310,6 @@ export default {
 .el-main {
   padding: 8px;
 }
-
 .elmain2 {
   margin-top: -20px;
 }
@@ -369,5 +358,4 @@ export default {
   color: #f56c6c;
 }
 }
-
 </style>

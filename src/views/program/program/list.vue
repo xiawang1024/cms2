@@ -10,31 +10,31 @@
     </div>
     
 
-    <el-table v-loading="listLoading" :data="list"  fit highlight-current-row size="small" style="width: 100%">
-      <el-table-column align="center" label="ID" width="80">
+    <el-table v-loading="listLoading" :data="list" fit highlight-current-row size="small" style="width: 100%">
+      <el-table-column label="ID" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.programlistId }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="排单名称">
+      <el-table-column label="排单名称">
         <template slot-scope="scope">
           <span>{{ scope.row.programlistName }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="所属频率">
+      <el-table-column label="所属频率">
         <template slot-scope="scope">
           <span>{{ scope.row.channelInfo.channelName }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :label="$t('table.actions')" width="200">
+      <el-table-column :label="$t('table.actions')" width="200">
         <template slot-scope="scope">
           <router-link :to="'/program/program/edit/'+scope.row.programlistId">
-            <el-button v-waves type="primary" size="small">{{ $t('table.edit') }}</el-button>
+            <el-button v-waves type="primary" size="mini">{{ $t('table.edit') }}</el-button>
           </router-link>
-          <el-button v-waves type="danger" size="small" @click="handleDel(scope.$index, scope.row)">{{ $t('table.delete') }}
+          <el-button v-waves type="danger" size="mini" @click="handleDel(scope.$index, scope.row)">{{ $t('table.delete') }}
           </el-button>
         </template>
       </el-table-column>
@@ -75,7 +75,6 @@ export default {
         name: 'type',
         placeholder: '类型',
         visible: true,
-        options: [],
         type: 'select',
         options: [
           {

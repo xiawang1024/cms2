@@ -1,18 +1,7 @@
 <template>
-  <div class="imageWatermarking-wrap">
-    <div class="tool-bar">
-      <el-button
-        type="warning"
-        @click="handleSave"
-      >保存</el-button>
-    </div>
-    <h3 class="title">水印设置</h3>
-    <el-form
-      ref="watermarkingForm"
-      :model="watermarkingForm"
-      label-width="100px"
-    >
-      <el-form-item label="水印位置：">
+  <div class="doc-water-setting">
+    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" :btn-loading = "isLoading">
+      <template slot="coner">
         <div class="location-box">
           <el-button
             :type="watermarkingForm.chooseLocation===1?'primary':''"
@@ -60,51 +49,43 @@
             @click="watermarkingForm.chooseLocation =9"
           >下右</el-button>
         </div>
-      </el-form-item>
-      <el-form-item label="水印图片：">
-        <Upload
-          v-model="watermarkingForm.chooseImageUrl"
-          width="20%"
-        />
-        <el-button
-          type="danger"
-          size="small"
-          @click="handleDelete"
-        >删除水印</el-button>
-        <el-switch
-          v-model="watermarkingForm.isScale"
-          active-text="上传后缩放"
-        />
-        <el-input
-          v-if="watermarkingForm.isScale"
-          v-model="watermarkingForm.width"
-          style="width:10em"
-          type="number"
-          maxlength="3"
-          step="10"
-          max="100"
-          min="0"
-        >
-          <template slot="prepend">宽</template>
-        </el-input>
-        <el-input
-          v-if="watermarkingForm.isScale"
-          v-model="watermarkingForm.height"
-          style="width:10em"
-          type="number"
-          maxlength="3"
-          step="10"
-          max="100"
-          min="0"
-        >
-          <template slot="prepend">高</template>
-        </el-input>
-      </el-form-item>
-    </el-form>
+      </template>
+      <template slot="isScale">
+        <div>
+          <el-checkbox v-model="imageSetting.isScaleChecked">是否缩放</el-checkbox>
+          <el-input
+            v-if="imageSetting.isScaleChecked"
+            v-model="imageSetting.width"
+            style="width:10em"
+            type="number"
+            maxlength="3"
+            step="10"
+            max="100"
+            min="0"
+          >
+            <template slot="prepend">宽</template>
+          </el-input>
+          <el-input
+            v-if="imageSetting.isScaleChecked"
+            v-model="imageSetting.height"
+            style="width:10em"
+            type="number"
+            maxlength="3"
+            step="10"
+            max="100"
+            min="0"
+          >
+            <template slot="prepend">高</template>
+          </el-input>
+        </div>
+      </template>
+    </v-form>
   </div>
 </template>
 <script>
 import Upload from '@/components/cms/Upload/upload'
+import { columnInfor, editColumn } from '@/api/cms/columnManage'
+import { mapGetters } from 'vuex'
 export default {
   name: 'ImageWatermarking',
   components: { Upload },
@@ -117,23 +98,130 @@ export default {
         isScale: false,
         width: 0,
         height: 0
+      },
+      formSettings: [
+        {
+          items: [
+             {
+              label: '水印位置',
+              name: 'coner',
+              type: 'slot'
+            }, {
+              label: '水印图片',
+              name: 'url',
+              type: 'img',
+              limit: 1
+            },
+            {
+              label: '',
+              name: 'isScale',
+              type: 'slot'
+           },
+          ]
+        }
+      ],
+      isLoading: false,
+      formData: {
+      },
+      routeQuery: {},
+      imageSetting: {
+        isScaleChecked: false,
+        height: '',
+        width: ''
       }
     }
   },
+  computed: {
+    ...mapGetters(['treeTags'])
+  },
+  mounted() {
+    this.routeQuery = this.$route.query
+    this.getColumnInfor()
+  },
   methods: {
-    handleSave() {},
-    handleDelete() {
-      this.watermarkingForm.chooseImageUrl = ''
+    getColumnInfor() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        columnInfor(this.treeTags[this.treeTags.length - 1].id)
+          .then((response) => {
+            _this.formData = response.data.result
+            _this.watermarkingForm.chooseLocation = response.data.result.stampSetting ? parseInt(response.data.result.stampSetting.coner) : 5
+            if(_this.formData.stampSetting && _this.formData.stampSetting.url) {
+              _this.formData.url = [{
+                url: _this.formData.stampSetting.url
+              }]
+            } else {
+              _this.formData.url = []
+            }
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    submitSave(formData) {
+      formData.coner = this.watermarkingForm.chooseLocation
+      this.isLoading = true
+      var _this = this
+      let iconUrlArray = []
+      if(formData.url.length) {
+        formData.url.forEach(ele => {
+          iconUrlArray.push(ele.url)
+        })
+      }
+      formData.url = iconUrlArray.length ? iconUrlArray.join(',') : ''
+      return new Promise((resolve, reject) => {
+        _this.formData.channelId = _this.treeTags[_this.treeTags.length - 1].id
+        _this.formData.stampSetting = {
+          coner: formData.coner,
+          url: formData.url 
+        }
+        editColumn(_this.formData)
+          .then((response) => {
+            _this.$message({ showClose: true, message: '操作成功!', type: 'success' })
+            // _this.gotoListPage(_this)
+            this.$store.dispatch('setContextMenu', {
+              id: '0',
+              label: ''
+            })
+            _this.isLoading = false
+            resolve()
+          })
+          .catch((error) => {
+            _this.isLoading = false
+            reject(error)
+          })
+      })
+    },
+    gotoListPage(context) {
+      context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {
+        if (context.isActive(context.$route)) {
+          const latestView = visitedViews.slice(-1)[0]
+          if (latestView) {
+            context.$router.push(latestView)
+          } else {
+            context.$router.push('/')
+          }
+        }
+      })
+      context.$router.push({
+        path: '/cms/website/column'
+      })
     }
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .el-button + .el-button {
   margin: 5px 0px;
 }
-.imageWatermarking-wrap {
-  margin: 0 5px;
+.doc-water-setting {
+  .el-form{
+    .el-input-group__prepend {
+      padding: 0 10px;
+    }
+  }
 }
 .tool-bar {
   text-align: right;
@@ -146,11 +234,10 @@ export default {
   margin-bottom: 20px;
 }
 .location-box {
-  width: 300px;
+  width: 267px;
 }
 .location-btn {
   width: 30%;
-  padding: 20px;
 }
 </style>
 

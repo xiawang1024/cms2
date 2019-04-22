@@ -280,6 +280,7 @@ export default {
             .then((response) => {
               _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
               _this.isLoading = false
+              this.$store.dispatch('GetColumnAll')
               resolve()
             })
             .catch((error) => {
@@ -292,6 +293,7 @@ export default {
             .then((response) => {
               _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
               _this.isLoading = false
+              this.$store.dispatch('GetColumnAll')
               resolve()
             })
             .catch((error) => {

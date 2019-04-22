@@ -30,7 +30,7 @@
         </el-form-item>
         <el-form-item style="margin-bottom: 40px;" class="redItem" label="所属类型">
           <el-select v-model="classIdArr" @change="selectClass" multiple placeholder="请选择">
-            <el-option v-for="item in this.options" :key="item.class_id" :label="item.class_name" :value="item.class_id"/>
+            <el-option v-for="item in options" :key="item.class_id" :label="item.class_name" :value="item.class_id"/>
           </el-select>
         </el-form-item>
         <el-form-item label="是否开启点播">

@@ -3,58 +3,31 @@
     <el-dialog
       :visible.sync="dialogVisible"
       :title="title"
-      width="60%"
+      width="50%"
       :before-close="colseMe"
     >
-      <el-button type="primary" size="small" @click="startHandel">开始{{ title }}</el-button>
-      <el-table
-        :data="tableData"
-        style="width: 100%">
-        <el-table-column
-          prop="articleTitle"
-          label="标题"
-          show-overflow-tooltip
-          width="180"/>
-        <el-table-column
-          prop="articleTitle"
-          label="发布人"
-          width="100"/>
-        <el-table-column
-          prop="sendTime"
-          label="提交时间">
-          <template slot-scope="scope">
-            <span>{{ scope.row.sendTime|timeFilter }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="handelTime"
-          label="执行时间">
-          <template slot-scope="scope">
-            <span>{{ scope.row.sendTime|timeFilter }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="modifyTime"
-          label="完成时间">
-          <template slot-scope="scope">
-            <div>
-              <i v-if="!scope.row.modifyTime" class="el-icon-loading"/>
-              <span v-else>{{ scope.row.modifyTime }}</span>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
-      <!-- <span slot="footer" class="dialog-footer">
+      <el-tree
+        ref="tree"
+        :data="treeData"
+        show-checkbox
+        node-key="id"
+        :check-on-click-node="true"
+        :props="defaultProps"/>
+      <span slot="footer" class="dialog-footer">
         <el-button @click="$emit('update:dialogVisible', false)" size="small">取消</el-button>
-        <el-button type="primary" @click="$emit('update:dialogVisible', false)" size="small">确定</el-button>
-      </span> -->
+        <el-button type="primary" @click="handelConfirm" size="small">确定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
 <script>
-import { deleteDocumentMore, cancelDocumentMore, publishDocumentMore } from '@/api/cms/article'
+import { columnList } from '@/api/cms/columnManage'
+import mixins from '@/components/cms/mixins'
+import { copyTo, moveTo } from '@/api/cms/article'
+import { mapGetters } from 'vuex'
 export default {
   name: 'DocFoot',
+  mixins: [mixins],
   props: {
     dialogVisible: {
       default: false,
@@ -69,57 +42,64 @@ export default {
         []
       },
       type: Array
+    },
+    documentIds: {
+      default: ()=> {
+        []
+      },
+      type: Array
     }
   },
   data() {
     return {
       tableData: [],
-      chooseIds: []
+      chooseIds: [],
+      treeData: [],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
+      channelId: ''
     }
+  },
+  computed: {
+    ...mapGetters(['treeTags'])
   },
   watch: {
     dialogVisible(val) {
       if(val) {
-        this.chooseIds = []
-        this.tableData = this.multipleList
-        this.tableData.forEach((ele) => {
-          ele.sendTime = Date.now()
-          ele.handelTime =  Date.now()
-          ele.modifyTime =  ''
-          this.chooseIds.push(ele.articleId)
-        })
+        this.columnSearchList()
       }
     }
   },
   methods: {
-    startHandel() {
-      if(!this.tableData.length) {
-        this.$message.warning('请选择文章')
+    handelConfirm() {
+      let choosedList = this.$refs.tree.getCheckedNodes()
+      let choosedIds = []
+      if(choosedList.length) {
+        choosedIds = choosedList.map((ele) => {
+          return ele.channelId
+        })
+      }
+      if(!this.documentIds.length) {
         return
       }
-      switch(this.title) {
-        case '发布':
-          this.publishDocumentMore(this.chooseIds.join(','))
-          break
-        case '撤销发布':
-          this.cancelDocumentMore(this.chooseIds.join(','))
-          break
-        case '删除':
-          this.deleteMore(this.chooseIds.join(','))
-          break
-        default:
+      if(this.title == '复制到') {
+        this.copyTo(this.documentIds.join(','), choosedIds.join(','))
+      } else if(this.title == '引用到') {
+        console.log('引用')
+      } else  if (this.title == '移动到') {
+        this.moveTo(this.documentIds.join(','), choosedIds.join(','))
       }
     },
-    // 批量发布
-    publishDocumentMore(id) {
+    //复制到
+    copyTo(articleId,channelId) {
       return new Promise((resolve, reject) => {
-        publishDocumentMore({articleId: id})
+        copyTo(articleId,channelId)
           .then((response) => {
-            // this.$emit('handelSuccess')
-            this.$message.success('发布成功')
-            this.tableData.forEach((ele) => {
-              ele.modifyTime = response.data.result.modifyTime
-            })
+            this.$emit('update:dialogVisible', false)
+            this.$message.success('复制成功')
+            this.$emit('handelSuccess')
             resolve()
           })
           .catch((error) => {
@@ -127,16 +107,15 @@ export default {
           })
       })
     },
-    // 批量撤销
-    cancelDocumentMore(id) {
+    // 移动到
+    moveTo(articleId,channelId) {
       return new Promise((resolve, reject) => {
-        cancelDocumentMore({articleId: id})
+        moveTo(articleId,channelId)
           .then((response) => {
+            this.$emit('handelSuccess')
+            this.$message.success('复制成功')
+            this.$emit('update:dialogVisible', false)
             // this.$emit('handelSuccess')
-            this.$message.success('撤销成功')
-            this.tableData.forEach((ele) => {
-              ele.modifyTime = response.data.result.modifyTime
-            })
             resolve()
           })
           .catch((error) => {
@@ -144,16 +123,11 @@ export default {
           })
       })
     },
-    // 删除多个
-    deleteMore(id) {
+    columnSearchList() {
       return new Promise((resolve, reject) => {
-        deleteDocumentMore({articleId: id})
+        columnList({}, 1, 1000)
           .then((response) => {
-            // this.$emit('handelSuccess')
-            this.$message.success('删除成功')
-            this.tableData.forEach((ele) => {
-              ele.modifyTime = response.data.result.modifyTime
-            })
+            this.treeData = this.toTree(response.data.result.content)
             resolve()
           })
           .catch((error) => {

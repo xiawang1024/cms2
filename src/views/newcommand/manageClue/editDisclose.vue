@@ -39,10 +39,8 @@
     </v-form>
   </div>
 </template>
-
 <script>
 // const Upload = _ => import('@/components/cms/Upload/upload')
-
 export default {
   name: "ColumnHandel",
   // components: { Upload },
@@ -57,7 +55,6 @@ export default {
               name: "disclosureName",
               type: "text",
               required: true,
-
               placeholder: "请输入爆料名称"
             },
             {
@@ -111,7 +108,6 @@ export default {
           ]
         }
       ],
-
       routeQuery: {},
       isEdit: true,
       isLoading: false,
@@ -139,13 +135,11 @@ export default {
     },
     submitSave(formData) {
       this.isLoading = true;
-
       console.log("submitSavesubmitSave");
     }
   }
 };
 </script>
-
 <style lang="scss" scoped>
 // .addbaoliao {
 //   width: 700px;

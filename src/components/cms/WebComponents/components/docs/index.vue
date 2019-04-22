@@ -39,6 +39,8 @@ export default {
   watch: {
     treeTags(val) {
       if(val) {
+        this.pageNum = 1;
+        this.pageSize = 10;
         this.channelId = val[val.length - 1].id
         this.documentList(val)
       }
@@ -47,6 +49,8 @@ export default {
   created() {
     if(this.contextMenu.id == '0') {
       if(this.treeTags && this.treeTags.length) {
+        this.pageNum = 1;
+        this.pageSize = 10;
         this.channelId = this.treeTags[this.treeTags.length - 1].id
         this.documentList()
       }

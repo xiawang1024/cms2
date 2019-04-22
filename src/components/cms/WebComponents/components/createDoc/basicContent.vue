@@ -3,12 +3,6 @@
     <div class="tool-bar clearfix">
       <el-form ref="form" :model="typeForm" label-width="80px">
         <el-form-item label="文档类型">
-          <!-- <el-radio-group v-model="typeForm.articleType" size="small" @change="typeChange">
-            <el-radio-button label="0">图文</el-radio-button>
-            <el-radio-button label="1">图集</el-radio-button>
-            <el-radio-button label="2">拼条</el-radio-button>
-            <el-radio-button label="3">转载</el-radio-button>
-          </el-radio-group> -->
           <el-select v-model="typeForm.articleType" placeholder="请选择">
             <el-option
               v-for="item in options"
@@ -19,10 +13,10 @@
         </el-form-item>
       </el-form>
     </div>
-    <imageText ref="imageText" :prop-information="propInformation" :extends-list="extendsList" :other-settings="otherSettings" :tag-list="tagList" :source-list="sourceList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 0"/>
-    <images ref="images" :prop-information="propInformation" :extends-list="extendsList" :images-setting="imagesSeting" :tag-list="tagList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 1"/>
-    <splicing ref="splicing" :prop-information="propInformation" :channel-id = "channelId" :doc-infor="docInfor" :tag-list = "tagList" v-if="typeForm.articleType == 2"/>
-    <reproduce ref="reproduce" :prop-information="propInformation" :channel-id = "channelId" :doc-infor="docInfor" :reproduce-setting="reproduceSetting" :tag-list = "tagList" v-if="typeForm.articleType == 3"/>
+    <imageText ref="imageText" :extends-list="extendsList" :other-settings="otherSettings" :tag-list="tagList" :source-list="sourceList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 0"/>
+    <images ref="images" :extends-list="extendsList" :images-setting="imagesSeting" :tag-list="tagList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 1"/>
+    <splicing ref="splicing" :channel-id = "channelId" :doc-infor="docInfor" :tag-list = "tagList" v-if="typeForm.articleType == 2"/>
+    <reproduce ref="reproduce" :channel-id = "channelId" :doc-infor="docInfor" :reproduce-setting="reproduceSetting" :tag-list = "tagList" v-if="typeForm.articleType == 3"/>
   </div>
 </template>
 <script>
@@ -43,12 +37,12 @@ export default {
      default: '',
      type: String
    },
-   propInformation: {
-     default: ()=> {
-       return {}
-     },
-     type: Object
-   }
+  //  propInformation: {
+  //    default: ()=> {
+  //      return {}
+  //    },
+  //    type: Object
+  //  }
   },
   data() {
     return {
@@ -82,21 +76,18 @@ export default {
     ...mapGetters(['treeTags', 'contextMenu'])
   },
   watch: {
-    activeName(val) {
-      if(val == 'picturesAndAccessories' && this.typeForm.articleType == 0) {
-        console.log(this.$refs.imageText.getSubmitData(), '图文')
-        this.$emit('docInfor', this.$refs.imageText.getSubmitData())
+    activeName(val, oldVal) {
+      if(oldVal == 'basicContent' && this.typeForm.articleType == 0) {
+        this.$store.dispatch('setBaseInfor', this.$refs.imageText.getSubmitData())
       }
-      if(val == 'picturesAndAccessories' && this.typeForm.articleType == 1) {
-        console.log(this.$refs.images.getSubmitData(), '图集')
-        this.$emit('docInfor', this.$refs.images.getSubmitData())
+      if(oldVal == 'basicContent' && this.typeForm.articleType == 1) {
+        this.$store.dispatch('setBaseInfor', this.$refs.images.getSubmitData())
       }
-      if(val == 'picturesAndAccessories' && this.typeForm.articleType == 2) {
-        this.$emit('docInfor', this.$refs.splicing.getSubmitData())
+      if(oldVal == 'basicContent' && this.typeForm.articleType == 2) {
+        this.$store.dispatch('setBaseInfor', this.$refs.splicing.getSubmitData())
       }
-      if(val == 'picturesAndAccessories' && this.typeForm.articleType == 3) {
-        console.log( this.$refs.reproduce.getSubmitData(), '转载')
-        this.$emit('docInfor', this.$refs.reproduce.getSubmitData())
+      if(oldVal == 'basicContent' && this.typeForm.articleType == 3) {
+        this.$store.dispatch('setBaseInfor', this.$refs.reproduce.getSubmitData())
       }
     }
   },
@@ -158,7 +149,11 @@ export default {
             _this.otherSettings[0].items[0].options = _this.tagList
             _this.imagesSeting[0].items[6].options = _this.tagList
             _this.reproduceSetting[0].items[3].options = _this.tagList
-            _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList)
+            let obj = {};
+            _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList).reduce((cur,next) => {
+              obj[next.label] ? "" : obj[next.label] = true && cur.push(next);
+              return cur
+            }, [])
             if(_this.tagList.length) {
               console.log()
             } else {
@@ -182,7 +177,7 @@ export default {
         documentInfor(id)
           .then((response) => {
             _this.docInfor = response.data.result
-            _this.$emit('docInfor', _this.docInfor)
+            // _this.$emit('docInfor', _this.docInfor)
             _this.typeForm.articleType = response.data.result.articleType ? response.data.result.articleType : 0
             if(_this.docInfor.extFieldsList && _this.docInfor.extFieldsList.length) {
               _this.docInfor.extFieldsList.forEach((ele) => {
@@ -205,7 +200,7 @@ export default {
               _this.sourceList = response.data.result.details.map((ele) => {
                 return {
                   label: ele.dictDetailName,
-                  value: ele.dictDetailId
+                  value: ele.dictDetailName
                 }
               })
               _this.imagesSeting[0].items[2].options = _this.sourceList

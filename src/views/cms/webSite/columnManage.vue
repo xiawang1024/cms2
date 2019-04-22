@@ -66,6 +66,8 @@
 // import { fetchDictByDictName } from '@/api/cms/dict'
 import { columnList, deleteColumn } from '@/api/cms/columnManage'
 import mixins from '@/components/cms/mixins'
+import store from 'store'
+import { mapGetters } from 'vuex'
 export default {
   name: 'ColumnManage',
   mixins: [mixins],
@@ -77,7 +79,7 @@ export default {
       totalCount: 0,
       searchSettings: [{
         label: '栏目名称',
-        name: 'channelName',
+        name: 'channelId',
         placeholder: '请输入栏目名称',
         visible: true,
         options: [],
@@ -102,18 +104,20 @@ export default {
       searchData: {}
     }
   },
+  computed: {
+    ...mapGetters(['columnAll'])
+  },
   watch:{
-    '$route'(val){
-      console.log(val)
-      this.columnList()
-      this.columnSearchList()
+    columnAll(val) {
+      this.searchSettings[0].options = val
     }
   },
   mounted() {
     this.columnList()
+    this.searchSettings[0].options= this.columnAll.length ? this.columnAll : store.get('columnsAll')
   },
   created() {
-    this.columnSearchList()
+    // this.columnSearchList()
   },
   methods: {
     columnSearchList() {
@@ -149,10 +153,10 @@ export default {
     },
     searchItem(searchData) {
       this.searchData = searchData
-      if(this.searchData.channelName && this.searchData.channelName.length) {
-        this.searchData.channelName = this.searchData.channelName[this.searchData.channelName.length - 1]
+      if(this.searchData.channelId && this.searchData.channelId.length) {
+        this.searchData.channelId = this.searchData.channelId[this.searchData.channelId.length - 1]
       } else {
-        this.searchData.channelName = ''
+        this.searchData.channelId = ''
       }
       this.pageNum = 1
       this.columnList()

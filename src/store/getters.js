@@ -25,6 +25,8 @@ const userInfo = {
   sysType: (state) => state.user.sysType,
   tenantId: (state) => state.user.tenantId,
   siteName: (state) => state.user.siteName,
+  currentInfor: (state) => state.user.currentInfor,
+  columnAll: (state) => state.user.columnAll,
 }
 /**
  * cms
@@ -33,13 +35,14 @@ const cms = {
   viewType: (state) => state.cms.viewType,
   viewTypeShow: (state) => state.cms.viewTypeShow,
   treeTags: (state) => state.cms.tags,
-  contextMenu: (state) => state.cms.contextMenu
+  contextMenu: (state) => state.cms.contextMenu,
+  getDocInformation: (state) => state.cms.docInformation
 }
 /**
  * newCommand
  */
 const newCommand = {
-  discloseClassify: (state) => state.newCommand.discloseClassify,
+  discloseClassifys: (state) => state.newCommand.discloseClassifys,
 
 }
 const getters = {

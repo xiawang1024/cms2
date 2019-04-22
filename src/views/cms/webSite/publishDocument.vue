@@ -41,6 +41,7 @@ import WebComponents from '@/components/cms/WebComponents'
 import { mapGetters } from 'vuex'
 import { columnList } from '@/api/cms/columnManage'
 import mixins from '@/components/cms/mixins'
+import store from 'store'
 export default {
   name: 'WebSiteWrap',
   components: { WebSiteTag, splitPane, Tree, WebComponents },
@@ -53,19 +54,22 @@ export default {
       tableData: []
     }
   },
+  /**
+   * columnAll 全部栏目列表
+   */
   computed: {
-    ...mapGetters(['contextMenu', 'choosedColumn'])
+    ...mapGetters(['contextMenu', 'choosedColumn', 'columnAll', 'treeTags'])
   },
   watch: {
-    contextMenu(val) {
-      if(val.id == '0') {
-        // this.columnList()
-      }
+    columnAll(val) {
+      this.tableData = val
+      this.barSet()
     }
   },
   mounted() {
-    this.columnList()
+    this.tableData = this.columnAll.length ? this.columnAll : store.get('columnsAll')
     this.$store.dispatch('toggleSideBar')
+    this.barSet()
   },
   // TODO:webSiteViewType
   beforeRouteEnter(to, from, next) {
@@ -87,7 +91,46 @@ export default {
   },
   methods: {
     resize() {
-      console.log('resize')
+    },
+    barSet() {
+      if(this.tableData.length) {
+        if(this.treeTags && this.treeTags.length) {
+          this.$nextTick(() => {
+            if(this.tableData && this.tableData.length) {
+              document.querySelectorAll('.el-tree-node').forEach((ele, index) => {
+                if(ele.innerText.split('\n')[0] == this.treeTags[this.treeTags.length - 1].label) {
+                  document.querySelectorAll('.el-tree-node')[index].classList.add('is-current')
+                }
+              })
+            }
+          })
+        } else {
+          let webSiteTags = []
+          if(this.tableData[0].children && this.tableData[0].children.length) {
+            webSiteTags = [{
+              channelCode: this.tableData[0].children[0].channelCode,
+              id: this.tableData[0].children[0].channelId,
+              label: this.tableData[0].children[0].channelName
+            }]
+          } else {
+            webSiteTags = [{
+              channelCode: this.tableData[0].channelCode,
+              id: this.tableData[0].channelId,
+              label: this.tableData[0].channelName
+            }]
+          }
+          this.$store.dispatch('setTreeTags', webSiteTags)
+          this.$nextTick(() => {
+            if(this.tableData && this.tableData.length) {
+              if(this.tableData[0].children) {
+                document.querySelectorAll('.el-tree-node')[1].classList.add('is-current')
+              } else {
+                document.querySelectorAll('.el-tree-node')[0].classList.add('is-current')
+              }
+            }
+          })
+        }
+      }
     },
     columnList() {
       var _this = this
