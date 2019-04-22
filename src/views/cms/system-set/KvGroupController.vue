@@ -17,14 +17,12 @@
     </div>
     <el-table :data="allGroup" >            
       <el-table-column prop="id" label="id"/>
-      <el-table-column prop="tenantId" label="租户ID"/>
       <el-table-column prop="description" label="描述"/>
       <el-table-column prop="tag" label="标签"/>
       <el-table-column prop="sort" label="排序"/>            
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="prime" @click="commentForm(2, scope.row)">编辑</el-button>
-          
           <el-button size="mini" type="warning" @click="handleSerch(scope.row.id,scope.row.description)">详情</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
@@ -51,6 +49,7 @@
 
 <script>
 import {getAllGroup,groupSave,deleteGroup,addGroupRequest,getAppDetail} from "@/api/cms/KvGroup.js"
+
 
 export default {
     data(){
@@ -80,14 +79,14 @@ export default {
                 "id": "",
                 "sort": "",
                 "tag": "",
-                "tenantId": ""
+                "tenantId": this.$store.getters.tenantId
             },
             searchData:{
                 "description": "",
                 "id": "",
                 "sort": "",
                 "tag": "",
-                "tenantId": ""
+                "tenantId": this.$store.getters.tenantId
             },
             dialogTitle:'新增',
             dialogVisible:false,
@@ -117,20 +116,20 @@ export default {
                     required: true,
                     placeholder: '请输入标签'
                   },
-                  {
-                    label: '租户ID',
-                    name: 'tenantId',
-                    type: 'text',
-                    required: true,
-                    placeholder: '请输入字母或者数字！',
+                  // {
+                  //   label: '租户ID',
+                  //   name: 'tenantId',
+                  //   type: 'text',
+                  //   required: true,
+                  //   placeholder: '请输入字母或者数字！',
                     // rule: [{
                     //       validator: this.checkTenantId,
                     //     }, {
                     //       required: true,
                     //       trigger: 'blur'
                     //     }],
-                    hidden:true
-                  },
+                  //   hidden:true
+                  // },
                   {
                     label:'id',
                     name: 'id',
@@ -150,32 +149,38 @@ export default {
     },
     created(){
       var _this=this
+      // console.log(this.$store.getters,'查看公共状态')
+      
         this.getTableData(_this.defaultData) 
-        console.log(this.defaultData,'duhz')
+        // console.log(this.defaultData,'duhz')
     },
     methods:{
+     
         //通用对话框
         commentForm(a,b){
           this.dialogVisible=true;
           if(a==1){
             this.handleType="新增"
             this.formData={}
-            this.formSettings[0].items[3].hidden=false
-            this.formSettings[0].items[4].hidden=true
+            // this.formSettings[0].items[3].hidden=false
+            this.formSettings[0].items[3].hidden=true;
+            this.formSettings[0].items[0].required=true;
+            this.formSettings[0].items[1].required=true;
+            this.formSettings[0].items[2].required=true;
 
             //新增
 
 
           }else if(a==2){
             //修改
-            console.log(b,'b')
+            // console.log(b,'b')
             this.handleType="编辑"
             this.formData={}
             
+            // this.formSettings[0].items[3].hidden=true
             this.formSettings[0].items[3].hidden=true
-            this.formSettings[0].items[4].hidden=true
             this.formData=b
-            console.log(this.formData,'formdate')
+            // console.log(this.formData,'formdate')
 
           }else if(a==3){
             //检索
@@ -184,8 +189,8 @@ export default {
              this.formSettings[0].items.forEach((item)=>{
                item.required=false;
              })
+            // this.formSettings[0].items[3].hidden=false
             this.formSettings[0].items[3].hidden=false
-            this.formSettings[0].items[4].hidden=false
 
 
           }
@@ -202,24 +207,25 @@ export default {
         // },
       submitSave(row){
         var _this=this
-        console.log(row,'row')
+        // console.log(row,'row')
         let sendPass=true;
           if(this.handleType=="新增"){
             //新增接口
-             console.log(this.addGroup.tenantId,'赋值前')
-             let patt=/^[A-Za-z0-9]+$/;
-             if(!patt.test(row.tenantId)){
-               console.log('校验')
-               sendPass=false;
-               return  _this.$message({                       
-                        type: 'error',
-                        message: '请在tenantId栏目输入字母或者数字!'
-                       });
+            //  console.log(this.addGroup.tenantId,'赋值前')
+            //  let patt=/^[A-Za-z0-9]+$/;
+            //  if(!patt.test(row.tenantId)){
+            //    console.log('校验')
+            //    sendPass=false;
+            //    return  _this.$message({                       
+            //             type: 'error',
+            //             message: '请在tenantId栏目输入字母或者数字!'
+            //            });
 
-             }
+            //  }
+            
              let patt1=/^[0-9]+$/;
              if(!patt1.test(row.sort)){
-               console.log('校验')
+              //  console.log('校验')
                sendPass=false;
                return  _this.$message({                       
                         type: 'error',
@@ -229,29 +235,29 @@ export default {
              }
             if(sendPass){
               this.addGroup={
-              tenantId:row.tenantId,
+              tenantId:this.$store.getters.tenantId,
               description:row.description,
               sort:row.sort,
               tag:row.tag
               }
-              console.log(this.addGroup.tenantId,'赋值后')
+              // console.log(this.addGroup.tenantId,'赋值后')
              this.handleAdd(this.addGroup)
             }
-          }else if(this.handleType=="修改"){
+          }else if(this.handleType=="编辑"){
             //修改接口
-               let patt=/^[0-9]+$/;
-             if(!patt.test(row.id)){
-               console.log('校验')
-               sendPass=false;
-               return  _this.$message({                       
-                        type: 'error',
-                        message: '请在tenantId栏目输入字母或者数字!'
-                       });
+            //    let patt=/^[0-9]+$/;
+            //  if(!patt.test(row.id)){
+            //    console.log('校验')
+            //    sendPass=false;
+            //    return  _this.$message({                       
+            //             type: 'error',
+            //             message: '请在tenantId栏目输入字母或者数字!'
+            //            });
 
-             }
+            //  }
              let patt1=/^[0-9]+$/;
              if(!patt1.test(row.sort)){
-               console.log('校验')
+              //  console.log('校验')
                sendPass=false;
                return  _this.$message({                       
                         type: 'error',
@@ -273,7 +279,7 @@ export default {
             
             if(sendPass){
                 this.searchData={
-                tenantId:row.tenantId,
+                tenantId:this.$store.getters.tenantId,
                 description:row.description,
                 sort:row.sort,
                 tag:row.tag,
@@ -290,12 +296,12 @@ export default {
       //获取所有列表
       getTableData(obj){
         var _this=this;
-        console.log(_this.pageNum,'页面')
+        // console.log(_this.pageNum,'页面')
         return new Promise((resolve,reject)=>{
            
             getAllGroup(_this.pageNum,_this.pageSize,obj)
             .then((response)=>{
-            console.log(response.data.result)
+            // console.log(response,'全部配置组')
             _this.totalCount=response.data.result.totalElements
             _this.allGroup=response.data.result.content
             _this.dialogVisible=false;
@@ -315,7 +321,7 @@ export default {
           return new Promise((resolve,reject)=>{
             getAppDetail(id)
             .then((response)=>{
-              console.log(response.data.result)
+              // console.log(response.data.result)
               if(response.data.code==0){
                  _this.allGroup=[response.data.result]
                  _this.backButtonVisible=true;
@@ -340,7 +346,7 @@ export default {
           return new Promise((resolve,reject)=>{
             addGroupRequest(obj)
             .then((response)=>{
-              console.log(response)
+              // console.log(response)
               _this.dialogVisible=false
               _this.$message({                       
                         type: 'success',
@@ -372,18 +378,18 @@ export default {
             //调用模态框
             this.Visible=true;
             // this.tenant=b;
-            console.log(b)
+            // console.log(b)
             
         },
         //修改保存、发送保存请求
         handleEditeSave(){
             var _this=this
-            console.log(_this.tenant.id,'ttttt')
+            // console.log(_this.tenant.id,'ttttt')
             
             return new Promise((resolve,reject)=>{
                 groupSave(_this.tenant)
                 .then((response)=>{
-                    console.log(response)
+                    // console.log(response)
                     if(response.data.code==0){
                        _this.dialogVisible=false;
                       this.$message({                       
@@ -419,12 +425,12 @@ export default {
                 type: 'warning'
                 }).then(() => {
                     
-                     console.log("111")
-                     console.log(b.id)
+                    //  console.log("111")
+                    //  console.log(b.id)
                     new Promise((resolve,reject)=>{
                     deleteGroup(b.id)
                     .then((response)=>{
-                      console.log(response)
+                      // console.log(response)
                       if(response.data.code==0){
                         this.$message({
                         type: 'success',

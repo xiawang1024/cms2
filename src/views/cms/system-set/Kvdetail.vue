@@ -538,8 +538,8 @@
             })
           },
           handleSearch(){
-           
             var _this=this
+            this.formData={}
             this.requestType="search"
             this.dialogTitle='检索'
             for(let i=0;i<8;i++){
