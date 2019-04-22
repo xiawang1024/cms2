@@ -15,7 +15,7 @@
             wrap-class="scrollbar-wrapper"
             style="height:100%;"
           >
-            <tree :tree-data = "tableData"/>
+            <tree :tree-data = "tableData" ref="tree"/>
           </el-scrollbar>
         </div>
       </template>
@@ -96,13 +96,7 @@ export default {
       if(this.tableData.length) {
         if(this.treeTags && this.treeTags.length) {
           this.$nextTick(() => {
-            if(this.tableData && this.tableData.length) {
-              document.querySelectorAll('.el-tree-node').forEach((ele, index) => {
-                if(ele.innerText.split('\n')[0] == this.treeTags[this.treeTags.length - 1].label) {
-                  document.querySelectorAll('.el-tree-node')[index].classList.add('is-current')
-                }
-              })
-            }
+            this.$refs.tree.$refs.websitTree.setCurrentKey(this.treeTags[this.treeTags.length - 1].id)
           })
         } else {
           let webSiteTags = []

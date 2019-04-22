@@ -181,7 +181,6 @@ request.interceptors.request.use(
  */
 request.interceptors.response.use(
   (res) => {
-    console.log(res, 'response')
     requestLoading.close(res.config.url)
     return res
   },
