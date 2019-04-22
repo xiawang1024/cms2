@@ -22,7 +22,7 @@
         </el-form-item>
         <el-form-item style="margin-bottom: 40px;" label="栏目主播">
           <el-select v-model="compere_arr" @change="selectCompere" multiple placeholder="多选">
-            <el-option :key="0" label="无主播" :value="0"/>
+            <el-option :key="0" label="无主播" value="无主播"/>
             <el-option :disabled="compereState" v-for="item in this.compereOptions" :key="item.compere_id" :label="item.compere_name" :value="item.compere_name"/>
           </el-select>
         </el-form-item>
@@ -185,6 +185,9 @@ export default {
       })
     },
     submitData() {
+      if(this.compere_arr.length == 0){
+        this.compere_str = '无主播'
+      }
       //将信息集体打包成json作为单独一个字段传入后台
       Vue.set(this.postInfo, 'channel_name', this.channel_name)
       Vue.set(this.postInfo, 'compere_str', this.compere_str)
@@ -228,9 +231,9 @@ export default {
     },
     selectCompere(cId) {
       this.compere_arr = cId
-      this.compereState = this.compere_arr.includes(0)
+      this.compereState = this.compere_arr.includes('无主播')
       if(this.compereState){  //如果选中无主播
-        this.compere_arr = [0]
+        this.compere_arr = ['无主播']
       }
       this.compere_str = this.compere_arr.join(',')
     },
