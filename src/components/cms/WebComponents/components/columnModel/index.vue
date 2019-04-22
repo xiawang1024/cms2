@@ -4,7 +4,7 @@
       <v-search :search-settings="searchSettings" @search="searchItem" ref="vSearch"/>
     </div>
     <div class="tool-bar">
-      <el-button type="primary" v-if="checkAuth('cms:channel:add')" @click="columnAddEdit(true, 'father')" size="small">添加</el-button>
+      <el-button type="primary" v-if="checkAuth('cms:channel:add')" @click="modelAddEdit(true, 'father')" size="small">添加</el-button>
     </div>
     <el-table :data="tableData" style="width:100%" size="small" highlight-current-row>
       <el-table-column prop="templateName" label="模板名称"/>
@@ -32,12 +32,50 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
+    <v-page :visible.sync="showPage" @goBack="goBack">
+      <h3 slot="title">{{ title }}</h3>
+      <template slot="content">
+        <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave">
+          <template slot="templateContent">
+            <div class="model-content">
+              <el-row>
+                <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
+                  <div class="model-left">
+                    <el-input
+                      type="textarea"
+                      placeholder="请输入内容"
+                      v-model="modelContent"/>
+                  </div>
+                </el-col>
+                <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
+                  <div class="model-right">
+                    <el-card class="box-card">
+                      <div v-for="(ele, index) in modelList" :key="index" class="text item">
+                        <div>
+                          <div>{{ ele.componentName }}</div>
+                          <div>{{ ele.componentName }}</div>
+                        </div>
+                        <div>{{ ele.componentDescription }}</div>
+                      </div>
+                    </el-card>
+                  </div>
+                </el-col>
+              </el-row>
+            </div>
+            <!-- <div class="choosed-list">
+              <choosed-list ref="choosedList" :details-list = "detailsList"/>
+            </div> -->
+          </template>
+        </v-form>
+      </template>
+    </v-page>
   </div>
 </template>
 
 <script>
 // import { fetchDictByDictName } from '@/api/cms/dict'
 import { fetchList } from "@/api/cms/template";
+import { fetchComponentList } from '@/api/cms/component'
 import mixins from '@/components/cms/mixins'
 import store from 'store'
 import { mapGetters } from 'vuex'
@@ -64,7 +102,90 @@ export default {
         visible: true,
         type: 'text'
       }],
-      searchData: {}
+      searchData: {},
+      showPage: false,
+      title: '添加模板',
+      formData: {},
+      formSettings: [
+        {
+          items: [
+            {
+              label: '所属栏目',
+              name: 'channelId',
+              type: 'text',
+              placeholder: '请选择'
+            },
+            {
+              label: '模板类别',
+              name: 'templateType',
+              type: 'select',
+              placeholder: '请选择',
+              options: [
+                {
+                  value: 'list',
+                  label: '列表组件'
+                },
+                {
+                  value: 'index',
+                  label: '首页组件'
+                },
+                {
+                  value: 'content',
+                  label: '正文组件'
+                }
+              ]
+            },
+            {
+              label: '适用平台',
+              name: 'templateFormat',
+              type: 'select',
+              placeholder: '请选择',
+              options: [
+                {
+                  value: 'pc',
+                  label: '电脑页面'
+                },
+                {
+                  value: 'mobile',
+                  label: '手机页面'
+                }
+              ]
+            },
+            {
+              label: '是否有效',
+              name: 'enableFlag',
+              activeValue: 1,
+              inactiveValue: 0,
+              value: 1,
+              type: 'switch'
+            },{
+              label: '模板名称',
+              name: 'templateName',
+              type: 'text',
+              placeholder: '请输入模板名称'
+            },{
+              label:'文件名',
+              name: 'templateFilename',
+              type:'text',
+              placeholder: '请输入文件名'
+            },
+            {
+              label:'描述',
+              name: 'templateDescription',
+              type:'textarea',
+              placeholder: '请输入'
+            },
+            {
+              label:'模板内容',
+              name: 'templateContent',
+              type:'slot',
+              placeholder: '请输入'
+            }
+          ]
+        }
+      ],
+      modelContent: '',
+      modelList: []
     }
   },
   computed: {
@@ -73,6 +194,11 @@ export default {
   watch:{
     columnAll(val) {
       this.searchSettings[0].options = val
+    },
+    showPage(val) {
+      if(val) {
+        this.getModelList()
+      }
     }
   },
   mounted() {
@@ -92,14 +218,24 @@ export default {
     // this.columnSearchList()
   },
   methods: {
-    channelNameChange(val) {
-      let arr = []
-      if(val) {
-        arr = val.split(',').concat([''])
-      } else {
-        arr = []
-      }
-      return arr
+    // 获取模板列表
+    getModelList() {
+      return new Promise((resolve, reject) => {
+        fetchComponentList({}, 1, 100)
+          .then((response) => {
+            this.modelList = response.data.result.content
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    goBack() {
+
+    },
+    submitSave() {
+
     },
     checkAuth (authKey) {
       if (this.$store.getters.authorities.indexOf(authKey) === -1) {
@@ -159,7 +295,8 @@ export default {
       this.pageNum = val
       this.columnList(this.searchData)
     },
-    columnAddEdit(handelType, type, channelId) {
+    modelAddEdit(handelType, type, channelId) {
+      this.showPage = true
       // this.$router.push({
       //   path: '/cms/website/columnHandel',
       //   query: {
@@ -168,39 +305,6 @@ export default {
       //     channelId: channelId
       //   }
       // })
-    },
-    columnTemplate(row) {
-      this.$router.push({
-        path: '/cms/website/columnTemplate',
-        query: {
-          channelId: row.channelId,
-          parentChannelId: row.parentChannelId
-        }
-      })
-    },
-    extendsWord(row) {
-      this.$router.push({
-        path: '/cms/website/extendsWord',
-        query: {
-          channelId: row.channelId
-        }
-      })
-    },
-    tagSetting(row) {
-      this.$router.push({
-        path: '/cms/website/tagSetting',
-        query: {
-          channelId: row.channelId
-        }
-      })
-    },
-    waterSetting(row) {
-      this.$router.push({
-        path: '/cms/website/waterSetting',
-        query: {
-          channelId: row.channelId
-        }
-      })
     },
     columnDel(row) {
       this.$confirm('此操作将永久删除该栏目, 是否继续?', '提示', {
@@ -225,29 +329,36 @@ export default {
     margin-top:20px;
     margin-bottom:20px;
   }
-  // .el-table {
-  //   // td, th{
-  //   //   padding:0;
-  //   // }
-  //   .space-holder {
-  //     width: 2px;
-  //     height: 20px;
-  //     background-color: #67C23A;
-  //     display: inline-block;
-  //     vertical-align: middle;
-  //     margin-right: 5px;
-  //   }
-  //   .space-length{
-  //     width: 10px;
-  //     height: 20px;
-  //     display: inline-block;
-  //     vertical-align: middle;
-  //   }
-  //   tr {
-  //     td {
-  //       padding:0px;
-  //     }
-  //   }
-  // }
+  .v-form {
+    max-width: 1000px;
+    // .el-form-item {
+    //   max-width: 800px;
+    // }
+    // .el-form-item:nth-child(8) {
+    //   max-width:100%;
+    // }
+    // .el-form-item:nth-child(7) {
+    //   max-width:100%;
+    // }
+  }
+  .model-content {
+    .model-left{
+      padding-right:20px;
+      margin-bottom:5px;
+      textarea{
+        height: 350px;
+      }
+    }
+    .model-right{
+      .el-card__body{
+        height: 350px;
+        overflow-y: scroll;
+        .item{
+          border-bottom:1px solid #dcdfe6;
+          margin-bottom:10px;
+        }
+      }
+    }
+  }
 }
 </style>
