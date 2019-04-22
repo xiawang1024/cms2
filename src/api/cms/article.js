@@ -273,5 +273,8 @@ export function getLiveInfor(id) {
   return request({
     url: `/cms/articleLiveComment/${id}`,
     method: 'get',
+    loadingConfig: {
+      target: '.el-dialog__body'
+    }
   })
 }
