@@ -115,7 +115,7 @@ export default {
       this.listLoading = true
       fetchList(this.searchData).then(response => {
         this.list = response.data.result.content
-        this.total = response.data.result.totalElements
+        this.totalCount = response.data.result.totalElements
         this.listLoading = false
       })
     },
