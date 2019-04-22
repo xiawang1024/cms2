@@ -28,7 +28,6 @@ export const currentDoc = [
   //   label: '引用到'
   // }
 ]
-
 export const currentColumn = [
   // {
   //   id: '1',
