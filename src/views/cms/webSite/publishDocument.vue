@@ -93,9 +93,6 @@ export default {
     resize() {
     },
     barSet() {
-      console.log(this.tableData, 'tableData')
-      console.log(this.treeTags, 'this.treeTags')
-      console.log(this.$refs.tree.$refs.websitTree, 'this.websitTree')
       if(this.tableData.length) {
         if(this.treeTags && this.treeTags.length) {
           this.$nextTick(() => {
