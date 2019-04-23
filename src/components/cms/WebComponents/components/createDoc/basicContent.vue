@@ -114,7 +114,7 @@ export default {
         case '1':
           return 'text'
         case '2':
-          return 'date'
+          return 'datetime'
         case '3':
           return 'number'
         default: ''
