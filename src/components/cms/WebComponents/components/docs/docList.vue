@@ -133,9 +133,9 @@ export default {
   methods: {
     // 查看审核进度
     reviewStep(row) {
-      console.log(row)
-      this.documentInfor = row
-      this.stepVisible = true
+      // console.log(row)
+      // this.documentInfor = row
+      // this.stepVisible = true
     },
     // 文章排序
     articalSort(data) {
