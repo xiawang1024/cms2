@@ -181,7 +181,7 @@ export default {
         deleteColumn({ channelId: row.channelId })
           .then((response) => {
             _this.columnList()
-            console.log(321)
+            this.$store.dispatch('GetColumnAll')
             if (response.data.code === 0) {
               _this.$message.success('操作成功！')
             } else {

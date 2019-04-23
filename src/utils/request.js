@@ -23,9 +23,9 @@ const requestLoading = (() => {
     if(loadingConfig.noLoading) {
       return
     }
-    // if(url === '/uua/oauth/check_token' || '/uua/oauth/token') {
-    //   return
-    // }
+    if(url === '/uua/oauth/check_token' || '/uua/oauth/token') {
+      return
+    }
     loadingStack.set(url, Loading.service({
       target: loadingConfig.target || '.main-container .app-main',
       lock: true,

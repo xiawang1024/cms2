@@ -18,7 +18,10 @@ export function fetchDict(id) {
 export function fetchDictByDictName(dictName) {
   return request({
     url: '/cms/dict/findbydictname?dictName=' + dictName,
-    method: 'get'
+    method: 'get',
+    // loadingConfig: {
+    //   noLoading: true
+    // }
   })
 }
 
