@@ -2,6 +2,7 @@
   <el-table
     :data="list"
     style="width: 100%"
+    size="mini"
     highlight-current-row>
     <el-table-column
       prop="documentName"
@@ -26,8 +27,8 @@
       label="操作">
       <template slot-scope="scope">
         <div>
-          <el-button size="small" type="primary" @click="editDoc(scope.row)">编辑</el-button>
-          <el-button size="small" type="danger" @click="delDoc(scope.row)">删除</el-button>
+          <el-button size="mini" type="primary" @click="editDoc(scope.row)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="delDoc(scope.row)">删除</el-button>
         </div>
       </template>
     </el-table-column>

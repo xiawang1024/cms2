@@ -14,20 +14,21 @@ export const currentDoc = [
   {
     id: '4',
     label: '删除'
-  }
-  // {
-  //   id: '5',
-  //   label: '复制到'
-  // },
-  // {
-  //   id: '6',
-  //   label: '移动到'
-  // },
+  },
+  {
+    id: '5',
+    label: '复制到'
+  },
+  {
+    id: '6',
+    label: '移动到'
+  },
   // {
   //   id: '7',
   //   label: '引用到'
   // }
 ]
+
 
 export const currentColumn = [
   // {
@@ -42,6 +43,22 @@ export const currentColumn = [
     id: '2',
     label: '建立子栏目'
   },
+  {
+    id: '4',
+    label: '栏目图片'
+  },
+  {
+    id: '5',
+    label: '自定义文档列表'
+  },
+  {
+    id: '6',
+    label: '栏目水印'
+  },
+  // {
+  //   id: '7',
+  //   label: '模板'
+  // },
   // {
   //   id: '4',
   //   label: '栏目图片'

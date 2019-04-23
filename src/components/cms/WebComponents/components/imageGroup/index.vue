@@ -4,7 +4,7 @@
       <el-button
         size="small"
         type="primary"
-        @click="handleAdd"
+        @click="handleGroup('add')"
       >新增</el-button>
     </div>
     <el-table
@@ -14,23 +14,23 @@
       highlight-current-row
     >
       <el-table-column
-        prop="name"
+        prop="picGroupName"
         min-width="150px"
         show-overflow-tooltip
         label="名称"
       />
       <el-table-column
-        prop="desc"
+        prop="picGroupRemark"
         show-overflow-tooltip
         min-width="150px"
         label="描述"
       />
       <el-table-column
-        prop="imageNum"
+        prop="picCount"
         label="图片数量"
       />
       <el-table-column
-        prop="author"
+        prop="createUser"
         label="创建人"
       />
       <el-table-column
@@ -59,7 +59,7 @@
       :visible.sync="addImageGroupVisible"
       :before-close="handleClean"
       top="8vh"
-      title="收货地址"
+      :title="title"
     >
       <el-row :gutter="20">
         <el-col :xs="24" :sm="12" :md="12" :lg="14" :xl="14">
@@ -99,8 +99,8 @@
 </template>
 <script>
 import Upload from '@/components/cms/Upload/uploadBtn'
-import { imageGroupList } from './mockData.js'
 import { columnInfor } from '@/api/cms/columnManage'
+import { columnImageList, createImageList, getImageListInfor, editImageList, deleteImageList } from '@/api/cms/article'
 import { mapGetters } from 'vuex'
 export default {
   name: 'ImageGroup',
@@ -108,28 +108,28 @@ export default {
   data() {
     return {
       addImageGroupVisible: false,
-      imageGroupList: imageGroupList,
-      imageGroupForm: {
-        id: '',
-        name: '',
-        desc: '',
-        disable: '',
-        tag: '',
-        imageList: []
-      },
+      imageGroupList: [],
+      // imageGroupForm: {
+      //   id: '',
+      //   name: '',
+      //   desc: '',
+      //   disable: '',
+      //   tag: '',
+      //   imageList: []
+      // },
       rightCardShow: false,
       showPreview: false,
       formSettings: [{
         items: [
           {
             label: '名称',
-            name: 'groupName',
+            name: 'picGroupName',
             type: 'text',
             placeholder: '请输入名称'
           },
           {
             label: '描述',
-            name: 'groupDes',
+            name: 'picGroupRemark',
             type: 'text',
             placeholder: '请输入描述'
           },
@@ -144,18 +144,18 @@ export default {
           },
           {
             label: '标签',
-            name: 'tagIds',
+            name: 'tagIdsList',
             type: 'checkbox',
             options: []
           },
           {
             label: '图片组',
-            name: 'contentImagesList',
+            name: 'details',
             type: 'img',
             required: false,
             // hasTextInput: true,
             hidden: false,
-            maxSize: 1024*1
+            maxSize: 1024*5
           }
         ]
       }],
@@ -173,15 +173,15 @@ export default {
           },
           {
             label: '描述',
-            name: 'desc',
+            name: 'description',
             type: 'textarea',
           },
-          {
-            label: '设为封面',
-            name: 'coverBool',
-            type: 'switch',
-            hidden: false
-          },
+          // {
+          //   label: '设为封面',
+          //   name: 'coverBool',
+          //   type: 'switch',
+          //   hidden: false
+          // },
           {
             label: '',
             name: 'btn',
@@ -191,19 +191,58 @@ export default {
       }],
       formData: {},
       singleData: {},
-      filedetail: {}
+      filedetail: {},
+      pageNum: 1,
+      pageSize: 30,
+      title: '新增',
+      picGroupId: '',
+      tagList: []
     }
   },
   computed: {
     ...mapGetters(['treeTags'])
   },
   mounted() {
-    this.getColumnInfor()
+    this.getColumnImage()
   },
   methods: {
     submitSave(data) {
-      console.log(data, 'data')
-      console.log(this.$refs.vform.formModel)
+      data.channelId = this.treeTags[this.treeTags.length - 1].id
+      console.log(data, 'data1')
+      if(data.details && data.details.length) {
+        data.details.forEach((ele) => {
+          ele.picUrl = ele.url,
+          ele.picName = ele.name
+        })
+      }
+      if(this.title == '新增') {
+        return new Promise((resolve, reject) => {
+          createImageList(data)
+            .then((response) => {
+              this.$message.success('添加成功')
+              this.addImageGroupVisible = false
+              this.getColumnImage()
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+            })
+        })
+      } else {
+        data.picGroupId = this.picGroupId
+        return new Promise((resolve, reject) => {
+          editImageList(data)
+            .then((response) => {
+              this.$message.success('编辑成功')
+              this.addImageGroupVisible = false
+              this.getColumnImage()
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+            })
+        })
+      }
     },
     fileDetail(val) {
       this.rightCardShow = true
@@ -220,18 +259,14 @@ export default {
     setFile() {
       this.filedetail.desc = this.$refs.formSetting.formModel.desc
       this.filedetail.title = this.$refs.formSetting.formModel.title
-      this.filedetail.coverBool = this.$refs.formSetting.formModel.coverBool
+      // this.filedetail.coverBool = this.$refs.formSetting.formModel.coverBool
+      this.filedetail.description = this.$refs.formSetting.formModel.description
       this.$message.success('保存成功')
     },
-    handleAdd() {
-      this.imageGroupForm = {
-        id: '',
-        name: '',
-        desc: '',
-        disable: '',
-        tag: '',
-        imageList: []
-      }
+    handleGroup(type) {
+      this.rightCardShow = false
+      this.formData = {}
+      this.title = "新增"
       this.addImageGroupVisible = true
     },
     // 获取栏目详情
@@ -259,15 +294,68 @@ export default {
           })
       })
     },
+    // 获取栏目图片组
+    getColumnImage() {
+      return new Promise((resolve, reject) => {
+        columnImageList({ channelId:this.treeTags[this.treeTags.length - 1].id }, this.pageNum, this.pageSize)
+          .then((response) => {
+            this.imageGroupList = response.data.result.content ? response.data.result.content : []
+            this.getColumnInfor()
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
     handleEdit(row) {
-      this.imageGroupForm.imageList = row.imageList
+      this.rightCardShow = false
+      this.title = "编辑"
       this.addImageGroupVisible = true
+      return new Promise((resolve, reject) => {
+        getImageListInfor(row.picGroupId)
+          .then((response) => {
+            this.formData = response.data.result
+            this.formData.tagIdsList = response.data.result.tagIdsList ? response.data.result.tagIdsList : []
+            if(this.formData.details && this.formData.details.length) {
+              this.formData.details.forEach((ele) => {
+                ele.url = ele.picUrl
+                ele.name = ele.picName
+              })
+            }
+            this.picGroupId = response.data.result.picGroupId
+            this.$refs.vform.setData('tagIdsList', ['a'])
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     },
     handleClean() {
       this.addImageGroupVisible = false
     },
     handleSave() {},
-    handleDelete() {}
+    handleDelete(row) {
+      this.$confirm('确定删除该图片组吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        return new Promise((resolve, reject) => {
+          deleteImageList({picGroupId: row.picGroupId})
+            .then((response) => {
+              this.$message.success('删除成功')
+              this.getColumnImage()
+              resolve()
+            })
+            .catch((error) => {
+              reject(error)
+            })
+        })
+      }).catch(() => {      
+      })
+    }
   },
 }
 </script>

@@ -81,3 +81,13 @@ export const getSource = () =>
     baseURL: '/source/',
     url: 'resource-test/hi'
   })
+// 获取当前用户登陆信息
+export const  userCurrent = () => {
+  return request({
+    url: '/userb/user/currentuser',
+    method: 'GET',
+    loadingConfig: {
+      noLoading: true
+    }
+  })
+}

@@ -168,7 +168,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['contextMenu'])
+    ...mapGetters(['contextMenu', 'treeTags'])
   },
   watch: {
     activeName(val) {
@@ -280,11 +280,16 @@ export default {
             .then((response) => {
               _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
               _this.isLoading = false
+              this.$store.dispatch('GetColumnAll')
+              this.$store.dispatch('setContextMenu', {
+                id: '0',
+                label: ''
+              })
               resolve()
             })
             .catch((error) => {
-              reject(error)
               _this.isLoading = false
+              reject(error)
             })
         } else {
           // 修改栏目
@@ -292,11 +297,17 @@ export default {
             .then((response) => {
               _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
               _this.isLoading = false
+              this.$store.dispatch('GetColumnAll')
+              console.log(response)
+              console.log(this.treeTags, '11')
+              let webSiteTags = this.treeTags.slice()
+              webSiteTags[webSiteTags.length - 1].label = response.data.result.channelName
+              this.$store.dispatch('setTreeTags', webSiteTags)
               resolve()
             })
             .catch((error) => {
+               _this.isLoading = false
               reject(error)
-              _this.isLoading = false
             })
         }
       })

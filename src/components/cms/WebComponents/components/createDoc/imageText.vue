@@ -100,12 +100,12 @@ export default {
       },
       type: Array
     },
-    propInformation: {
-      default: ()=> {
-        return {}
-      },
-      type: Object
-    }
+    // propInformation: {
+    //   default: ()=> {
+    //     return {}
+    //   },
+    //   type: Object
+    // }
   },
   data() {
     return {
@@ -174,7 +174,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['contextMenu'])
+    ...mapGetters(['contextMenu', 'getDocInformation'])
   },
   watch: {
     docInfor(val) {
@@ -282,7 +282,6 @@ export default {
       }
       resoultObj.extFieldsList = extendsFields
       resoultObj.channelId = this.channelId
-      // resoultObj.articleStatus = publishType
       // 标签字段处理
       let chooseTags = []
       if(resoultObj.tagIds) {
@@ -301,9 +300,7 @@ export default {
       resoultObj.articleType = 0
       delete resoultObj.set
       delete resoultObj.tagIds
-      if (resoultObj.contentBody) {
-        console.log('')
-      } else {
+      if(!resoultObj.contentBody) {
         resoultObj.contentBody = ''
       }
       return resoultObj
@@ -311,7 +308,6 @@ export default {
     save(formName, publishType) {
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       // 获取扩展字段的值
-      console.log(resoultObj, 'zzzzzzzzzz')
       let extendsFields = []
       if(this.extendsList.length) {
         extendsFields = this.extendsList.map((ele) => {
@@ -340,18 +336,25 @@ export default {
       resoultObj.articleType = 0
       delete resoultObj.set
       delete resoultObj.tagIds
-      if (resoultObj.contentBody) {
-        console.log('')
-      } else {
+      if (!resoultObj.contentBody) {
         resoultObj.contentBody = ''
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if(this.contextMenu.docId) {
+            if(this.getDocInformation.attachmentsList) {
+              resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+            } else {
+              resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
+            }
             resoultObj.articleId = this.contextMenu.docId
             this.editDoc(resoultObj)
           } else {
-            resoultObj.articleAttachmentsList = this.propInformation.articleAttachmentsList
+             if(this.getDocInformation.attachmentsList) {
+              resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+            } else {
+              resoultObj.articleAttachmentsList = []
+            }
             this.createDoc(resoultObj)
           }
         } else {

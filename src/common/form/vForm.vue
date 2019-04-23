@@ -57,11 +57,11 @@
             </template>
             <!-- switch开关 -->
             <template v-else-if="item.type=='switch'">
-              <el-switch v-model="formModel[item.name]" :active-color="item.activeColor" :inactive-color="item.inactiveColor" :active-value="item.activeValue" :inactive-value="item.inactiveValue" @change="(item.events&&item.events.change)?$emit(item.events.change, formModel[item.name]):null"/>
+              <el-switch v-model="formModel[item.name]" :active-text="item.activeText" :inactive-text="item.inactiveText" :active-color="item.activeColor" :inactive-color="item.inactiveColor" :active-value="item.activeValue" :inactive-value="item.inactiveValue" @change="(item.events&&item.events.change)?$emit(item.events.change, formModel[item.name]):null"/>
             </template>
             <!-- 级联选择器 -->
             <template v-else-if="item.type=='cascader'">
-              <el-cascader :options="item.options" change-on-select v-model="formModel[item.name]" :clearable="true" :props="item.props" expand-trigger="hover"/>
+              <el-cascader change-on-select :options="item.options" v-model="formModel[item.name]" :clearable="true" :props="item.props" expand-trigger="hover"/>
             </template>
             <!-- 时间日期范围选择 -->
             <template v-else-if="item.type=='datetimerange'">

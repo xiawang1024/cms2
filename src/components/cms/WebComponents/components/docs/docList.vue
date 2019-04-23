@@ -6,15 +6,14 @@
       :highlight-current-row="true"
       tooltip-effect="dark"
       style="width: 100%"
-      size="small"
+      size="mini"
       @selection-change="handleSelectionChange"
       @row-click="rowClick"
       :row-class-name="tableRowClassName"
     >
-      <!-- :default-sort="{prop: 'publishTime', order: 'descending'}" -->
       <el-table-column type="selection" width="55"/>
-      <el-table-column fixed prop="articleId" label="ID/序号" width="150" show-overflow-tooltip/>
-      <el-table-column fixed prop="articleTitle" label="标题" min-width="300" show-overflow-tooltip>
+      <el-table-column prop="articleId" label="ID/序号" width="150" show-overflow-tooltip/>
+      <el-table-column prop="articleTitle" label="标题" min-width="300" show-overflow-tooltip>
         <template slot-scope="scope">
           <span v-if="checkAuth('cms:article:stick')" class="titleClick" @click="editDoc(scope.row.articleId)">{{ scope.row.articleTitle }}</span>
           <span v-else>{{ scope.row.articleTitle }}</span>
@@ -43,13 +42,15 @@
       </el-table-column>
       <el-table-column prop="articleStatus" label="状态" width="80">
         <template slot-scope="scope">
-          <span v-if="scope.row.articleStatus == 0">新稿</span>
-          <span v-if="scope.row.articleStatus == 1">提交审核</span>
-          <span v-if="scope.row.articleStatus == 2">审核未通过</span>
-          <span v-if="scope.row.articleStatus == 3">已撤</span>
-          <span v-if="scope.row.articleStatus == 4">已删</span>
-          <span v-if="scope.row.articleStatus == 10">待发</span>
-          <span v-if="scope.row.articleStatus == 11">已发</span>
+          <div class="docunmnt-status" @click.stop="reviewStep(scope.row)">
+            <span v-if="scope.row.articleStatus == 0" style="color:#909399">新稿</span>
+            <span v-if="scope.row.articleStatus == 1" style="color:#3498db">提交审核</span>
+            <span v-if="scope.row.articleStatus == 2" style="color:#f67a61">审核未通过</span>
+            <span v-if="scope.row.articleStatus == 3" style="color:#E6A23C">已撤</span>
+            <span v-if="scope.row.articleStatus == 4" style="color:#F56C6C">已删</span>
+            <span v-if="scope.row.articleStatus == 10" style="color:#409EFF">待发布</span>
+            <span v-if="scope.row.articleStatus == 11" style="color:#67C23A">已发布</span>
+          </div>
         </template>
       </el-table-column>
       <!-- <el-table-column prop="mark" label="标记" width="100"/> -->
@@ -72,25 +73,31 @@
       />
       <el-table-column prop="createUser" label="撰稿人" width="100" show-overflow-tooltip/>
       <el-table-column prop="clickNum" label="点击" width="50"/>
-      <el-table-column fixed="right" label="操作" width="140">
+      <el-table-column fixed="right" label="操作" width="220">
         <template slot-scope="scope">
-          <el-button v-if="checkAuth('cms:article:stick')" type="text" size="small" @click="setTop(scope.row.articleId)">置顶</el-button>
-          <el-button v-if="checkAuth('cms:article:edit')" type="text" size="small" @click="editDoc(scope.row.articleId)">编辑</el-button>
-          <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click="handleClickDel(scope.row.articleId)">删除</el-button> -->
-          <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click="deleteConfiorm(scope.row.articleId)">删除</el-button>
+          <el-button v-if="checkAuth('cms:article:stick')" type="text" size="small" @click.stop="setTop(scope.row.articleId)">置顶</el-button>
+          <el-button v-if="checkAuth('cms:article:edit')" type="text" size="small" @click.stop="editDoc(scope.row.articleId)">编辑</el-button>
+          <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">撤销</el-button>
+          <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">审核</el-button> -->
+          <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <review-dialog :dialog-visible.sync="dialogVisible" :document-infor="documentInfor"/>
+    <step-dialog :dialog-visible.sync="stepVisible" :document-infor="documentInfor"/>
   </div>
 </template>
 
 <script>
-import { deleteDocument, topDocument} from '@/api/cms/article'
+import { deleteDocument, topDocument, articalSort} from '@/api/cms/article'
 import reviewDialog from './review'
+import stepDialog from './step'
+import Sortable from 'sortablejs'
+import { mapGetters } from 'vuex'
 export default {
   components: {
-    reviewDialog
+    reviewDialog,
+    stepDialog
   },
   props: {
     tableData: {
@@ -104,10 +111,62 @@ export default {
     return {
       multipleSelection: [],
       dialogVisible: false,
-      documentInfor: {}
+      documentInfor: {},
+      oldList: [],
+      newList: [],
+      stepVisible: false
     }
   },
+  computed: {
+    ...mapGetters(['treeTags'])
+  },
+  watch: {
+    tableData: function(val) {
+      this.oldList = val.map(v => v.articleId)
+      this.newList = this.oldList.slice()
+      this.$nextTick(() => {
+        this.setSort()
+      })
+    }
+  },
+  
   methods: {
+    // 查看审核进度
+    reviewStep(row) {
+      // console.log(row)
+      // this.documentInfor = row
+      // this.stepVisible = true
+    },
+    // 文章排序
+    articalSort(data) {
+      return new Promise((resolve, reject) => {
+        articalSort(data)
+          .then((response) => {
+            this.$message.success('排序成功')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    setSort() {
+      const el = this.$refs.multipleTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
+      this.sortable = Sortable.create(el, {
+        // ghostClass: 'sortable-ghost',
+        setData: function(dataTransfer) {
+        },
+        onEnd: evt => {
+          const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
+          this.newList.splice(evt.newIndex, 0, tempIndex)
+          let params = {
+            articleIdList: this.newList,
+            // channelId: this.treeTags[this.treeTags.length - 1].id
+          }
+          this.articalSort(params)
+        }
+      })
+    },
     // 点击行
     rowClick(row) {
       if(row) {
@@ -254,6 +313,21 @@ export default {
 }
 </script>
 <style lang="scss">
+$color-maintain: #34dcf0;
+$color-purple: #950bff;
+$color-yellow: #ffcb02;
+$color-blue: #3498db;
+.docunmnt-status{
+  span{
+    cursor: pointer;
+  }
+}
+
+.sortable-ghost{
+  opacity: .8;
+  color: #fff!important;
+  background: #42b983!important;
+}
 .fa-icon{
   width:15px;
   height:15px;

@@ -50,12 +50,23 @@ export function getRoot() {
     method: 'get'
   })
 }
-
+// 分页栏目获取
 export function columnList(queryObj, pageNo, pageSize, sortBy='channelLevel,seqNo') {
   return request({
     url: '/cms/channel/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + "&order=asc,desc",
     method: 'post',
     data: queryObj
+  })
+}
+// 全部栏目获取
+export function columnListAll(queryObj, pageNo, pageSize, sortBy='channelLevel,seqNo') {
+  return request({
+    url: '/cms/channel/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + "&order=asc,desc",
+    method: 'post',
+    data: queryObj,
+    loadingConfig: {
+      noLoading: true
+    }
   })
 }
 // 扩展字段创建

@@ -77,6 +77,8 @@ export default {
     backTask: 'backTask',
     personAndAuthor: 'personAndAuthor',
     permissionGroup: 'permissionGroup',
+    check: 'check',
+    checkSetting: 'checkSetting',
     character: 'characterSet',
     personRole: 'personRole',
     systemFunc: 'systemFunc',
