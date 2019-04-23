@@ -30,3 +30,10 @@ export function updateTemplate(data) {
     data
   })
 }
+export function deleteTemplate(data) {
+  return request({
+    url: '/cms/template',
+    method: 'delete',
+    data
+  })
+}

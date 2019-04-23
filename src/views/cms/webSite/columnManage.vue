@@ -83,7 +83,8 @@ export default {
         placeholder: '请输入栏目名称',
         visible: true,
         options: [],
-        type: 'cascader'
+        type: 'cascader',
+        changeOnSelect: true
       }, {
         label: '状态',
         name: 'hiddenFlag',
