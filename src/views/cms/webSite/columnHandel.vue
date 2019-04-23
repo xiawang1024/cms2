@@ -323,6 +323,7 @@ export default {
               this.formData = {
                 parentChannelNames: formData.parentChannelNames
               }
+              this.$store.dispatch('GetColumnAll')
               resolve()
               _this.isLoading = false
             })
@@ -349,6 +350,7 @@ export default {
               _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
               _this.gotoListPage(_this)
               _this.isLoading = false
+              this.$store.dispatch('GetColumnAll')
               resolve()
             })
             .catch((error) => {

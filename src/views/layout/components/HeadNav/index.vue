@@ -49,7 +49,7 @@
         trigger="click"
       >
         <div class="avatar-wrapper">
-          <span class="userName">
+          <span class="userName" style="cursor:pointer">
             {{ Object.assign(baseInfor, currentInfor).userName }}
           </span>
           <!-- <img
