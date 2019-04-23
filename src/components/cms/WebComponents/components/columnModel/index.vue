@@ -44,6 +44,7 @@
                     <el-input
                       type="textarea"
                       placeholder="请输入内容"
+                      ref="inputContent"
                       v-model="modelContent"/>
                   </div>
                 </el-col>
@@ -51,9 +52,11 @@
                   <div class="model-right">
                     <el-card class="box-card">
                       <div v-for="(ele, index) in modelList" :key="index" class="text item">
-                        <div>
-                          <div>{{ ele.componentName }}</div>
-                          <div>{{ ele.componentName }}</div>
+                        <div class="model-list">
+                          <div class="model-name">{{ ele.componentName }}</div>
+                          <div class="list-btn">
+                            <el-button type="text" @click="useModel(ele)">使用</el-button>
+                          </div>
                         </div>
                         <div>{{ ele.componentDescription }}</div>
                       </div>
@@ -218,6 +221,11 @@ export default {
     // this.columnSearchList()
   },
   methods: {
+    // 使用模板
+    useModel(ele) {
+      console.log(this.$refs.inputContent)
+      console.log(this.$refs.inputContent.$el.selectionStart)
+    },
     // 获取模板列表
     getModelList() {
       return new Promise((resolve, reject) => {
@@ -356,6 +364,15 @@ export default {
         .item{
           border-bottom:1px solid #dcdfe6;
           margin-bottom:10px;
+        }
+      }
+      .model-list{
+         display: flex;
+        .model-name{
+          flex:1
+        }
+        .list-btn{
+          width:32px;
         }
       }
     }

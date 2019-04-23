@@ -190,6 +190,7 @@ export default {
     },
     async insertAtCursorForTemplateContentRef(myValue) {
       const myField = document.querySelector('#templateContentRef')
+      console.log(myField, 'myField')
       if (myField.selectionStart || myField.selectionStart === 0) {
         var startPos = myField.selectionStart
         var endPos = myField.selectionEnd
