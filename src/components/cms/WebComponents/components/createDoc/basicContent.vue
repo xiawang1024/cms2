@@ -27,7 +27,7 @@ import reproduce from './reproduce.vue'
 import { columnInfor } from '@/api/cms/columnManage'
 import { documentInfor } from '@/api/cms/article'
 import { fetchDictByDictName } from "@/api/cms/dict"
-import {otherSettings, imagesSeting, reproduceSetting} from './setting.js'
+import {otherSettings, imagesSeting, reproduceSetting, defultItems} from './setting.js'
 import { mapGetters } from 'vuex'
 export default {
   name: 'BasicContent',
@@ -122,6 +122,7 @@ export default {
     },
     // 获取栏目详情
     getColumnInfor(id) {
+      this.otherSettings[0].items = defultItems
       var _this = this
       return new Promise((resolve, reject) => {
         columnInfor(id)
@@ -132,6 +133,7 @@ export default {
                   label: ele.label,
                   name: ele.label,
                   type: _this.datachange(ele.type),
+                  required: ele.required,
                   placeholder: '请输入'
                 }
               })
@@ -149,14 +151,8 @@ export default {
             _this.otherSettings[0].items[0].options = _this.tagList
             _this.imagesSeting[0].items[6].options = _this.tagList
             _this.reproduceSetting[0].items[3].options = _this.tagList
-            let obj = {};
-            _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList).reduce((cur,next) => {
-              obj[next.label] ? "" : obj[next.label] = true && cur.push(next);
-              return cur
-            }, [])
-            if(_this.tagList.length) {
-              console.log()
-            } else {
+            _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList)
+            if(!_this.tagList.length) {
               _this.otherSettings[0].items[0].hidden = true
               _this.imagesSeting[0].items[6].hidden = true
               _this.reproduceSetting[0].items[3].hidden = true

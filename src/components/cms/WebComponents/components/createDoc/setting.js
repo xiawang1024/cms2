@@ -71,7 +71,75 @@ export const otherSettings = [
     ]
   }
 ]
-
+export const defultItems = [
+  {
+    label: '标签',
+    name: 'tagIds',
+    type: 'checkbox',
+    options: [],
+    hidden: false
+  },
+  {
+    label: '点击量',
+    name: 'clickNum',
+    type: 'number',
+    placeholder: '请输入点击量'
+  },
+  {
+    label: '创建时间',
+    name: 'createTime',
+    type: 'date'
+  },
+  {
+    label: '设置',
+    name: 'set',
+    type: 'slot',
+  },
+  {
+    label: '排序号',
+    name: 'seqNo',
+    type: 'number'
+  },
+  {
+    label: '展现形式',
+    name: 'articleShowStyle',
+    type: 'select',
+    options: [
+      {
+        label: '正文标题和描述',
+        value: 0
+      },
+      {
+        label: '左图，右正文标题',
+        value: 1
+      },
+      {
+        label: '右图，左正文标题',
+        value: 2
+      },
+      {
+        label: '一个图片通栏，无标题',
+        value: 3
+      },
+      {
+        label: '上正文标题，下一个图片通栏',
+        value: 4
+      },
+      {
+        label: '上正文标题，下两张图片',
+        value: 5
+      },
+      {
+        label: '上正文标题，下三张图片',
+        value: 6
+      },
+      {
+        label: '上正文标题，下左一张图片，下右描述',
+        value: 7
+      }
+    ]
+  }
+]
 export const imagesSeting = [
   {
     items: [
