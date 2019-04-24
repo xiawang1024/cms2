@@ -120,7 +120,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['columnAll', 'treeTags', 'contextMenu'])
+    ...mapGetters(['columnAll', 'treeTags', 'contextMenu', 'columnAllOrigin'])
   },
   watch:{
     columnAll(val) {
@@ -303,16 +303,6 @@ export default {
         this.modelInfor(row.templateId)
       }
     },
-    // 栏目id转换为数组
-    getChannelId(id, channelList, type="father") {
-      for(var i=0; i < channelList.length; i++) {
-        if(channelList[i].channelId == id) {
-          return channelList[i]
-        } else if(channelList[i].children) {
-          return this.getChannelId(id, channelList[i].children, 'son')
-        }
-      }
-    },
     modelInfor(id) {
       return new Promise((resolve, reject) => {
         fetchTemplate(id)
@@ -320,7 +310,10 @@ export default {
             this.formData = response.data.result
             this.modelContent = response.data.result.templateContent
             let id = response.data.result.channelId
-            let channelIds = this.getChannelId(id, this.searchSettings[0].options)
+            let channelAll = this.columnAllOrigin || store.get('columnsAllOrigin')
+            let channelIds = channelAll.find((ele) => {
+              return ele.channelId == id
+            })
             if(channelIds.parentChannelIds) {
               this.formData.channelId = channelIds.parentChannelIds.split(',').concat([channelIds.channelId])
             } else {

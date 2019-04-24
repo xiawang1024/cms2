@@ -27,6 +27,8 @@ const userInfo = {
   siteName: (state) => state.user.siteName,
   currentInfor: (state) => state.user.currentInfor,
   columnAll: (state) => state.user.columnAll,
+  columnAllOrigin: (state) => state.user.columnAllOrigin,
+
 }
 /**
  * cms
