@@ -59,10 +59,10 @@ export const currentColumn = [
     id: '6',
     label: '栏目水印'
   },
-  // {
-  //   id: '7',
-  //   label: '模板'
-  // },
+  {
+    id: '7',
+    label: '模板'
+  },
   // {
   //   id: '4',
   //   label: '栏目图片'

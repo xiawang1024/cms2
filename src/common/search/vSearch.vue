@@ -515,6 +515,7 @@ export default {
      * 设置指定项的值
      */
     setItemData(name, data) {
+      console.log(name, data)
       if (typeof name == 'object') {
         Object.keys(name).forEach(item => {
           this.formModel[item] = name[item]
