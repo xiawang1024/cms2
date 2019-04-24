@@ -41,7 +41,7 @@
               <span>其他属性</span>
             </div>
             <div>
-              <v-form ref="otherForm" :form-settings="otherSetting" :form-data="formData" label-width="80px" :show-button = "showButton">
+              <v-form ref="otherForm" :form-settings="otherSettings" :form-data="formData" label-width="80px" :show-button = "showButton">
                 <template slot="set">
                   <div class="set">
                     <el-checkbox true-label="1" false-label="0" v-model="adddocSet.topFlag">置顶</el-checkbox>
@@ -291,9 +291,9 @@ export default {
   mounted() {
     console.log('moun')
     console.log(this.otherSettings)
-    // this.$nextTick(() => {
-    //   this.otherSetting = this.otherSettings
-    // })
+    this.$refs.otherForm.clearValidate()
+    this.$refs.otherForm.updateRule()
+    
     if(this.sourceList.length) {
       this.baseSettings[0].items[1].options = this.sourceList
     }
