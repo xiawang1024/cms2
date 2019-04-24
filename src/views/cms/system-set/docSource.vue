@@ -3,7 +3,7 @@
     <div class="tool-bar">
       <el-button size="small" type="primary" @click="handleDialog('add')">新增</el-button>
     </div>
-    <el-table :data="dictObj.details" style="width: 100%" highlight-current-row>
+    <el-table :data="dictObj.details" style="width: 100%" highlight-current-row size="small">
       <el-table-column prop="dictDetailName" label="来源名称" min-width="150" show-overflow-tooltip/>
       <el-table-column prop="dictDetailValue" label="来源路径" min-width="150" show-overflow-tooltip/>
       <el-table-column label="操作" width="200">
@@ -114,12 +114,18 @@ export default {
     },
     // 确认提交
     submitSave(data) {
+      console.log(data, 'data')
       let copyData = JSON.parse(JSON.stringify(this.dictObj))
+      // let copyData = this.dictObj.details.slice()
+      console.log(copyData, 'copyData')
       if(this.handelType == 'add') {
         copyData.details.push(data)
       } else {
         copyData.details[this.currentIndex] = Object.assign(copyData.details[this.currentIndex], data)
+        // copyData[this.currentIndex] = data
       }
+      console.log(this.currentIndex, 'this.currentIndex')
+      console.log(copyData, 'copyData22')
       this.handleSubmit(copyData)
     },
     handleDelete(index, row) {
@@ -155,10 +161,12 @@ export default {
     handleSubmit(data) {
       var _this = this;
       data.details.forEach((ele) => {
-        if(ele.dictDetailRemark && ele.dictDetailRemark.length) {
+        if(ele.dictDetailRemark && typeof ele.dictDetailRemark == 'object') {
           ele.dictDetailRemark = ele.dictDetailRemark[0].url
+        } else if(ele.dictDetailRemark){
+          ele.dictDetailRemark =  ele.dictDetailRemark
         } else {
-          ele.dictDetailRemark = ''
+          ele.dictDetailRemark =  ''
         }
       })
       if (!_this.dictObj.dictId) {
