@@ -114,18 +114,12 @@ export default {
     },
     // 确认提交
     submitSave(data) {
-      console.log(data, 'data')
       let copyData = JSON.parse(JSON.stringify(this.dictObj))
-      // let copyData = this.dictObj.details.slice()
-      console.log(copyData, 'copyData')
       if(this.handelType == 'add') {
         copyData.details.push(data)
       } else {
         copyData.details[this.currentIndex] = Object.assign(copyData.details[this.currentIndex], data)
-        // copyData[this.currentIndex] = data
       }
-      console.log(this.currentIndex, 'this.currentIndex')
-      console.log(copyData, 'copyData22')
       this.handleSubmit(copyData)
     },
     handleDelete(index, row) {
@@ -161,9 +155,9 @@ export default {
     handleSubmit(data) {
       var _this = this;
       data.details.forEach((ele) => {
-        if(ele.dictDetailRemark && typeof ele.dictDetailRemark == 'object') {
+        if(ele.dictDetailRemark && typeof ele.dictDetailRemark == 'object' && ele.dictDetailRemark.length) {
           ele.dictDetailRemark = ele.dictDetailRemark[0].url
-        } else if(ele.dictDetailRemark){
+        } else if(ele.dictDetailRemark && typeof ele.dictDetailRemark !== 'object'){
           ele.dictDetailRemark =  ele.dictDetailRemark
         } else {
           ele.dictDetailRemark =  ''
