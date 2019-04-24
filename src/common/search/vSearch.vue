@@ -22,7 +22,7 @@
             </template>
             <!-- 级联选择器 -->
             <template v-else-if="item.type=='cascader'">
-              <el-cascader expand-trigger="click" :change-on-select="item.changeOnSelect" :options="item.options" v-model="formModel[item.name]" :clearable="true"/>
+              <el-cascader expand-trigger="hover" :change-on-select="item.changeOnSelect" :options="item.options" v-model="formModel[item.name]" :clearable="true"/>
             </template>
             <!-- 日期选择 -->
             <template v-else-if="item.type=='date'">
