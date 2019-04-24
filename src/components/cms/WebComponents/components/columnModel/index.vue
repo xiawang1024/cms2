@@ -143,15 +143,14 @@ export default {
     }
   },
   mounted() {
-    console.log('monted')
     this.searchSettings[0].options= this.columnAll.length ? this.columnAll : store.get('columnsAll')
     let setDefaultChannel = []
     this.treeTags.forEach((ele) => {
       setDefaultChannel.push(ele.id)
     })
-    // this.$refs.vSearch.setItemData('channelId', setDefaultChannel)
-    this.formData.channelId = setDefaultChannel
-    console.log(this.formData.channelId, 'this.formData.channelId')
+    this.$nextTick(() => {
+      this.$refs.vSearch.setItemData('channelId', setDefaultChannel)
+    })
     this.searchData = {
       channelId: setDefaultChannel,
       templateName: ''
@@ -263,9 +262,9 @@ export default {
         return true
       }
     },
-    searchItem(searchData) {
-      this.searchData = searchData
-      this.pageNum = 1
+    searchItem(data) {
+      this.searchData = data
+      this.pageNum = 1 
       this.columnList()
     },
     columnList() {
