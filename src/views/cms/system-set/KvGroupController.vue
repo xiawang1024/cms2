@@ -16,7 +16,7 @@
       <el-button size="mini" type="primary" @click="commentForm(1,'b')">新增</el-button>
     </div>
     <el-table :data="allGroup" >            
-      <el-table-column prop="id" label="id"/>
+      <el-table-column prop="id" label="组ID"/>
       <el-table-column prop="description" label="描述"/>
       <el-table-column prop="tag" label="标签"/>
       <el-table-column prop="sort" label="排序"/>            
@@ -95,7 +95,7 @@ export default {
               {
                 items: [
                   {
-                    label: '租户描述',
+                    label: '描述',
                     name: 'description',
                     type: 'text',
                     required: true,
@@ -116,20 +116,6 @@ export default {
                     required: true,
                     placeholder: '请输入标签'
                   },
-                  // {
-                  //   label: '租户ID',
-                  //   name: 'tenantId',
-                  //   type: 'text',
-                  //   required: true,
-                  //   placeholder: '请输入字母或者数字！',
-                    // rule: [{
-                    //       validator: this.checkTenantId,
-                    //     }, {
-                    //       required: true,
-                    //       trigger: 'blur'
-                    //     }],
-                  //   hidden:true
-                  // },
                   {
                     label:'id',
                     name: 'id',
@@ -149,10 +135,7 @@ export default {
     },
     created(){
       var _this=this
-      // console.log(this.$store.getters,'查看公共状态')
-      
         this.getTableData(_this.defaultData) 
-        // console.log(this.defaultData,'duhz')
     },
     methods:{
      
@@ -162,7 +145,6 @@ export default {
           if(a==1){
             this.handleType="新增"
             this.formData={}
-            // this.formSettings[0].items[3].hidden=false
             this.formSettings[0].items[3].hidden=true;
             this.formSettings[0].items[0].required=true;
             this.formSettings[0].items[1].required=true;
@@ -173,14 +155,12 @@ export default {
 
           }else if(a==2){
             //修改
-            // console.log(b,'b')
             this.handleType="编辑"
             this.formData={}
             
             // this.formSettings[0].items[3].hidden=true
             this.formSettings[0].items[3].hidden=true
             this.formData=b
-            // console.log(this.formData,'formdate')
 
           }else if(a==3){
             //检索
@@ -196,33 +176,11 @@ export default {
           }
 
         },
-        // checkTenantId(rule, value, callback){
-        //    var patt=/^[A-Za-z0-9]+$/;
-        //      console.log(value,"value")
-        //   if (!patt.test(value)) {
-        //  return callback(new Error('请输入字母或者数字'))
-        //      }else{
-        //        return callback()
-        //      }
-        // },
       submitSave(row){
         var _this=this
         // console.log(row,'row')
         let sendPass=true;
           if(this.handleType=="新增"){
-            //新增接口
-            //  console.log(this.addGroup.tenantId,'赋值前')
-            //  let patt=/^[A-Za-z0-9]+$/;
-            //  if(!patt.test(row.tenantId)){
-            //    console.log('校验')
-            //    sendPass=false;
-            //    return  _this.$message({                       
-            //             type: 'error',
-            //             message: '请在tenantId栏目输入字母或者数字!'
-            //            });
-
-            //  }
-            
              let patt1=/^[0-9]+$/;
              if(!patt1.test(row.sort)){
               //  console.log('校验')
@@ -244,20 +202,8 @@ export default {
              this.handleAdd(this.addGroup)
             }
           }else if(this.handleType=="编辑"){
-            //修改接口
-            //    let patt=/^[0-9]+$/;
-            //  if(!patt.test(row.id)){
-            //    console.log('校验')
-            //    sendPass=false;
-            //    return  _this.$message({                       
-            //             type: 'error',
-            //             message: '请在tenantId栏目输入字母或者数字!'
-            //            });
-
-            //  }
              let patt1=/^[0-9]+$/;
              if(!patt1.test(row.sort)){
-              //  console.log('校验')
                sendPass=false;
                return  _this.$message({                       
                         type: 'error',
@@ -321,7 +267,6 @@ export default {
           return new Promise((resolve,reject)=>{
             getAppDetail(id)
             .then((response)=>{
-              // console.log(response.data.result)
               if(response.data.code==0){
                  _this.allGroup=[response.data.result]
                  _this.backButtonVisible=true;
@@ -418,15 +363,11 @@ export default {
         //删除组
         handleDelete(a,b){
           var _this=this
-                // console.log(b)
                 this.$confirm('此操作将永久删除该组, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
                 }).then(() => {
-                    
-                    //  console.log("111")
-                    //  console.log(b.id)
                     new Promise((resolve,reject)=>{
                     deleteGroup(b.id)
                     .then((response)=>{
