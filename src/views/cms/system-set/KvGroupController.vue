@@ -151,7 +151,7 @@ export default {
     created(){
       var _this=this
         this.getTableData(_this.defaultData) 
-        console.log(this.defaultData,'duhz')
+        // console.log(this.defaultData,'duhz')
     },
     methods:{
         //通用对话框
