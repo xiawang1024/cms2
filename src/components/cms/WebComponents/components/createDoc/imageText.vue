@@ -41,7 +41,7 @@
               <span>其他属性</span>
             </div>
             <div>
-              <v-form ref="otherForm" :form-settings="otherSetting" :form-data="formData" label-width="80px" :show-button = "showButton">
+              <v-form ref="otherForm" :form-settings="otherSettings" :form-data="formData" label-width="80px" :show-button = "showButton">
                 <template slot="set">
                   <div class="set">
                     <el-checkbox true-label="1" false-label="0" v-model="adddocSet.topFlag">置顶</el-checkbox>
@@ -170,91 +170,11 @@ export default {
           ]
         }
       ],
-      showButton: false,
-      otherSetting: [
-        {
-          items: [
-            {
-              label: '标签',
-              name: 'tagIds',
-              type: 'checkbox',
-              options: [],
-              hidden: false
-            },
-            {
-              label: '点击量',
-              name: 'clickNum',
-              type: 'number',
-              placeholder: '请输入点击量'
-            },
-            {
-              label: '创建时间',
-              name: 'createTime',
-              type: 'date'
-            },
-            {
-              label: '设置',
-              name: 'set',
-              type: 'slot',
-            },
-            {
-              label: '排序号',
-              name: 'seqNo',
-              type: 'number'
-            },
-            {
-              label: '展现形式',
-              name: 'articleShowStyle',
-              type: 'select',
-              options: [
-                {
-                  label: '正文标题和描述',
-                  value: 0
-                },
-                {
-                  label: '左图，右正文标题',
-                  value: 1
-                },
-                {
-                  label: '右图，左正文标题',
-                  value: 2
-                },
-                {
-                  label: '一个图片通栏，无标题',
-                  value: 3
-                },
-                {
-                  label: '上正文标题，下一个图片通栏',
-                  value: 4
-                },
-                {
-                  label: '上正文标题，下两张图片',
-                  value: 5
-                },
-                {
-                  label: '上正文标题，下三张图片',
-                  value: 6
-                },
-                {
-                  label: '上正文标题，下左一张图片，下右描述',
-                  value: 7
-                }
-              ]
-            },
-            {
-              label: '22',
-              name: '22',
-              type: 'text',
-              required: true,
-              placeholder: '请输入'
-            }
-          ]
-        }
-      ]
+      showButton: false
     }
   },
   computed: {
-    ...mapGetters(['contextMenu', 'getDocInformation']),
+    ...mapGetters(['contextMenu', 'getDocInformation'])
   },
   watch: {
     docInfor(val) {
@@ -285,16 +205,9 @@ export default {
     },
     otherSettings(val) {
       console.log(val, 'val')
-      // this.otherSetting = val
     }
   },
   mounted() {
-    console.log('moun')
-    console.log(this.otherSettings)
-    // this.$refs.otherForm.clearValidate()
-   
-    this.otherSetting = this.otherSettings
-    this.$refs.otherForm.updateRule()
     if(this.sourceList.length) {
       this.baseSettings[0].items[1].options = this.sourceList
     }
@@ -319,10 +232,6 @@ export default {
     }
   },
   created() {
-    console.log('created')
-    this.$nextTick(() => {
-      // this.otherSetting = this.otherSettings
-    })
   },
   methods: {
     goBack() {
@@ -402,7 +311,6 @@ export default {
     },
     save(formName, publishType) {
       // this.$refs.otherForm.updateRule()
-      // this.$refs.otherForm.updateForm()
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       // 获取扩展字段的值
       let extendsFields = []
@@ -442,26 +350,25 @@ export default {
             if (!data) {
               return
             }
+            if(this.contextMenu.docId) {
+              if(this.getDocInformation.attachmentsList) {
+                resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+              } else {
+                resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
+              }
+              resoultObj.articleId = this.contextMenu.docId
+              this.editDoc(resoultObj)
+            } else {
+              if(this.getDocInformation.attachmentsList) {
+                resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+              } else {
+                resoultObj.articleAttachmentsList = []
+              }
+              this.createDoc(resoultObj)
+            }
           }).catch(err => {
             console.log('====err====', err)
           })
-
-          // if(this.contextMenu.docId) {
-          //   if(this.getDocInformation.attachmentsList) {
-          //     resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
-          //   } else {
-          //     resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
-          //   }
-          //   resoultObj.articleId = this.contextMenu.docId
-          //   this.editDoc(resoultObj)
-          // } else {
-          //    if(this.getDocInformation.attachmentsList) {
-          //     resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
-          //   } else {
-          //     resoultObj.articleAttachmentsList = []
-          //   }
-          //   this.createDoc(resoultObj)
-          // }
         } else {
           this.$refs.otherForm.getDataAsync().then(data => {
             if (!data) {

@@ -17,7 +17,7 @@ export const otherSettings = [
       {
         label: '创建时间',
         name: 'createTime',
-        type: 'date'
+        type: 'datetime'
       },
       {
         label: '设置',
@@ -88,7 +88,7 @@ export const defultItems = [
   {
     label: '创建时间',
     name: 'createTime',
-    type: 'date'
+    type: 'datetime'
   },
   {
     label: '设置',
@@ -195,7 +195,7 @@ export const imagesSeting = [
       },{
         label:'创建时间',
         name:'createTime',
-        type:'date',
+        type:'datetime',
         placeholder: '请选择'
       },
       {

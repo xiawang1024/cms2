@@ -122,6 +122,7 @@ export default {
     },
     // 获取栏目详情
     getColumnInfor(id) {
+      // 设置默认值， 防止扩展字段重复添加
       this.otherSettings[0].items = defultItems
       var _this = this
       return new Promise((resolve, reject) => {
@@ -151,7 +152,9 @@ export default {
             _this.otherSettings[0].items[0].options = _this.tagList
             _this.imagesSeting[0].items[6].options = _this.tagList
             _this.reproduceSetting[0].items[3].options = _this.tagList
-            _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList)
+            this.$nextTick(() => {
+              _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList)
+            })
             if(!_this.tagList.length) {
               _this.otherSettings[0].items[0].hidden = true
               _this.imagesSeting[0].items[6].hidden = true
@@ -159,6 +162,14 @@ export default {
             }
             if(_this.contextMenu.docId) {
               _this.getDocumentInfor(_this.contextMenu.docId)
+            } else {
+              // 扩展字段必填触发updateForm
+              this.$nextTick(() => {
+                _this.docInfor = {
+                  hiddenFlag: '0',
+                  topFlag: '0'
+                }
+              })
             }
             resolve()
           })
@@ -173,7 +184,6 @@ export default {
         documentInfor(id)
           .then((response) => {
             _this.docInfor = response.data.result
-            // _this.$emit('docInfor', _this.docInfor)
             _this.typeForm.articleType = response.data.result.articleType ? response.data.result.articleType : 0
             if(_this.docInfor.extFieldsList && _this.docInfor.extFieldsList.length) {
               _this.docInfor.extFieldsList.forEach((ele) => {
