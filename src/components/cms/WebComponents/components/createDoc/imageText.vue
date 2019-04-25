@@ -11,7 +11,7 @@
           </el-form-item>
           <el-form-item label="">
             <div class="grid-content bg-purple">
-              <Tinymce ref="editor" :height="400" v-model="docContentForm.contentBody"/>
+              <Tinymce ref="editor" :height="450" v-model="docContentForm.contentBody"/>
             </div>
           </el-form-item>
         </el-form>
