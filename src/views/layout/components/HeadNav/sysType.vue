@@ -1,5 +1,8 @@
 <template>
   <div class="sysType">
+    <!-- {{storageSelect}} 'store' -->
+    <!-- 触发更新sessionStorage -->
+    <span style="display:none"> {{ sysType }}</span>
     <div
       v-for="(item,index) of sysTypeList"
       :class="selected(index)"
@@ -20,19 +23,21 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['sysList']),
+    ...mapGetters(['sysList', 'sysType']),
     sysTypeList: function() {
       return this.filterSysList(this.sysList)
     }
   },
   methods: {
     selected(index) {
-      return this.selectedIndex === index
+      let current = window.sessionStorage.getItem('sysType') ? window.sessionStorage.getItem('sysType') : this.selectedIndex
+      return current == index
         ? { item: true, active: true }
         : { item: true }
     },
     selectHandler(sysType) {
       this.selectedIndex = sysType
+      // this.selected(sysType)
       this.$store.dispatch('selectSysType', `${sysType}`)
     },
     filterSysList(sysList) {

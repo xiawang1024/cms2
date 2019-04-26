@@ -123,6 +123,7 @@ const user = {
           .then((response) => {
             const data = response.data
             commit('SET_TOKEN', data.access_token)
+            commit('SET_SYS_TYPE', '0')
             setAuth(data)
             // getCurrentInfor()
             // userCurrent()
