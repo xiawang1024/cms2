@@ -19,6 +19,7 @@
           <span v-else>{{ scope.row.articleTitle }}</span>
           <icon name="file-alt" title="正文有图" v-if="scope.row.contentImagesList && scope.row.contentImagesList.length"/>
           <icon name="file-image" title="附件有图" v-if="documentHasImg(scope.row.articleAttachmentsList)"/>
+          <icon name="arrow-circle-up" title="置顶" v-if="scope.row.topFlag == 1"/>
         </template>
       </el-table-column>
       <!-- <el-table-column label="查看" width="60">
