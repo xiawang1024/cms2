@@ -139,6 +139,7 @@ export default {
         file_picker_types: 'file image media',
         // //上传文件
         file_picker_callback: function(callback, value, meta) {
+          console.log('上传文件')
           var input = document.createElement('input')
           input.setAttribute('type', 'file')
           input.setAttribute('accept', 'image/*')
@@ -240,12 +241,17 @@ export default {
     },
     imageSuccessCBK(arr) {
       console.log(arr, 'arr')
+      // .insertContent(`<video class="" src="${v.url}" controls="controls"> </video>`)
       const _this = this
       arr.forEach(v => {
         if(v.type == 'video/mp4') {
           window.tinymce
           .get(_this.tinymceId)
-          .insertContent(`<video class="" src="${v.url}" controls="controls"> </video>`)
+          .insertContent(`<p>
+               <span class="mce-preview-object mce-object-video" contenteditable="false" data-mce-object="video" data-mce-p-allowfullscreen="allowfullscreen" data-mce-p-frameborder="no" data-mce-p-scrolling="no" data-mce-p-src=${v.url} data-mce-html="%20">
+                 <video src=${v.url} width="100%" controls="controls"></video>
+               </span>
+            </p>`)
         } else {
           window.tinymce
           .get(_this.tinymceId)
