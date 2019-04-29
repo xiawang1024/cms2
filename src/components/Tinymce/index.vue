@@ -239,11 +239,18 @@ export default {
       window.tinymce.get(this.tinymceId).getContent()
     },
     imageSuccessCBK(arr) {
+      console.log(arr, 'arr')
       const _this = this
       arr.forEach(v => {
-        window.tinymce
+        if(v.type == 'video/mp4') {
+          window.tinymce
+          .get(_this.tinymceId)
+          .insertContent(`<video class="" src="${v.url}" controls="controls"> </video>`)
+        } else {
+          window.tinymce
           .get(_this.tinymceId)
           .insertContent(`<img class="wscnph" src="${v.url}" >`)
+        }
       })
     }
   }
