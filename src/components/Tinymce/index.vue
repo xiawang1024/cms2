@@ -248,8 +248,8 @@ export default {
           window.tinymce
           .get(_this.tinymceId)
           .insertContent(`<p>
-               <span class="mce-preview-object mce-object-video" contenteditable="false" data-mce-object="video" data-mce-p-allowfullscreen="allowfullscreen" data-mce-p-frameborder="no" data-mce-p-scrolling="no" data-mce-p-src=${v.url} data-mce-html="%20">
-                 <video src=${v.url} width="100%" controls="controls"></video>
+               <span class="mce-preview-object mce-object-video" contenteditable="false" data-mce-object="video" data-mce-p-allowfullscreen="allowfullscreen" data-mce-p-frameborder="no" data-mce-p-scrolling="no" data-mce-p-src=${v.url} data-mce-html="%10">
+                 <video src=${v.url} width="100px" height="100%" controls="controls"></video>
                </span>
             </p>`)
         } else {
