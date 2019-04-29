@@ -142,7 +142,7 @@ export default {
           console.log('上传文件')
           var input = document.createElement('input')
           input.setAttribute('type', 'file')
-          input.setAttribute('accept', 'image/*')
+          // input.setAttribute('accept', 'image/*')
           input.onchange = function() {
             var file = this.files[0]
 
@@ -175,6 +175,7 @@ export default {
 
               // Provide alternative source and posted for the media dialog
               if (meta.filetype === 'media') {
+                console.log(meta, 'meta')
                 callback('http://vod.hndt.com/minsheng/2018/12/20181229.mp4', {
                   source2: 'alt.ogg',
                   poster: 'image.jpg'
@@ -244,15 +245,23 @@ export default {
       // .insertContent(`<video class="" src="${v.url}" controls="controls"> </video>`)
       const _this = this
       arr.forEach(v => {
-        if(v.type == 'video/mp4') {
+        if(v.type.split('/')[0] == 'video') {
           window.tinymce
           .get(_this.tinymceId)
           .insertContent(`<p>
                <span class="mce-preview-object mce-object-video" contenteditable="false" data-mce-object="video" data-mce-p-allowfullscreen="allowfullscreen" data-mce-p-frameborder="no" data-mce-p-scrolling="no" data-mce-p-src=${v.url} data-mce-html="%10">
-                 <video src=${v.url} width="100px" height="100%" controls="controls"></video>
+                 <video src=${v.url} width="100%" height="200" controls="controls"></video>
                </span>
             </p>`)
-        } else {
+        } else if(v.type.split('/')[0] == 'audio') {
+          window.tinymce
+          .get(_this.tinymceId)
+          .insertContent(`<p>
+               <span class="mce-preview-object"  data-mce-object="audio" data-mce-p-frameborder="no" data-mce-p-scrolling="no"  data-mce-html="%10">
+                 <audio class="wscnph" src=${v.url} width="100%" height="200" controls="controls"></audio>
+               </span>
+            </p>`)
+        } else if (v.type.split('/')[0] == 'image') {
           window.tinymce
           .get(_this.tinymceId)
           .insertContent(`<img class="wscnph" src="${v.url}" >`)
