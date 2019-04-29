@@ -2,7 +2,7 @@
   <div class="doc-list">
     <el-table
       ref="multipleTable"
-      :data="tableData"
+      :data="newList"
       :highlight-current-row="true"
       tooltip-effect="dark"
       style="width: 100%"
@@ -115,7 +115,7 @@ export default {
       documentInfor: {},
       oldList: [],
       newList: [],
-      stepVisible: false
+      stepVisible: false,
     }
   },
   computed: {
@@ -123,14 +123,14 @@ export default {
   },
   watch: {
     tableData: function(val) {
-      this.oldList = val.map(v => v.articleId)
-      this.newList = this.oldList.slice()
-      this.$nextTick(() => {
-        this.setSort()
-      })
+      this.newList = val.slice()
     }
   },
-  
+  mounted() {
+    this.$nextTick(() => {
+      this.setSort()
+    })
+  },
   methods: {
     // 查看审核进度
     reviewStep(row) {
@@ -144,6 +144,8 @@ export default {
         articalSort(data)
           .then((response) => {
             this.$message.success('排序成功')
+           
+              this.$emit('handelSuccess')
             resolve()
           })
           .catch((error) => {
@@ -152,19 +154,38 @@ export default {
       })
     },
     setSort() {
+      var that = this
       const el = this.$refs.multipleTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
       this.sortable = Sortable.create(el, {
         // ghostClass: 'sortable-ghost',
         setData: function(dataTransfer) {
         },
         onEnd: evt => {
-          const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
-          this.newList.splice(evt.newIndex, 0, tempIndex)
-          let params = {
-            articleIdList: this.newList,
-            // channelId: this.treeTags[this.treeTags.length - 1].id
-          }
-          this.articalSort(params)
+        },
+        onUpdate:function(event){
+           var newIndex = event.newIndex,
+               oldIndex = event.oldIndex,
+               $li = el.children[newIndex],
+               $oldLi = el.children[oldIndex]
+            // 先删除移动的节点
+            el.removeChild($li)    
+            // 再插入移动的节点到原有节点，还原了移动的操作
+            if(newIndex > oldIndex) {
+                el.insertBefore($li,$oldLi)
+            } else {
+                el.insertBefore($li,$oldLi.nextSibling)
+            }
+            // 更新items数组
+            var item = that.newList.splice(oldIndex,1)
+            that.newList.splice(newIndex,0,item[0])
+            // 下一个tick就会走patch更新
+            let ids = that.newList.map((ele) => {
+              return ele.articleId
+            })
+            let params = {
+              articleIdList: ids
+            }
+            that.articalSort(params)
         }
       })
     },
