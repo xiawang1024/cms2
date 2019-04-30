@@ -228,6 +228,7 @@ export default {
             _this.formData.contentImagesList = _this.differenceFile(response.data.result.articleAttachmentsList, 'IMG')
             _this.formData.contentAudioList = _this.differenceFile(response.data.result.articleAttachmentsList, 'AUDIO')
             _this.formData.articleAttachmentsList = _this.differenceFile(response.data.result.articleAttachmentsList, 'OTHER')
+            console.log( _this.formData, '图片附件')
             resolve()
           })
           .catch((error) => {

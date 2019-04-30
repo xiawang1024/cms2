@@ -17,6 +17,7 @@
         </el-form>
         <div class="btn-list">
           <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
+          <el-button type = "primary" size="small" @click = "save('docContentForm', '0', 'saveOnly')">保存</el-button>
           <el-button type = "primary" size="small" @click = "save('docContentForm', '0')">存草稿</el-button>
           <el-button type = "primary" size="small" @click = "save('docContentForm', '11')">保存并发布</el-button>
           <!-- <el-button type = "primary" size="small" @click = "save('docContentForm')">保存并发布</el-button> -->
@@ -240,13 +241,21 @@ export default {
         label: ''
       })
     },
-    createDoc(formData) {
+    goEdit(docId) {
+      const select = { id: '1', label: '新建文档', docId: docId}
+      this.$store.dispatch('setContextMenu', select)
+    },
+    createDoc(formData, saveType) {
       var _this = this
       return new Promise((resolve, reject) => {
         createDocument(formData)
           .then((response) => {
             _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            this.goBack()
+            if(saveType === 'saveOnly') {
+              this.goEdit(response.data.result.articleId)
+            } else {
+              this.goBack()
+            } 
             resolve()
             _this.isLoading = false
           })
@@ -256,13 +265,18 @@ export default {
           })
       })
     },
-    editDoc(formData) {
+    editDoc(formData, saveType) {
+      console.log(saveType, 'edit')
       var _this = this
       return new Promise((resolve, reject) => {
         editDocument(formData)
           .then((response) => {
             _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            this.goBack()
+            if(saveType === 'saveOnly') {
+              this.goEdit(response.data.result.articleId)
+            } else {
+              this.goBack()
+            } 
             resolve()
             _this.isLoading = false
           })
@@ -309,7 +323,7 @@ export default {
       }
       return resoultObj
     },
-    save(formName, publishType) {
+    save(formName, publishType, saveType) {
       // this.$refs.otherForm.updateRule()
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       // 获取扩展字段的值
@@ -357,14 +371,14 @@ export default {
                 resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
               }
               resoultObj.articleId = this.contextMenu.docId
-              this.editDoc(resoultObj)
+              this.editDoc(resoultObj, saveType)
             } else {
               if(this.getDocInformation.attachmentsList) {
                 resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
               } else {
                 resoultObj.articleAttachmentsList = []
               }
-              this.createDoc(resoultObj)
+              this.createDoc(resoultObj, saveType)
             }
           }).catch(err => {
             console.log('====err====', err)

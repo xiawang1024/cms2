@@ -278,3 +278,11 @@ export function getLiveInfor(id) {
     }
   })
 }
+// 新增直播消息
+export function picCoverHandel(articleId, data) {
+  return request({
+    url: `/cms/article/coverimagesoperation/${articleId}`,
+    method: 'post',
+    data
+  })
+}

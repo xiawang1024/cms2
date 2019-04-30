@@ -15,8 +15,8 @@ export const otherSettings = [
         placeholder: '请输入点击量'
       },
       {
-        label: '创建时间',
-        name: 'createTime',
+        label: '发布时间',
+        name: 'publishTime',
         type: 'datetime'
       },
       {
@@ -86,8 +86,8 @@ export const defultItems = [
     placeholder: '请输入点击量'
   },
   {
-    label: '创建时间',
-    name: 'createTime',
+    label: '发布时间',
+    name: 'publishTime',
     type: 'datetime'
   },
   {

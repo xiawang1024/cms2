@@ -300,7 +300,7 @@ export default {
       })
     },
     createDocument() {
-      const select = { id: '1', label: '新建文档' }
+      const select = { id: '1', label: '新建文档', docId: '' }
       this.$store.dispatch('setContextMenu', select)
       this.$store.dispatch('setBaseInfor', {})
       this.$store.dispatch('setAttachmentsList', [])
