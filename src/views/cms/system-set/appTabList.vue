@@ -6,14 +6,18 @@
     <el-table :data="fullTabList" >  
       <el-table-column prop="name" label="列表名字"/>
       <el-table-column prop="description" label="描述"/>
-      <el-table-column prop="icon" label="图标"/>
+      <el-table-column label="图标">
+        <template slot-scope="scope">
+          <img :src="scope.row.icon" class="icon" >
+        </template>
+      </el-table-column>
       <el-table-column prop="url" label="链接地址"/>
       <el-table-column prop="sort" label="排序"/>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="prime" @click="handleEdite(scope.$index,scope.row)">编辑</el-button>
-          <el-button size="mini" type="warning" @click="handleDetail(scope.$index,scope.row)">详情</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button size="mini" type="text" @click="handleEdite(scope.$index,scope.row)">编辑</el-button>
+          <el-button size="mini" type="text" @click="handleDetail(scope.$index,scope.row)">详情</el-button>
+          <el-button size="mini" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -50,14 +54,6 @@ export default {
                       disabled: false,
                       placeholder: '请输入描述'
                     },{
-                      label: '图标',
-                      name: 'icon',
-                      type: 'text',
-                      valueType: 'string',
-                      disabled: false,
-                      required: true,
-                      placeholder: '请输入图标URL'
-                    },{
                       label: 'URL',
                       name: 'url',
                       type: 'text',
@@ -65,10 +61,20 @@ export default {
                       disabled: false,
                       required: true,
                       placeholder: '请输入URL'
+                    },
+                    {
+                      label: '图标',
+                      name: 'icon',
+                      type: 'img',
+                      disabled: false,
+                      limit:1,
+                      required: true,
+                      placeholder: '请上传图标'
                     },{
                       label: '排序',
                       name: 'sort',
-                      type: 'text',
+                      type: 'number',
+                      value:1,
                       valueType: 'number',
                       disabled: false,
                       placeholder: '请输入序列号'
@@ -88,7 +94,6 @@ export default {
         }
     },
     created(){
-        console.log(this.$route.query.appId)
         //发送请求数据
         this.getFullTab();
 
@@ -110,7 +115,6 @@ export default {
             })
         },
         handleDelete(index,row){
-           console.log(row,'row')
              var _this=this
                 this.$confirm('此操作将永久删除该组, 是否继续?', '提示', {
                 confirmButtonText: '确定',
@@ -120,7 +124,6 @@ export default {
                     new Promise((resolve,reject)=>{
                     deleteNavigation(row.id)
                     .then((response)=>{
-                      console.log(response)
                       if(response.data.code==0){
                         this.$message({
                         type: 'success',
@@ -130,7 +133,7 @@ export default {
                       }else{
                         this.$message({
                         type: 'error',
-                        message: '删除失败，请稍后再试!'
+                        message: response.data.msg
                        });
                       }
                       
@@ -150,22 +153,29 @@ export default {
 
         },
         handleEdite(index,row){
-            console.log(index,row,"row")
             
             this.handleType='edit';
             this.currentRow=row;
             this.dialogTitle='编辑';
-            this.formData=row;
+            // this.formData=row;
+            this.formData={
+              name:row.name,
+              description:row.description,
+              url:row.url,
+              icon:[{url:row.icon}],
+              sort:row.sort
+
+            }
             this.currentIndex=index;
             this.dialogVisible=true;
         },
         submitSave(res){
-            console.log(res)
             if(this.handleType=='add'){
                 let data={
                     ...res,
                     appInfoId:this.$route.query.appId
                 }
+                data.icon=res.icon[0].url
              this.addTabContent(data)
             
             }else if(this.handleType=='edit'){
@@ -174,6 +184,7 @@ export default {
                     ...res,
                     id:this.currentRow.id
                 }
+                data.icon=res.icon[0].url
                 this.editTabContent(data)
             }
            
@@ -184,12 +195,8 @@ export default {
             return new Promise((resolve,reject)=>{
                 initNavigation(_this.pageNo,_this.pageSize,_this.$route.query.appId)
                 .then((response)=>{
-                    console.log(response)
                     if(response.data.code=='0'){
                          _this.fullTabList=response.data.result.content
-                         console.log(_this.fullTabList,'fullapp')
-                        //  _this.totalCount=parseInt(response.data.result.total)
-                        // _this.pageFlag=false;
                     }
                    
                     resolve();
@@ -210,7 +217,6 @@ export default {
                return new Promise((resolve,reject)=>{
                    addNavigation(data)
                         .then((response)=>{
-                            console.log(response)
                             if(response.data.code=='0'){
                                 this.$message({
                                     type:'success',
@@ -236,7 +242,6 @@ export default {
                return new Promise((resolve,reject)=>{
                    editNavigation(data)
                         .then((response)=>{
-                            console.log(response,'wenben cuowu ')
                             if(response.data.code=='0'){
                                 this.$message({
                                     type:'success',
@@ -268,5 +273,8 @@ export default {
     }
     .tool-bar {
          text-align: right;
+    }
+    .icon{
+      width: 60px;
     }
 </style>

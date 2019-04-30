@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 // import baseUrl from '@/config/base-url'
 // import QS from "qs"
-// let  Cpath='http://10.99.1.75:8082'
+// let  Cpath='http://10.99.1.246:53006'
 let Cpath="http://172.20.5.103:55001"
 // let Cpath='http://10.50.7.11:53001'
 // let Cpath=''
@@ -145,8 +145,77 @@ export function deletetopTable(id) {
 
 export function edittopTable(data) {
     return request({  
-    url: Cpath+`/appinfoconfig/topType/updateTopType?id=${data.id}&navigationId=${data.navigationId}&have=1&name=${data.name}&description=${data.description}&url=${data.url}&sort=${data.sort}`, 
+    url: Cpath+`/appinfoconfig/topType/updateTopType?id=${data.id}&navigationId=${data.navigationId}&have=${data.have}&name=${data.name}&description=${data.description}&url=${data.url}&sort=${data.sort}`, 
     method: 'put',    
+    
+    })
+}
+
+
+//app页面配置
+
+//条件检索
+
+export function searchPageConfig(id) {
+    
+    return request({  
+    url: Cpath+`/appinfoconfig/pageConfig/queryPageConfig?topTypeId=${id}&pageNo=1&pageSize=999`, 
+    method: 'get',    
+    
+    })
+}
+
+//组件添加
+export function addPageConfig(data) {
+    return request({  
+    url: Cpath+`/appinfoconfig/pageConfig/addPageConfig?topTypeId=${data.topTypeId}&name=${data.name}&description=${data.description}&type=${data.type}&url=${data.url}&sort=${data.sort}`, 
+    method: 'post',    
+    
+    })
+}
+
+
+//删除组件
+export function deletePageConfig(id) {
+    return request({  
+    url: Cpath+`/appinfoconfig/pageConfig/deletePageConfig?id=${id}`, 
+    method: 'delete',    
+    
+    })
+}
+
+//更新组件
+export function editPageConfig(data) {
+    return request({  
+    url: Cpath+`/appinfoconfig/pageConfig/updatePageConfig?id=${data.id}&topTypeId=${data.topTypeId}&name=${data.name}&description=${data.description}&type=${data.type}&url=${data.url}&sort=${data.sort}`, 
+    method: 'put',    
+    
+    })
+}
+//添加轮播组件
+export function putPicture(data) {
+    return request({  
+    url: Cpath+`/appinfoconfig/pageConfig/addPageConfig?pictureList%5B0%5D.url=${data.Purl}&pictureList%5B0%5D.path=${data.Ppath}&pictureList%5B0%5D.name=${data.Pname}&pictureList%5B0%5D.description=${data.Pdescription}&pictureList%5B0%5D.sort=${data.Psort}&topTypeId=${data.topTypeId}&name=${data.name}&description=${data.description}&type=${data.type}&url=${data.url}&sort=${data.sort}`, 
+    method: 'post',    
+    
+    })
+}
+//添加轮播图片
+export function updatePicture(data) {
+    return request({  
+    url: Cpath+`/appinfoconfig/pageConfig/addPageConfig?pictureList%5B${data.order}%5D.pageConfigId=${data.id}&pictureList%5B${data.order}%5D.url=${data.Purl}&pictureList%5B${data.order}%5D.path=${data.Ppath}&pictureList%5B${data.order}%5D.name=${data.Pname}&pictureList%5B${data.order}%5D.description=${data.Pdescription}&pictureList%5B${data.order}%5D.sort=${data.Psort}&id=${data.id}&topTypeId=${data.topTypeId}&name=${data.name}&description=${data.description}&type=${data.type}&url=${data.url}&sort=${data.sort}`, 
+    method: 'post',    
+    
+    })
+}
+
+//查询页面详细配置
+
+export function searchPage(id) {
+    
+    return request({  
+    url: Cpath+`/appinfoconfig/pageConfig/findPageConfigById?id=${id}`, 
+    method: 'get',    
     
     })
 }
