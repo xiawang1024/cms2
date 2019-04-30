@@ -1,63 +1,92 @@
 <template>
-  <div class="login-container">
+  <div style="height: 100%">
+    <div class="login-container">
 
-    <el-form
-      ref="loginForm"
-      :model="loginForm"
-      class="login-form"
-      auto-complete="on"
-      label-position="left"
-    >
+      <el-form
+        ref="loginForm"
+        :model="loginForm"
+        class="login-form"
+        auto-complete="on"
+        label-position="left"
+      >
 
-      <div class="title-container">
-        <h3 class="title">{{ login.title }}</h3>
+        <div class="title-container">
+          <h3 class="title">{{ login.title }}</h3>
 
-      </div>
+        </div>
 
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          v-model="loginForm.username"
-          :placeholder="login.username"
-          name="username"
-          type="text"
-          auto-complete="on"
-        />
-      </el-form-item>
+        <el-form-item prop="username">
+          <span class="svg-container">
+            <svg-icon icon-class="user" />
+          </span>
+          <el-input
+            v-model="loginForm.username"
+            :placeholder="login.username"
+            name="username"
+            type="text"
+            auto-complete="on"
+          />
+        </el-form-item>
 
-      <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
-        <el-input
-          :type="passwordType"
-          v-model="loginForm.password"
-          :placeholder="login.password"
-          name="password"
-          auto-complete="on"
-        />
-        <span
-          class="show-pwd"
-          @click="showPwd"
-        >
-          <svg-icon icon-class="eye" />
-        </span>
-      </el-form-item>
+        <el-form-item prop="password">
+          <span class="svg-container">
+            <svg-icon icon-class="password" />
+          </span>
+          <el-input
+            :type="passwordType"
+            v-model="loginForm.password"
+            :placeholder="login.password"
+            name="password"
+            auto-complete="on"
+          />
+          <span
+            class="show-pwd"
+            @click="showPwd"
+          >
+            <svg-icon icon-class="eye" />
+          </span>
+        </el-form-item>
 
-      <el-button
-        :loading="loading"
-        type="primary"
-        style="width:100%;margin-bottom:30px;"
-        @click.native.prevent="handleLogin"
-      >{{ login.logIn }}</el-button>
-    </el-form>
+        <el-button
+          :loading="loading"
+          type="primary"
+          style="width:100%;margin-bottom:30px;"
+          @click.native.prevent="handleGoogleLogin"
+        >{{ login.googleLoginIn }}</el-button>
 
+        <el-button
+          :loading="loading"
+          type="primary"
+          style="width:100%;margin-bottom:30px;"
+          @click.native.prevent="handleLogin"
+        >{{ login.logIn }}</el-button>
+      </el-form>
+    </div>
+
+    <el-dialog class="binding" title="Google二次验证绑定" :visible.sync="dialogGoogleBindingVisible" width="30%">
+      <span><img :src="dialogGoogleBindingQrCodeBase64" alt="二维码图片" ></span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogGoogleBindingVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogGoogleBindingHandle">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog class="doublecheck" title="Google二次验证(请查看APP中的动态口令)" :visible.sync="dialogGoogleDoubleCheckVisible" width="30%">
+      <el-form >
+        <el-form-item label="动态口令" style="background: none">
+          <el-input v-model="dialogGoogleInputSecondCheckkey" style="border: none;"/>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogGoogleDoubleCheckVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogGoogleDoubleCheckHandle">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { UserNoAuthCheckUserInfo, UserNoAuthQrCode, UserNoAuthQrCodeBinding, UserNoAuthGoogleDoubleCheck } from '@/api/user/user'
 export default {
   name: 'Login',
   data() {
@@ -66,7 +95,8 @@ export default {
         title: '系统登录',
         username: '用户名',
         password: '密码',
-        logIn: '登录'
+        logIn: '登录',
+        googleLoginIn: 'Google二次校验登录'
       },
       loginForm: {
         username: '',
@@ -75,7 +105,13 @@ export default {
 
       passwordType: 'password',
       loading: false,
-      redirect: undefined
+      redirect: undefined,
+      // google 二次绑定功能
+      dialogGoogleBindingVisible: false,
+      dialogGoogleBindingSecretKey: '',
+      dialogGoogleBindingQrCodeBase64: '',
+      dialogGoogleDoubleCheckVisible: false,
+      dialogGoogleInputSecondCheckkey: ''
     }
   },
   watch: {
@@ -92,6 +128,95 @@ export default {
       } else {
         this.passwordType = 'password'
       }
+    },
+    handleGoogleLogin() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        // 开始请求登录接口
+        UserNoAuthCheckUserInfo(_this.loginForm.username, _this.loginForm.password).then(async res => {
+          console.log(res.data)
+          if(res.data.code == 0) {
+            if(res.data.result.bindingFlag == 0) {
+              // 未绑定
+              _this.dialogGoogleBindingSecretKey = res.data.result.secretKey
+              _this.handleGoogleQrCode();
+              _this.dialogGoogleBindingVisible = true
+            }
+            if(res.data.result.bindingFlag == 1) {
+              // 已绑定
+              _this.dialogGoogleDoubleCheckVisible = true
+            }
+
+          } else {
+            _this.$message(res.data.msg);
+          }
+          // 结束
+          resolve()
+        })
+          .catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+      })
+    },
+    handleGoogleQrCode() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        // 开始请求登录接口
+        UserNoAuthQrCode(_this.loginForm.username, _this.loginForm.password, _this.dialogGoogleBindingSecretKey).then(async res => {
+          console.log(res.data)
+          if(res.data.code == 0) {
+            _this.dialogGoogleBindingQrCodeBase64 = 'data:img/jpg;base64,' + res.data.result
+          }
+          // 结束
+          resolve()
+        })
+          .catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+      })
+    },
+    // 绑定二维码
+    dialogGoogleBindingHandle() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        // 开始请求登录接口
+        UserNoAuthQrCodeBinding(_this.loginForm.username, _this.loginForm.password, _this.dialogGoogleBindingSecretKey).then(async res => {
+          console.log(res.data)
+          if(res.data.code == 0) {
+            _this.dialogGoogleBindingVisible = false
+            _this.dialogGoogleDoubleCheckVisible = true
+          }
+          // 结束
+          resolve()
+        })
+          .catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+      })
+    },
+    // double check
+    dialogGoogleDoubleCheckHandle() {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        // 开始请求登录接口
+        UserNoAuthGoogleDoubleCheck(_this.loginForm.username, _this.loginForm.password, _this.dialogGoogleInputSecondCheckkey).then(async res => {
+          console.log(res.data)
+          if(res.data.code == 0) {
+            _this.handleLogin()
+          } else {
+            _this.$message(res.data.msg);
+          }
+          // 结束
+          resolve()
+        })
+          .catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+      })
     },
     handleLogin() {
       this.loading = true
