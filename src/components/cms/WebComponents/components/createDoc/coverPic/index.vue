@@ -22,8 +22,8 @@
                 </div>
               </template>
               <template slot="btn">
-                <el-button type="primary" size="small" @click ="setFile">保存</el-button>
-                <el-button size="small" @click="colseSet">关闭</el-button>
+                <el-button type="primary" size="mini" @click ="setFile">保存</el-button>
+                <el-button size="mini" @click="colseSet">关闭</el-button>
               </template>
             </v-form>
           </div>
@@ -34,7 +34,7 @@
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
       <!-- <el-button type = "primary" size="small" @click = "save">存草稿</el-button>
       <el-button type = "primary" size="small" @click = "save">保存并发布</el-button> -->
-      <el-button type = "primary" size="small" @click="savePic">保存</el-button>
+      <el-button type = "primary" size="mini" @click="savePic">保存</el-button>
     </div>
   </div>
 </template>

@@ -11,7 +11,7 @@
       </template>
       <template slot="preview">
         <div>
-          <el-button type="primary" size="small" @click="lookPreview">预览</el-button>
+          <el-button type="primary" size="mini" @click="lookPreview">预览</el-button>
         </div>
         <div class="preview" v-if="indexTitle">
           <div v-html="indexTitle"/>

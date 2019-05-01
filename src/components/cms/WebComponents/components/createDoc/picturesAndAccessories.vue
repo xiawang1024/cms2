@@ -1,7 +1,7 @@
 <template>
   <div class="upload-file">
     <div class="type-choose">
-      <el-radio-group v-model="fileType" size="small" @change="typeChange">
+      <el-radio-group v-model="fileType" size="mini" @change="typeChange">
         <el-radio-button label="0">上传图片</el-radio-button>
         <el-radio-button label="1">上传音频</el-radio-button>
         <el-radio-button label="2">上传视频</el-radio-button>
@@ -36,8 +36,8 @@
                 </div>
               </template>
               <template slot="btn">
-                <el-button type="primary" size="small" @click ="setFile">保存</el-button>
-                <el-button size="small" @click="colseSet">关闭</el-button>
+                <el-button type="primary" size="mini" @click ="setFile">保存</el-button>
+                <el-button size="mini" @click="colseSet">关闭</el-button>
               </template>
             </v-form>
           </div>
@@ -48,8 +48,8 @@
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
       <!-- <el-button type = "primary" size="small" @click = "save">存草稿</el-button>
       <el-button type = "primary" size="small" @click = "save">保存并发布</el-button> -->
-      <el-button type = "primary" size="small" @click = "save('0')">存草稿</el-button>
-      <el-button type = "primary" size="small" @click = "save('11')">保存并发布</el-button>
+      <el-button type = "primary" size="mini" @click = "save('0')">存草稿</el-button>
+      <el-button type = "primary" size="mini" @click = "save('11')">保存并发布</el-button>
     </div>
   </div>
 </template>

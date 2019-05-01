@@ -1,7 +1,7 @@
 <template>
   <div class="docSource-container">
     <div class="tool-bar">
-      <el-button size="small" type="primary" @click="handleDialog('add')">新增</el-button>
+      <el-button size="mini" type="primary" @click="handleDialog('add')">新增</el-button>
     </div>
     <el-table :data="dictObj.details" style="width: 100%" highlight-current-row >
       <el-table-column prop="dictDetailName" label="来源名称" min-width="150" show-overflow-tooltip/>

@@ -1,7 +1,7 @@
 <template>
   <div class="site-set-container">
     <div class="tool-bar">
-      <el-button size="small" type="primary" @click="handleAddDialog()">新增</el-button>
+      <el-button size="mini" type="primary" @click="handleAddDialog()">新增</el-button>
     </div>
     <el-table :data="dictObj.details" style="width: 100%">
       <el-table-column prop="dictDetailName" label="名称"/>
@@ -30,8 +30,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addSiteSetVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleAdd()">确 定</el-button>
+        <el-button @click="addSiteSetVisible = false" size="mini">取 消</el-button>
+        <el-button type="primary" @click="handleAdd()" size="mini">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -48,12 +48,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="alterSiteSetVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleAlter()">确 定</el-button>
+        <el-button @click="alterSiteSetVisible = false" size="mini">取 消</el-button>
+        <el-button type="primary" size="mini" @click="handleAlter()">确 定</el-button>
       </div>
     </el-dialog>
 
-    <el-button size="small" type="primary" class="btn-save" @click="handleSubmit()">保存</el-button>
+    <el-button size="mini" type="primary" class="btn-save" @click="handleSubmit()">保存</el-button>
   </div>
 </template>
 
