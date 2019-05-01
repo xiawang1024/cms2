@@ -2,9 +2,9 @@
   <div :class="{fullscreen:fullscreen}" class="tinymce-container editor-container">
     <textarea :id="tinymceId" class="tinymce-textarea"/>
 
-    <div class="editor-custom-btn-container">
+    <!-- <div class="editor-custom-btn-container">
       <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"/>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -12,7 +12,7 @@
 import editorImage from './components/editorImage'
 import plugins from './plugins'
 import toolbar from './toolbar'
-
+import baseUrl from '@/config/base-url'
 export default {
   name: 'Tinymce',
   components: { editorImage },
@@ -57,7 +57,9 @@ export default {
       languageTypeList: {
         en: 'en',
         zh: 'zh_CN'
-      }
+      },
+      upURL: baseUrl.UP_URL,
+      downURL: baseUrl.DOWN_URL
     }
   },
   computed: {
@@ -138,19 +140,19 @@ export default {
             _this.fullscreen = e.state
           })
         },
-        link_list: [
-              { title: '预置链接1', value: 'http://www.tinymce.com' },
-              { title: '预置链接2', value: 'http://tinymce.ax-z.cn' }
-          ],
-          image_list: [
-              { title: '预置图片1', value: 'https://www.tiny.cloud/images/glyph-tinymce@2x.png' },
-              { title: '预置图片2', value: 'https://www.baidu.com/img/bd_logo1.png' }
-          ],
-          image_class_list: [
-          { title: 'None', value: '' },
-          { title: 'Some class', value: 'class-name' }
-          ],
-        importcss_append: true,
+        // link_list: [
+        //       { title: '预置链接1', value: 'http://www.tinymce.com' },
+        //       { title: '预置链接2', value: 'http://tinymce.ax-z.cn' }
+        //   ],
+        //   image_list: [
+        //       { title: '预置图片1', value: 'https://www.tiny.cloud/images/glyph-tinymce@2x.png' },
+        //       { title: '预置图片2', value: 'https://www.baidu.com/img/bd_logo1.png' }
+        //   ],
+        //   image_class_list: [
+        //   { title: 'None', value: '' },
+        //   { title: 'Some class', value: 'class-name' }
+        //   ],
+        // importcss_append: true,
         file_picker_types: 'file image media',
         // images_upload_handler: function (blobInfo, success, failure) {
         //     function uploadPic () {
@@ -209,28 +211,27 @@ export default {
             var file = this.files[0]
             let xhr, formData;
             xhr = new XMLHttpRequest();
-            xhr.open('POST', 'http://fupload.test.dianzhenkeji.com:55030/basefile/upload?fileRefId=');
+            xhr.open('POST', _this.upURL);
             xhr.withCredentials = false;
             xhr.upload.onprogress = function (e) {
               // 进度(e.loaded / e.total * 100)
             };
             xhr.onerror = function () {
               //根据自己的需要添加代码
-              console.log(xhr.status);
+              alert(xhr.status);
               return;
             }
             xhr.onload = function () {
               let json;
               if (xhr.status < 200 || xhr.status >= 300) {
-                console.log('HTTP 错误: ' + xhr.status);
+                alert('HTTP 错误: ' + xhr.status);
                 return;
               }
               json = JSON.parse(xhr.responseText);
-              console.log(json, 'json11')
               //假设接口返回JSON数据为{status: 0, msg: "上传成功", data: {location: "/localImgs/1546434503854.mp4"}}
               if(json.code==0){
                 //接口返回的文件保存地址
-                let mediaLocation='http://cmsres.test.dianzhenkeji.com' + json.result.filePath;
+                let mediaLocation= _this.downURL + json.result.filePath;
                 console.log(json, 'json')
                 //cb()回调函数，将mediaLocation显示在弹框输入框中
                 callback(mediaLocation, { title: file.name });
@@ -241,52 +242,12 @@ export default {
             } 
             formData = new FormData();
             //假设接口接收参数为file,值为选中的文件
-            formData.append('file', file);
+            formData.append('file', file)
             //正式使用将下面被注释的内容恢复
-            xhr.send(formData);
-
-
-            //之前
-            // var reader = new FileReader()
-            // reader.onload = function() {
-            //   // Note: Now we need to register the blob in TinyMCEs image blob
-            //   // registry. In the next release this part hopefully won't be
-            //   // necessary, as we are looking to handle it internally.
-            //   var id = 'blobid' + new Date().getTime()
-            //   var blobCache = window.tinymce.activeEditor.editorUpload.blobCache
-            //   var base64 = reader.result.split(',')[1]
-            //   var blobInfo = blobCache.create(id, file, base64)
-            //   blobCache.add(blobInfo)
-            //   // call the callback and populate the Title field with the file name
-            //   // callback(blobInfo.blobUri(), { title: file.name });
-            //   if (meta.filetype === 'file') {
-            //     callback('mypage.html', { text: 'My text' })
-            //   }
-
-            //   // Provide image and alt text for the image dialog
-            //   if (meta.filetype === 'image') {
-            //     callback(
-            //       'http://cmsres.test.dianzhenkeji.com/anonymous/2019/4/30/1123112909510152192.jpg',
-            //       { alt: 'My alt text' }
-            //     )
-            //   }
-
-            //   // Provide alternative source and posted for the media dialog
-            //   if (meta.filetype === 'media') {
-            //     console.log(meta, 'meta')
-            //     // http://cmsres.test.dianzhenkeji.com/anonymous/2019/4/30/1123167553854771200.mp3
-            //     // http://vod.hndt.com/minsheng/2018/12/20181229.mp4
-            //     callback('http://cmsres.test.dianzhenkeji.com/anonymous/2019/4/30/1123167553854771200.mp3', {
-            //       source2: 'alt.ogg',
-            //       poster: 'image.jpg'
-            //     })
-            //   }
-            // }
-            // reader.readAsDataURL(file)
+            xhr.send(formData)
           }
           input.click()
         }
-
         // 整合七牛上传
         // images_dataimg_filter(img) {
         //   setTimeout(() => {
