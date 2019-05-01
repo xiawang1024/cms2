@@ -40,11 +40,11 @@
       <el-table-column prop="size" label="大小"/>
       <el-table-column prop="type" label="类别"/>
       <el-table-column prop="updateTime" label="修改时间"/>
-      <el-table-column label="操作">
+      <el-table-column label="操作" fixed="right" width="150">
         <template slot-scope="scope">
           <el-button
             size="mini"
-            type="prime"
+            type="primary"
             title="同步资源文件到发布目录"
             @click="sync(scope.$index, scope.row)"
           >同步</el-button>

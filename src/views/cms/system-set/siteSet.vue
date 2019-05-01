@@ -1,7 +1,7 @@
 <template>
   <div class="site-set-container">
     <div class="tool-bar">
-      <el-button size="mini" type="primary" @click="handleAddDialog()">新增</el-button>
+      <el-button size="small" type="primary" @click="handleAddDialog()">新增</el-button>
     </div>
     <el-table :data="dictObj.details" style="width: 100%">
       <el-table-column prop="dictDetailName" label="名称"/>
@@ -53,7 +53,7 @@
       </div>
     </el-dialog>
 
-    <el-button size="mini" type="primary" class="btn-save" @click="handleSubmit()">保存</el-button>
+    <el-button size="small" type="primary" class="btn-save" @click="handleSubmit()">保存</el-button>
   </div>
 </template>
 
@@ -237,25 +237,38 @@ export default {
 };
 </script>
 
-<style scoped>
-.el-button + .el-button {
-  margin-top: 5px;
-  margin-left: 0px;
-}
+<style lang = "scss">
+.site-set-container{
+  .el-button{
+    margin-top: 5px;
+    margin-left: 0px;
+  }
 
-.siteSet-container {
-  margin: 30px;
-}
+  .siteSet-container {
+    margin: 30px;
+  }
 
-.tool-bar {
-  text-align: right;
-}
-/* liyu */
-.site-set-container {
-  box-sizing: border-box;
-  margin: 30px;
-}
-.btn-save {
-  margin-top: 20px;
+  .tool-bar {
+    text-align: right;
+  }
+  /* liyu */
+    box-sizing: border-box;
+    margin: 30px;
+    .el-table{
+      .el-input__inner{
+        height:32px;
+        line-height: 32px;
+      }
+      td{
+        padding:5px 0;
+      }
+    }
+  .el-input__inner {
+    height:32px;
+    line-height: 32px;
+  }
+  .btn-save {
+    margin-top: 20px;
+  }
 }
 </style>

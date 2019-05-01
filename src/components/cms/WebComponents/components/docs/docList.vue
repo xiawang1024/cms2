@@ -6,20 +6,23 @@
       :highlight-current-row="true"
       tooltip-effect="dark"
       style="width: 100%"
-      size="mini"
       @selection-change="handleSelectionChange"
       @row-click="rowClick"
       :row-class-name="tableRowClassName"
     >
-      <el-table-column type="selection" width="55"/>
-      <el-table-column prop="articleId" label="ID/序号" width="150" show-overflow-tooltip/>
+      <el-table-column type="selection" width="40"/>
+      <el-table-column prop="articleId" label="ID/序号" width="150" show-overflow-tooltip>
+        <template slot-scope="scope">
+          <span class="article-id">{{ scope.row.articleId }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="articleTitle" label="标题" min-width="300" show-overflow-tooltip>
         <template slot-scope="scope">
-          <span v-if="checkAuth('cms:article:stick')" class="titleClick" @click="editDoc(scope.row.articleId)">{{ scope.row.articleTitle }}</span>
-          <span v-else>{{ scope.row.articleTitle }}</span>
-          <icon name="file-alt" title="正文有图" v-if="scope.row.contentImagesList && scope.row.contentImagesList.length"/>
-          <icon name="file-image" title="附件有图" v-if="documentHasImg(scope.row.articleAttachmentsList)"/>
-          <icon name="arrow-circle-up" title="置顶" v-if="scope.row.topFlag == 1"/>
+          <span v-if="checkAuth('cms:article:stick')" class="titleClick hover-color" @click="editDoc(scope.row.articleId)">{{ scope.row.articleTitle }}</span>
+          <span v-else class="hover-color">{{ scope.row.articleTitle }}</span>
+          <i class="el-icon-document fz-16" title="正文有图" v-if="scope.row.contentImagesList && scope.row.contentImagesList.length"/>
+          <i class="el-icon-picture fz-16" title="附件有图" v-if="documentHasImg(scope.row.articleAttachmentsList)"/>
+          <i class="el-icon-upload2 fz-16" title="置顶" v-if="scope.row.topFlag == 1"/>
         </template>
       </el-table-column>
       <!-- <el-table-column label="查看" width="60">
@@ -35,7 +38,7 @@
       </el-table-column>
       <el-table-column prop="articleType" label="类型" width="50">
         <template slot-scope="scope">
-          <span v-if="scope.row.articleType == 0">图文</span>
+          <span v-if="scope.row.articleType == 0" >图文</span>
           <span v-if="scope.row.articleType == 1">图集</span>
           <span v-if="scope.row.articleType == 2">拼条</span>
           <span v-if="scope.row.articleType == 3">引用</span>
@@ -63,18 +66,18 @@
       <el-table-column
         prop="createTime"
         label="创建时间"
-        width="135"
+        width="155"
         show-overflow-tooltip
       />
       <el-table-column
         prop="publishTime"
         label="发布时间"
-        width="135"
+        width="155"
         show-overflow-tooltip
       />
       <el-table-column prop="createUser" label="撰稿人" width="100" show-overflow-tooltip/>
       <el-table-column prop="clickNum" label="点击" width="50"/>
-      <el-table-column fixed="right" label="操作" width="220">
+      <el-table-column fixed="right" label="操作" width="140">
         <template slot-scope="scope">
           <el-button v-if="checkAuth('cms:article:stick')" type="text" size="small" @click.stop="setTop(scope.row.articleId)">置顶</el-button>
           <el-button v-if="checkAuth('cms:article:edit')" type="text" size="small" @click.stop="editDoc(scope.row.articleId)">编辑</el-button>
@@ -364,9 +367,20 @@ $color-blue: #3498db;
   width: 100%;
   // padding: 0 10px;
   box-sizing: border-box;
+  .hover-color{
+    &:hover{
+      color: #67C23A;
+    }
+  }
+  .fz-16{
+    font-size: 16px;
+  }
   .titleClick{
     cursor: pointer;
     color: #409EFF;
+  }
+  .article-id{
+    font-size: 12px;
   }
   .el-table{
     .top-row {

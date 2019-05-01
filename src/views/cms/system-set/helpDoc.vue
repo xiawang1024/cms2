@@ -26,10 +26,10 @@
       <el-table-column prop="title" label="模板名称"/>
       <el-table-column prop="tag" label="标签"/>
       <el-table-column prop="size" label="文档大小"/>
-      <el-table-column label="操作">
+      <el-table-column label="操作" fixed="right" width="200">
         <template slot-scope="scope">
-          <el-button size="mini" type="prime" @click="handleAlter(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="warning" @click="handleBroadcast(scope.$index, scope.row)">广播</el-button>
+          <el-button size="mini" type="primary" @click="handleAlter(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="success" @click="handleBroadcast(scope.$index, scope.row)">广播</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
