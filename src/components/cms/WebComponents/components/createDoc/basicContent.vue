@@ -27,7 +27,7 @@ import reproduce from './reproduce.vue'
 import { columnInfor } from '@/api/cms/columnManage'
 import { documentInfor } from '@/api/cms/article'
 import { fetchDictByDictName } from "@/api/cms/dict"
-import {otherSettings, imagesSeting, reproduceSetting} from './setting.js'
+import {otherSettings, imagesSeting, reproduceSetting, defultItems} from './setting.js'
 import { mapGetters } from 'vuex'
 export default {
   name: 'BasicContent',
@@ -114,7 +114,7 @@ export default {
         case '1':
           return 'text'
         case '2':
-          return 'date'
+          return 'datetime'
         case '3':
           return 'number'
         default: ''
@@ -122,6 +122,8 @@ export default {
     },
     // 获取栏目详情
     getColumnInfor(id) {
+      // 设置默认值， 防止扩展字段重复添加
+      this.otherSettings[0].items = defultItems
       var _this = this
       return new Promise((resolve, reject) => {
         columnInfor(id)
@@ -132,6 +134,7 @@ export default {
                   label: ele.label,
                   name: ele.label,
                   type: _this.datachange(ele.type),
+                  required: ele.required,
                   placeholder: '请输入'
                 }
               })
@@ -149,20 +152,24 @@ export default {
             _this.otherSettings[0].items[0].options = _this.tagList
             _this.imagesSeting[0].items[6].options = _this.tagList
             _this.reproduceSetting[0].items[3].options = _this.tagList
-            let obj = {};
-            _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList).reduce((cur,next) => {
-              obj[next.label] ? "" : obj[next.label] = true && cur.push(next);
-              return cur
-            }, [])
-            if(_this.tagList.length) {
-              console.log()
-            } else {
+            this.$nextTick(() => {
+              _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList)
+            })
+            if(!_this.tagList.length) {
               _this.otherSettings[0].items[0].hidden = true
               _this.imagesSeting[0].items[6].hidden = true
               _this.reproduceSetting[0].items[3].hidden = true
             }
             if(_this.contextMenu.docId) {
               _this.getDocumentInfor(_this.contextMenu.docId)
+            } else {
+              // 扩展字段必填触发updateForm
+              this.$nextTick(() => {
+                _this.docInfor = {
+                  hiddenFlag: '0',
+                  topFlag: '0'
+                }
+              })
             }
             resolve()
           })
@@ -177,7 +184,6 @@ export default {
         documentInfor(id)
           .then((response) => {
             _this.docInfor = response.data.result
-            // _this.$emit('docInfor', _this.docInfor)
             _this.typeForm.articleType = response.data.result.articleType ? response.data.result.articleType : 0
             if(_this.docInfor.extFieldsList && _this.docInfor.extFieldsList.length) {
               _this.docInfor.extFieldsList.forEach((ele) => {

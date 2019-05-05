@@ -74,7 +74,10 @@ export function UserShow(data) {
 export function UserCurrent() {
   return request({
     url: '/userb/user/currentuser',
-    method: 'GET'
+    method: 'GET',
+    loadingConfig: {
+      noLoading: true
+    }
   })
 }
 // 修改当前用户密码

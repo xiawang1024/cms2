@@ -5,7 +5,7 @@
 import { loginByUsername, logout, getUserInfo, userCurrent } from '@/api/login'
 import { columnListAll } from '@/api/cms/columnManage'
 import { UserCurrent } from '@/api/user/user'
-import { getAuth, setAuth, removeAuth, setBaseInfor, setColumnAll } from '@/utils/auth'
+import { getAuth, setAuth, removeAuth, setBaseInfor, setColumnAll, setColumnAllOrigin } from '@/utils/auth'
 import { sha1 } from '@/utils/index'
 import router from '@/router'
 // 获取当前用户
@@ -103,6 +103,9 @@ const user = {
     },
     SET_COLUMN_ALL: (state, columnAll) => {
       state.columnAll = columnAll
+    },
+    SET_COLUMN_ALL_ORIGIN: (state, columnAll) => {
+      state.columnAllOrigin = columnAll
     }
   },
 
@@ -120,6 +123,7 @@ const user = {
           .then((response) => {
             const data = response.data
             commit('SET_TOKEN', data.access_token)
+            commit('SET_SYS_TYPE', '0')
             setAuth(data)
             // getCurrentInfor()
             // userCurrent()
@@ -155,7 +159,9 @@ const user = {
         columnListAll({}, 1, 1000)
           .then((res) => {
             commit('SET_COLUMN_ALL', toTree(res.data.result.content))
+            commit('SET_COLUMN_ALL_ORIGIN', toTree(res.data.result.content))
             setColumnAll(toTree(res.data.result.content))
+            setColumnAllOrigin(res.data.result.content)
             resolve()
           })
           .catch((error) => {

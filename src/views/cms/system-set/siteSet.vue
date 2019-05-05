@@ -30,8 +30,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addSiteSetVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleAdd()">确 定</el-button>
+        <el-button @click="addSiteSetVisible = false" size="mini">取 消</el-button>
+        <el-button type="primary" @click="handleAdd()" size="mini">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -48,8 +48,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="alterSiteSetVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleAlter()">确 定</el-button>
+        <el-button @click="alterSiteSetVisible = false" size="mini">取 消</el-button>
+        <el-button type="primary" size="mini" @click="handleAlter()">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -237,25 +237,38 @@ export default {
 };
 </script>
 
-<style scoped>
-.el-button + .el-button {
-  margin-top: 5px;
-  margin-left: 0px;
-}
+<style lang = "scss">
+.site-set-container{
+  .el-button{
+    margin-top: 5px;
+    margin-left: 0px;
+  }
 
-.siteSet-container {
-  margin: 30px;
-}
+  .siteSet-container {
+    margin: 30px;
+  }
 
-.tool-bar {
-  text-align: right;
-}
-/* liyu */
-.site-set-container {
-  box-sizing: border-box;
-  margin: 30px;
-}
-.btn-save {
-  margin-top: 20px;
+  .tool-bar {
+    text-align: right;
+  }
+  /* liyu */
+    box-sizing: border-box;
+    margin: 30px;
+    .el-table{
+      .el-input__inner{
+        height:32px;
+        line-height: 32px;
+      }
+      td{
+        padding:5px 0;
+      }
+    }
+  .el-input__inner {
+    height:32px;
+    line-height: 32px;
+  }
+  .btn-save {
+    margin-top: 20px;
+  }
 }
 </style>

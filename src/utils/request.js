@@ -13,6 +13,9 @@ const request = axios.create({
 const requestLoading = (() => {
   const loadingStack = new Map()
   function openLoading(loadingConfig={}, baseURL, url) {
+    if(url === '/uua/oauth/check_token' || url ==='/uua/oauth/token') {
+      return
+    }
     if (url && !url.match('http')) {
       url = baseURL + url
     }

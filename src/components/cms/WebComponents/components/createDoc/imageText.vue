@@ -11,14 +11,15 @@
           </el-form-item>
           <el-form-item label="">
             <div class="grid-content bg-purple">
-              <Tinymce ref="editor" :height="400" v-model="docContentForm.contentBody"/>
+              <Tinymce ref="editor" :height="450" v-model="docContentForm.contentBody"/>
             </div>
           </el-form-item>
         </el-form>
         <div class="btn-list">
           <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
-          <el-button type = "primary" size="small" @click = "save('docContentForm', '0')">存草稿</el-button>
-          <el-button type = "primary" size="small" @click = "save('docContentForm', '11')">保存并发布</el-button>
+          <el-button type = "primary" size="mini" @click = "save('docContentForm', '0', 'saveOnly')">保存</el-button>
+          <el-button type = "primary" size="mini" @click = "save('docContentForm', '0')">存草稿</el-button>
+          <el-button type = "primary" size="mini" @click = "save('docContentForm', '11')">保存并发布</el-button>
           <!-- <el-button type = "primary" size="small" @click = "save('docContentForm')">保存并发布</el-button> -->
           <!-- <el-button type = "primary" size="small" @click = "save">保存并关闭</el-button>
           <el-button type = "primary" size="small" @click = "save">保存并发布</el-button> -->
@@ -202,12 +203,16 @@ export default {
         console.log(val)
         this.baseSettings[0].items[1].options = val
       }
+    },
+    otherSettings(val) {
+      console.log(val, 'val')
     }
   },
   mounted() {
     if(this.sourceList.length) {
       this.baseSettings[0].items[1].options = this.sourceList
     }
+
     this.docContentForm = {
       articleTitle: this.docInfor.articleTitle,
       contentTitle: this.docInfor.contentTitle,
@@ -236,13 +241,21 @@ export default {
         label: ''
       })
     },
-    createDoc(formData) {
+    goEdit(docId) {
+      const select = { id: '1', label: '新建文档', docId: docId}
+      this.$store.dispatch('setContextMenu', select)
+    },
+    createDoc(formData, saveType) {
       var _this = this
       return new Promise((resolve, reject) => {
         createDocument(formData)
           .then((response) => {
             _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            this.goBack()
+            if(saveType === 'saveOnly') {
+              this.goEdit(response.data.result.articleId)
+            } else {
+              this.goBack()
+            } 
             resolve()
             _this.isLoading = false
           })
@@ -252,13 +265,18 @@ export default {
           })
       })
     },
-    editDoc(formData) {
+    editDoc(formData, saveType) {
+      console.log(saveType, 'edit')
       var _this = this
       return new Promise((resolve, reject) => {
         editDocument(formData)
           .then((response) => {
             _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            this.goBack()
+            if(saveType === 'saveOnly') {
+              this.goEdit(response.data.result.articleId)
+            } else {
+              this.goBack()
+            } 
             resolve()
             _this.isLoading = false
           })
@@ -305,7 +323,8 @@ export default {
       }
       return resoultObj
     },
-    save(formName, publishType) {
+    save(formName, publishType, saveType) {
+      // this.$refs.otherForm.updateRule()
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       // 获取扩展字段的值
       let extendsFields = []
@@ -341,23 +360,37 @@ export default {
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if(this.contextMenu.docId) {
-            if(this.getDocInformation.attachmentsList) {
-              resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
-            } else {
-              resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
+          this.$refs.otherForm.getDataAsync().then(data => {
+            if (!data) {
+              return
             }
-            resoultObj.articleId = this.contextMenu.docId
-            this.editDoc(resoultObj)
-          } else {
-             if(this.getDocInformation.attachmentsList) {
-              resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+            if(this.contextMenu.docId) {
+              if(this.getDocInformation.attachmentsList) {
+                resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+              } else {
+                resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
+              }
+              resoultObj.articleId = this.contextMenu.docId
+              this.editDoc(resoultObj, saveType)
             } else {
-              resoultObj.articleAttachmentsList = []
+              if(this.getDocInformation.attachmentsList) {
+                resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+              } else {
+                resoultObj.articleAttachmentsList = []
+              }
+              this.createDoc(resoultObj, saveType)
             }
-            this.createDoc(resoultObj)
-          }
+          }).catch(err => {
+            console.log('====err====', err)
+          })
         } else {
+          this.$refs.otherForm.getDataAsync().then(data => {
+            if (!data) {
+              return
+            }
+          }).catch(err => {
+            console.log('====err====', err)
+          })
           return false;
         }
       })

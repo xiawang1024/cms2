@@ -22,7 +22,7 @@
             </template>
             <!-- 级联选择器 -->
             <template v-else-if="item.type=='cascader'">
-              <el-cascader expand-trigger="click" :change-on-select="item.changeOnSelect" :options="item.options" v-model="formModel[item.name]" :clearable="true"/>
+              <el-cascader expand-trigger="hover" :change-on-select="item.changeOnSelect" :options="item.options" v-model="formModel[item.name]" :clearable="true"/>
             </template>
             <!-- 日期选择 -->
             <template v-else-if="item.type=='date'">
@@ -110,8 +110,8 @@
         </el-col>
         <el-col :md="8" :sm="12" :xs="24" style="float:right">
           <el-form-item label-width="0" style="text-align:right">
-            <el-button type="primary" @click="onSearch">搜索</el-button>
-            <el-button @click="onReset" v-if="!hideReset">重置</el-button>
+            <el-button type="primary" @click="onSearch" size="mini">搜索</el-button>
+            <el-button @click="onReset" v-if="!hideReset" size="mini">重置</el-button>
             <el-button type="text" @click="handleShowAll" v-if="invisibleItemCount">
               {{ showAll ? "简单搜索" : "高级搜索" }}
               <i v-if="showAll" class="el-icon-arrow-up"/>
@@ -515,6 +515,7 @@ export default {
      * 设置指定项的值
      */
     setItemData(name, data) {
+      console.log(name, data)
       if (typeof name == 'object') {
         Object.keys(name).forEach(item => {
           this.formModel[item] = name[item]

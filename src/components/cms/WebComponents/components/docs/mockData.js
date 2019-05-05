@@ -22,15 +22,23 @@ export const currentDoc = [
   {
     id: '6',
     label: '移动到'
-  }
+  },
+  // {
+  //   id: '7',
+  //   label: '引用到'
+  // }
 ]
 
 
 export const currentColumn = [
-  {
-    id: '1',
-    label: '栏目首页'
-  },
+  // {
+  //   id: '1',
+  //   label: '栏目首页'
+  // },
+  // {
+  //   id: '1',
+  //   label: '栏目首页'
+  // },
   {
     id: '3',
     label: '修改栏目'
@@ -51,6 +59,22 @@ export const currentColumn = [
     id: '6',
     label: '栏目水印'
   },
+  {
+    id: '7',
+    label: '模板'
+  },
+  // {
+  //   id: '4',
+  //   label: '栏目图片'
+  // },
+  // {
+  //   id: '5',
+  //   label: '自定义文档列表'
+  // },
+  // {
+  //   id: '6',
+  //   label: '栏目水印'
+  // },
   // {
   //   id: '7',
   //   label: '模板'

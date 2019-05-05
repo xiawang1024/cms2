@@ -20,10 +20,13 @@
       <el-table-column prop="description" label="描述"/>
       <el-table-column prop="tag" label="标签"/>
       <el-table-column prop="sort" label="排序"/>            
-      <el-table-column label="操作">
+      <el-table-column label="操作" fixed="right" width="200">
         <template slot-scope="scope">
-          <el-button size="mini" type="prime" @click="commentForm(2, scope.row)">编辑</el-button>
-          <el-button size="mini" type="warning" @click="handleSerch(scope.row.id,scope.row.description)">详情</el-button>
+          <!-- <el-button size="mini" type="prime" @click="commentForm(2, scope.row)">编辑</el-button> -->
+          <!-- <el-button size="mini" type="warning" @click="handleSerch(scope.row.id,scope.row.description)">详情</el-button> -->
+          <el-button size="mini" type="primary" @click="commentForm(2, scope.row)">编辑</el-button>
+          
+          <el-button size="mini" type="success" @click="handleSerch(scope.row.id,scope.row.description)">详情</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>

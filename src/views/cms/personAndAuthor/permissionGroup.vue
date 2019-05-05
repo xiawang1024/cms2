@@ -16,7 +16,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination :total="total"/>
+    <pagination :total="total" @sizeChange="sizeChange" @pageChange="pageChange"/>
     <access-dialog :dialog-visible.sync="showAccess" :tree-data="treeData" :user-infor="userInfor" @handelSuccess="handelSuccess"/>
   </div>
 </template>
@@ -63,6 +63,14 @@ export default
     this.columnSearchList()
   },
   methods: {
+    sizeChange(val) {
+      this.pageSize = val
+      this.getUserList()
+    },
+    pageChange(val) {
+      this.page = val
+      this.getUserList()
+    },
     handelSuccess() {
       this.getUserList()
     },

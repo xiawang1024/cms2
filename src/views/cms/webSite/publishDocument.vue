@@ -39,7 +39,7 @@ import splitPane from 'vue-splitpane'
 import Tree from '@/components/cms/Tree'
 import WebComponents from '@/components/cms/WebComponents'
 import { mapGetters } from 'vuex'
-import { columnList } from '@/api/cms/columnManage'
+// import { columnList } from '@/api/cms/columnManage'
 import mixins from '@/components/cms/mixins'
 import store from 'store'
 export default {
@@ -82,7 +82,6 @@ export default {
     next()
   },
   beforeRouteLeave(to, from, next) {
-    console.log(from)
     const { path } = from
     if (path === '/website/doc') {
       this.$store.dispatch('setViewTypeShow', false)
@@ -101,7 +100,13 @@ export default {
         } else {
           let webSiteTags = []
           if(this.tableData[0].children && this.tableData[0].children.length) {
-            webSiteTags = [{
+            webSiteTags = [
+              {
+                channelCode: this.tableData[0].channelCode,
+                id: this.tableData[0].channelId,
+                label: this.tableData[0].channelName
+              },
+              {
               channelCode: this.tableData[0].children[0].channelCode,
               id: this.tableData[0].children[0].channelId,
               label: this.tableData[0].children[0].channelName
@@ -115,56 +120,57 @@ export default {
           }
           this.$store.dispatch('setTreeTags', webSiteTags)
           this.$nextTick(() => {
-            if(this.tableData && this.tableData.length) {
-              if(this.tableData[0].children) {
-                document.querySelectorAll('.el-tree-node')[1].classList.add('is-current')
-              } else {
-                document.querySelectorAll('.el-tree-node')[0].classList.add('is-current')
-              }
-            }
+            this.$refs.tree.$refs.websitTree.setCurrentKey(this.treeTags[this.treeTags.length - 1].id)
+            // if(this.tableData && this.tableData.length) {
+            //   if(this.tableData[0].children) {
+            //     document.querySelectorAll('.el-tree-node')[1].classList.add('is-current')
+            //   } else {
+            //     document.querySelectorAll('.el-tree-node')[0].classList.add('is-current')
+            //   }
+            // }
           })
         }
       }
     },
-    columnList() {
-      var _this = this
-      return new Promise((resolve, reject) => {
-        columnList({}, _this.pageNum, _this.pageSize)
-          .then((response) => {
-            _this.tableData = _this.toTree(response.data.result.content)
-            if(_this.tableData.length) {
-              let webSiteTags = []
-              if(_this.tableData[0].children && _this.tableData[0].children.length) {
-                webSiteTags = [{
-                  channelCode: _this.tableData[0].children[0].channelCode,
-                  id: _this.tableData[0].children[0].channelId,
-                  label: _this.tableData[0].children[0].channelName
-                }]
-              } else {
-                webSiteTags = [{
-                  channelCode: _this.tableData[0].channelCode,
-                  id: _this.tableData[0].channelId,
-                  label: _this.tableData[0].channelName
-                }]
-              }
-              this.$store.dispatch('setTreeTags', webSiteTags)
-              this.$nextTick(() => {
-                if(_this.tableData && _this.tableData.length) {
-                  if(_this.tableData[0].children) {
-                    document.querySelectorAll('.el-tree-node')[1].classList.add('is-current')
-                  } else {
-                    document.querySelectorAll('.el-tree-node')[0].classList.add('is-current')
-                  }
-                }
-              })
-            }
-            resolve()
-          })
-          .catch((error) => {
-            reject(error)
-          })
-      })
-    },
+    // columnList() {
+    //   var _this = this
+    //   return new Promise((resolve, reject) => {
+    //     columnList({}, _this.pageNum, _this.pageSize)
+    //       .then((response) => {
+    //         _this.tableData = _this.toTree(response.data.result.content)
+    //         if(_this.tableData.length) {
+    //           let webSiteTags = []
+    //           if(_this.tableData[0].children && _this.tableData[0].children.length) {
+    //             webSiteTags = [{
+    //               channelCode: _this.tableData[0].children[0].channelCode,
+    //               id: _this.tableData[0].children[0].channelId,
+    //               label: _this.tableData[0].children[0].channelName
+    //             }]
+    //           } else {
+    //             webSiteTags = [{
+    //               channelCode: _this.tableData[0].channelCode,
+    //               id: _this.tableData[0].channelId,
+    //               label: _this.tableData[0].channelName
+    //             }]
+    //           }
+    //           this.$store.dispatch('setTreeTags', webSiteTags)
+    //           this.$nextTick(() => {
+    //             if(_this.tableData && _this.tableData.length) {
+    //               if(_this.tableData[0].children) {
+    //                 document.querySelectorAll('.el-tree-node')[1].classList.add('is-current')
+    //               } else {
+    //                 document.querySelectorAll('.el-tree-node')[0].classList.add('is-current')
+    //               }
+    //             }
+    //           })
+    //         }
+    //         resolve()
+    //       })
+    //       .catch((error) => {
+    //         reject(error)
+    //       })
+    //   })
+    // },
   }
 }
 </script>

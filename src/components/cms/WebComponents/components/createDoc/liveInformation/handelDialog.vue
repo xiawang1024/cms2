@@ -112,6 +112,7 @@ export default {
     submitSave(data) {
       data.articleId = this.contextMenu.docId
       data.articleLiveCommentPicUrl = data.articleLiveCommentPicUrl.length ? data.articleLiveCommentPicUrl[0].url : ''
+      data.enableFlag = 1
       if(this.title == '添加') {
         this.addLive(data)
       } else {

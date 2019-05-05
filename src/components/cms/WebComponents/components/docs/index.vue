@@ -109,6 +109,7 @@ export default {
       return new Promise((resolve, reject) => {
         documentList(_this.searchData, _this.pageNum, _this.pageSize)
           .then((response) => {
+            _this.tableData = []
             _this.tableData = response.data.result.content
             _this.totalCount = response.data.result.total
             resolve()

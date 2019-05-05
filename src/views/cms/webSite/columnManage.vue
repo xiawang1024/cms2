@@ -4,7 +4,7 @@
       <v-search :search-settings="searchSettings" @search="searchItem"/>
     </div>
     <div class="tool-bar">
-      <el-button type="primary" v-if="checkAuth('cms:channel:add')" @click="columnAddEdit(true, 'father')" size="small">添加</el-button>
+      <el-button type="primary" v-if="checkAuth('cms:channel:add')" @click="columnAddEdit(true, 'father')" size="mini">添加</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%">
       <el-table-column prop="channelName" label="栏目名称" min-width="250" show-overflow-tooltip>
@@ -17,7 +17,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="channelCode" label="栏目编码" min-width="80"/>
+      <el-table-column prop="channelCode" label="栏目编码" min-width="100"/>
       <el-table-column prop="hiddenFlag" label="状态">
         <template slot-scope="scope">
           <span v-if="scope.row.hiddenFlag == 1">隐藏</span>
@@ -31,19 +31,19 @@
           <span v-else>否</span>
         </template>
       </el-table-column>
-      <el-table-column label="设置" width="300">
+      <el-table-column label="设置" width="270">
         <template v-if="checkAuth('cms:channel:setup')" slot-scope="scope">
-          <el-button type="text" @click="columnTemplate(scope.row)">栏目模板</el-button>
-          <el-button type="text" @click="extendsWord(scope.row)">扩展字段</el-button>
-          <el-button type="text" @click="tagSetting(scope.row)">标签设置</el-button>
-          <el-button type="text" @click="waterSetting(scope.row)">水印设置</el-button>
+          <el-button type="text" size="small" @click="columnTemplate(scope.row)">栏目模板</el-button>
+          <el-button type="text" size="small" @click="extendsWord(scope.row)">扩展字段</el-button>
+          <el-button type="text" size="small" @click="tagSetting(scope.row)">标签设置</el-button>
+          <el-button type="text" size="small" @click="waterSetting(scope.row)">水印设置</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="150">
+      <el-table-column label="操作" width="130">
         <template v-if="checkAuth('cms:channel:operation')" slot-scope="scope">
-          <el-button type="text" @click="columnAddEdit(false, '', scope.row.channelId)">编辑</el-button>
-          <el-button type="text" v-if="checkAuth('cms:channel:delete')" @click="columnDel(scope.row)">删除</el-button>
-          <el-button type="text" @click="columnAddEdit(true, 'child', scope.row.channelId)">添加</el-button>
+          <el-button type="text" size="small" @click="columnAddEdit(true, 'child', scope.row.channelId)">添加</el-button>
+          <el-button type="text" size="small" @click="columnAddEdit(false, '', scope.row.channelId)">编辑</el-button>
+          <el-button type="text" size="small" v-if="checkAuth('cms:channel:delete')" @click="columnDel(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -83,7 +83,8 @@ export default {
         placeholder: '请输入栏目名称',
         visible: true,
         options: [],
-        type: 'cascader'
+        type: 'cascader',
+        changeOnSelect: true
       }, {
         label: '状态',
         name: 'hiddenFlag',
@@ -183,7 +184,7 @@ export default {
         deleteColumn({ channelId: row.channelId })
           .then((response) => {
             _this.columnList()
-            console.log(321)
+            this.$store.dispatch('GetColumnAll')
             if (response.data.code === 0) {
               _this.$message.success('操作成功！')
             } else {
@@ -266,6 +267,7 @@ export default {
   margin:30px;
   .tool-bar {
     margin-top:22px;
+    margin-bottom:22px;
   }
   .pagination {
     margin-top:20px;
@@ -289,11 +291,11 @@ export default {
       display: inline-block;
       vertical-align: middle;
     }
-    tr {
-      td {
-        padding:0px;
-      }
-    }
+    // tr {
+    //   td {
+    //     padding:0px;
+    //   }
+    // }
   }
 }
 </style>

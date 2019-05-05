@@ -26,6 +26,9 @@ export const getAuth = () => {
 export const setColumnAll = (colums) => {
   return store.set('columnsAll', colums)
 }
+export const setColumnAllOrigin = (colums) => {
+  return store.set('columnsAllOrigin', colums)
+}
 /**
  * remove token
  */

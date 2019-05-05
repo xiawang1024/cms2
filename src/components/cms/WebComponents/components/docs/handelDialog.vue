@@ -12,6 +12,7 @@
         show-checkbox
         node-key="id"
         :check-on-click-node="true"
+        :check-strictly="true"
         :props="defaultProps"/>
       <span slot="footer" class="dialog-footer">
         <el-button @click="$emit('update:dialogVisible', false)" size="small">取消</el-button>
