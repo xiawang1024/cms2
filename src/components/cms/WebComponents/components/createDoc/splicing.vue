@@ -250,6 +250,7 @@ export default {
           this.editDoc(resoultObj, saveType)
         } else {
           resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+          resoultObj.coverImagesList =this.getDocInformation.coverImagesList
           this.createDoc(resoultObj, saveType)
         }
       })

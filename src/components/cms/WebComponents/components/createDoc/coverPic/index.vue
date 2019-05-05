@@ -40,7 +40,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { documentInfor, picCoverHandel } from '@/api/cms/article'
+import { documentInfor, picCoverHandel, createDocument } from '@/api/cms/article'
 export default {
   props: {
     activeName: {
@@ -108,13 +108,49 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['contextMenu'])
+    ...mapGetters(['contextMenu', 'getDocInformation'])
   },
   watch: {
-    activeName(val) {
+    activeName(val, oldVal) {
       if(val == 'coverPic' && this.contextMenu.docId) {
         this.getDocumentInfor(this.contextMenu.docId)
         this.rightCardShow = false
+      } else if(val == 'coverPic' && !this.contextMenu.docId) {
+        // 从编辑器获取图片
+        let imgReg = /<img.*?(?:>|\/>)/gi;
+        let srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
+        let imgArr = this.getDocInformation.baseInfor.contentBody.match(imgReg);
+        let imgSrc = []
+        if(imgArr && imgArr.length) {
+        imgArr.forEach((ele) => {
+          let src = ele.match(srcReg)
+          imgSrc.push({
+            url: src[1],
+            name: '图片'
+          })
+        })
+        }
+        this.formData = {}
+        // 封面图片赋值
+        if(imgSrc.length && this.getDocInformation.coverImagesList.length) {
+          this.formData.contentImagesList = imgSrc
+          imgSrc.forEach((src) => {
+            this.getDocInformation.coverImagesList.forEach((storeImage) => {
+              if(src.url === storeImage.url) {
+                // this.formData.contentImagesList.push(storeImage)
+                src = Object.assign(src, storeImage)
+              }else {
+                this.formData.contentImagesList.push(storeImage)
+              }
+            })
+          })
+        } else {
+          this.formData.contentImagesList = imgSrc.concat(this.getDocInformation.coverImagesList)
+        }
+      }
+      // 存储封面图片
+      if(oldVal == 'coverPic') {
+        this.$store.dispatch('setCoverList', this.$refs.imageForm.formModel.contentImagesList)
       }
     }
   },
@@ -177,11 +213,53 @@ export default {
       })
     },
     savePic() {
-      console.log(this.$refs.imageForm.formModel.contentImagesList)
+      if(this.contextMenu.docId) {
+        // 编辑封面图
+        this.editCover()
+      } else {
+        // 新增文章是添加封面
+        // this.addCover()
+        console.log(this.getDocInformation)
+        let params =this.getDocInformation.baseInfor 
+        params.articleAttachmentsList = this.getDocInformation.attachmentsList
+        params.coverImagesList = this.$refs.imageForm.formModel.contentImagesList
+        console.log(params, 'addparams')
+        if(!params.articleTitle && params.articleType !==2) {
+          this.$message.warning('文档标题不能为空')
+          return
+        }
+        if(!params.contentTitle) {
+          this.$message.warning('首页标题不能为空')
+          return
+        }
+        this.addCover(params)
+      }
+    },
+    editCover() {
       return new Promise((resolve, reject) => {
         picCoverHandel(this.contextMenu.docId, this.$refs.imageForm.formModel.contentImagesList)
           .then((response) => {
             this.$message.success('保存成功')
+            this.$store.dispatch('setContextMenu', {
+              id: '0',
+              label: ''
+            })
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    addCover(params) {
+      return new Promise((resolve, reject) => {
+        createDocument(params)
+          .then((response) => {
+            this.$message.success('保存成功')
+            this.$store.dispatch('setContextMenu', {
+              id: '0',
+              label: ''
+            })
             resolve()
           })
           .catch((error) => {

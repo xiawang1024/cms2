@@ -303,6 +303,7 @@ export default {
         } else {
           if(this.getDocInformation.attachmentsList) {
             resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+            resoultObj.coverImagesList =this.getDocInformation.coverImagesList
           } else {
             resoultObj.articleAttachmentsList = []
           }

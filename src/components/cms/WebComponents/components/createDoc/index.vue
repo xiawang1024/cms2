@@ -13,7 +13,7 @@
       <el-tab-pane label="直播消息" name="liveInformation" v-if="contextMenu.docId">
         <LiveInfor :active-name="activeName"/>
       </el-tab-pane>
-      <el-tab-pane label="封面图" name="coverPic" v-if="contextMenu.docId">
+      <el-tab-pane label="封面图" name="coverPic">
         <cover-pic :active-name="activeName"/>
       </el-tab-pane>
     </el-tabs>
