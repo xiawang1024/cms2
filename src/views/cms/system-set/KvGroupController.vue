@@ -178,12 +178,20 @@ export default {
         },
       submitSave(row){
         var _this=this
-        // console.log(row,'row')
         let sendPass=true;
           if(this.handleType=="新增"){
+            //新增接口
+             let patt=/^[A-Za-z0-9]+$/;
+             if(!patt.test(row.tenantId)){
+               sendPass=false;
+               return  _this.$message({                       
+                        type: 'error',
+                        message: '请在tenantId栏目输入字母或者数字!'
+                       });
+
+             }
              let patt1=/^[0-9]+$/;
              if(!patt1.test(row.sort)){
-              //  console.log('校验')
                sendPass=false;
                return  _this.$message({                       
                         type: 'error',
@@ -198,10 +206,19 @@ export default {
               sort:row.sort,
               tag:row.tag
               }
-              // console.log(this.addGroup.tenantId,'赋值后')
              this.handleAdd(this.addGroup)
             }
-          }else if(this.handleType=="编辑"){
+          }else if(this.handleType=="修改"){
+            //修改接口
+               let patt=/^[0-9]+$/;
+             if(!patt.test(row.id)){
+               sendPass=false;
+               return  _this.$message({                       
+                        type: 'error',
+                        message: '请在tenantId栏目输入字母或者数字!'
+                       });
+
+             }
              let patt1=/^[0-9]+$/;
              if(!patt1.test(row.sort)){
                sendPass=false;
@@ -242,12 +259,10 @@ export default {
       //获取所有列表
       getTableData(obj){
         var _this=this;
-        // console.log(_this.pageNum,'页面')
         return new Promise((resolve,reject)=>{
            
             getAllGroup(_this.pageNum,_this.pageSize,obj)
             .then((response)=>{
-            // console.log(response,'全部配置组')
             _this.totalCount=response.data.result.totalElements
             _this.allGroup=response.data.result.content
             _this.dialogVisible=false;
@@ -291,7 +306,6 @@ export default {
           return new Promise((resolve,reject)=>{
             addGroupRequest(obj)
             .then((response)=>{
-              // console.log(response)
               _this.dialogVisible=false
               _this.$message({                       
                         type: 'success',
@@ -322,19 +336,15 @@ export default {
         handleEdite(a,b){
             //调用模态框
             this.Visible=true;
-            // this.tenant=b;
-            // console.log(b)
             
         },
         //修改保存、发送保存请求
         handleEditeSave(){
             var _this=this
-            // console.log(_this.tenant.id,'ttttt')
             
             return new Promise((resolve,reject)=>{
                 groupSave(_this.tenant)
                 .then((response)=>{
-                    // console.log(response)
                     if(response.data.code==0){
                        _this.dialogVisible=false;
                       this.$message({                       
@@ -371,7 +381,6 @@ export default {
                     new Promise((resolve,reject)=>{
                     deleteGroup(b.id)
                     .then((response)=>{
-                      // console.log(response)
                       if(response.data.code==0){
                         this.$message({
                         type: 'success',

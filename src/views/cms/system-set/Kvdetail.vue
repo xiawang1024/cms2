@@ -282,7 +282,6 @@
          },
         selectChange(val) {
           var _this=this
-          // console.log(val, 'val')
           for(let i=3;i<8;i++){
             _this.formSettings[0].items[i].hidden=true;
            
@@ -315,8 +314,6 @@
         
         submitSave(row){
            //获取表单数据
-           console.log(row, 'row')
-            // console.log(this.requestType,'requestType')
           if(this.requestType=='add'){
             this.addGroupAttribute.description=row.description;
            this.addGroupAttribute.name=row.name;
@@ -342,7 +339,6 @@
            if(this.selectRow==5){
 
               this.addGroupAttribute.value=this.moment(row.valuedate).format('YYYY-MM-DD HH:mm:ss')
-              console.log(this.editGroupAttribute,'tianjiariqi')
               if(this.addGroupAttribute.value==''||this.addGroupAttribute.value==null){
                return this.$message({
                  type: 'error',
@@ -392,7 +388,6 @@
            if(this.selectRow==5){
 
              this.editGroupAttribute.value=this.moment(row.valuedate).format('YYYY-MM-DD HH:mm:ss');
-             console.log(this.editGroupAttribute,'bianjiariqi')
              if(this.editGroupAttribute.value==	'Invalid date'||this.editGroupAttribute.value==null){
                return this.$message({
                  type: 'error',
@@ -440,7 +435,6 @@
                 //调用根据id请求接口
                   getAllField(_this.pageNum,_this.pageSize,data)
                   .then((response)=>{
-                      // console.log(response)
                       _this.appDetail=response.data.result.content
                       _this.totalCount=response.data.result.totalElements
                   })
@@ -502,13 +496,11 @@
             
           },
           addAttribute(){
-            //  console.log(this.addGroupAttribute)
             //发送保存请求
             var _this=this
             return new Promise((resolve,reject)=>{
               addGroupAttribute(_this.addGroupAttribute)
               .then((response)=>{
-                 console.log(response)
                 if(response.data.result.success){
                     this.dialogVisible=false;
                           this.$message({
@@ -562,7 +554,6 @@
             return new Promise((resolve,reject)=>{
               getAllField(_this.pageNum,_this.pageSize,_this.searchGroupAttribute)
               .then((response)=>{
-                console.log(response)
                 _this.pageFlag=false;
                 _this.appDetail=response.data.result.content
                 _this.totalCount=response.data.result.totalElements
@@ -583,13 +574,11 @@
             for(let i=3;i<12;i++){
             _this.formSettings[0].items[i].hidden=true;
             }
-            console.log(b.valueType)
             this.formData={}
              this.formData={
                         description:b.description,
                         name:b.name,
                         valueType:b.valueType,
-                        // value:b.value
                       }
              this.selectChange(b.valueType)
               if(b.valueType=='0'){
@@ -612,7 +601,6 @@
              this.requestType='edit';
              this.dialogTitle='编辑配置组属性'
              this.editGroupAttribute.id=b.id
-            //  this.editGroupAttribute=b
             this.dialogVisible=true;
           },
           editAttribute(){
@@ -640,17 +628,14 @@
           },
           handleDelete(a,b){
                   var _this=this
-                  // console.log(b)
                   this.$confirm('此操作将永久删除该组, 是否继续?', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
                   type: 'warning'
                   }).then(() => {
-                       console.log(b.id)
                       new Promise((resolve,reject)=>{
                       deleteGroupAttribute(b.id)
                       .then((response)=>{
-                        console.log(response)
                         if(response.data.result=="删除成功"){
                           this.$message({
                           type: 'success',
