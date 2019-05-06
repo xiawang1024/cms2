@@ -159,8 +159,8 @@ export default {
     articalSort(data) {
       console.log(this.searchData)
       return new Promise((resolve, reject) => {
-
-        articalSort(data, this.pageNum, this.pageSize)
+        let params = Object.assign(data, this.searchData)
+        articalSort(params, this.pageNum, this.pageSize)
           .then((response) => {
             this.$message.success('排序成功')
            

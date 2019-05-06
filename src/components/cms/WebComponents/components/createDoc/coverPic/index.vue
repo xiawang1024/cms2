@@ -2,11 +2,11 @@
   <div class="article-cover-pic">
     <div class="upload-content">
       <el-row :gutter="20">
-        <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+        <el-col :sm="12" :md="12" :lg="12" :xl="12">
           <v-form ref="imageForm" :form-settings="imageSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail" @removeFile="removeFile"/>
           <!-- <v-form ref="videoForm" :form-settings="videoSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail"/> -->
         </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="10" :xl="10" :offset="1">
+        <el-col :sm="10" :md="10" :lg="10" :xl="10" >
           <div v-if="rightCardShow">
             <v-form ref="vForm" :form-settings="fileSettings" :form-data="singleData" label-width="80px" :show-button = "showButton">
               <template slot="information">
@@ -32,9 +32,9 @@
     </div>
     <div class="upload-btn">
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
-      <!-- <el-button type = "primary" size="small" @click = "save">存草稿</el-button>
-      <el-button type = "primary" size="small" @click = "save">保存并发布</el-button> -->
-      <el-button type = "primary" size="mini" @click="savePic">保存</el-button>
+      <el-button type = "primary" size="small" @click = "savePic('0')" v-if="!contextMenu.docId">存草稿</el-button>
+      <el-button type = "primary" size="small" @click = "savePic('11')" v-if="!contextMenu.docId">保存并发布</el-button>
+      <el-button type = "primary" size="mini" @click="savePic" v-if="contextMenu.docId">保存封面</el-button>
     </div>
   </div>
 </template>
@@ -212,18 +212,17 @@ export default {
           })
       })
     },
-    savePic() {
+    savePic(type) {
       if(this.contextMenu.docId) {
         // 编辑封面图
         this.editCover()
       } else {
         // 新增文章是添加封面
         // this.addCover()
-        console.log(this.getDocInformation)
         let params =this.getDocInformation.baseInfor 
         params.articleAttachmentsList = this.getDocInformation.attachmentsList
         params.coverImagesList = this.$refs.imageForm.formModel.contentImagesList
-        console.log(params, 'addparams')
+        params.articleStatus = type
         if(!params.articleTitle && params.articleType !==2) {
           this.$message.warning('文档标题不能为空')
           return
@@ -239,11 +238,11 @@ export default {
       return new Promise((resolve, reject) => {
         picCoverHandel(this.contextMenu.docId, this.$refs.imageForm.formModel.contentImagesList)
           .then((response) => {
-            this.$message.success('保存成功')
-            this.$store.dispatch('setContextMenu', {
-              id: '0',
-              label: ''
-            })
+            this.$message.success('封面保存成功')
+            // this.$store.dispatch('setContextMenu', {
+            //   id: '0',
+            //   label: ''
+            // })
             resolve()
           })
           .catch((error) => {

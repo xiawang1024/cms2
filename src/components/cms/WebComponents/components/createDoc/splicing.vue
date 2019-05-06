@@ -20,7 +20,7 @@
     </v-form>
     <div class="splicing-btn">
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
-      <el-button type = "primary" size="small" @click = "save('docContentForm', '0', 'saveOnly')">保存</el-button>
+      <!-- <el-button type = "primary" size="small" @click = "save('docContentForm', '0', 'saveOnly')">保存</el-button> -->
       <el-button type = "primary" size="small" @click = "save('docContentForm', '0')">存草稿</el-button>
       <el-button type = "primary" size="small" @click = "save('docContentForm', '1')">保存并发布</el-button>
     </div>
