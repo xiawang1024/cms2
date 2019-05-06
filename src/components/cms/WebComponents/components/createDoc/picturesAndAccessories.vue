@@ -353,6 +353,7 @@ export default {
         this.editDoc(resoultObj)
       } else {
         resoultObj = Object.assign(resoultObj, this.getDocInformation.baseInfor)
+        resoultObj.coverImagesList =this.getDocInformation.coverImagesList
         if(!resoultObj.articleTitle && resoultObj.articleType !==2) {
           this.$message.warning('正文标题不能为空')
           return

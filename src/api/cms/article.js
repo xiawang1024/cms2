@@ -225,9 +225,9 @@ export function deleteImageList(data) {
   })
 }
 // 文章拖拽
-export function articalSort(data) {
+export function articalSort(data, pageNo, pageSize, sortBy='topFlag', order='desc,desc,desc') {
   return request({
-    url: `/cms/article/sort`,
+    url: '/cms/article/sortwithpageinfo?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + ',seqNo,createTime&order=' + order,
     method: 'post',
     data
   })

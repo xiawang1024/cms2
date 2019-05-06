@@ -302,6 +302,7 @@ export default {
       this.$store.dispatch('setContextMenu', select)
       this.$store.dispatch('setBaseInfor', {})
       this.$store.dispatch('setAttachmentsList', [])
+      this.$store.dispatch('setCoverList', [])
     }
   }
 }

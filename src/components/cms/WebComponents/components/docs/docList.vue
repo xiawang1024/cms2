@@ -109,6 +109,20 @@ export default {
       default: ()=> {
         []
       }
+    },
+    pageNum: {
+      type: Number,
+      default: 1
+    },
+    pageSize: {
+      type: Number,
+      default: 10
+    },
+    searchData: {
+      type: Object,
+      default: ()=> {
+        return {}
+      }
     }
   },
   data() {
@@ -143,8 +157,10 @@ export default {
     },
     // 文章排序
     articalSort(data) {
+      console.log(this.searchData)
       return new Promise((resolve, reject) => {
-        articalSort(data)
+        let params = Object.assign(data, this.searchData)
+        articalSort(params, this.pageNum, this.pageSize)
           .then((response) => {
             this.$message.success('排序成功')
            
