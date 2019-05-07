@@ -1,22 +1,56 @@
 <template>
   <div class="box">
     <div class="tool-bar">
-      <el-button size="mini" type="primary" @click="addTopList">新增</el-button>
+      <el-button
+        size="mini"
+        type="primary"
+        @click="addTopList"
+      >新增</el-button>
     </div>
     <el-table :data="fullTopList">
-      <el-table-column prop="name" label="顶部列表名字" :formatter="fomateName"/>
-      <el-table-column prop="description" label="描述" :formatter="fomateDes"/>
-      <el-table-column prop="url" label="链接地址" :formatter="fomateUrl"/>
-      <el-table-column prop="sort" label="排序"/>
+      <el-table-column
+        prop="name"
+        label="顶部列表名字"
+        :formatter="fomateName"
+      />
+      <el-table-column
+        prop="description"
+        label="描述"
+        :formatter="fomateDes"
+      />
+      <el-table-column
+        prop="url"
+        label="链接地址"
+        :formatter="fomateUrl"
+      />
+      <el-table-column
+        prop="sort"
+        label="排序"
+      />
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" @click="handleEdite(scope.$index,scope.row)">编辑</el-button>
-          <el-button size="mini" type="text" @click="handleDetail(scope.$index,scope.row)">详情</el-button>
-          <el-button size="mini" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            @click="handleEdite(scope.$index,scope.row)"
+          >编辑</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            @click="handleDetail(scope.$index,scope.row)"
+          >详情</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            @click="handleDelete(scope.$index, scope.row)"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="dialogVisible" :title="dialogTitle">
+    <el-dialog
+      :visible.sync="dialogVisible"
+      :title="dialogTitle"
+    >
       <v-form
         ref="vform"
         :form-settings="formSettings"
@@ -75,7 +109,7 @@ export default {
               valueType: "string",
               disabled: false,
               hidden: true,
-              //   required:true,
+              required: true,
               placeholder: "请输入顶部列表名字"
             },
             {
@@ -85,18 +119,19 @@ export default {
               valueType: "string",
               disabled: false,
               hidden: true,
+              required: true,
               placeholder: "请输入描述"
             },
-            {
-              label: "URL",
-              name: "url",
-              type: "text",
-              valueType: "string",
-              disabled: false,
-              hidden: true,
-              //   required:true,
-              placeholder: "请输入URL"
-            },
+            // {
+            //   label: "URL",
+            //   name: "url",
+            //   type: "text",
+            //   valueType: "string",
+            //   disabled: false,
+            //   hidden: true,
+            //   required: true,
+            //   placeholder: "请输入URL"
+            // },
             {
               label: "排序",
               name: "sort",
@@ -131,14 +166,13 @@ export default {
         data = "无";
         return data;
       }
-       return val.name
-      
+      return val.name;
     },
     fomateDes(val) {
       let data = "";
       if (val.description == "undefined") {
         data = "无";
-        return data
+        return data;
       }
       return val.description;
     },
@@ -146,7 +180,7 @@ export default {
       let data = "";
       if (val.url == "undefined") {
         data = "无";
-        return data
+        return data;
       }
       return val.url;
     },
@@ -240,6 +274,8 @@ export default {
       this.formData = row;
       this.currentIndex = index;
       this.dialogVisible = true;
+      row.description = " ";
+      row.name = "";
     },
     addTopContent(data) {
       var _this = this;
@@ -317,6 +353,7 @@ export default {
       return new Promise((resolve, reject) => {
         edittopTable(data)
           .then(response => {
+            // console.log(response);
             if (response.data.code == "0") {
               this.$message({
                 type: "success",
@@ -340,12 +377,16 @@ export default {
       if (val == 0) {
         this.formSettings[0].items[1].hidden = true;
         this.formSettings[0].items[2].hidden = true;
-        this.formSettings[0].items[3].hidden = true;
+        this.formSettings[0].items[3].hidden = false;
+        this.formSettings[0].items[2].required = true;
+        this.$refs.vform.updateRule();
       }
       if (val == 1) {
         this.formSettings[0].items[1].hidden = false;
         this.formSettings[0].items[2].hidden = false;
         this.formSettings[0].items[3].hidden = false;
+        this.formSettings[0].items[2].required = true;
+        this.$refs.vform.updateRule();
       }
     }
   }
