@@ -164,6 +164,7 @@ export const imagesSeting = [
         name: 'articleOrigin',
         type: 'select',
         placeholder: '请选择',
+        required: true,
         options: []
       },{
         label:'文档作者',
