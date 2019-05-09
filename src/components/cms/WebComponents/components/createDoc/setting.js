@@ -15,8 +15,8 @@ export const otherSettings = [
         placeholder: '请输入点击量'
       },
       {
-        label: '创建时间',
-        name: 'createTime',
+        label: '发布时间',
+        name: 'publishTime',
         type: 'datetime'
       },
       {
@@ -27,12 +27,14 @@ export const otherSettings = [
       {
         label: '排序号',
         name: 'seqNo',
-        type: 'number'
+        type: 'number',
+        value: 0
       },
       {
         label: '展现形式',
         name: 'articleShowStyle',
         type: 'select',
+        required: true,
         options: [
           {
             label: '正文标题和描述',
@@ -65,6 +67,10 @@ export const otherSettings = [
           {
             label: '上正文标题，下左一张图片，下右描述',
             value: 7
+          },
+          {
+            label: '视频形式',
+            value: 8
           }
         ]
       },
@@ -86,8 +92,8 @@ export const defultItems = [
     placeholder: '请输入点击量'
   },
   {
-    label: '创建时间',
-    name: 'createTime',
+    label: '发布时间',
+    name: 'publishTime',
     type: 'datetime'
   },
   {
@@ -98,12 +104,14 @@ export const defultItems = [
   {
     label: '排序号',
     name: 'seqNo',
-    type: 'number'
+    type: 'number',
+    value: 0
   },
   {
     label: '展现形式',
     name: 'articleShowStyle',
     type: 'select',
+    required: true,
     options: [
       {
         label: '正文标题和描述',
@@ -136,6 +144,10 @@ export const defultItems = [
       {
         label: '上正文标题，下左一张图片，下右描述',
         value: 7
+      },
+      {
+        label: '视频形式',
+        value: 8
       }
     ]
   }
@@ -164,6 +176,7 @@ export const imagesSeting = [
         name: 'articleOrigin',
         type: 'select',
         placeholder: '请选择',
+        required: true,
         options: []
       },{
         label:'文档作者',
@@ -206,12 +219,14 @@ export const imagesSeting = [
       {
         label: '排序号',
         name: 'seqNo',
-        type: 'number'
+        type: 'number',
+        value: 0
       },
       {
         label: '展现形式',
         name: 'articleShowStyle',
         type: 'select',
+        required: true,
         options: [
           {
             label: '正文标题和描述',
@@ -244,6 +259,10 @@ export const imagesSeting = [
           {
             label: '上正文标题，下左一张图片，下右描述',
             value: 7
+          },
+          {
+            label: '视频形式',
+            value: 8
           }
         ]
       },
@@ -302,6 +321,7 @@ export const reproduceSetting = [
         label: '展现形式',
         name: 'articleShowStyle',
         type: 'select',
+        required: true,
         options: [
           {
             label: '正文标题和描述',
@@ -334,6 +354,10 @@ export const reproduceSetting = [
           {
             label: '上正文标题，下左一张图片，下右描述',
             value: 7
+          },
+          {
+            label: '视频形式',
+            value: 8
           }
         ]
       },

@@ -110,7 +110,7 @@
              -->
             <template v-else-if="item.type=='img'">
               <el-upload :class="{'has-text-input': item.hasTextInput}" :action="upURL" :file-list="formModel[item.name]" :multiple="item.multiple" :name="'file'" :limit="item.limit" :before-upload="beforeUploadCallbacks[item.name]" :on-success="uploadCallbacks[item.name]" :on-preview="handlePreviewImg" :on-remove="removeCallbacks[item.name]" class="upload-img" :on-exceed="handelUploadExceed" :on-error="handleUploadError" list-type="picture" accept="image/*">
-                <el-button :disabled="isUploading" size="small" type="primary">点击上传</el-button>
+                <el-button :disabled="isUploading" size="mini" type="primary">点击上传</el-button>
                 <div slot="tip" class="upload-tip-container">
                   <div v-if="item.tip && typeof item.tip === 'string'" class="el-upload__tip">
                     {{ item.tip }}
@@ -140,7 +140,7 @@
             <!-- 文件上传 -->
             <template v-else-if="item.type=='file'">
               <el-upload :action="upURL" :file-list="formModel[item.name]" :multiple="item.multiple" :name="'file'" :limit="item.limit" :before-upload="beforeUploadCallbacks[item.name]" :on-success="uploadCallbacks[item.name]" :on-preview="handlePreviewFile" :on-remove="removeCallbacks[item.name]" :on-exceed="handelUploadExceed" :on-error="handleUploadError" :disabled="item.disabled" class="upload-file">
-                <el-button :disabled="isUploading" size="small" type="primary">点击上传</el-button>
+                <el-button :disabled="isUploading" size="mini" type="primary">点击上传</el-button>
                 <div v-if="item.tip" slot="tip" class="el-upload__tip">{{ item.tip }}
                   <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
                 </div>
@@ -149,7 +149,7 @@
             <!-- 音频上传 -->
             <template v-else-if="item.type=='audio'">
               <el-upload :action="upURL" :file-list="formModel[item.name]" :multiple="item.multiple" :name="'file'" :limit="item.limit" :before-upload="beforeUploadCallbacks[item.name]" :on-success="uploadCallbacks[item.name]" :on-preview="handlePreviewFile" :on-remove="removeCallbacks[item.name]" :on-exceed="handelUploadExceed" :on-error="handleUploadError" :disabled="item.disabled" class="upload-file" accept="audio/mp3">
-                <el-button :disabled="isUploading" size="small" type="primary">点击上传</el-button>
+                <el-button :disabled="isUploading" size="mini" type="primary">点击上传</el-button>
                 <div v-if="item.tip" slot="tip" class="el-upload__tip">{{ item.tip }}
                   <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
                 </div>
@@ -158,7 +158,7 @@
             <!-- 视频上传 -->
             <template v-else-if="item.type=='video'">
               <el-upload :action="upURL" :file-list="formModel[item.name]" :multiple="item.multiple" :name="'file'" :limit="item.limit" :before-upload="beforeUploadCallbacks[item.name]" :on-success="uploadCallbacks[item.name]" :on-preview="handlePreviewFile" :on-remove="removeCallbacks[item.name]" :on-exceed="handelUploadExceed" :on-error="handleUploadError" :disabled="item.disabled" class="upload-file" accept="video/mp4">
-                <el-button :disabled="isUploading" size="small" type="primary">点击上传</el-button>
+                <el-button :disabled="isUploading" size="mini" type="primary">点击上传</el-button>
                 <div v-if="item.tip" slot="tip" class="el-upload__tip">{{ item.tip }}
                   <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
                 </div>
@@ -190,9 +190,9 @@
         </div>
       </div>
       <el-form-item v-if="showButton">
-        <el-button :loading="btnLoading" class="save-btn" type="primary" @click="onSave">{{ submitName }}</el-button>
-        <el-button v-if="showCancel" class="cancel-btn" @click="onCancel">取消</el-button>
-        <el-button v-if="showReturn" class="cancel-btn" @click="onReturn">返回</el-button>
+        <el-button :loading="btnLoading" class="save-btn" type="primary" @click="onSave" size="mini">{{ submitName }}</el-button>
+        <el-button v-if="showCancel" class="cancel-btn" @click="onCancel" size="mini">取消</el-button>
+        <el-button v-if="showReturn" class="cancel-btn" @click="onReturn" size="mini">返回</el-button>
       </el-form-item>
       <slot name="bottom-slot"/>
     </el-form>

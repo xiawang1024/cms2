@@ -1,7 +1,7 @@
 <template>
   <div class="docs-wrap">
     <DocHead @searchList = "searchList" :multiple-list="multipleList" :source-list="sourceList" @handelSuccess = "handelSuccess"/>
-    <doc-list :table-data="tableData" ref="documentList" @handelSuccess="handelSuccess" @multipleChoose="multipleChoose"/>
+    <doc-list :table-data="tableData" ref="documentList" @handelSuccess="handelSuccess" @multipleChoose="multipleChoose" :page-num="pageNum" :page-size="pageSize" :search-data="searchData" />
     <DocFoot :total="totalCount" @sizeChange = "sizeChange" @pageChange="pageChange"/>
     <!-- {{ treeTags }}
     {{ contextMenu }} -->

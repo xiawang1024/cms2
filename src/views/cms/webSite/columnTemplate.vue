@@ -73,7 +73,7 @@
       </el-row>
     </div>
     <div>
-      <el-button type="primary" size="small" class="save-btn" @click="submitSave" :loading="isLoading">保存</el-button>
+      <el-button type="primary" size="mini" class="save-btn" @click="submitSave" :loading="isLoading">保存</el-button>
     </div>
   </div>
 </template>

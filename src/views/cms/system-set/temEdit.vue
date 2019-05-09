@@ -74,8 +74,8 @@
       </el-row>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="handleSubmit()">保 存</el-button>
+      <el-button @click="dialogVisible = false" size="mini">取 消</el-button>
+      <el-button type="primary" @click="handleSubmit()" size="mini">保 存</el-button>
     </div>
   </div>
 </template>
