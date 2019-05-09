@@ -205,13 +205,22 @@ export default {
               placeholder: "请输入下载URL"
             },
             {
-              label: "安卓下载链接",
+              label: "安卓程序包",
               name: "androidURL",
-              type: "text",
-              valueType: "string",
+              type: "file",
               disabled: false,
+              limit: 1,
+              required: true,
               placeholder: "请输入下载URL"
             },
+            // {
+            //   label: "安卓下载链接",
+            //   name: "androidURL",
+            //   type: "text",
+            //   valueType: "string",
+            //   disabled: false,
+            //   placeholder: "请输入下载URL"
+            // },
             {
               label: "排序",
               name: "sort",
@@ -228,7 +237,6 @@ export default {
   },
   created() {
     //请求app列表数据
-
     this.getAppList(this.pageNo, this.pageSize, { tenantId: this.currentUser });
   },
   methods: {
@@ -297,13 +305,22 @@ export default {
               placeholder: "请输入下载URL"
             },
             {
-              label: "安卓下载链接",
+              label: "安卓程序包",
               name: "androidURL",
-              type: "text",
-              valueType: "string",
+              type: "file",
+              limit: 1,
               disabled: false,
+              required: true,
               placeholder: "请输入下载URL"
             },
+            // {
+            //   label: "安卓下载链接",
+            //   name: "androidURL",
+            //   type: "text",
+            //   valueType: "string",
+            //   disabled: false,
+            //   placeholder: "请输入下载URL"
+            // },
             {
               label: "排序",
               name: "sort",
@@ -334,7 +351,7 @@ export default {
       console.log(row, "row");
       this.formData = {
         appName: row.name,
-        androidURL: row.androidURL,
+        androidURL: [{ url: row.androidURL }],
         description: row.description,
         icon: [{ url: row.icon }],
         id: row.id,
@@ -352,7 +369,7 @@ export default {
               name: "appName",
               type: "text",
               valueType: "string",
-              disabled: false,
+              disabled: true,
               required: true,
               placeholder: "请输入app名字"
             },
@@ -402,11 +419,20 @@ export default {
             {
               label: "安卓下载链接",
               name: "androidURL",
-              type: "text",
-              valueType: "string",
+              type: "file",
+              limit: 1,
               disabled: false,
+              required: true,
               placeholder: "请输入下载URL"
             },
+            // {
+            //   label: "安卓下载链接",
+            //   name: "androidURL",
+            //   type: "text",
+            //   valueType: "string",
+            //   disabled: false,
+            //   placeholder: "请输入下载URL"
+            // },
             {
               label: "排序",
               name: "sort",
@@ -557,9 +583,10 @@ export default {
           tenantId: this.currentUser,
           ...res
         };
-        console.log(res);
+        console.log(data, "595");
         data.icon = res.icon[0].url;
         data.startingImage = res.startingImage[0].url;
+        data.androidURL = res.androidURL[0].url;
         this.addApp(data);
       } else if (this.handleType == "edit") {
         let data = res;
@@ -567,7 +594,7 @@ export default {
         data.tenantId = this.currentUser;
         data.icon = res.icon[0].url;
         data.startingImage = res.startingImage[0].url;
-
+        data.androidURL = res.androidURL[0].url;
         this.updateAPP(data);
       } else if (this.handleType == "search") {
         //获取数据
@@ -658,6 +685,7 @@ export default {
       return new Promise((resolve, reject) => {
         addAppInfo(data)
           .then(response => {
+            console.log(response, "696");
             if (response.data.code == "0") {
               this.$message({
                 type: "success",

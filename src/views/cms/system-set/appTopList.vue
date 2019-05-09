@@ -18,11 +18,11 @@
         label="描述"
         :formatter="fomateDes"
       />
-      <el-table-column
+      <!-- <el-table-column
         prop="url"
         label="链接地址"
         :formatter="fomateUrl"
-      />
+      /> -->
       <el-table-column
         prop="sort"
         label="排序"
@@ -119,7 +119,6 @@ export default {
               valueType: "string",
               disabled: false,
               hidden: true,
-              required: true,
               placeholder: "请输入描述"
             },
             // {
@@ -176,14 +175,14 @@ export default {
       }
       return val.description;
     },
-    fomateUrl(val) {
-      let data = "";
-      if (val.url == "undefined") {
-        data = "无";
-        return data;
-      }
-      return val.url;
-    },
+    // fomateUrl(val) {
+    //   let data = "";
+    //   if (val.url == "undefined") {
+    //     data = "无";
+    //     return data;
+    //   }
+    //   return val.url;
+    // },
     getFullTobList() {
       var _this = this;
       return new Promise((resolve, reject) => {
@@ -274,15 +273,18 @@ export default {
       this.formData = row;
       this.currentIndex = index;
       this.dialogVisible = true;
-      row.description = " ";
-      row.name = "";
+      // row.description = " ";
+      // row.name = "";
+      this.selectChange();
     },
     addTopContent(data) {
+      this.isLoading = true;
       var _this = this;
 
       return new Promise((resolve, reject) => {
         addtopTable(data)
           .then(response => {
+            this.isLoading = false;
             if (response.data.code == "0") {
               this.$message({
                 type: "success",
@@ -298,12 +300,12 @@ export default {
             resolve();
           })
           .catch(reject => {
+            this.isLoading = false;
             console.log(reject);
           });
       });
     },
     submitSave(res) {
-      console.log(res);
       if (this.handleType == "add") {
         if (res.have == 1) {
           let data = {
@@ -353,7 +355,6 @@ export default {
       return new Promise((resolve, reject) => {
         edittopTable(data)
           .then(response => {
-            // console.log(response);
             if (response.data.code == "0") {
               this.$message({
                 type: "success",
@@ -385,7 +386,8 @@ export default {
         this.formSettings[0].items[1].hidden = false;
         this.formSettings[0].items[2].hidden = false;
         this.formSettings[0].items[3].hidden = false;
-        this.formSettings[0].items[2].required = true;
+        // this.formSettings[0].items[2].required = true;
+        this.formSettings[0].items[2].required = false;
         this.$refs.vform.updateRule();
       }
     }

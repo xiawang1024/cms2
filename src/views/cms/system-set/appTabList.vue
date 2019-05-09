@@ -4,7 +4,7 @@
       <el-button
         size="mini"
         type="primary"
-        @click="addAppConfig"
+        @click.stop="addAppConfig"
       >新增</el-button>
     </div>
     <el-table :data="fullTabList">
@@ -25,8 +25,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="url"
-        label="链接地址"
+        prop="type"
+        label="类型"
       />
       <el-table-column
         prop="sort"
@@ -148,7 +148,8 @@ export default {
               disabled: false,
               limit: 1,
               required: true,
-              placeholder: "请上传图标"
+              placeholder: "请上传图片",
+              defineMessage: "图片"
             },
             {
               label: "排序",
@@ -228,11 +229,9 @@ export default {
         });
     },
     handleEdite(index, row) {
-      console.log(row);
       this.handleType = "edit";
       this.currentRow = row;
       this.dialogTitle = "编辑";
-      // this.formData=row;
       this.formData = {
         name: row.name,
         description: row.description,
@@ -241,15 +240,32 @@ export default {
         sort: row.sort,
         type: row.type
       };
+      // console.log(this.formData, "editedit");
+      if (this.formData.description == null) {
+        this.formData.description == "";
+      }
       this.currentIndex = index;
       this.dialogVisible = true;
     },
     submitSave(res) {
+      //保存触发
       if (this.handleType == "add") {
         let data = {
           ...res,
           appInfoId: this.$route.query.appId
         };
+        // console.log(data, "data");
+        if (data.type == 0) {
+          data.type = "新闻";
+        } else if (data.type == 1) {
+          data.type = "地主号";
+        } else if (data.type == 2) {
+          data.type = "服务";
+        } else if (data.type == 3) {
+          data.type = "视听";
+        } else if (data.type == 4) {
+          data.type = "互动";
+        }
         data.icon = res.icon[0].url;
         this.addTabContent(data);
       } else if (this.handleType == "edit") {
@@ -257,6 +273,19 @@ export default {
           ...res,
           id: this.currentRow.id
         };
+        // console.log(data);
+        // data.description = "";
+        if (data.type == 0) {
+          data.type = "新闻";
+        } else if (data.type == 1) {
+          data.type = "地主号";
+        } else if (data.type == 2) {
+          data.type = "服务";
+        } else if (data.type == 3) {
+          data.type = "视听";
+        } else if (data.type == 4) {
+          data.type = "互动";
+        }
         data.icon = res.icon[0].url;
         this.editTabContent(data);
       }
@@ -271,7 +300,6 @@ export default {
             if (response.data.code == "0") {
               _this.fullTabList = response.data.result.content;
             }
-
             resolve();
           })
           .catch(reject => {
@@ -284,12 +312,12 @@ export default {
       });
     },
     addTabContent(data) {
+      this.isLoading = true;
       var _this = this;
-
       return new Promise((resolve, reject) => {
         addNavigation(data)
           .then(response => {
-            console.log(response);
+            this.isLoading = false;
             if (response.data.code == "0") {
               this.$message({
                 type: "success",
@@ -305,6 +333,7 @@ export default {
             resolve();
           })
           .catch(reject => {
+            this.isLoading = false;
             console.log(reject);
           });
       });
@@ -314,7 +343,10 @@ export default {
       return new Promise((resolve, reject) => {
         editNavigation(data)
           .then(response => {
-            console.log(response);
+            console.log(response, "点击修改");
+            if (response.data.result.description === "null") {
+              response.data.result.description = "";
+            }
             if (response.data.code == "0") {
               this.$message({
                 type: "success",
