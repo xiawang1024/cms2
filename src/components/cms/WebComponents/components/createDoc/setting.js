@@ -27,12 +27,14 @@ export const otherSettings = [
       {
         label: '排序号',
         name: 'seqNo',
-        type: 'number'
+        type: 'number',
+        value: 0
       },
       {
         label: '展现形式',
         name: 'articleShowStyle',
         type: 'select',
+        required: true,
         options: [
           {
             label: '正文标题和描述',
@@ -102,12 +104,14 @@ export const defultItems = [
   {
     label: '排序号',
     name: 'seqNo',
-    type: 'number'
+    type: 'number',
+    value: 0
   },
   {
     label: '展现形式',
     name: 'articleShowStyle',
     type: 'select',
+    required: true,
     options: [
       {
         label: '正文标题和描述',
@@ -215,12 +219,14 @@ export const imagesSeting = [
       {
         label: '排序号',
         name: 'seqNo',
-        type: 'number'
+        type: 'number',
+        value: 0
       },
       {
         label: '展现形式',
         name: 'articleShowStyle',
         type: 'select',
+        required: true,
         options: [
           {
             label: '正文标题和描述',
@@ -315,6 +321,7 @@ export const reproduceSetting = [
         label: '展现形式',
         name: 'articleShowStyle',
         type: 'select',
+        required: true,
         options: [
           {
             label: '正文标题和描述',
