@@ -24,7 +24,7 @@
 <script>
 import { columnList } from '@/api/cms/columnManage'
 import mixins from '@/components/cms/mixins'
-import { copyTo, moveTo } from '@/api/cms/article'
+import { copyTo, moveTo, quoteTo } from '@/api/cms/article'
 import { mapGetters } from 'vuex'
 export default {
   name: 'DocFoot',
@@ -88,10 +88,25 @@ export default {
       if(this.title == '复制到') {
         this.copyTo(this.documentIds.join(','), choosedIds.join(','))
       } else if(this.title == '引用到') {
-        console.log('引用')
+        this.quoteTo(this.documentIds.join(','), choosedIds.join(','))
       } else  if (this.title == '移动到') {
         this.moveTo(this.documentIds.join(','), choosedIds.join(','))
       }
+    },
+    // 引用到
+    quoteTo(articleId,channelId){
+      return new Promise((resolve, reject) => {
+        quoteTo(articleId,channelId)
+          .then((response) => {
+            this.$emit('update:dialogVisible', false)
+            this.$message.success('引用成功')
+            this.$emit('handelSuccess')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     },
     //复制到
     copyTo(articleId,channelId) {

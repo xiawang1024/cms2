@@ -15,11 +15,12 @@
       <el-table-column prop="articleId" label="ID/序号" width="150" show-overflow-tooltip/>
       <el-table-column prop="articleTitle" label="标题" min-width="300" show-overflow-tooltip>
         <template slot-scope="scope">
-          <span v-if="checkAuth('cms:article:stick')" class="titleClick" @click="editDoc(scope.row.articleId)">{{ scope.row.articleTitle }}</span>
+          <span v-if="checkAuth('cms:article:stick')" class="titleClick" @click="editDoc(scope.row)">{{ scope.row.articleTitle }}</span>
           <span v-else>{{ scope.row.articleTitle }}</span>
           <icon name="file-alt" title="正文有图" v-if="scope.row.contentImagesList && scope.row.contentImagesList.length"/>
           <icon name="file-image" title="附件有图" v-if="documentHasImg(scope.row.articleAttachmentsList)"/>
           <icon name="arrow-circle-up" title="置顶" v-if="scope.row.topFlag == 1"/>
+          <i class="iconfont iconlink" title="引用" v-if="scope.row.articleType ==3"/>
         </template>
       </el-table-column>
       <!-- <el-table-column label="查看" width="60">
@@ -77,7 +78,7 @@
       <el-table-column fixed="right" label="操作" width="220">
         <template slot-scope="scope">
           <el-button v-if="checkAuth('cms:article:stick')" type="text" size="small" @click.stop="setTop(scope.row.articleId)">置顶</el-button>
-          <el-button v-if="checkAuth('cms:article:edit')" type="text" size="small" @click.stop="editDoc(scope.row.articleId)">编辑</el-button>
+          <el-button v-if="checkAuth('cms:article:edit')" type="text" size="small" @click.stop="editDoc(scope.row)">编辑</el-button>
           <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">撤销</el-button>
           <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">审核</el-button> -->
           <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">删除</el-button>
@@ -327,8 +328,8 @@ export default {
       // window.location.href = link
       window.open(link)
     },
-    editDoc(docId) {
-      const select = { id: '1', label: '新建文档', docId: docId}
+    editDoc(row) {
+      const select = { id: '1', label: '新建文档', docId: row.articleId, articleType: row.articleType}
       this.$store.dispatch('setContextMenu', select)
     }
   }

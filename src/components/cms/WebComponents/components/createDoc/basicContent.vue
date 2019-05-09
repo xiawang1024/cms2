@@ -1,7 +1,11 @@
 <template>
   <div class="basicContent-wrap">
+    <!-- {{contextMenu}} -->
     <div class="tool-bar clearfix">
-      <el-form ref="form" :model="typeForm" label-width="80px">
+      <div v-if="contextMenu.articleType && contextMenu.articleType == 3">
+        文档类型：转载
+      </div>
+      <el-form ref="form" :model="typeForm" label-width="80px" v-else>
         <el-form-item label="文档类型">
           <el-select v-model="typeForm.articleType" placeholder="请选择">
             <el-option
@@ -13,10 +17,11 @@
         </el-form-item>
       </el-form>
     </div>
-    <imageText ref="imageText" :extends-list="extendsList" :other-settings="otherSettings" :tag-list="tagList" :source-list="sourceList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 0"/>
-    <images ref="images" :extends-list="extendsList" :images-setting="imagesSeting" :tag-list="tagList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 1"/>
-    <splicing ref="splicing" :channel-id = "channelId" :doc-infor="docInfor" :tag-list = "tagList" v-if="typeForm.articleType == 2"/>
-    <reproduce ref="reproduce" :channel-id = "channelId" :doc-infor="docInfor" :reproduce-setting="reproduceSetting" :tag-list = "tagList" v-if="typeForm.articleType == 3"/>
+    <imageText ref="imageText" :extends-list="extendsList" :other-settings="otherSettings" :tag-list="tagList" :source-list="sourceList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 0 || contextMenu.articleType == 3"/>
+    <images ref="images" :extends-list="extendsList" :images-setting="imagesSeting" :tag-list="tagList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 1 || contextMenu.articleType == 3"/>
+    <splicing ref="splicing" :channel-id = "channelId" :doc-infor="docInfor" :tag-list = "tagList" v-if="typeForm.articleType == 2 || contextMenu.articleType == 3"/>
+    <reproduce ref="reproduce" :channel-id = "channelId" :doc-infor="docInfor" :reproduce-setting="reproduceSetting" :tag-list = "tagList" v-if="typeForm.articleType == 4 || contextMenu.articleType == 3"/>
+    <!-- <quote v-if="typeForm.articleType == 3"></quote> -->
   </div>
 </template>
 <script>
@@ -24,6 +29,7 @@ import imageText from './imageText'
 import images from './images.vue'
 import splicing from './splicing.vue'
 import reproduce from './reproduce.vue'
+import quote from './quote'
 import { columnInfor } from '@/api/cms/columnManage'
 import { documentInfor } from '@/api/cms/article'
 import { fetchDictByDictName } from "@/api/cms/dict"
@@ -31,7 +37,7 @@ import {otherSettings, imagesSeting, reproduceSetting, defultItems} from './sett
 import { mapGetters } from 'vuex'
 export default {
   name: 'BasicContent',
-  components: { imageText, images, splicing, reproduce },
+  components: { imageText, images, splicing, reproduce, quote },
   props: {
    activeName: {
      default: '',
@@ -62,8 +68,8 @@ export default {
         }, {
           value: 2,
           label: '拼条'
-        }, {
-          value: 3,
+        },{
+          id: 4,
           label: '转载'
         }],
         otherSettings: otherSettings,
