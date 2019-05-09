@@ -44,7 +44,7 @@ const cms = {
  * newCommand
  */
 const newCommand = {
-  discloseClassify: (state) => state.newCommand.discloseClassify,
+  discloseClassifys: (state) => state.newCommand.discloseClassifys,
 
 }
 const getters = {
