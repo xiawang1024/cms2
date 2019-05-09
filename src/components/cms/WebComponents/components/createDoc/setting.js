@@ -65,6 +65,10 @@ export const otherSettings = [
           {
             label: '上正文标题，下左一张图片，下右描述',
             value: 7
+          },
+          {
+            label: '视频形式',
+            value: 8
           }
         ]
       },
@@ -136,6 +140,10 @@ export const defultItems = [
       {
         label: '上正文标题，下左一张图片，下右描述',
         value: 7
+      },
+      {
+        label: '视频形式',
+        value: 8
       }
     ]
   }
@@ -164,6 +172,7 @@ export const imagesSeting = [
         name: 'articleOrigin',
         type: 'select',
         placeholder: '请选择',
+        required: true,
         options: []
       },{
         label:'文档作者',
@@ -244,6 +253,10 @@ export const imagesSeting = [
           {
             label: '上正文标题，下左一张图片，下右描述',
             value: 7
+          },
+          {
+            label: '视频形式',
+            value: 8
           }
         ]
       },
@@ -334,6 +347,10 @@ export const reproduceSetting = [
           {
             label: '上正文标题，下左一张图片，下右描述',
             value: 7
+          },
+          {
+            label: '视频形式',
+            value: 8
           }
         ]
       },

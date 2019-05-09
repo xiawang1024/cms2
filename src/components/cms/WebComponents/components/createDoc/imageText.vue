@@ -152,6 +152,7 @@ export default {
               name: 'articleOrigin',
               type: 'select',
               placeholder: '请选择',
+              required: true,
               options: []
             },
             {
@@ -364,28 +365,42 @@ export default {
             if (!data) {
               return
             }
-            if(this.contextMenu.docId) {
-              if(this.getDocInformation.attachmentsList) {
-                resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
-              } else {
-                resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
+            this.$refs.baseForm.getDataAsync().then(data => {
+              if (!data) {
+                return
               }
-              resoultObj.articleId = this.contextMenu.docId
-              this.editDoc(resoultObj, saveType)
-            } else {
-              if(this.getDocInformation.attachmentsList) {
-                resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
-                resoultObj.coverImagesList =this.getDocInformation.coverImagesList
+              if(this.contextMenu.docId) {
+                if(this.getDocInformation.attachmentsList) {
+                  resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+                } else {
+                  resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
+                }
+                resoultObj.articleId = this.contextMenu.docId
+                this.editDoc(resoultObj, saveType)
               } else {
-                resoultObj.articleAttachmentsList = []
+                if(this.getDocInformation.attachmentsList) {
+                  resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+                  resoultObj.coverImagesList =this.getDocInformation.coverImagesList
+                } else {
+                  resoultObj.articleAttachmentsList = []
+                }
+                this.createDoc(resoultObj, saveType)
               }
-              this.createDoc(resoultObj, saveType)
-            }
+            }).catch(err => {
+              console.log('====err====', err)
+            })
           }).catch(err => {
             console.log('====err====', err)
           })
         } else {
           this.$refs.otherForm.getDataAsync().then(data => {
+            if (!data) {
+              return
+            }
+          }).catch(err => {
+            console.log('====err====', err)
+          })
+          this.$refs.baseForm.getDataAsync().then(data => {
             if (!data) {
               return
             }
