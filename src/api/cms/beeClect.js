@@ -1,11 +1,5 @@
 import request from '@/utils/request'
-// import baseUrl from '@/config/base-url'
 import QS from "qs"
-  // let cpath=baseUrl['BASE_URL'].split(":");
-  // let  Cpath=cpath[0].toString()+':'+cpath[1].toString()
-  // let  Cpath='http://172.20.5.4'
-  //本地接口
-  // let  Cpath='http://192.168.25.148:19080'
 export function getRuler(data) {
     return request({
       url: '/content-grab/newslist/getAllRuleById',
@@ -34,7 +28,9 @@ export function testRequest(data) {
   return request({
     url: '/content-grab/newslist/getnewslist',
     method: 'post',
-    data:QS.stringify(data)
+    data:QS.stringify(data),
+    timeout: 20000
+
   })
 }
 //保存接口
