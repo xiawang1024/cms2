@@ -5,7 +5,7 @@
       <div class="topdivRight">
         <el-button size="mini" @click="godiscloselist" icon="el-icon-back" type="primary">返回</el-button>
       </div>
-    </div> -->
+    </div>-->
     <el-container class="elcontainer">
       <!-- <el-header class="elheader">爆料详情</el-header> -->
       <el-main class="elmain1">
@@ -206,7 +206,7 @@ export default {
         });
       });
     },
-    openMessage(queryObj,message) {
+    openMessage(queryObj, message) {
       let _this = this;
       this.$prompt(message, "提示", {
         confirmButtonText: "确定",
@@ -229,6 +229,7 @@ export default {
           _this.auditStatus = queryObj.auditStatus;
           _this.formData.auditStatus = queryObj.auditStatus;
           _this.amendState();
+          _this.formData.refuseReasons = queryObj.refuseReasons;
           _this.$message({
             showClose: true,
             message: "操作成功!",
@@ -246,10 +247,10 @@ export default {
       };
       if (num == 2) {
         // 拒绝 添加理由
-        this.openMessage(queryObj,"请输入拒绝理由");
+        this.openMessage(queryObj, "请输入拒绝理由");
       } else {
         // 通过
-        this.openMessage(queryObj,"审核通过反馈意见");
+        this.openMessage(queryObj, "审核通过反馈意见");
 
         // this.amendDiscloseState(queryObj);
       }
@@ -267,97 +268,97 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.disclisedetails{
-.leftdiv {
-  text-align: right;
-  box-sizing: border-box;
-  padding: 0 15px;
-  border-right: 1px solid rgba(228, 228, 228, 1);
-  font-weight: 600;
-}
-.rightdiv {
-  padding-left: 15px;
-}
-.biaoge {
-  box-sizing: border-box;
-  padding: 15px;
-}
-.el-row {
-  border: 1px solid rgba(228, 228, 228, 1);
-  border-bottom: none;
-  height: 50px;
-  line-height: 50px;
-}
-.el-row:last-child {
-  border-bottom: 1px solid rgba(228, 228, 228, 1);
-}
-.elcontainer {
-  width:700px;
-  // border: 1px solid rgba(228, 228, 228, 1);
-  // margin-top: 30px;
-  font-family: "微软雅黑";
-  font-weight: 400;
-  font-style: normal;
-  font-size: 12px;
-  color: #666666;
-  display: block;
-}
-.el-header {
-  background: rgba(243, 243, 243, 1);
-  height: 60px;
-  line-height: 60px;
-  padding-left: 20px;
-  border-bottom: 1px solid rgba(228, 228, 228, 1);
-}
-.el-main {
-  padding: 8px;
-}
-.elmain2 {
-  margin-top: -20px;
-}
-.elmain3 {
-  text-align: center;
-  margin-bottom: 30px;
-}
-.el-button + .el-button {
-  margin-left: 80px;
-}
-.topdiv {
-  display: flex;
-  justify-content: space-between;
-  background: rgba(243, 243, 243, 1);
-  align-items: center;
-  height: 60px;
-  box-sizing: border-box;
-  padding: 0 18px;
-  border-bottom: 1px solid #e4e4e4;
-}
-.topdivLeft {
-  position: relative;
-  font-family: "微软雅黑";
-  font-weight: 400;
-  font-style: normal;
-  color: #999999;
-  box-sizing: border-box;
-  padding: 0 10px;
-}
-.topdivLeft::before {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 5px;
-  height: 24px;
-  content: "";
-  background: #409eff;
-}
-.colblue {
-  color: #409eff;
-}
-.colgreen {
-  color: #67c23a;
-}
-.colred {
-  color: #f56c6c;
-}
+.disclisedetails {
+  .leftdiv {
+    text-align: right;
+    box-sizing: border-box;
+    padding: 0 15px;
+    border-right: 1px solid rgba(228, 228, 228, 1);
+    font-weight: 600;
+  }
+  .rightdiv {
+    padding-left: 15px;
+  }
+  .biaoge {
+    box-sizing: border-box;
+    padding: 15px;
+  }
+  .el-row {
+    border: 1px solid rgba(228, 228, 228, 1);
+    border-bottom: none;
+    height: 50px;
+    line-height: 50px;
+  }
+  .el-row:last-child {
+    border-bottom: 1px solid rgba(228, 228, 228, 1);
+  }
+  .elcontainer {
+    width: 700px;
+    // border: 1px solid rgba(228, 228, 228, 1);
+    // margin-top: 30px;
+    font-family: "微软雅黑";
+    font-weight: 400;
+    font-style: normal;
+    font-size: 12px;
+    color: #666666;
+    display: block;
+  }
+  .el-header {
+    background: rgba(243, 243, 243, 1);
+    height: 60px;
+    line-height: 60px;
+    padding-left: 20px;
+    border-bottom: 1px solid rgba(228, 228, 228, 1);
+  }
+  .el-main {
+    padding: 8px;
+  }
+  .elmain2 {
+    margin-top: -20px;
+  }
+  .elmain3 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .el-button + .el-button {
+    margin-left: 80px;
+  }
+  .topdiv {
+    display: flex;
+    justify-content: space-between;
+    background: rgba(243, 243, 243, 1);
+    align-items: center;
+    height: 60px;
+    box-sizing: border-box;
+    padding: 0 18px;
+    border-bottom: 1px solid #e4e4e4;
+  }
+  .topdivLeft {
+    position: relative;
+    font-family: "微软雅黑";
+    font-weight: 400;
+    font-style: normal;
+    color: #999999;
+    box-sizing: border-box;
+    padding: 0 10px;
+  }
+  .topdivLeft::before {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 5px;
+    height: 24px;
+    content: "";
+    background: #409eff;
+  }
+  .colblue {
+    color: #409eff;
+  }
+  .colgreen {
+    color: #67c23a;
+  }
+  .colred {
+    color: #f56c6c;
+  }
 }
 </style>
