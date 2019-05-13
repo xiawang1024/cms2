@@ -11,7 +11,7 @@
           </el-form-item>
           <el-form-item label="">
             <div class="grid-content bg-purple">
-              <Tinymce ref="editor" :height="450" v-model="docContentForm.contentBody"/>
+              <Tinymce ref="editor" :height="450" :read-only="contextMenu.articleType == 3" v-model="docContentForm.contentBody"/>
             </div>
           </el-form-item>
         </el-form>
@@ -199,7 +199,6 @@ export default {
     },
     sourceList(val) {
       if(val.length) {
-        console.log(val)
         this.baseSettings[0].items[1].options = val
       }
     },
@@ -211,9 +210,12 @@ export default {
     if(this.sourceList.length) {
       this.baseSettings[0].items[1].options = this.sourceList
     }
-    this.baseSettings[0].items.forEach((ele) => {
-      ele.disabled = true
-    })
+    // 转载禁用
+    if(this.contextMenu.articleType == 3) {
+      this.baseSettings[0].items.forEach((ele) => {
+        ele.disabled = true
+      })
+    }
     this.docContentForm = {
       articleTitle: this.docInfor.articleTitle,
       contentTitle: this.docInfor.contentTitle,
@@ -340,7 +342,8 @@ export default {
         })
       })
       resoultObj.tagIdsList = chooseTags
-      resoultObj.articleType = 0
+      // resoultObj.articleType = 0
+      resoultObj.articleType = this.contextMenu.articleType ? this.contextMenu.articleType : 0
       delete resoultObj.set
       delete resoultObj.tagIds
       if (!resoultObj.contentBody) {

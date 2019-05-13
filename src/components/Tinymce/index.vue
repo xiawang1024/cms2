@@ -46,6 +46,10 @@ export default {
       type: Number,
       required: false,
       default: 360
+    },
+    readOnly: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -101,6 +105,7 @@ export default {
       const _this = this
       window.tinymce.init({
         // language: this.language,
+        readonly: this.readOnly,
         language: 'zh_CN',
         selector: `#${this.tinymceId}`,
         height: this.height,

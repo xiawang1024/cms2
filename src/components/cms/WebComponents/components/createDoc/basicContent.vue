@@ -2,8 +2,8 @@
   <div class="basicContent-wrap">
     <!-- {{contextMenu}} -->
     <div class="tool-bar clearfix">
-      <div v-if="contextMenu.articleType && contextMenu.articleType == 3">
-        文档类型：转载
+      <div v-if="contextMenu.articleType && contextMenu.articleType == 3" class="quote-tille">
+        <span>文档类型： 引用</span>
       </div>
       <el-form ref="form" :model="typeForm" label-width="80px" v-else>
         <el-form-item label="文档类型">
@@ -82,6 +82,7 @@ export default {
     ...mapGetters(['treeTags', 'contextMenu'])
   },
   watch: {
+    // 存储文章信息
     activeName(val, oldVal) {
       if(oldVal == 'basicContent' && this.typeForm.articleType == 0) {
         this.$store.dispatch('setBaseInfor', this.$refs.imageText.getSubmitData())
@@ -102,6 +103,17 @@ export default {
     this.getColumnInfor(this.treeTags[this.treeTags.length - 1].id)
     this.channelId = this.treeTags[this.treeTags.length - 1].id
     this.fetchDict()
+  },
+  mounted() {
+    if(this.contextMenu.articleType == 3) {
+      this.otherSettings[0].items.forEach((ele) => {
+        ele.disabled = true
+      })
+    } else {
+      this.otherSettings[0].items.forEach((ele) => {
+        ele.disabled = false
+      })
+    }
   },
   methods: {
     handleSave() {},
@@ -160,7 +172,13 @@ export default {
             _this.reproduceSetting[0].items[3].options = _this.tagList
             this.$nextTick(() => {
               _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList)
+              if(_this.contextMenu.articleType == 3) {
+                this.otherSettings[0].items.forEach((ele) => {
+                  ele.disabled = true
+                })
+              }
             })
+            //未设置标签字段时标签不显示
             if(!_this.tagList.length) {
               _this.otherSettings[0].items[0].hidden = true
               _this.imagesSeting[0].items[6].hidden = true
@@ -169,10 +187,6 @@ export default {
             if(_this.contextMenu.docId) {
               if(_this.contextMenu.articleType == 3) {
                 _this.getQuoteDocumentInfor(_this.contextMenu.docId)
-                console.log(this.otherSettings, 'otherSettings')
-                this.otherSettings[0].items.forEach((ele) => {
-                  ele.disabled = true
-                })
               } else {
                 _this.getDocumentInfor(_this.contextMenu.docId)
               }
@@ -271,6 +285,12 @@ export default {
       .el-form-item__content{
         text-align: left;
       }
+    }
+    .quote-tille{
+      font-size: 14px;
+      color: #606266;
+      line-height: 40px;
+      padding-left:12px;
     }
   }
 }
