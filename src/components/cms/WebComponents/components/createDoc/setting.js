@@ -34,7 +34,7 @@ export const otherSettings = [
         label: '展现形式',
         name: 'articleShowStyle',
         type: 'select',
-        required: true,
+        // required: true,
         options: [
           {
             label: '正文标题和描述',
@@ -111,7 +111,7 @@ export const defultItems = [
     label: '展现形式',
     name: 'articleShowStyle',
     type: 'select',
-    required: true,
+    // required: true,
     options: [
       {
         label: '正文标题和描述',
