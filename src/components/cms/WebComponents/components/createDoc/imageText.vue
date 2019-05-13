@@ -44,10 +44,10 @@
               <v-form ref="otherForm" :form-settings="otherSettings" :form-data="formData" label-width="80px" :show-button = "showButton">
                 <template slot="set">
                   <div class="set">
-                    <el-checkbox true-label="1" false-label="0" v-model="adddocSet.topFlag">置顶</el-checkbox>
-                    <el-checkbox true-label="1" false-label="0" v-model="adddocSet.hiddenFlag">隐身</el-checkbox>
+                    <el-checkbox true-label="1" false-label="0" v-model="adddocSet.topFlag" :disabled="contextMenu.articleType == 3">置顶</el-checkbox>
+                    <el-checkbox true-label="1" false-label="0" v-model="adddocSet.hiddenFlag" :disabled="contextMenu.articleType == 3">隐身</el-checkbox>
                     <span class = "extractCode">提取码</span>
-                    <el-input v-model="adddocSet.extractCode"/>
+                    <el-input v-model="adddocSet.extractCode" :disabled="contextMenu.articleType == 3"/>
                   </div>
                 </template>
               </v-form>
@@ -211,7 +211,9 @@ export default {
     if(this.sourceList.length) {
       this.baseSettings[0].items[1].options = this.sourceList
     }
-
+    this.baseSettings[0].items.forEach((ele) => {
+      ele.disabled = true
+    })
     this.docContentForm = {
       articleTitle: this.docInfor.articleTitle,
       contentTitle: this.docInfor.contentTitle,

@@ -65,11 +65,11 @@
             </template>
             <!-- 时间日期范围选择 -->
             <template v-else-if="item.type=='datetimerange'">
-              <el-date-picker v-model="formModel[item.name]" :default-time="item.defaultTime" type="datetimerange" align="right" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"/>
+              <el-date-picker v-model="formModel[item.name]" :disabled="item.disabled" :default-time="item.defaultTime" type="datetimerange" align="right" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"/>
             </template>
             <!-- 日期范围选择 -->
             <template v-else-if="item.type=='daterange'">
-              <el-date-picker v-model="formModel[item.name]" type="daterange" align="right" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"/>
+              <el-date-picker v-model="formModel[item.name]" :disabled="item.disabled" type="daterange" align="right" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"/>
             </template>
             <!-- 日期选择 -->
             <template v-else-if="item.type=='date'">
@@ -77,15 +77,15 @@
             </template>
             <!-- 日期和时间选择 -->
             <template v-else-if="item.type=='datetime'">
-              <el-date-picker v-model="formModel[item.name]" :placeholder="item.placeholder || '选择日期'" type="datetime"/>
+              <el-date-picker v-model="formModel[item.name]" :disabled="item.disabled" :placeholder="item.placeholder || '选择日期'" type="datetime"/>
             </template>
             <!-- 时间范围选择 -->
             <template v-else-if="item.type=='timerange'">
-              <el-time-picker v-model="formModel[item.name]" :placeholder="item.placeholder || '选择时间范围'" is-range range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间"/>
+              <el-time-picker v-model="formModel[item.name]" :disabled="item.disabled" :placeholder="item.placeholder || '选择时间范围'" is-range range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间"/>
             </template>
             <!-- 时间选择 -->
             <template v-else-if="item.type=='time'">
-              <el-time-picker v-model="formModel[item.name]" :placeholder="item.placeholder || '选择时间'"/>
+              <el-time-picker v-model="formModel[item.name]" :disabled="item.disabled" :placeholder="item.placeholder || '选择时间'"/>
             </template>
             <!-- 单选 -->
             <template v-else-if="item.type=='radio'">
@@ -101,7 +101,7 @@
             </template>
             <!-- 文本域 -->
             <template v-else-if="item.type=='textarea'">
-              <el-input :autosize="{ minRows: 2, maxRows: 4}" :placeholder="item.placeholder || '请输入内容'" :maxlength="item.maxlength" v-model="formModel[item.name]" type="textarea"/>
+              <el-input :autosize="{ minRows: 2, maxRows: 4}" :placeholder="item.placeholder || '请输入内容'" :disabled="item.disabled" :maxlength="item.maxlength" v-model="formModel[item.name]" type="textarea"/>
             </template>
             <!-- 图片上传 -->
             <!--

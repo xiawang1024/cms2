@@ -31,7 +31,7 @@ import splicing from './splicing.vue'
 import reproduce from './reproduce.vue'
 import quote from './quote'
 import { columnInfor } from '@/api/cms/columnManage'
-import { documentInfor } from '@/api/cms/article'
+import { documentInfor, documentQuoteInfor } from '@/api/cms/article'
 import { fetchDictByDictName } from "@/api/cms/dict"
 import {otherSettings, imagesSeting, reproduceSetting, defultItems} from './setting.js'
 import { mapGetters } from 'vuex'
@@ -167,7 +167,15 @@ export default {
               _this.reproduceSetting[0].items[3].hidden = true
             }
             if(_this.contextMenu.docId) {
-              _this.getDocumentInfor(_this.contextMenu.docId)
+              if(_this.contextMenu.articleType == 3) {
+                _this.getQuoteDocumentInfor(_this.contextMenu.docId)
+                console.log(this.otherSettings, 'otherSettings')
+                this.otherSettings[0].items.forEach((ele) => {
+                  ele.disabled = true
+                })
+              } else {
+                _this.getDocumentInfor(_this.contextMenu.docId)
+              }
             } else {
               // 扩展字段必填触发updateForm
               this.$nextTick(() => {
@@ -188,6 +196,25 @@ export default {
       var _this = this
       return new Promise((resolve, reject) => {
         documentInfor(id)
+          .then((response) => {
+            _this.docInfor = response.data.result
+            _this.typeForm.articleType = response.data.result.articleType ? response.data.result.articleType : 0
+            if(_this.docInfor.extFieldsList && _this.docInfor.extFieldsList.length) {
+              _this.docInfor.extFieldsList.forEach((ele) => {
+                _this.docInfor[ele.label] = ele.fieldValue
+              })
+            }
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    getQuoteDocumentInfor(id) {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        documentQuoteInfor(id)
           .then((response) => {
             _this.docInfor = response.data.result
             _this.typeForm.articleType = response.data.result.articleType ? response.data.result.articleType : 0

@@ -86,6 +86,14 @@ export function quoteTo(articleId,channelId) {
     method: 'get'
   })
 }
+
+// 引用文章详情
+export function documentQuoteInfor(id) {
+  return request({
+    url: '/cms/article/findarticlebyreferarticleid/' + id,
+    method: 'get'
+  })
+}
 // 获取文章详情
 export function documentInfor(id) {
   return request({
