@@ -25,7 +25,7 @@
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column prop="id" label="id"/>
+      <el-table-column prop="id" label="ID"/>
       <el-table-column prop="description" label="描述"/>
       <el-table-column prop="name" label="名字"/>
       <el-table-column prop="valueType" label="字段类型" :formatter="formatValueType" />
@@ -94,6 +94,8 @@
               // addGroupAttributeVisible:false,
               searchGroupAttributeVisible:false,
               // editGroupAttributeVisible:false,
+
+              groupIdQuery:'',
               searchGroupAttribute:{
                 groupId:'',
                 description:'',
@@ -109,13 +111,13 @@
                   // label:'添加配置组属性',
                   items: [
                     {
-                      label: '配置组属性描述',
+                      label: '描述',
                       name: 'description',
                       type: 'text',
                       valueType: 'string',
                       disabled: false,
                       required: true,
-                      placeholder: '请输入配置组属性描述'
+                      placeholder: '描述'
                     },
                     {
                       label: '名字',
@@ -187,20 +189,20 @@
                       hidden: true
                     },
                      {
-                    label: '租户ID',
+                    label: '组ID',
                     name: 'groupIdS',
                     type: 'text',
                     valueType: 'string',
                     disabled: false,
-                    placeholder: '请输入租户ID',
+                    placeholder: '请输入组ID',
                      hidden: true
                   }, {
-                    label: '租户描述',
+                    label: '描述',
                     name: 'descriptionS',
                     type: 'text',
                     valueType: 'string',
                     disabled: false,
-                    placeholder: '请输入租户描述',
+                    placeholder: '请输入描述',
                      hidden: true
                   }, {
                     label: '名字',
@@ -249,7 +251,7 @@
           }
       },
       created() {
-              // this.description=this.$route.query.des
+              this.groupIdQuery=this.$route.query.userid
               this.getList()
              
       },
@@ -359,6 +361,7 @@
            }
   
             this.addAttribute();
+            this.formData={};
           }else if(this.requestType=='edit'){
                       this.editGroupAttribute.description=row.description;
                       this.editGroupAttribute.name=row.name;
@@ -413,7 +416,7 @@
           }else if(this.requestType=='search'){
             //检索接口
              this.searchGroupAttribute={
-                groupId:row.groupIdS,
+                groupId:this.groupIdQuery,
                 description:row.descriptionS,
                 name:row.nameS,
                 valueType:row.valueTypeS
@@ -454,6 +457,7 @@
                   _this.appDetail=[response.data.result]
                   _this.totalCount=1;
                   _this.backButtonVisible=true;
+                  
                 })
                 .catch((reject)=>{
                   console.log(reject)
@@ -472,6 +476,7 @@
              
           },
           backDetail(){
+            this.searchAttributeById='';
             this.getList()
             this.backButtonVisible=false;
           },
@@ -530,14 +535,14 @@
             })
           },
           handleSearch(){
-           
             var _this=this
+            this.formData={}
             this.requestType="search"
             this.dialogTitle='检索'
-            for(let i=0;i<8;i++){
+            for(let i=0;i<9;i++){
             _this.formSettings[0].items[i].hidden=true;
             }
-            for(let i=8;i<12;i++){
+            for(let i=9;i<12;i++){
             _this.formSettings[0].items[i].hidden=false;
             _this.formSettings[0].items[i].required=false;
             }

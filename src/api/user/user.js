@@ -144,3 +144,58 @@ export function UserCheckCode(userName) {
     method: 'GET'
   })
 }
+
+/**
+ * 坚持当前输入的用户名密码是否正确
+ * @param userName
+ * @param password
+ * @constructor
+ */
+export function UserNoAuthCheckUserInfo(userName, password) {
+  return request({
+    url: '/userb/portal/noauth/checkuserinfo?userName=' + userName + '&password=' + password,
+    method: 'GET'
+  })
+}
+
+/**
+ * google auth 二维码
+ * @param userName
+ * @param password
+ * @param secretKey
+ * @constructor
+ */
+export function UserNoAuthQrCode(userName, password, secretKey) {
+  return request({
+    url:  '/userb/portal/noauth/googleauthqrcode?userName=' + userName + '&password=' + password + '&secretKey=' + secretKey,
+    method: 'GET'
+  })
+}
+
+/**
+ * google auth 二次校验绑定
+ * @param userName
+ * @param password
+ * @param secretKey
+ * @constructor
+ */
+export function UserNoAuthQrCodeBinding(userName, password, secretKey) {
+  return request({
+    url:  '/userb/portal/noauth/bindqrcode?userName=' + userName + '&password=' + password + '&secretKey=' + secretKey,
+    method: 'GET'
+  })
+}
+
+/**
+ * google auth 二次校验
+ * @param userName
+ * @param password
+ * @param pubKey
+ * @constructor
+ */
+export function UserNoAuthGoogleDoubleCheck(userName, password, pubKey) {
+  return request({
+    url:  '/userb/portal/noauth/checkKey?userName=' + userName + '&password=' + password + '&pubKey=' + pubKey,
+    method: 'GET'
+  })
+}
