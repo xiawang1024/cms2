@@ -98,7 +98,7 @@
           </el-row>
           <el-row v-if="formData.refuseReasons">
             <el-col :span="5">
-              <div class="leftdiv">拒绝理由</div>
+              <div class="leftdiv">处理理由</div>
             </el-col>
             <el-col :span="19">
               <div class="rightdiv">{{ formData.refuseReasons }}</div>
@@ -206,9 +206,9 @@ export default {
         });
       });
     },
-    openMessage(queryObj) {
+    openMessage(queryObj,message) {
       let _this = this;
-      this.$prompt("请输入拒绝理由", "提示", {
+      this.$prompt(message, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消"
       })
@@ -246,10 +246,12 @@ export default {
       };
       if (num == 2) {
         // 拒绝 添加理由
-        this.openMessage(queryObj);
+        this.openMessage(queryObj,"请输入拒绝理由");
       } else {
         // 通过
-        this.amendDiscloseState(queryObj);
+        this.openMessage(queryObj,"审核通过反馈意见");
+
+        // this.amendDiscloseState(queryObj);
       }
     },
     amendState(num) {
