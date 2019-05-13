@@ -60,7 +60,7 @@
 </template>
 <script>
 import Tinymce from '@/components/Tinymce'
-import { createDocument, editDocument } from '@/api/cms/article'
+import { createDocument, editDocument, editQuoteDocument } from '@/api/cms/article'
 import { mapGetters } from 'vuex'
 export default {
   name: 'ImageText',
@@ -262,19 +262,35 @@ export default {
     },
     editDoc(formData) {
       var _this = this
-      return new Promise((resolve, reject) => {
-        editDocument(formData)
-          .then((response) => {
-            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            this.goBack()
-            resolve()
-            _this.isLoading = false
-          })
-          .catch((error) => {
-            _this.isLoading = false
-            reject(error)
-          })
-      })
+      if(this.contextMenu.articleType == 3) {
+        return new Promise((resolve, reject) => {
+          editQuoteDocument(formData)
+            .then((response) => {
+              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+              this.goBack()
+              resolve()
+              _this.isLoading = false
+            })
+            .catch((error) => {
+              _this.isLoading = false
+              reject(error)
+            })
+        })
+      } else {
+        return new Promise((resolve, reject) => {
+          editDocument(formData)
+            .then((response) => {
+              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+              this.goBack()
+              resolve()
+              _this.isLoading = false
+            })
+            .catch((error) => {
+              _this.isLoading = false
+              reject(error)
+            })
+        })
+      }
     },
     getSubmitData() {
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)

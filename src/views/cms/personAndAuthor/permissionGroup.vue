@@ -13,6 +13,7 @@
       <el-table-column label="操作" width="120">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleAlter(scope.$index, scope.row)">权限设置</el-button>
+          <el-button size="mini" type="primary" @click="handleAlter(scope.$index, scope.row)">来源权限</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -23,7 +24,7 @@
 <script>
 import accessDialog from './accessDiolog'
 import { UserList } from '@/api/user/user'
-import { columnList } from '@/api/cms/columnManage'
+import { columnListAny } from '@/api/cms/columnManage'
 import Pagination from '@/common/Pagination'
 import mixins from '@/components/cms/mixins'
 export default
@@ -118,7 +119,7 @@ export default
     },
     columnSearchList() {
       return new Promise((resolve, reject) => {
-        columnList({}, 1, 1000)
+        columnListAny({}, 1, 1000)
           .then((response) => {
             // this.$nextTick(() => {
             //   // _this.searchSettings[0].options = _this.toTree(response.data.result.content)

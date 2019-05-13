@@ -17,6 +17,14 @@ export function editDocument(queryObj) {
     data: queryObj
   })
 }
+// 修改引用文章
+export function editQuoteDocument(queryObj) {
+  return request({
+    url: '/cms/article/modifyrefertitlebyarticleid',
+    method: 'post',
+    data: queryObj
+  })
+}
 //创建文章
 export function createDocument(data) {
   return request({

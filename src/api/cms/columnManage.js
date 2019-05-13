@@ -50,16 +50,27 @@ export function getRoot() {
     method: 'get'
   })
 }
-// 分页栏目获取
+// 根据权限栏目获取
 export function columnList(queryObj, pageNo, pageSize, sortBy='channelLevel,seqNo') {
   return request({
-    url: '/cms/channel/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + "&order=asc,desc",
+    url: '/cms/channel/pagebyuserid?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + "&order=asc,desc",
     method: 'post',
     data: queryObj
   })
 }
-// 全部栏目获取
+// 获取全部栏目
 export function columnListAll(queryObj, pageNo, pageSize, sortBy='channelLevel,seqNo') {
+  return request({
+    url: '/cms/channel/pagebyuserid?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + "&order=asc,desc",
+    method: 'post',
+    data: queryObj,
+    loadingConfig: {
+      noLoading: true
+    }
+  })
+}
+// 全部栏目获取(不分权限)
+export function columnListAny(queryObj, pageNo, pageSize, sortBy='channelLevel,seqNo') {
   return request({
     url: '/cms/channel/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + "&order=asc,desc",
     method: 'post',
