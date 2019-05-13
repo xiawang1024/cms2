@@ -361,6 +361,7 @@
            }
   
             this.addAttribute();
+            this.formData={};
           }else if(this.requestType=='edit'){
                       this.editGroupAttribute.description=row.description;
                       this.editGroupAttribute.name=row.name;

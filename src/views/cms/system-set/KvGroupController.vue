@@ -209,9 +209,10 @@ export default {
               sort:row.sort,
               tag:row.tag
               }
-             this.handleAdd(this.addGroup)
+                 this.handleAdd(this.addGroup)
+                 this.formData={}
             }
-          }else if(this.handleType=="修改"){
+          }else if(this.handleType=="编辑"){
             //修改接口
                let patt=/^[0-9]+$/;
              if(!patt.test(row.id)){
@@ -255,6 +256,7 @@ export default {
               _this.backButtonVisible=true;
             }
           }
+        
       },
 
 
@@ -310,11 +312,13 @@ export default {
             addGroupRequest(obj)
             .then((response)=>{
               _this.dialogVisible=false
-              _this.$message({                       
+              if(response.data.code==0){
+                _this.$message({                       
                         type: 'success',
                         message: '添加成功!'
                        });
               _this.getTableData(_this.defaultData) 
+              }
               resolve()
             })
             .catch((reject)=>{
