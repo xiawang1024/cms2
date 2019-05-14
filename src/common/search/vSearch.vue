@@ -110,8 +110,8 @@
         </el-col>
         <el-col :md="8" :sm="12" :xs="24" style="float:right">
           <el-form-item label-width="0" style="text-align:right">
-            <el-button type="primary" @click="onSearch">搜索</el-button>
-            <el-button @click="onReset" v-if="!hideReset">重置</el-button>
+            <el-button type="primary" @click="onSearch" size="mini">搜索</el-button>
+            <el-button @click="onReset" v-if="!hideReset" size="mini">重置</el-button>
             <el-button type="text" @click="handleShowAll" v-if="invisibleItemCount">
               {{ showAll ? "简单搜索" : "高级搜索" }}
               <i v-if="showAll" class="el-icon-arrow-up"/>

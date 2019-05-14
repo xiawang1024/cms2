@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="add-btn">
-      <el-button type="primary" size="small" @click="handelLive">添加</el-button>
+      <el-button type="primary" size="mini" @click="handelLive">添加</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%" highlight-current-row size="small">
       <el-table-column prop="articleLiveCommentUser" label="直播人" min-width="100" show-overflow-tooltip/>

@@ -1,7 +1,7 @@
 <template>
   <div class="relatedDocuments-wrap">
     <div class="save-btn">
-      <el-button type="primary" size="small" @click="saveHandelRelation">保存</el-button>
+      <el-button type="primary" size="mini" @click="saveHandelRelation">保存</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%" highlight-current-row>
       <el-table-column prop="articleTitle" label="标题" min-width="200" show-overflow-tooltip/>
@@ -35,7 +35,7 @@
       <el-table-column prop="modifyTime" label="修改时间" width="200"/>
       <el-table-column align="right">
         <template slot="header" slot-scope="scope">
-          <el-button type="text" @click="handleAdd">添加</el-button>
+          <el-button type="text" @click="handleAdd" size="mini">添加</el-button>
           <!-- <el-button type="text" style="color:#f95757" @click="handleAutoGet">自动获取</el-button> -->
         </template>
         <template slot-scope="scope">

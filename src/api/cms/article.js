@@ -225,9 +225,9 @@ export function deleteImageList(data) {
   })
 }
 // 文章拖拽
-export function articalSort(data) {
+export function articalSort(data, pageNo, pageSize, sortBy='topFlag', order='desc,desc,desc') {
   return request({
-    url: `/cms/article/sort`,
+    url: '/cms/article/sortwithpageinfo?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + ',seqNo,createTime&order=' + order,
     method: 'post',
     data
   })
@@ -276,5 +276,13 @@ export function getLiveInfor(id) {
     loadingConfig: {
       target: '.el-dialog__body'
     }
+  })
+}
+// 新增直播消息
+export function picCoverHandel(articleId, data) {
+  return request({
+    url: `/cms/article/coverimagesoperation/${articleId}`,
+    method: 'post',
+    data
   })
 }

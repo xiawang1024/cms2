@@ -21,11 +21,11 @@
       <el-table-column prop="description" label="描述"/>
       <el-table-column prop="tag" label="标签"/>
       <el-table-column prop="sort" label="排序"/>            
-      <el-table-column label="操作">
+      <el-table-column label="操作" fixed="right" width="200">
         <template slot-scope="scope">
-          <el-button size="mini" type="prime" @click="commentForm(2, scope.row)">编辑</el-button>
+          <el-button size="mini" type="primary" @click="commentForm(2, scope.row)">编辑</el-button>
           
-          <el-button size="mini" type="warning" @click="handleSerch(scope.row.id,scope.row.description)">详情</el-button>
+          <el-button size="mini" type="success" @click="handleSerch(scope.row.id,scope.row.description)">详情</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -151,7 +151,6 @@ export default {
     created(){
       var _this=this
         this.getTableData(_this.defaultData) 
-        console.log(this.defaultData,'duhz')
     },
     methods:{
         //通用对话框
@@ -168,14 +167,12 @@ export default {
 
           }else if(a==2){
             //修改
-            console.log(b,'b')
             this.handleType="编辑"
             this.formData={}
             
             this.formSettings[0].items[3].hidden=true
             this.formSettings[0].items[4].hidden=true
             this.formData=b
-            console.log(this.formData,'formdate')
 
           }else if(a==3){
             //检索
@@ -191,25 +188,13 @@ export default {
           }
 
         },
-        // checkTenantId(rule, value, callback){
-        //    var patt=/^[A-Za-z0-9]+$/;
-        //      console.log(value,"value")
-        //   if (!patt.test(value)) {
-        //  return callback(new Error('请输入字母或者数字'))
-        //      }else{
-        //        return callback()
-        //      }
-        // },
       submitSave(row){
         var _this=this
-        console.log(row,'row')
         let sendPass=true;
           if(this.handleType=="新增"){
             //新增接口
-             console.log(this.addGroup.tenantId,'赋值前')
              let patt=/^[A-Za-z0-9]+$/;
              if(!patt.test(row.tenantId)){
-               console.log('校验')
                sendPass=false;
                return  _this.$message({                       
                         type: 'error',
@@ -219,7 +204,6 @@ export default {
              }
              let patt1=/^[0-9]+$/;
              if(!patt1.test(row.sort)){
-               console.log('校验')
                sendPass=false;
                return  _this.$message({                       
                         type: 'error',
@@ -234,14 +218,12 @@ export default {
               sort:row.sort,
               tag:row.tag
               }
-              console.log(this.addGroup.tenantId,'赋值后')
              this.handleAdd(this.addGroup)
             }
           }else if(this.handleType=="修改"){
             //修改接口
                let patt=/^[0-9]+$/;
              if(!patt.test(row.id)){
-               console.log('校验')
                sendPass=false;
                return  _this.$message({                       
                         type: 'error',
@@ -251,7 +233,6 @@ export default {
              }
              let patt1=/^[0-9]+$/;
              if(!patt1.test(row.sort)){
-               console.log('校验')
                sendPass=false;
                return  _this.$message({                       
                         type: 'error',
@@ -290,12 +271,10 @@ export default {
       //获取所有列表
       getTableData(obj){
         var _this=this;
-        console.log(_this.pageNum,'页面')
         return new Promise((resolve,reject)=>{
            
             getAllGroup(_this.pageNum,_this.pageSize,obj)
             .then((response)=>{
-            console.log(response.data.result)
             _this.totalCount=response.data.result.totalElements
             _this.allGroup=response.data.result.content
             _this.dialogVisible=false;
@@ -315,7 +294,6 @@ export default {
           return new Promise((resolve,reject)=>{
             getAppDetail(id)
             .then((response)=>{
-              console.log(response.data.result)
               if(response.data.code==0){
                  _this.allGroup=[response.data.result]
                  _this.backButtonVisible=true;
@@ -340,7 +318,6 @@ export default {
           return new Promise((resolve,reject)=>{
             addGroupRequest(obj)
             .then((response)=>{
-              console.log(response)
               _this.dialogVisible=false
               _this.$message({                       
                         type: 'success',
@@ -371,19 +348,15 @@ export default {
         handleEdite(a,b){
             //调用模态框
             this.Visible=true;
-            // this.tenant=b;
-            console.log(b)
             
         },
         //修改保存、发送保存请求
         handleEditeSave(){
             var _this=this
-            console.log(_this.tenant.id,'ttttt')
             
             return new Promise((resolve,reject)=>{
                 groupSave(_this.tenant)
                 .then((response)=>{
-                    console.log(response)
                     if(response.data.code==0){
                        _this.dialogVisible=false;
                       this.$message({                       
@@ -412,19 +385,14 @@ export default {
         //删除组
         handleDelete(a,b){
           var _this=this
-                // console.log(b)
                 this.$confirm('此操作将永久删除该组, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
                 }).then(() => {
-                    
-                     console.log("111")
-                     console.log(b.id)
                     new Promise((resolve,reject)=>{
                     deleteGroup(b.id)
                     .then((response)=>{
-                      console.log(response)
                       if(response.data.code==0){
                         this.$message({
                         type: 'success',

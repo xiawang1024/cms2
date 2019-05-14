@@ -10,10 +10,11 @@
         </div>
       </template>
     </v-form>
-    <div>
+    <div class="reproduce-btn">
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
-      <el-button type = "primary" size="small" @click = "save('docContentForm', '0')">存草稿</el-button>
-      <el-button type = "primary" size="small" @click = "save('docContentForm', '11')">保存并发布</el-button>
+      <!-- <el-button type = "primary" size="mini" @click = "save('docContentForm', '0', 'saveOnly')">保存</el-button> -->
+      <el-button type = "primary" size="mini" @click = "save('docContentForm', '0')">存草稿</el-button>
+      <el-button type = "primary" size="mini" @click = "save('docContentForm', '11')">保存并发布</el-button>
     </div>
   </div>
 </template>
@@ -106,13 +107,21 @@ export default {
         label: ''
       })
     },
-    createDoc(formData) {
+    goEdit(docId) {
+      const select = { id: '1', label: '新建文档', docId: docId}
+      this.$store.dispatch('setContextMenu', select)
+    },
+    createDoc(formData, saveType) {
       var _this = this
       return new Promise((resolve, reject) => {
         createDocument(formData)
           .then((response) => {
             _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            this.goBack()
+            if(saveType === 'saveOnly') {
+              this.goEdit(response.data.result.articleId)
+            } else {
+              this.goBack()
+            } 
             resolve()
             _this.isLoading = false
           })
@@ -122,13 +131,17 @@ export default {
           })
       })
     },
-    editDoc(formData) {
+    editDoc(formData, saveType) {
       var _this = this
       return new Promise((resolve, reject) => {
         editDocument(formData)
           .then((response) => {
             _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            this.goBack()
+            if(saveType === 'saveOnly') {
+              this.goEdit(response.data.result.articleId)
+            } else {
+              this.goBack()
+            } 
             resolve()
             _this.isLoading = false
           })
@@ -168,7 +181,7 @@ export default {
       delete resoultObj.tagIds
       return resoultObj
     },
-    save(formName, publishType) {
+    save(formName, publishType, saveType) {
       this.$refs.form.getDataAsync().then(data => {
         if (!data) {
           return
@@ -203,10 +216,11 @@ export default {
         delete resoultObj.tagIds
         if(this.contextMenu.docId) {
           resoultObj.articleId = this.contextMenu.docId
-          this.editDoc(resoultObj)
+          this.editDoc(resoultObj, saveType)
         } else {
           resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
-          this.createDoc(resoultObj)
+          resoultObj.coverImagesList =this.getDocInformation.coverImagesList
+          this.createDoc(resoultObj, saveType)
         }
       })
     }
@@ -228,6 +242,9 @@ export default {
     margin-right: 10px;
   }
 }
+  .reproduce-btn{
+    padding-left:80px;
+  }
 }
 </style>
 
