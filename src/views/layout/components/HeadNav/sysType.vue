@@ -7,7 +7,7 @@
       v-for="(item,index) of sysTypeList"
       :class="selected(index)"
       :key="item.type"
-      @click="selectHandler(index)"
+      @click="selectHandler(item)"
       v-text="item.value"
     />
   </div>
@@ -38,7 +38,8 @@ export default {
     selectHandler(sysType) {
       this.selectedIndex = sysType
       // this.selected(sysType)
-      this.$store.dispatch('selectSysType', `${sysType}`)
+      // console.log(sysType, '222')
+      this.$store.dispatch('selectSysType', `${sysType.type}`)
     },
     filterSysList(sysList) {
       console.log(sysList, 'this.sysList')

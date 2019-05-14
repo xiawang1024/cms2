@@ -17,6 +17,7 @@ function filterSysRouter(sysType) {
  */
 function hasPermission(authorities, route) {
   if (route.meta && route.meta.role) {
+    // console.log(route.meta.role, authorities.includes(route.meta.role))
     return authorities.includes(route.meta.role)
   } else {
     return true
@@ -67,13 +68,14 @@ const permission = {
       return new Promise((resolve) => {
         const { authorities } = data
         let asyncSysRouterMap = null
-
+        console.log(getters.sysType, 'getters.sysType')
+        console.log(authorities, 'getters.authorities')
         asyncSysRouterMap = filterSysRouter(getters.sysType)
         const accessedRouters = filterAsyncRouter(asyncSysRouterMap, authorities)
-        console.log("vuex里的router")
-        console.log(accessedRouters)
-        console.log(authorities, 'authorities')
-        console.log(asyncSysRouterMap, 'asyncSysRouterMap')
+        // console.log("vuex里的router")
+        console.log(accessedRouters, 'accessedRouters111')
+        // console.log(authorities, 'authorities')
+        console.log(asyncSysRouterMap, 'asyncSysRouterMap22')
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })
