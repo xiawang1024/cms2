@@ -72,6 +72,8 @@ const permission = {
         const accessedRouters = filterAsyncRouter(asyncSysRouterMap, authorities)
         console.log("vuex里的router")
         console.log(accessedRouters)
+        console.log(authorities, 'authorities')
+        console.log(asyncSysRouterMap, 'asyncSysRouterMap')
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })

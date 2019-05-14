@@ -127,6 +127,9 @@ const user = {
             setAuth(data)
             // getCurrentInfor()
             // userCurrent()
+            if(response.data.code == '600') {
+              reject(response.data)
+            }
             resolve()
           })
           .catch((error) => {
@@ -246,6 +249,7 @@ const user = {
      * 选择子系统，动态修改路由 
      */
     selectSysType({ commit, dispatch, getters, state }, sysType) {
+      console.log(getters.authorities, 'getters.authorities')
       commit('SET_SYS_TYPE', sysType)
       router.push({ path: '/' })
       dispatch('delAllViews') // 清除tagViews

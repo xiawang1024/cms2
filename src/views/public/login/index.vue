@@ -99,13 +99,14 @@ export default {
         .dispatch('LoginByUsername', this.loginForm)
         .then((res) => {
           this.loading = false
-          // this.$router.push({ path: this.redirect || '/' })
-          // this.$store.dispatch('GetCurrentInfor')
-          // this.$store.dispatch('GetColumnAll')
+          this.$router.push({ path: this.redirect || '/' })
+          this.$store.dispatch('GetCurrentInfor')
+          this.$store.dispatch('GetColumnAll')
         })
         .catch((res) => {
           this.loading = false
           console.log(res, 'res')
+          this.$message.error(res.error_description)
         })
     }
   }
