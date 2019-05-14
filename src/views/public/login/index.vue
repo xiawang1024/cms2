@@ -54,12 +54,12 @@
           @click.native.prevent="handleGoogleLogin"
         >{{ login.googleLoginIn }}</el-button>
 
-        <el-button
+        <!--<el-button
           :loading="loading"
           type="primary"
           style="width:100%;margin-bottom:30px;"
           @click.native.prevent="handleLogin"
-        >{{ login.logIn }}</el-button>
+        >{{ login.logIn }}</el-button>-->
       </el-form>
     </div>
 
@@ -96,7 +96,7 @@
           username: '用户名',
           password: '密码',
           logIn: '登录',
-          googleLoginIn: 'Google二次校验登录'
+          googleLoginIn: '登录'
         },
         loginForm: {
           username: '',
