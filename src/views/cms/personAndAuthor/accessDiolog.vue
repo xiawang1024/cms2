@@ -82,8 +82,6 @@ export default {
       this.$emit('update:dialogVisible', false)
     },
     confirmSave() {
-      console.log(this.$refs.tree.getCheckedNodes())
-      console.log(this.userInfor)
       let params = {
         userId: this.userInfor.userId,
         channelIdList: this.$refs.tree.getCheckedNodes().map((ele) => {
@@ -96,6 +94,7 @@ export default {
             this.$message.success('操作成功')
             this.$emit('update:dialogVisible', false)
             this.$emit('handelSuccess')
+            this.$store.dispatch('GetColumnAll')
             resolve()
           })
           .catch((error) => {

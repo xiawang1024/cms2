@@ -41,6 +41,7 @@ export default {
       this.$store.dispatch('selectSysType', `${sysType}`)
     },
     filterSysList(sysList) {
+      console.log(sysList, 'this.sysList')
       const syncSysList = sysType.filter(item => {
         return sysList.includes(item.type)
       })

@@ -97,14 +97,15 @@ export default {
       this.loading = true
       this.$store
         .dispatch('LoginByUsername', this.loginForm)
-        .then(() => {
+        .then((res) => {
           this.loading = false
-          this.$router.push({ path: this.redirect || '/' })
-          this.$store.dispatch('GetCurrentInfor')
-          this.$store.dispatch('GetColumnAll')
+          // this.$router.push({ path: this.redirect || '/' })
+          // this.$store.dispatch('GetCurrentInfor')
+          // this.$store.dispatch('GetColumnAll')
         })
-        .catch(() => {
+        .catch((res) => {
           this.loading = false
+          console.log(res, 'res')
         })
     }
   }
