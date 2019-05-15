@@ -12,7 +12,6 @@ const webSite = {
   // redirect: `${cmsPath}/website/doc`,
   meta: { title: 'webSite', icon: 'webSite', role: 'cms' },
   name: 'website',
-  // role: 'cms:article1133',
   children: [
     /**
        * 发布文章
@@ -31,7 +30,7 @@ const webSite = {
       path: 'document',
       component: () => import(`@/${path}/publishDocument`),
       name: 'PublishDocument',
-      meta: { title: 'publishDocument', icon: 'docSource', role: 'cms:article' }
+      meta: { title: 'publishDocument', icon: 'docSource', role: 'cms:article1' }
     },
     {
       /**
@@ -40,7 +39,7 @@ const webSite = {
       path: 'column',
       component: () => import(`@/${path}/columnManage`),
       name: 'ColumnManage',
-      meta: { title: 'columnManage', icon: 'docSource', role: 'cms:channel' }
+      meta: { title: 'columnManage', icon: 'docSource', role: 'cms:channel1' }
     },
     {
       /**
