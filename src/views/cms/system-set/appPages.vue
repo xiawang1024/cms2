@@ -1,9 +1,6 @@
 <template>
   <div class="box">
-    <el-row
-      class="atLeft"
-      style="minWidth:1100px"
-    >
+    <el-row class="atLeft" style="minWidth:1100px">
       <el-button
         v-for="x in 15"
         :key="x"
@@ -13,73 +10,41 @@
         icon="el-icon-circle-plus"
         @click="add(x-1)"
       >{{ componentValue[x-1] }}</el-button>
-      <el-table :data="componentsList">
-        <el-table-column type="expand">
+      <el-table :data="componentsList" :row-class-name="getRowClassName" >
+        <el-table-column type="expand" >
           <template slot-scope="props">
-            <el-form
-              label-position="left"
-              inline
-              class="demo-table-expand"
-            >
-              <el-form-item
-                label="图片信息"
-                v-show="props.row.pictureList.length"
-              >
-                <el-row
-                  v-for="(item,index) in props.row.pictureList"
-                  :key="index"
-                >
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="图片信息" v-show="props.row.pictureList?props.row.pictureList.length:false">
+                <el-row v-for="(item,index) in props.row.pictureList" :key="index">
                   <el-row>
-                    <span> 名字:{{ item.name }}</span>
+                    <span>名字:{{ item.name }}</span>
                   </el-row>
                   <el-row>
-                    <span v-show="props.row.type==0 || props.row.type==2 ">
-                      跳转路径:{{ item.url }}
-                    </span>
+                    <span v-show="props.row.type==0 || props.row.type==2 ">跳转路径:{{ item.url }}</span>
                   </el-row>
                   <el-row>
-                    <span> 图片资源地址:{{ item.path }}</span>
+                    <span>图片资源地址:{{ item.path }}</span>
                   </el-row>
                   <el-row>
-                    <span> 图片描述:{{ item.description }}</span>
+                    <span>图片描述:{{ item.description }}</span>
                   </el-row>
                   <el-row>
-                    <span> 序号:{{ item.sort }}</span>&#x3000;&#x3000;
-                    <span> 创建时间:{{ item.createTime | formate }}</span>
+                    <span>序号:{{ item.sort }}</span>&#x3000;&#x3000;
+                    <span>创建时间:{{ item.createTime | formate }}</span>
                   </el-row>
-                  <el-button
-                    type="primary"
-                    size="mini"
-                    @click="handleImgList(item,index)"
-                  >删除图片</el-button>
+                  <el-button type="primary" size="mini" @click="handleImgList(item,index)">删除图片</el-button>
                 </el-row>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="name"
-          label="组件名字"
-        />
-        <el-table-column
-          prop="description"
-          label="描述"
-        />
-        <el-table-column
-          prop="url"
-          label="链接地址"
-        />
-        <el-table-column
-          prop="sort"
-          label="排序"
-        />
+        <el-table-column prop="name" label="组件名字"/>
+        <el-table-column prop="description" label="描述"/>
+        <el-table-column prop="url" label="链接地址"/>
+        <el-table-column prop="sort" label="排序"/>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="text"
-              @click="handleEdite(scope.$index,scope.row)"
-            >编辑</el-button>
+            <el-button size="mini" type="text" @click="handleEdite(scope.$index,scope.row)">编辑</el-button>
             <el-button
               size="mini"
               type="text"
@@ -92,20 +57,13 @@
               @click="handleAdd(scope.$index,scope.row)"
               v-show="scope.row.type==2"
             >添加查询链接</el-button>
-            <el-button
-              size="mini"
-              type="text"
-              @click="handleDelete(scope.$index, scope.row)"
-            >删除</el-button>
+            <el-button size="mini" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-row>
 
-    <el-dialog
-      :visible.sync="dialogVisible"
-      :title="dialogTitle"
-    >
+    <el-dialog :visible.sync="dialogVisible" :title="dialogTitle">
       <v-form
         ref="vform"
         :form-settings="formSettings"
@@ -229,11 +187,15 @@ export default {
                   searchPage(item.id)
                     .then(response => {
                       if (response.data.code == "0") {
-                        item.pictureList = response.data.result.pictureList;
-                        // console.log(item.pictureList);
+                        item.pictureList = response.data.result.pictureList||[];
+                        console.log(item.pictureList,'pictureList');
                       }
+                      _this.isLoading = false;
                     })
-                    .catch(reject => {});
+                    .catch(reject => {
+                      console.log(reject);
+                      _this.isLoading = false;
+                    });
                 });
               });
             } else {
@@ -606,7 +568,7 @@ export default {
         addPageConfig(data)
           .then(response => {
             // console.log(response, "590");
-            this.isLoading = false;
+            _this.isLoading = false;
             if (response.data.code == "0") {
               this.$message({
                 type: "success",
@@ -622,7 +584,7 @@ export default {
             resolve();
           })
           .catch(reject => {
-            this.isLoading = true;
+            this.isLoading = false;
             console.log(reject);
           });
       });
@@ -918,7 +880,13 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    getRowClassName({row, rowIndex}){
+   if (row.pictureList==null||row.pictureList.length == 0) {
+       return 'row-expand-cover';
+       }
     }
+
   }
 };
 </script>
@@ -937,4 +905,5 @@ export default {
 .btn {
   margin: 10px;
 }
+ /deep/.row-expand-cover .el-table__expand-icon{visibility:hidden ;}
 </style>
