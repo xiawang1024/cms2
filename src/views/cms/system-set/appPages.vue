@@ -1,9 +1,6 @@
 <template>
   <div class="box">
-    <el-row
-      class="atLeft"
-      style="minWidth:1100px"
-    >
+    <el-row class="atLeft" style="minWidth:1100px">
       <el-button
         v-for="x in 15"
         :key="x"
@@ -13,94 +10,60 @@
         icon="el-icon-circle-plus"
         @click="add(x-1)"
       >{{ componentValue[x-1] }}</el-button>
-      <el-table :data="componentsList">
-        <el-table-column type="expand">
+      <el-table :data="componentsList" :row-class-name="getRowClassName" >
+        <el-table-column type="expand" >
           <template slot-scope="props">
-            <el-form
-              label-position="left"
-              inline
-              class="demo-table-expand"
-            >
-              <el-form-item
-                label="图片信息"
-                v-show="props.row.pictureList.length"
-              >
-                <el-row
-                  v-for="(item,index) in props.row.pictureList"
-                  :key="index"
-                >
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="图片信息" v-show="props.row.pictureList?props.row.pictureList.length:false">
+                <el-row v-for="(item,index) in props.row.pictureList" :key="index">
                   <el-row>
-                    <span> 名字:{{ item.name }}</span>
+                    <span>名字:{{ item.name }}</span>
                   </el-row>
                   <el-row>
-                    <span v-show="props.row.type==0"> 跳转路径:{{ item.url }}</span>
+                    <span v-show="props.row.type==0 || props.row.type==2 ">跳转路径:{{ item.url }}</span>
                   </el-row>
                   <el-row>
-                    <span> 图片资源地址:{{ item.path }}</span>
+                    <span>图片资源地址:{{ item.path }}</span>
                   </el-row>
                   <el-row>
-                    <span> 序号:{{ item.sort }}</span>&#x3000;&#x3000;
-                    <span> 创建时间:{{ item.createTime | formate }}</span>
+                    <span>图片描述:{{ item.description }}</span>
                   </el-row>
-                  <el-button
-                    type="primary"
-                    size="mini"
-                    @click="handleImgList(item,index)"
-                  >删除图片</el-button>
+                  <el-row>
+                    <span>序号:{{ item.sort }}</span>&#x3000;&#x3000;
+                    <span>创建时间:{{ item.createTime | formate }}</span>
+                  </el-row>
+                  <el-button type="primary" size="mini" @click="handleImgList(item,index)">删除图片</el-button>
                 </el-row>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="name"
-          label="组件名字"
-        />
-        <el-table-column
-          prop="description"
-          label="描述"
-        />
-        <el-table-column
-          prop="url"
-          label="链接地址"
-        />
-        <el-table-column
-          prop="sort"
-          label="排序"
-        />
+        <el-table-column prop="name" label="组件名字"/>
+        <el-table-column prop="description" label="描述"/>
+        <el-table-column prop="url" label="链接地址"/>
+        <el-table-column prop="sort" label="排序"/>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="text"
-              @click="handleEdite(scope.$index,scope.row)"
-            >编辑</el-button>
+            <el-button size="mini" type="text" @click="handleEdite(scope.$index,scope.row)">编辑</el-button>
             <el-button
               size="mini"
               type="text"
               @click="handleAdd(scope.$index,scope.row)"
-              v-show="scope.row.type==0 || scope.row.type==3"
+              v-show="scope.row.type==0 || scope.row.type==1"
             >添加图片</el-button>
             <el-button
               size="mini"
               type="text"
               @click="handleAdd(scope.$index,scope.row)"
-              v-show="scope.row.type==4"
+              v-show="scope.row.type==2"
             >添加查询链接</el-button>
-            <el-button
-              size="mini"
-              type="text"
-              @click="handleDelete(scope.$index, scope.row)"
-            >删除</el-button>
+            <el-button size="mini" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-row>
 
-    <el-dialog
-      :visible.sync="dialogVisible"
-      :title="dialogTitle"
-    >
+    <el-dialog :visible.sync="dialogVisible" :title="dialogTitle">
       <v-form
         ref="vform"
         :form-settings="formSettings"
@@ -181,10 +144,10 @@ export default {
       currentType: "",
       componentValue: [
         "轮播图",
-        "新闻列表(不可评论)",
-        "新闻列表(可评论)",
         "广告位",
         "查询链接列表",
+        "新闻列表(不可评论)",
+        "新闻列表(可评论)",
         "视频列表",
         "直播列表",
         "广播列表",
@@ -224,11 +187,15 @@ export default {
                   searchPage(item.id)
                     .then(response => {
                       if (response.data.code == "0") {
-                        item.pictureList = response.data.result.pictureList;
-                        console.log(item.pictureList, "2");
+                        item.pictureList = response.data.result.pictureList||[];
+                        console.log(item.pictureList,'pictureList');
                       }
+                      _this.isLoading = false;
                     })
-                    .catch(reject => {});
+                    .catch(reject => {
+                      console.log(reject);
+                      _this.isLoading = false;
+                    });
                 });
               });
             } else {
@@ -265,15 +232,15 @@ export default {
                 required: true,
                 placeholder: "请输入描述"
               },
-              {
-                label: "轮播图URL",
-                name: "url",
-                type: "text",
-                valueType: "string",
-                disabled: false,
-                required: true,
-                placeholder: "请输入URL"
-              },
+              // {
+              //   label: "轮播图URL",
+              //   name: "url",
+              //   type: "text",
+              //   valueType: "string",
+              //   disabled: true,
+              //   required: false,
+              //   placeholder: "请输入URL"
+              // },
               {
                 label: "轮播图排序",
                 name: "sort",
@@ -326,6 +293,7 @@ export default {
                 label: "上传图片",
                 name: "Ppath",
                 type: "img",
+                limit: 1,
                 disabled: false,
                 required: true,
                 placeholder: "请上传图片"
@@ -333,7 +301,7 @@ export default {
             ]
           }
         ];
-      } else if (type == 3) {
+      } else if (type == 1) {
         this.formSettings = [
           {
             items: [
@@ -346,16 +314,16 @@ export default {
                 required: true,
                 placeholder: "请输入描述"
               },
-              {
-                label: "广告位URL",
-                name: "url",
-                type: "text",
-                valueType: "string",
-                disabled: true,
-                // required: true,
-                placeholder: "请输入URL",
-                value: ""
-              },
+              // {
+              //   label: "广告位URL",
+              //   name: "url",
+              //   type: "text",
+              //   valueType: "string",
+              //   disabled: true,
+              //   // required: true,
+              //   placeholder: "请输入URL",
+              //   value: ""
+              // },
               {
                 label: "广告位排序",
                 name: "sort",
@@ -400,13 +368,14 @@ export default {
                 name: "Ppath",
                 type: "img",
                 disabled: false,
+                limit: 1,
                 required: true,
                 placeholder: "请上传图片"
               }
             ]
           }
         ];
-      } else if (type == 4) {
+      } else if (type == 2) {
         this.formSettings = [
           {
             items: [
@@ -419,16 +388,16 @@ export default {
                 required: true,
                 placeholder: "请输入描述"
               },
-              {
-                label: "查询链接URL",
-                name: "url",
-                type: "text",
-                valueType: "string",
-                disabled: true,
-                // required: true,
-                placeholder: "请输入URL",
-                value: ""
-              },
+              // {
+              //   label: "查询链接URL",
+              //   name: "url",
+              //   type: "text",
+              //   valueType: "string",
+              //   disabled: true,
+              //   required: true,
+              //   placeholder: "请输入URL",
+              //   value: ""
+              // },
               {
                 label: "查询链接排序",
                 name: "sort",
@@ -459,6 +428,15 @@ export default {
                 placeholder: "请输入描述"
               },
               {
+                label: "跳转路径",
+                name: "Purl",
+                type: "text",
+                valueType: "string",
+                disabled: false,
+                required: true,
+                placeholder: "请输入URL"
+              },
+              {
                 label: "图片信息排序",
                 name: "Psort",
                 type: "number",
@@ -472,6 +450,7 @@ export default {
                 label: "上传图片",
                 name: "Ppath",
                 type: "img",
+                limit: 1,
                 disabled: false,
                 required: true,
                 placeholder: "请上传图片"
@@ -518,6 +497,7 @@ export default {
       this.dialogVisible = true;
     },
     submitSave(res) {
+      // console.log(res, "6666");
       if (this.handleType == "add") {
         let data = {
           type: this.currentType,
@@ -525,14 +505,14 @@ export default {
           name: this.componentValue[this.currentType],
           ...res
         };
-
+        // console.log(data, "submit");
         if (data.type == 0) {
           data.Ppath = res.Ppath[0].url;
           this.addBanner(data);
-        } else if (data.type == 3) {
+        } else if (data.type == 1) {
           data.Ppath = res.Ppath[0].url;
           this.addBanner(data);
-        } else if (data.type == 4) {
+        } else if (data.type == 2) {
           data.Ppath = res.Ppath[0].url;
           this.addBanner(data);
         } else {
@@ -560,6 +540,8 @@ export default {
       return new Promise((resolve, reject) => {
         editPageConfig(data)
           .then(response => {
+            console.log(response, "editeditedit");
+            // console.log(response.data.result);
             if (response.data.code == "0") {
               this.$message({
                 type: "success",
@@ -580,10 +562,13 @@ export default {
       });
     },
     addPageComponent(data) {
+      this.isLoading = true;
       var _this = this;
       return new Promise((resolve, reject) => {
         addPageConfig(data)
           .then(response => {
+            // console.log(response, "590");
+            _this.isLoading = false;
             if (response.data.code == "0") {
               this.$message({
                 type: "success",
@@ -599,6 +584,7 @@ export default {
             resolve();
           })
           .catch(reject => {
+            this.isLoading = false;
             console.log(reject);
           });
       });
@@ -607,8 +593,11 @@ export default {
       this.handleType = "edit";
       this.formData = row;
       this.currentType = row.type;
-      console.log(this.currentType == 3);
-      if (this.currentType == 3) {
+      if (
+        this.currentType == 0 ||
+        this.currentType == 1 ||
+        this.currentType == 2
+      ) {
         this.formSettings = [
           {
             items: [
@@ -721,7 +710,6 @@ export default {
 
     handleAdd(index, row) {
       this.handleType = "addpicture";
-
       this.formSettings = [
         {
           items: [
@@ -746,6 +734,7 @@ export default {
             {
               label: "跳转路径",
               name: "Purl",
+              // name: "url",
               type: "text",
               valueType: "string",
               disabled: false,
@@ -759,7 +748,8 @@ export default {
               valueType: "number",
               disabled: false,
               required: true,
-              placeholder: "请输入序列号"
+              placeholder: "请输入序列号",
+              value: "1"
             },
             {
               label: "上传图片",
@@ -773,14 +763,16 @@ export default {
           ]
         }
       ];
-      if (row.type == 0) {
+      if (row.type == 0 || row.type == 2) {
         this.formSettings[0].items[2].hidden = false;
       } else {
         this.formSettings[0].items[2].hidden = true;
       }
+
       this.saveData = {
         // singPictureID: row.pictureList[0].pageConfigId,
         singPictureID: row.id,
+        // pageConfigId: row.id,
         order: row.pictureList.length,
         id: row.id,
         type: row.type,
@@ -794,10 +786,13 @@ export default {
     },
 
     addBanner(data) {
+      this.isLoading = true;
       var _this = this;
       return new Promise((resolve, reject) => {
         putPicture(data)
           .then(response => {
+            // console.log(response, "response");
+            this.isLoading = false;
             if (response.data.code == "0") {
               this.$message({
                 type: "success",
@@ -813,16 +808,20 @@ export default {
             resolve();
           })
           .catch(reject => {
+            this.isLoading = false;
             console.log(reject);
           });
       });
     },
     //添加图片
     addPicture(data) {
+      this.isLoading = true;
       var _this = this;
       return new Promise((resolve, reject) => {
         updatePicture(data)
           .then(response => {
+            this.isLoading = false;
+            // console.log(response, "添加图片");
             if (response.data.code == "0") {
               this.$message({
                 type: "success",
@@ -838,6 +837,7 @@ export default {
             resolve();
           })
           .catch(reject => {
+            this.isLoading = false;
             console.log(reject);
           });
       });
@@ -880,7 +880,13 @@ export default {
             message: "已取消删除"
           });
         });
+    },
+    getRowClassName({row, rowIndex}){
+   if (row.pictureList==null||row.pictureList.length == 0) {
+       return 'row-expand-cover';
+       }
     }
+
   }
 };
 </script>
@@ -899,4 +905,5 @@ export default {
 .btn {
   margin: 10px;
 }
+ /deep/.row-expand-cover .el-table__expand-icon{visibility:hidden ;}
 </style>

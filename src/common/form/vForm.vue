@@ -770,6 +770,9 @@ export default {
             ) {
               ruleMsg = "请选择";
             }
+            if (item.type === "img" || item.type === "file") {
+              ruleMsg = "请上传";
+            }
             tmpRules[item.name] = [
               {
                 required: true,

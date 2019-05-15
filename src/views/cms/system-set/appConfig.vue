@@ -1,101 +1,39 @@
 <template>
   <div class="box">
     <div class="tool-bar">
-      <el-button
-        size="mini"
-        type="primary"
-        @click="backFoword"
-        v-show="!pageFlag"
-      >返回</el-button>
-      <el-button
-        size="mini"
-        type="primary"
-        @click="searchAppConfig"
-      >检索</el-button>
-      <el-button
-        size="mini"
-        type="primary"
-        @click="addAppConfig"
-      >新增</el-button>
+      <el-button size="mini" type="primary" @click="backFoword" v-show="!pageFlag">返回</el-button>
+      <el-button size="mini" type="primary" @click="searchAppConfig">检索</el-button>
+      <el-button size="mini" type="primary" @click="addAppConfig">新增</el-button>
     </div>
 
     <el-table :data="fullApp">
-      <el-table-column
-        prop="name"
-        label="app名字"
-      />
-      <el-table-column
-        prop="version"
-        label="版本"
-      />
-      <el-table-column
-        prop="description"
-        label="描述"
-      />
-      <el-table-column
-        prop="startingImage"
-        label="启动页"
-      >
+      <el-table-column prop="name" label="app名字"/>
+      <el-table-column prop="version" label="版本"/>
+      <el-table-column prop="description" label="描述"/>
+      <el-table-column prop="startingImage" label="启动页">
         <template slot-scope="scope">
-          <img
-            :src="scope.row.startingImage"
-            class="icon"
-          >
+          <img :src="scope.row.startingImage" class="icon">
         </template>
       </el-table-column>
-      <el-table-column
-        prop="icon"
-        label="APP图标"
-      >
+      <el-table-column prop="icon" label="APP图标">
         <template slot-scope="scope">
-          <img
-            :src="scope.row.icon"
-            class="icon"
-          >
+          <img :src="scope.row.icon" class="icon">
         </template>
       </el-table-column>
-      <el-table-column
-        prop="iosurl"
-        label="苹果下载链接"
-      />
-      <el-table-column
-        prop="androidURL"
-        label="安卓下载链接"
-      />
-      <el-table-column
-        prop="sort"
-        label="排序"
-      />
-      <el-table-column
-        prop="createTime"
-        label="创建时间"
-        :formatter="formatDate"
-      />
+      <el-table-column prop="iosurl" label="苹果下载链接"/>
+      <el-table-column prop="androidURL" label="安卓下载链接"/>
+      <el-table-column prop="sort" label="排序"/>
+      <el-table-column prop="createTime" label="创建时间" :formatter="formatDate"/>
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            @click="handleEdit(scope.$index, scope.row)"
-          >编辑</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            @click="handleDetail(scope.row.id,scope.row)"
-          >详情</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            @click="handleDelete(scope.$index, scope.row)"
-          >删除</el-button>
+          <el-button size="mini" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="text" @click="handleDetail(scope.row.id,scope.row)">详情</el-button>
+          <el-button size="mini" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog
-      :visible.sync="dialogVisible"
-      :title="dialogTitle"
-    >
+    <el-dialog :visible.sync="dialogVisible" :title="dialogTitle">
       <v-form
         ref="vform"
         :form-settings="formSettings"
@@ -117,9 +55,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-
   </div>
-
 </template>
 
 <script>
@@ -205,13 +141,22 @@ export default {
               placeholder: "请输入下载URL"
             },
             {
-              label: "安卓下载链接",
+              label: "安卓程序包",
               name: "androidURL",
-              type: "text",
-              valueType: "string",
+              type: "file",
               disabled: false,
+              limit: 1,
+              required: true,
               placeholder: "请输入下载URL"
             },
+            // {
+            //   label: "安卓下载链接",
+            //   name: "androidURL",
+            //   type: "text",
+            //   valueType: "string",
+            //   disabled: false,
+            //   placeholder: "请输入下载URL"
+            // },
             {
               label: "排序",
               name: "sort",
@@ -228,7 +173,6 @@ export default {
   },
   created() {
     //请求app列表数据
-
     this.getAppList(this.pageNo, this.pageSize, { tenantId: this.currentUser });
   },
   methods: {
@@ -297,13 +241,22 @@ export default {
               placeholder: "请输入下载URL"
             },
             {
-              label: "安卓下载链接",
+              label: "安卓程序包",
               name: "androidURL",
-              type: "text",
-              valueType: "string",
+              type: "file",
+              limit: 1,
               disabled: false,
+              required: true,
               placeholder: "请输入下载URL"
             },
+            // {
+            //   label: "安卓下载链接",
+            //   name: "androidURL",
+            //   type: "text",
+            //   valueType: "string",
+            //   disabled: false,
+            //   placeholder: "请输入下载URL"
+            // },
             {
               label: "排序",
               name: "sort",
@@ -334,7 +287,7 @@ export default {
       console.log(row, "row");
       this.formData = {
         appName: row.name,
-        androidURL: row.androidURL,
+        androidURL: [{ url: row.androidURL }],
         description: row.description,
         icon: [{ url: row.icon }],
         id: row.id,
@@ -352,7 +305,7 @@ export default {
               name: "appName",
               type: "text",
               valueType: "string",
-              disabled: false,
+              disabled: true,
               required: true,
               placeholder: "请输入app名字"
             },
@@ -402,11 +355,20 @@ export default {
             {
               label: "安卓下载链接",
               name: "androidURL",
-              type: "text",
-              valueType: "string",
+              type: "file",
+              limit: 1,
               disabled: false,
+              required: true,
               placeholder: "请输入下载URL"
             },
+            // {
+            //   label: "安卓下载链接",
+            //   name: "androidURL",
+            //   type: "text",
+            //   valueType: "string",
+            //   disabled: false,
+            //   placeholder: "请输入下载URL"
+            // },
             {
               label: "排序",
               name: "sort",
@@ -557,9 +519,10 @@ export default {
           tenantId: this.currentUser,
           ...res
         };
-        console.log(res);
+        console.log(data, "595");
         data.icon = res.icon[0].url;
         data.startingImage = res.startingImage[0].url;
+        data.androidURL = res.androidURL[0].url;
         this.addApp(data);
       } else if (this.handleType == "edit") {
         let data = res;
@@ -567,7 +530,7 @@ export default {
         data.tenantId = this.currentUser;
         data.icon = res.icon[0].url;
         data.startingImage = res.startingImage[0].url;
-
+        data.androidURL = res.androidURL[0].url;
         this.updateAPP(data);
       } else if (this.handleType == "search") {
         //获取数据
@@ -658,6 +621,7 @@ export default {
       return new Promise((resolve, reject) => {
         addAppInfo(data)
           .then(response => {
+            console.log(response, "696");
             if (response.data.code == "0") {
               this.$message({
                 type: "success",
