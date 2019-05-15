@@ -5,8 +5,8 @@
     <span style="display:none"> {{ sysType }}</span>
     <div
       v-for="(item,index) of sysTypeList"
-      :class="selected(index)"
-      :key="item.type"
+      :class="selected(item)"
+      :key="index"
       @click="selectHandler(item)"
       v-text="item.value"
     />
@@ -19,7 +19,7 @@ import sysType from './sysType.js'
 export default {
   data() {
     return {
-      selectedIndex: 0
+      selectedIndex: ''
     }
   },
   computed: {
@@ -29,9 +29,9 @@ export default {
     }
   },
   methods: {
-    selected(index) {
+    selected(getType) {
       let current = window.sessionStorage.getItem('sysType') ? window.sessionStorage.getItem('sysType') : this.selectedIndex
-      return current == index
+      return current == getType.type
         ? { item: true, active: true }
         : { item: true }
     },

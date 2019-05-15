@@ -68,14 +68,8 @@ const permission = {
       return new Promise((resolve) => {
         const { authorities } = data
         let asyncSysRouterMap = null
-        console.log(getters.sysType, 'getters.sysType')
-        console.log(authorities, 'getters.authorities')
         asyncSysRouterMap = filterSysRouter(getters.sysType)
         const accessedRouters = filterAsyncRouter(asyncSysRouterMap, authorities)
-        // console.log("vuex里的router")
-        console.log(accessedRouters, 'accessedRouters111')
-        // console.log(authorities, 'authorities')
-        console.log(asyncSysRouterMap, 'asyncSysRouterMap22')
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })

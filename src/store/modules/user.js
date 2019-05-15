@@ -201,16 +201,20 @@ const user = {
             /**
              * 子系统列表
              */
-            data.user_authorities.permissionCodeList.forEach((ele) => {
-              if(defaultSysList.includes(ele)) {
-                getSysList.push(ele)
-              }
+            // data.user_authorities.permissionCodeList.forEach((ele) => {
+            //   if(defaultSysList.includes(ele)) {
+            //     getSysList.push(ele)
+            //   }
+            // })
+            getSysList = defaultSysList.filter(item => {
+              return data.user_authorities.permissionCodeList.includes(item)
             })
-            // console.log(getSysList, 'getSysList')
+            let resSysList = window.sessionStorage.getItem('sysType') ? window.sessionStorage.getItem('sysType') : getSysList[0]
+            console.log(getSysList, 'getSysList11')
             commit('SET_SYS_LIST', getSysList)
-            commit('SET_SYS_TYPE', getSysList[0])
+            commit('SET_SYS_TYPE',resSysList)
             // this.$store.dispatch('selectSysType', `${sysType}`)
-            console.log(data.user_authorities.permissionCodeList, '11')
+            // console.log(getSysList, '111111')
             // data.user_authorities.permissionCodeList
             commit('SET_NAME', data.name)
             commit('SET_TENANT_ID', data.tenant_id)
@@ -242,7 +246,6 @@ const user = {
     // 前端 登出
     FedLogOut({ commit }) {
       return new Promise((resolve) => {
-        console.log('loginOut')
         commit('SET_TOKEN', '')
 
         commit('SET_AUTHORITIES', [])
@@ -282,7 +285,7 @@ const user = {
          */
         router.addRoutes(getters.addRouters)
       }) // 动态修改权限后 重绘侧边菜单
-      if (sysType === '2') {
+      if (sysType === 'interaction') {
         var redirectUrl = ''
         return new Promise((resolve, reject) => {
           UserCurrent()

@@ -22,7 +22,7 @@ const systemSet = {
       meta: {
         title: 'siteSet',
         icon: 'siteSet',
-        role: 'cms:sit'
+        role: 'cms'
       }
     },
     {
@@ -32,7 +32,7 @@ const systemSet = {
       path: 'docSource',
       component: () => import(`@/${path}/docSource`),
       name: 'DocSource',
-      meta: { title: 'docSource', icon: 'docSource', role: 'cms:source' }
+      meta: { title: 'docSource', icon: 'docSource', role: 'cms' }
     },
     {
       /**
@@ -41,7 +41,7 @@ const systemSet = {
       path: 'platformSet',
       component: () => import(`@/${path}/platformSet`),
       name: 'platformSet',
-      meta: { title: 'platformSet', icon: 'platformSet', role: 'cms:publish' }
+      meta: { title: 'platformSet', icon: 'platformSet', role: 'cms' }
     },
     {
       /**
@@ -50,7 +50,7 @@ const systemSet = {
       path: 'columnTypeSet',
       component: () => import(`@/${path}/columnTypeSet`),
       name: 'columnTypeSet',
-      meta: { title: 'columnTypeSet', icon: 'docSource', role: 'cms:columnType' }
+      meta: { title: 'columnTypeSet', icon: 'docSource', role: 'cms' }
     },
     {
       /**
@@ -59,7 +59,7 @@ const systemSet = {
       path: 'temManager',
       component: () => import(`@/${path}/temManager`),
       name: 'temManager',
-      meta: { title: 'temManager', icon: 'temManager', role: 'cms:template' }
+      meta: { title: 'temManager', icon: 'temManager', role: 'cms' }
     },
     {
       /**
@@ -78,7 +78,7 @@ const systemSet = {
       path: 'sourceManage',
       component: () => import(`@/${path}/sourceManage`),
       name: 'sourceManage',
-      meta: { title: 'sourceManage', icon: 'sourceManage', role: 'cms:file' }
+      meta: { title: 'sourceManage', icon: 'sourceManage', role: 'cms' }
     },
     {
       /**
@@ -87,7 +87,7 @@ const systemSet = {
       path: 'comComponent',
       component: () => import(`@/${path}/comComponent`),
       name: 'comComponent',
-      meta: { title: 'comComponent', icon: 'comComponent', role: 'cms:component' }
+      meta: { title: 'comComponent', icon: 'comComponent', role: 'cms' }
     },
     {
       /**
@@ -106,7 +106,7 @@ const systemSet = {
       path: 'helpDoc',
       component: () => import(`@/${path}/helpDoc`),
       name: 'helpDoc',
-      meta: { title: 'helpDoc', icon: 'helpDoc', role: 'cms:help' }
+      meta: { title: 'helpDoc', icon: 'helpDoc', role: 'cms' }
     },
     {
       /**
@@ -125,7 +125,7 @@ const systemSet = {
       path: 'collection',
       component: () => import(`@/${path}/form`),
       name: 'collection',
-      meta: { title: 'collection', icon: 'bee', role: 'cms:bee' },
+      meta: { title: 'collection', icon: 'bee', role: 'cms' },
     },
     {
       /**
@@ -134,7 +134,7 @@ const systemSet = {
       path: 'KvGroupController',
       component: () => import(`@/${path}/KvGroupController`),
       name: 'KvGroupController',
-      meta: { title: 'KvGroupController', icon: 'kvGroup', role: 'cms:config' },
+      meta: { title: 'KvGroupController', icon: 'kvGroup', role: 'cms' },
       
     },
     {

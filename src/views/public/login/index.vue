@@ -81,6 +81,7 @@ export default {
   watch: {
     $route: {
       handler: function(route) {
+        console.log(route, 'route')
         this.redirect = route.query && route.query.redirect
       }
     }
@@ -98,6 +99,7 @@ export default {
       this.$store
         .dispatch('LoginByUsername', this.loginForm)
         .then((res) => {
+          console.log(this.redirect, 'this.redirect ')
           this.loading = false
           this.$router.push({ path: this.redirect || '/' })
           this.$store.dispatch('GetCurrentInfor')
