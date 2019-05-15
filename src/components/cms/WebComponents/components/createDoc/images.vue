@@ -297,7 +297,7 @@ export default {
           resoultObj.publishTime =  handleDate(resoultObj.publishTime)
         }
         if(this.contextMenu.docId) {
-          if(this.getDocInformation.attachmentsList) {
+          if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
             resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
           } else {
             resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
@@ -305,7 +305,7 @@ export default {
           resoultObj.articleId = this.contextMenu.docId
           this.editDoc(resoultObj, saveType)
         } else {
-          if(this.getDocInformation.attachmentsList) {
+          if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
             resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
             resoultObj.coverImagesList =this.getDocInformation.coverImagesList
           } else {

@@ -357,6 +357,7 @@ export default {
     editDoc(docId) {
       const select = { id: '1', label: '新建文档', docId: docId}
       this.$store.dispatch('setContextMenu', select)
+      this.$store.dispatch('setAttachmentsList', [])
     }
   }
 }
