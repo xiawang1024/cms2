@@ -341,6 +341,9 @@ export default {
       resoultObj.channelId = this.channelId
       resoultObj.articleStatus = publishType
       // 标签字段处理
+      if(typeof resoultObj.articleShowStyle == 'object') {
+        resoultObj.articleShowStyle = ''
+      }
       let chooseTags = []
       resoultObj.tagIds.forEach((ele) => {
         this.tagList.forEach((son) => {
@@ -359,6 +362,8 @@ export default {
       if (!resoultObj.contentBody) {
         resoultObj.contentBody = ''
       }
+      // 展现形式null处理
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$refs.otherForm.getDataAsync().then(data => {
