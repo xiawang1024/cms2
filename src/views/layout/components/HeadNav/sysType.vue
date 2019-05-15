@@ -5,9 +5,9 @@
     <span style="display:none"> {{ sysType }}</span>
     <div
       v-for="(item,index) of sysTypeList"
-      :class="selected(index)"
-      :key="item.type"
-      @click="selectHandler(index)"
+      :class="selected(item)"
+      :key="index"
+      @click="selectHandler(item)"
       v-text="item.value"
     />
   </div>
@@ -19,7 +19,7 @@ import sysType from './sysType.js'
 export default {
   data() {
     return {
-      selectedIndex: 0
+      selectedIndex: ''
     }
   },
   computed: {
@@ -29,18 +29,20 @@ export default {
     }
   },
   methods: {
-    selected(index) {
+    selected(getType) {
       let current = window.sessionStorage.getItem('sysType') ? window.sessionStorage.getItem('sysType') : this.selectedIndex
-      return current == index
+      return current == getType.type
         ? { item: true, active: true }
         : { item: true }
     },
     selectHandler(sysType) {
       this.selectedIndex = sysType
       // this.selected(sysType)
-      this.$store.dispatch('selectSysType', `${sysType}`)
+      // console.log(sysType, '222')
+      this.$store.dispatch('selectSysType', `${sysType.type}`)
     },
     filterSysList(sysList) {
+      console.log(sysList, 'this.sysList')
       const syncSysList = sysType.filter(item => {
         return sysList.includes(item.type)
       })

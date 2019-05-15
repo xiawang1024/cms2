@@ -62,24 +62,25 @@ const newscommandRouterMap = [manageClue,commandDispatch,manuscriptClue,fileClue
 /**
  * 路由map
  */
+// ['cms', 'userCenter', 'interaction', 'program','newsCommand'],
 export const routerMap = [{
-    type: '0',
+    type: 'cms',
     route: cmsRouterMap
   },
   {
-    type: '1',
+    type: 'userCenter',
     route: userRouterMap
   },
   {
-    type: '2',
+    type: 'interaction',
     route: internalRouterMap
   },
   {
-    type: '3',
+    type: 'program',
     route: programRouterMap
   },
   {
-    type: '4',
+    type: 'newsCommand',
     route: newscommandRouterMap
   }
 ]

@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog
-      title="栏目权限设置"
+      title="来源权限设置"
       :visible.sync="dialogVisible"
       width="50%"
       :before-close="handleClose">
@@ -21,7 +21,7 @@
   </div>
 </template>
 <script>
-import { setDataAccess, getDataAccess } from '@/api/cms/dataAccess'
+import { setSourceAccess, getSourceAccess } from '@/api/cms/dataAccess'
 export default {
   props: {
     dialogVisible: {
@@ -57,16 +57,16 @@ export default {
         if(this.$refs.tree) {
           this.$refs.tree.setCheckedKeys([])
         }
-        this.getUserAccess(this.userInfor.userId)
+        this.getSourceAccess(this.userInfor.userId)
       }
     }
   },
   methods: {
-    getUserAccess(userId) {
+    getSourceAccess(userId) {
       return new Promise((resolve, reject) => {
-        getDataAccess(userId)
+        getSourceAccess(userId)
           .then((response) => {
-            this.defaultCheck = response.data.result.channelIdList ? response.data.result.channelIdList : []
+            this.defaultCheck = response.data.result.articleOriginIdList ? response.data.result.articleOriginIdList : []
             // this.$refs.tree.setCheckedKeys(['1108265560111714304'])
             // this.$message.success('操作成功')
             // this.$emit('update:dialogVisible', false)
@@ -82,19 +82,20 @@ export default {
       this.$emit('update:dialogVisible', false)
     },
     confirmSave() {
+      console.log(this.$refs.tree.getCheckedNodes())
+      console.log(this.userInfor)
       let params = {
         userId: this.userInfor.userId,
-        channelIdList: this.$refs.tree.getCheckedNodes().map((ele) => {
-          return ele.channelId
+        articleOriginIdList: this.$refs.tree.getCheckedNodes().map((ele) => {
+          return ele.id
         })
       }
       return new Promise((resolve, reject) => {
-        setDataAccess(params)
+        setSourceAccess(params)
           .then((response) => {
             this.$message.success('操作成功')
             this.$emit('update:dialogVisible', false)
             this.$emit('handelSuccess')
-            this.$store.dispatch('GetColumnAll')
             resolve()
           })
           .catch((error) => {

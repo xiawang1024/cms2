@@ -17,6 +17,14 @@ export function editDocument(queryObj) {
     data: queryObj
   })
 }
+// 修改引用文章
+export function editQuoteDocument(queryObj) {
+  return request({
+    url: '/cms/article/modifyrefertitlebyarticleid',
+    method: 'post',
+    data: queryObj
+  })
+}
 //创建文章
 export function createDocument(data) {
   return request({
@@ -80,6 +88,20 @@ export function moveTo(articleId,channelId) {
   })
 }
 // 引用到
+export function quoteTo(articleId,channelId) {
+  return request({
+    url: `/cms/article/refers/${articleId}/${channelId}`,
+    method: 'get'
+  })
+}
+
+// 引用文章详情
+export function documentQuoteInfor(id) {
+  return request({
+    url: '/cms/article/findarticlebyreferarticleid/' + id,
+    method: 'get'
+  })
+}
 // 获取文章详情
 export function documentInfor(id) {
   return request({

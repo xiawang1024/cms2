@@ -4,13 +4,13 @@
       <el-tab-pane label="基本内容" name="basicContent">
         <BasicContent :active-name="activeName"/>
       </el-tab-pane>
-      <el-tab-pane label="图片和附件" name="picturesAndAccessories">
+      <el-tab-pane label="图片和附件" name="picturesAndAccessories" v-if="contextMenu.articleType !== 3">
         <PicturesAndAccessories :prop-information="docInformation" :active-name="activeName" @docInfor="docInfor"/>
       </el-tab-pane>
-      <el-tab-pane label="相关文档" name="relatedDocuments" v-if="contextMenu.docId">
+      <el-tab-pane label="相关文档" name="relatedDocuments" v-if="contextMenu.docId && contextMenu.articleType !== 3">
         <RelatedDocuments :active-name="activeName"/>
       </el-tab-pane>
-      <el-tab-pane label="直播消息" name="liveInformation" v-if="contextMenu.docId">
+      <el-tab-pane label="直播消息" name="liveInformation" v-if="contextMenu.docId && contextMenu.articleType !== 3">
         <LiveInfor :active-name="activeName"/>
       </el-tab-pane>
       <el-tab-pane label="封面图" name="coverPic">

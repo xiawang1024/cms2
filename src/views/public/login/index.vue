@@ -117,6 +117,7 @@ export default {
   watch: {
     $route: {
       handler: function(route) {
+        console.log(route, 'route')
         this.redirect = route.query && route.query.redirect
       }
     }
@@ -222,14 +223,17 @@ export default {
       this.loading = true
       this.$store
         .dispatch('LoginByUsername', this.loginForm)
-        .then(() => {
+        .then((res) => {
+          console.log(this.redirect, 'this.redirect ')
           this.loading = false
           this.$router.push({ path: this.redirect || '/' })
           this.$store.dispatch('GetCurrentInfor')
           this.$store.dispatch('GetColumnAll')
         })
-        .catch(() => {
+        .catch((res) => {
           this.loading = false
+          console.log(res, 'res')
+          this.$message.error(res.error_description)
         })
     }
   }

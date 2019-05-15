@@ -11,7 +11,7 @@
           </el-form-item>
           <el-form-item label="">
             <div class="grid-content bg-purple">
-              <Tinymce ref="editor" :height="450" v-model="docContentForm.contentBody"/>
+              <Tinymce ref="editor" :height="450" :read-only="contextMenu.articleType == 3" v-model="docContentForm.contentBody"/>
             </div>
           </el-form-item>
         </el-form>
@@ -45,10 +45,10 @@
               <v-form ref="otherForm" :form-settings="otherSettings" :form-data="formData" label-width="80px" :show-button = "showButton">
                 <template slot="set">
                   <div class="set">
-                    <el-checkbox true-label="1" false-label="0" v-model="adddocSet.topFlag">置顶</el-checkbox>
-                    <el-checkbox true-label="1" false-label="0" v-model="adddocSet.hiddenFlag">隐身</el-checkbox>
+                    <el-checkbox true-label="1" false-label="0" v-model="adddocSet.topFlag" :disabled="contextMenu.articleType == 3">置顶</el-checkbox>
+                    <el-checkbox true-label="1" false-label="0" v-model="adddocSet.hiddenFlag" :disabled="contextMenu.articleType == 3">隐身</el-checkbox>
                     <span class = "extractCode">提取码</span>
-                    <el-input v-model="adddocSet.extractCode"/>
+                    <el-input v-model="adddocSet.extractCode" :disabled="contextMenu.articleType == 3"/>
                   </div>
                 </template>
               </v-form>
@@ -61,7 +61,7 @@
 </template>
 <script>
 import Tinymce from '@/components/Tinymce'
-import { createDocument, editDocument } from '@/api/cms/article'
+import { createDocument, editDocument, editQuoteDocument } from '@/api/cms/article'
 import { mapGetters } from 'vuex'
 export default {
   name: 'ImageText',
@@ -201,7 +201,6 @@ export default {
     },
     sourceList(val) {
       if(val.length) {
-        console.log(val)
         this.baseSettings[0].items[1].options = val
       }
     },
@@ -213,7 +212,12 @@ export default {
     if(this.sourceList.length) {
       this.baseSettings[0].items[1].options = this.sourceList
     }
-
+    // 转载禁用
+    if(this.contextMenu.articleType == 3) {
+      this.baseSettings[0].items.forEach((ele) => {
+        ele.disabled = true
+      })
+    }
     this.docContentForm = {
       articleTitle: this.docInfor.articleTitle,
       contentTitle: this.docInfor.contentTitle,
@@ -269,23 +273,35 @@ export default {
     editDoc(formData, saveType) {
       console.log(saveType, 'edit')
       var _this = this
-      return new Promise((resolve, reject) => {
-        editDocument(formData)
-          .then((response) => {
-            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            if(saveType === 'saveOnly') {
-              this.goEdit(response.data.result.articleId)
-            } else {
+      if(this.contextMenu.articleType == 3) {
+        return new Promise((resolve, reject) => {
+          editQuoteDocument(formData)
+            .then((response) => {
+              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
               this.goBack()
-            } 
-            resolve()
-            _this.isLoading = false
-          })
-          .catch((error) => {
-            _this.isLoading = false
-            reject(error)
-          })
-      })
+              resolve()
+              _this.isLoading = false
+            })
+            .catch((error) => {
+              _this.isLoading = false
+              reject(error)
+            })
+        })
+      } else {
+        return new Promise((resolve, reject) => {
+          editDocument(formData)
+            .then((response) => {
+              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+              this.goBack()
+              resolve()
+              _this.isLoading = false
+            })
+            .catch((error) => {
+              _this.isLoading = false
+              reject(error)
+            })
+        })
+      }
     },
     getSubmitData() {
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
@@ -356,7 +372,8 @@ export default {
         })
       })
       resoultObj.tagIdsList = chooseTags
-      resoultObj.articleType = 0
+      // resoultObj.articleType = 0
+      resoultObj.articleType = this.contextMenu.articleType ? this.contextMenu.articleType : 0
       delete resoultObj.set
       delete resoultObj.tagIds
       if (!resoultObj.contentBody) {

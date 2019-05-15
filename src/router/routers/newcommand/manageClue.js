@@ -12,7 +12,7 @@ const manageClue = {
   meta: {
     title: 'manageClue',
     icon: 'manageClue',
-    role: 'cms'
+    role: 'newsCommand'
   },
   name: 'manageClue',
   children: [{
@@ -25,7 +25,7 @@ const manageClue = {
       meta: {
         title: 'discloseList',
         icon: 'discloseList',
-        role: 'cms'
+        role: 'newsCommand'
       }
     },
     {
@@ -35,7 +35,7 @@ const manageClue = {
     meta: {
       title: 'addDisclose',
       icon: 'addDisclose',
-    role: 'cms'
+    role: 'newsCommand'
     },
     hidden: true
   },
@@ -46,7 +46,7 @@ const manageClue = {
     meta: {
       title: 'discloseDetails',
       icon: 'discloseDetails',
-    role: 'cms'
+    role: 'newsCommand'
     },
     hidden: true
   }
