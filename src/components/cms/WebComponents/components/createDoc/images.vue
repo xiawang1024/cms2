@@ -21,6 +21,7 @@
 <script>
 import { createDocument, editDocument } from '@/api/cms/article'
 import { mapGetters } from 'vuex'
+import { handleDate } from '@/utils/date-filter'
 export default {
   name: 'Images',
   props: {
@@ -291,6 +292,9 @@ export default {
         delete resoultObj.btn
         if (!resoultObj.contentBody) {
           resoultObj.contentBody = ''
+        }
+        if(resoultObj.publishTime) {
+          resoultObj.publishTime =  handleDate(resoultObj.publishTime)
         }
         if(this.contextMenu.docId) {
           if(this.getDocInformation.attachmentsList) {

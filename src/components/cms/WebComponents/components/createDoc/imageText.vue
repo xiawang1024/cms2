@@ -63,6 +63,7 @@
 import Tinymce from '@/components/Tinymce'
 import { createDocument, editDocument } from '@/api/cms/article'
 import { mapGetters } from 'vuex'
+import { handleDate } from '@/utils/date-filter'
 export default {
   name: 'ImageText',
   components: { Tinymce },
@@ -362,6 +363,13 @@ export default {
       if (!resoultObj.contentBody) {
         resoultObj.contentBody = ''
       }
+     
+      if(resoultObj.publishTime) {
+        resoultObj.publishTime =  handleDate(resoultObj.publishTime)
+      }
+      // console.log(Date.parse(resoultObj.publishTime), 2222)
+      // console.log(handleDate(resoultObj.publishTime), 2222)
+      
       // 展现形式null处理
 
       this.$refs[formName].validate((valid) => {
