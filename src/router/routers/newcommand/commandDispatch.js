@@ -12,7 +12,7 @@ const commandDispatch = {
   meta: {
     title: 'commandDispatch',
     icon: 'commandDispatch',
-    role: 'newsCommand'
+    role: 'newsCommand:dispath'
   },
   name: 'commandDispatch',
   children: [{
@@ -26,7 +26,7 @@ const commandDispatch = {
       meta: {
         title: 'allTask',
         icon: 'allTask',
-    role: 'newsCommand'
+        role: 'newsCommand:allTask'
       }
     },
     {
@@ -40,7 +40,7 @@ const commandDispatch = {
       meta: {
         title: 'myTask',
         icon: 'myTask',
-    role: 'newsCommand'
+        role: 'newsCommand:myTask'
       },
     },
   ]

@@ -13,7 +13,7 @@ const webSite = {
   meta: {
     title: 'filesClue',
     icon: 'filesClue',
-    role: 'newsCommand'
+    role: 'newsCommand:filesClue'
   },
   children: [{
     /**
@@ -25,7 +25,7 @@ const webSite = {
     meta: {
       title: 'filesClue',
       icon: 'filesClue',
-      role: 'newsCommand'
+      role: 'newsCommand:filesClue'
     },
     redirect: '/newCommand/manageClue/discloseList', 
     hidden: true

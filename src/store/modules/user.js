@@ -181,16 +181,6 @@ const user = {
         getUserInfo(state.token)
           .then((response) => {
             const data = response.data
-            // data.user_authorities.permissionCodeList = [
-            //   "platform:application",
-            //   "platform:operation",
-            //   "platform:permission",
-            //   "platform:tenant",
-            //   'cms',
-            //   'userCenter',
-            //   'program',
-            //   'newsCommand'
-            // ]
             if (data.user_authorities.permissionCodeList && data.user_authorities.permissionCodeList.length > 0) {
               // 验证返回的authorities是否是一个非空数组
 
@@ -232,8 +222,8 @@ const user = {
         logout(state.token)
           .then(() => {
             commit('SET_TOKEN', '')
-
             commit('SET_AUTHORITIES', [])
+            commit('SET_SYS_TYPE', '')
             removeAuth()
             resolve()
           })
@@ -247,7 +237,7 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise((resolve) => {
         commit('SET_TOKEN', '')
-
+        commit('SET_SYS_TYPE', '')
         commit('SET_AUTHORITIES', [])
         removeAuth()
         resolve()
