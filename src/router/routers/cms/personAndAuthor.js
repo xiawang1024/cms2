@@ -9,7 +9,7 @@ const personAndAuthor = {
   meta: {
     title: 'personAndAuthor',
     icon: 'personAndAuthor',
-    role: 'cms'
+    role: 'cms:permissionGroup'
   },
   children: [
     {
@@ -19,7 +19,7 @@ const personAndAuthor = {
       path: 'permissionGroup',
       component: () => import(`@/${path}/permissionGroup`),
       name: 'permissionGroup',
-      meta: { title: 'permissionGroup', icon: 'permissionGroup', role: 'cms' }
+      meta: { title: 'permissionGroup', icon: 'permissionGroup', role: 'cms:permissionGroup' }
     },
     // {
     //   /**

@@ -12,7 +12,7 @@ const operationRecord = {
   meta: {
     title: 'operationsRecord',
     icon: 'docSource',
-    role: 'newsCommand'
+    role: 'newsCommand:operationsRecord'
   },
   children: [{
     /**
@@ -24,7 +24,7 @@ const operationRecord = {
     meta: {
       title: 'operationsRecord',
       icon: 'docSource',
-      role: 'newsCommand'
+      role: 'newsCommand:operationsRecord'
     },
     redirect: '/newCommand/manageClue/discloseList', 
     hidden:true

@@ -10,9 +10,8 @@ const webSite = {
   path: `/${cmsPath}/website`,
   component: Layout,
   // redirect: `${cmsPath}/website/doc`,
-  meta: { title: 'webSite', icon: 'webSite', role: 'cms' },
+  meta: { title: 'webSite', icon: 'webSite', role: 'cms:webSite' },
   name: 'website',
-  // role: 'cms:article1133',
   children: [
     /**
        * 发布文章

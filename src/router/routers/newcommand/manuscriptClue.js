@@ -12,7 +12,7 @@ const manuscriptClue = {
   meta: {
     title: 'manuscriptClue',
     icon: 'manuscriptClue',
-    role: 'cms'
+    role: 'newsCommand:manuscriptClue'
   },
   name: 'manuscriptClue',
   children: [{
@@ -25,7 +25,7 @@ const manuscriptClue = {
       meta: {
         title: 'myManuscript',
         icon: 'myManuscript',
-    role: 'cms'
+        role: 'newsCommand:myManuscript'
       },
       redirect: '/newCommand/manageClue/discloseList', 
     },
@@ -39,7 +39,7 @@ const manuscriptClue = {
       meta: {
         title: 'pendingManuscript',
         icon: 'pendingManuscript',
-    role: 'cms'
+        role: 'newsCommand:pendingManuscript'
       },
       redirect: '/newCommand/manageClue/discloseList', 
     },
@@ -53,7 +53,7 @@ const manuscriptClue = {
       meta: {
         title: 'commonManuscript',
         icon: 'commonManuscript',
-    role: 'cms'
+        role: 'newsCommand:commonManuscript'
       },
       redirect: '/newCommand/manageClue/discloseList', 
     },
