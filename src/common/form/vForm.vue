@@ -180,7 +180,12 @@
             </template>
             <!-- 日期和时间选择 -->
             <template v-else-if="item.type=='datetime'">
-              <el-date-picker v-model="formModel[item.name]" :disabled="item.disabled" :placeholder="item.placeholder || '选择日期'" type="datetime"/>
+              <el-date-picker
+                v-model="formModel[item.name]"
+                :placeholder="item.placeholder || '选择日期'"
+                :clearable="item.clearable"
+                type="datetime"
+              />
             </template>
             <!-- 时间范围选择 -->
             <template v-else-if="item.type=='timerange'">
