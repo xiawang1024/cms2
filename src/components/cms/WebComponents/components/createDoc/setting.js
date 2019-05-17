@@ -17,7 +17,8 @@ export const otherSettings = [
       {
         label: '发布时间',
         name: 'publishTime',
-        type: 'datetime'
+        type: 'datetime',
+        // required: true,
       },
       {
         label: '设置',
@@ -94,7 +95,8 @@ export const defultItems = [
   {
     label: '发布时间',
     name: 'publishTime',
-    type: 'datetime'
+    type: 'datetime',
+    // required: true
   },
   {
     label: '设置',
@@ -206,10 +208,11 @@ export const imagesSeting = [
         type:'number',
         placeholder: '请输入点击量'
       },{
-        label:'创建时间',
-        name:'createTime',
+        label:'发布时间',
+        name:'publishTime',
         type:'datetime',
-        placeholder: '请选择'
+        placeholder: '请选择',
+        // required: true,
       },
       {
         label: '设置',

@@ -216,10 +216,23 @@ export default {
         delete resoultObj.tagIds
         if(this.contextMenu.docId) {
           resoultObj.articleId = this.contextMenu.docId
+          // this.editDoc(resoultObj, saveType)
+          if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
+            resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+          } else {
+            resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
+          }
+          resoultObj.articleId = this.contextMenu.docId
           this.editDoc(resoultObj, saveType)
         } else {
-          resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
-          resoultObj.coverImagesList =this.getDocInformation.coverImagesList
+          if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
+            resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+            resoultObj.coverImagesList =this.getDocInformation.coverImagesList
+          } else {
+            resoultObj.articleAttachmentsList = []
+          }
+          // resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+          // resoultObj.coverImagesList =this.getDocInformation.coverImagesList
           this.createDoc(resoultObj, saveType)
         }
       })

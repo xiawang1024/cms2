@@ -182,6 +182,7 @@ export default {
       //   }
       // }
       if(oldval == 'picturesAndAccessories') {
+        console.log(this.getSubmitData(), 'picturesAndAccessoriesData')
         this.$store.dispatch('setAttachmentsList', this.getSubmitData())
       }
     }

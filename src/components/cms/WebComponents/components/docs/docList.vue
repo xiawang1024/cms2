@@ -69,22 +69,30 @@
         label="创建时间"
         width="155"
         show-overflow-tooltip
-      />
+      >
+        <template slot-scope="scope">
+          {{ scope.row.createTime|timeFilter }}
+        </template>
+      </el-table-column>
       <el-table-column
         prop="publishTime"
         label="发布时间"
         width="155"
         show-overflow-tooltip
-      />
+      >
+        <template slot-scope="scope">
+          {{ scope.row.publishTime|timeFilter }}
+        </template>
+      </el-table-column>
       <el-table-column prop="createUser" label="撰稿人" width="100" show-overflow-tooltip/>
       <el-table-column prop="clickNum" label="点击" width="50"/>
-      <el-table-column fixed="right" label="操作" width="140">
+      <el-table-column fixed="right" label="操作" width="110">
         <template slot-scope="scope">
           <el-button v-if="checkAuth('cms:article:stick')" type="text" size="small" @click.stop="setTop(scope.row.articleId)">置顶</el-button>
           <el-button v-if="checkAuth('cms:article:edit')" type="text" size="small" @click.stop="editDoc(scope.row)">编辑</el-button>
           <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">撤销</el-button>
           <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">审核</el-button> -->
-          <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">删除</el-button>
+          <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -350,6 +358,7 @@ export default {
     editDoc(row) {
       const select = { id: '1', label: '新建文档', docId: row.articleId, articleType: row.articleType}
       this.$store.dispatch('setContextMenu', select)
+      this.$store.dispatch('setAttachmentsList', [])
     }
   }
 }

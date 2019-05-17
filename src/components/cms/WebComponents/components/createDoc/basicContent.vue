@@ -84,6 +84,7 @@ export default {
   watch: {
     // 存储文章信息
     activeName(val, oldVal) {
+      console.log(oldVal, '3333')
       if(oldVal == 'basicContent' && this.typeForm.articleType == 0) {
         this.$store.dispatch('setBaseInfor', this.$refs.imageText.getSubmitData())
       }
