@@ -198,6 +198,7 @@
               <el-date-picker
                 v-model="formModel[item.name]"
                 :placeholder="item.placeholder || '选择日期'"
+                :clearable="item.clearable"
                 type="datetime"
               />
             </template>

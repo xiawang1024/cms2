@@ -168,7 +168,8 @@ export default {
               this.$nextTick(() => {
                 _this.docInfor = {
                   hiddenFlag: '0',
-                  topFlag: '0'
+                  topFlag: '0',
+                  publishTime: new Date()
                 }
               })
             }
