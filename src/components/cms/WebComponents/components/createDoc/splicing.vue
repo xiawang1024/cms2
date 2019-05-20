@@ -246,7 +246,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .splicing-wrap {
-  margin: 10px 0;
+  // margin: 10px 0;
   .set {
     .extractCode {
       margin-left: 10px;
