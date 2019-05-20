@@ -9,7 +9,7 @@
       :button-array="buttonArray"
       @list-click="listClick()"
       @create-click="createClick" @able-click="enableFlagClick('1')" @disable-click="enableFlagClick('0')"
-      @role-click="roleClick"
+      @role-click="roleClick" @roles-click="rolesClick"
       @edit-click="editClick"/>
     <!-- 表格的数据展示，参数放置到 tableConfig 中进行传入。 -->
     <!-- 分页条处理：每页条数变化、当前页页码条数、表格选中数据监听 -->
@@ -43,7 +43,7 @@ import PapSearch from '@/components/pap/search/index'
 import PapTable from '@/components/pap/table/index'
 import ButtonGroup from '@/components/pap/button-group/index'
 import ElFormRenderer from '@/components/el-form-renderer'
-import { UserList, UserCreate, UserUpdate, UserRoleRelSave, UserRoleRelRoleInfoByUserId, UserModifyEnableFlagByUserIds, UserCheckCode } from '@/api/user/user'
+import { UserList, UserCreate, UserUpdate, UserRoleRelSave, UsersRolesRelSave, UserRoleRelRoleInfoByUserId, UserModifyEnableFlagByUserIds, UserCheckCode } from '@/api/user/user'
 import Role from '@/views/user/role'
 
 export default {
@@ -77,8 +77,13 @@ export default {
             {name: '禁用', auth: true, icon: 'el-icon-circle-close-outline', click: 'disable-click'}
           ]
         },
+        {name: '批量操作', icon:'el-icon-document', click: 'query',
+          details:[
+            {name: '角色分配', auth: true, icon: 'el-icon-edit', click: 'roles-click'}
+          ]
+        },
       ],
-      
+
       // 表格
       tableConfig: {
         // 多页选中数据回显，分页记录保存选中的数据
@@ -96,11 +101,11 @@ export default {
       },
       // 表格选择的值
       multipleSelection: [],
-      
+
       // 搜索框
       searchForm: [
         {$id: 'userName', $type: 'input', $label: '姓名', $default: '',
-	        $el: { placeholder: '请输入', style: 'width: 200px' }
+          $el: { placeholder: '请输入', style: 'width: 200px' }
         }
       ],
       // 用户管理
@@ -135,6 +140,8 @@ export default {
       dialogRoleManagerButtonArrayProps: [
         {name: '搜索', auth: 'ROLE:LIST', click: 'list-click', icon: 'el-icon-search'},
       ],
+      // 弹窗是单数据操作还是批量数量操作
+      dialogRoleManagerOperationType: 'ONE',
       dialogRoleManagerTreeButtonFlag: false,
       filename: ''
       /* eslint-disable */
@@ -303,6 +310,7 @@ export default {
     roleClick () {
       var _this = this
       _this.dialogRoleManagerUserId = _this.multipleSelection[0].userId
+      _this.dialogRoleManagerOperationType = 'ONE'
       _this.dialogRoleManagerVisible = true
       _this.$nextTick(function () {
         // 父组件调用子组件方法，在上述方法将部门下用户带出来之后，重新渲染表格数据，这样可以保证表格的数据选中效果
@@ -326,37 +334,84 @@ export default {
         })
       })
     },
+    rolesClick () {
+      var _this = this
+      _this.dialogRoleManagerOperationType = 'MUTI'
+      _this.dialogRoleManagerVisible = true
+      _this.$nextTick(function () {
+        // 父组件调用子组件方法，在上述方法将部门下用户带出来之后，重新渲染表格数据，这样可以保证表格的数据选中效果
+        _this.$refs.dialogRoleRef.getList()
+        _this.$refs.dialogRoleRef.$refs.tree.setCheckedKeys([])
+      })
+    },
     dialogRoleManagerSubmit () {
       var _this = this
       var roleArrays = _this.$refs.dialogRoleRef.$refs.tree.getCheckedKeys()
-      var obj = {
-        userId: _this.dialogRoleManagerUserId,
-        roleIdDetails: roleArrays
-      }
-      return new Promise((resolve, reject) => {
-        UserRoleRelSave(obj).then(async res => {
-          console.log(res)
-          const h = this.$createElement;
-          if (res.data.code == 0) {
-            this.$notify({
-              title: '用户角色绑定',
-              message: h('i', {style: 'color: teal'}, "用户角色成功!")
-            })
-            _this.dialogRoleManagerVisible = false
-          } else {
-            this.$notify({
-              title: '用户角色绑定',
-              message: h('i', {style: 'color: teal'}, res.data.data)
-            })
-          }
-          _this.$refs["user-table"].$refs["pap-base-table"].clearSelection()
-          // 结束
-          resolve()
-        }).catch(err => {
-          console.log('err: ', err)
-          reject(err)
+      if(_this.dialogRoleManagerOperationType == 'ONE') {
+        var obj = {
+          userId: _this.dialogRoleManagerUserId,
+          roleIdDetails: roleArrays
+        }
+        return new Promise((resolve, reject) => {
+          UserRoleRelSave(obj).then(async res => {
+            console.log(res)
+            const h = this.$createElement;
+            if (res.data.code == 0) {
+              this.$notify({
+                title: '用户角色绑定',
+                message: h('i', {style: 'color: teal'}, "用户角色成功!")
+              })
+              _this.dialogRoleManagerVisible = false
+            } else {
+              this.$notify({
+                title: '用户角色绑定',
+                message: h('i', {style: 'color: teal'}, res.data.data)
+              })
+            }
+            _this.$refs["user-table"].$refs["pap-base-table"].clearSelection()
+            // 结束
+            resolve()
+          }).catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
         })
-      })
+      }
+      if(_this.dialogRoleManagerOperationType == 'MUTI') {
+        var multiSelection = _this.$refs["user-table"].multipleSelection
+        var userIds = []
+        for(var i = 0; i < multiSelection.length; i++) {
+          userIds.push(multiSelection[i].userId)
+        }
+        var obj = {
+          userIdDetails: userIds,
+          roleIdDetails: roleArrays
+        }
+        return new Promise((resolve, reject) => {
+          UsersRolesRelSave(obj).then(async res => {
+            console.log(res)
+            const h = this.$createElement;
+            if (res.data.code == 0) {
+              this.$notify({
+                title: '用户角色绑定',
+                message: h('i', {style: 'color: teal'}, "用户角色成功!")
+              })
+              _this.dialogRoleManagerVisible = false
+            } else {
+              this.$notify({
+                title: '用户角色绑定',
+                message: h('i', {style: 'color: teal'}, res.data.data)
+              })
+            }
+            _this.$refs["user-table"].$refs["pap-base-table"].clearSelection()
+            // 结束
+            resolve()
+          }).catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+        })
+      }
     },
     showClick () {
       console.log(this.multipleSelection)

@@ -115,6 +115,19 @@ export function UserRoleRelSave(data) {
 }
 
 /**
+ * 用户管理，批量用户分配批量角色
+ * @param data
+ * @constructor
+ */
+export function UsersRolesRelSave(data) {
+  return request({
+    url: '/userb/userrolerel/usersrolesrels',
+    method: 'POST',
+    data
+  })
+}
+
+/**
  *  UserRoleRelRoleInfoByUserId 组织机构下属用户信息关联关系查询
  * @param userId  组织机构编号
  * @constructor
