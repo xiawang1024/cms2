@@ -28,7 +28,7 @@
         <el-button
           v-else
           class="button-new-tag"
-          size="small"
+          size="mini"
           icon="el-icon-plus"
           @click="showInput"
         >输入标签或搜索已有标签</el-button>

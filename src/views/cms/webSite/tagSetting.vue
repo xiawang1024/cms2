@@ -136,7 +136,7 @@
         </el-row>
       </el-form>
     </div>
-    <el-button type="primary" size="small" class="submit-btn" @click="submit" :loading="isLoading">保存</el-button>
+    <el-button type="primary" size="mini" class="submit-btn" @click="submit" :loading="isLoading">保存</el-button>
   </div>
 </template>
 

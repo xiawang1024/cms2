@@ -80,3 +80,18 @@
     display: block
   }
 }
+.el-table--mini {
+  .el-table__body-wrapper{
+    .el-table__body{
+      td: {
+        padding: 0px !important;
+      }
+      th{
+        padding:0px !important;
+      }
+    }
+  }
+}
+.color-text {
+  color: red
+}

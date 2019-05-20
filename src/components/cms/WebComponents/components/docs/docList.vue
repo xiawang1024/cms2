@@ -6,13 +6,16 @@
       :highlight-current-row="true"
       tooltip-effect="dark"
       style="width: 100%"
-      size="mini"
       @selection-change="handleSelectionChange"
       @row-click="rowClick"
       :row-class-name="tableRowClassName"
     >
-      <el-table-column type="selection" width="55"/>
-      <el-table-column prop="articleId" label="ID/序号" width="150" show-overflow-tooltip/>
+      <el-table-column type="selection" width="40"/>
+      <el-table-column prop="articleId" label="ID/序号" width="150" show-overflow-tooltip>
+        <template slot-scope="scope">
+          <span class="article-id">{{ scope.row.articleId }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="articleTitle" label="标题" min-width="300" show-overflow-tooltip>
         <template slot-scope="scope">
           <span v-if="checkAuth('cms:article:stick')" class="titleClick" @click="editDoc(scope.row)">{{ scope.row.articleTitle }}</span>
@@ -36,7 +39,7 @@
       </el-table-column>
       <el-table-column prop="articleType" label="类型" width="50">
         <template slot-scope="scope">
-          <span v-if="scope.row.articleType == 0">图文</span>
+          <span v-if="scope.row.articleType == 0" >图文</span>
           <span v-if="scope.row.articleType == 1">图集</span>
           <span v-if="scope.row.articleType == 2">拼条</span>
           <span v-if="scope.row.articleType == 3">引用</span>
@@ -64,24 +67,32 @@
       <el-table-column
         prop="createTime"
         label="创建时间"
-        width="135"
+        width="155"
         show-overflow-tooltip
-      />
+      >
+        <template slot-scope="scope">
+          {{ scope.row.createTime|timeFilter }}
+        </template>
+      </el-table-column>
       <el-table-column
         prop="publishTime"
         label="发布时间"
-        width="135"
+        width="155"
         show-overflow-tooltip
-      />
+      >
+        <template slot-scope="scope">
+          {{ scope.row.publishTime|timeFilter }}
+        </template>
+      </el-table-column>
       <el-table-column prop="createUser" label="撰稿人" width="100" show-overflow-tooltip/>
       <el-table-column prop="clickNum" label="点击" width="50"/>
-      <el-table-column fixed="right" label="操作" width="220">
+      <el-table-column fixed="right" label="操作" width="110">
         <template slot-scope="scope">
           <el-button v-if="checkAuth('cms:article:stick')" type="text" size="small" @click.stop="setTop(scope.row.articleId)">置顶</el-button>
           <el-button v-if="checkAuth('cms:article:edit')" type="text" size="small" @click.stop="editDoc(scope.row)">编辑</el-button>
           <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">撤销</el-button>
           <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">审核</el-button> -->
-          <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">删除</el-button>
+          <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -106,6 +117,20 @@ export default {
       type: Array,
       default: ()=> {
         []
+      }
+    },
+    pageNum: {
+      type: Number,
+      default: 1
+    },
+    pageSize: {
+      type: Number,
+      default: 10
+    },
+    searchData: {
+      type: Object,
+      default: ()=> {
+        return {}
       }
     }
   },
@@ -141,8 +166,10 @@ export default {
     },
     // 文章排序
     articalSort(data) {
+      console.log(this.searchData)
       return new Promise((resolve, reject) => {
-        articalSort(data)
+        let params = Object.assign(data, this.searchData)
+        articalSort(params, this.pageNum, this.pageSize)
           .then((response) => {
             this.$message.success('排序成功')
            
@@ -331,6 +358,7 @@ export default {
     editDoc(row) {
       const select = { id: '1', label: '新建文档', docId: row.articleId, articleType: row.articleType}
       this.$store.dispatch('setContextMenu', select)
+      this.$store.dispatch('setAttachmentsList', [])
     }
   }
 }
@@ -365,9 +393,20 @@ $color-blue: #3498db;
   width: 100%;
   // padding: 0 10px;
   box-sizing: border-box;
+  .hover-color{
+    &:hover{
+      color: #67C23A;
+    }
+  }
+  .fz-16{
+    font-size: 16px;
+  }
   .titleClick{
     cursor: pointer;
     color: #409EFF;
+  }
+  .article-id{
+    font-size: 12px;
   }
   .el-table{
     .top-row {

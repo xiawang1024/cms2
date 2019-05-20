@@ -1,7 +1,7 @@
 <template>
   <div class="extends-word">
     <div class="extends-word-add">
-      <el-button type="primary" @click="handelWord('add')" size="small">创建扩展字段</el-button>
+      <el-button type="primary" @click="handelWord('add')" size="mini">创建扩展字段</el-button>
     </div>
     <el-table :data="extFieldsList" style="width: 100%">
       <el-table-column prop="label" label="字段名称" min-width="180"/>
@@ -18,10 +18,10 @@
           <span v-if="scope.row.required === true">是</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="120">
+      <el-table-column label="操作" width="150" fixed="right">
         <template slot-scope="scope">
-          <el-button type="text" @click="handelWord('edit', scope.row)">编辑</el-button>
-          <el-button type="text" @click="wordDelete(scope.row)">删除</el-button>
+          <el-button type="primary" size="mini" @click="handelWord('edit', scope.row)">编辑</el-button>
+          <el-button type="danger" size="mini" @click="wordDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -115,6 +115,7 @@ export default {
     margin: 30px;
     .extends-word-add {
       text-align: right;
+      margin-bottom:22px;
     }
   }
 </style>

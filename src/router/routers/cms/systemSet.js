@@ -146,6 +146,50 @@ const systemSet = {
       name: 'Kvdetail',
       meta: { title: 'Kvdetail', icon: 'kvGroup', role: 'cms' },
       hidden: true
+    },
+    {
+      /**
+       * app配置
+       */
+      path: 'appConfig',
+      component: () => import(`@/${path}/appConfig`),
+      name: 'appConfig',
+      meta: { title: 'appConfig', icon: 'appConfig', role: 'cms' },
+      
+    },
+    {
+      /**
+       * 导航列表
+       */
+      path: 'appTabList',
+      component: () => import(`@/${path}/appTabList`),
+      name: 'appTabList',
+      meta: { title: 'appTabList', icon: 'appConfig', role: 'cms' },
+      hidden:true
+      
+    },
+    
+    {
+      /**
+       * app顶部列表
+       */
+      path: 'appTopList',
+      component: () => import(`@/${path}/appTopList`),
+      name: 'appTopList',
+      meta: { title: 'appTopList', icon: 'appConfig', role: 'cms' },
+      hidden:true
+      
+    },
+    {
+      /**
+       * app列表页面
+       */
+      path: 'appPages',
+      component: () => import(`@/${path}/appPages`),
+      name: 'appPages',
+      meta: { title: 'appPages', icon: 'appConfig', role: 'cms' },
+      hidden:true
+      
     }
   ]
 }

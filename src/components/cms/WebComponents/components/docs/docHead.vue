@@ -14,11 +14,10 @@
             v-for="item of currentDoc"
             :key="item.id"
             :command="item.id"
-            :divided="true"
           >{{ item.label }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-dropdown size="mini" v-if="checkAuth('cms:article:channel')" @command="handleColumn" placement="bottom-start">
+      <el-dropdown size="small" v-if="checkAuth('cms:article:channel')" @command="handleColumn" placement="bottom-start">
         <el-button type="primary" size="mini" >
           当前栏目<i class="el-icon-arrow-down el-icon--right" />
         </el-button>
@@ -27,7 +26,6 @@
             v-for="item of currentColumn"
             :key="item.id"
             :command="item.id"
-            :divided="true"
           >{{ item.label }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -300,10 +298,11 @@ export default {
       })
     },
     createDocument() {
-      const select = { id: '1', label: '新建文档' }
+      const select = { id: '1', label: '新建文档', docId: '' }
       this.$store.dispatch('setContextMenu', select)
       this.$store.dispatch('setBaseInfor', {})
       this.$store.dispatch('setAttachmentsList', [])
+      this.$store.dispatch('setCoverList', [])
     }
   }
 }

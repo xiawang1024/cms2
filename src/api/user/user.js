@@ -115,6 +115,19 @@ export function UserRoleRelSave(data) {
 }
 
 /**
+ * 用户管理，批量用户分配批量角色
+ * @param data
+ * @constructor
+ */
+export function UsersRolesRelSave(data) {
+  return request({
+    url: '/userb/userrolerel/usersrolesrels',
+    method: 'POST',
+    data
+  })
+}
+
+/**
  *  UserRoleRelRoleInfoByUserId 组织机构下属用户信息关联关系查询
  * @param userId  组织机构编号
  * @constructor
@@ -141,6 +154,61 @@ export function UserRoleRelUserInfoByRoleId(roleId) {
 export function UserCheckCode(userName) {
   return request({
     url: '/userb/user/checkusername/' + userName,
+    method: 'GET'
+  })
+}
+
+/**
+ * 坚持当前输入的用户名密码是否正确
+ * @param userName
+ * @param password
+ * @constructor
+ */
+export function UserNoAuthCheckUserInfo(userName, password) {
+  return request({
+    url: '/userb/portal/noauth/checkuserinfo?userName=' + userName + '&password=' + password,
+    method: 'GET'
+  })
+}
+
+/**
+ * google auth 二维码
+ * @param userName
+ * @param password
+ * @param secretKey
+ * @constructor
+ */
+export function UserNoAuthQrCode(userName, password, secretKey) {
+  return request({
+    url:  '/userb/portal/noauth/googleauthqrcode?userName=' + userName + '&password=' + password + '&secretKey=' + secretKey,
+    method: 'GET'
+  })
+}
+
+/**
+ * google auth 二次校验绑定
+ * @param userName
+ * @param password
+ * @param secretKey
+ * @constructor
+ */
+export function UserNoAuthQrCodeBinding(userName, password, secretKey) {
+  return request({
+    url:  '/userb/portal/noauth/bindqrcode?userName=' + userName + '&password=' + password + '&secretKey=' + secretKey,
+    method: 'GET'
+  })
+}
+
+/**
+ * google auth 二次校验
+ * @param userName
+ * @param password
+ * @param pubKey
+ * @constructor
+ */
+export function UserNoAuthGoogleDoubleCheck(userName, password, pubKey) {
+  return request({
+    url:  '/userb/portal/noauth/checkKey?userName=' + userName + '&password=' + password + '&pubKey=' + pubKey,
     method: 'GET'
   })
 }

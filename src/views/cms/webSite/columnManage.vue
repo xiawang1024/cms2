@@ -4,7 +4,7 @@
       <v-search :search-settings="searchSettings" @search="searchItem"/>
     </div>
     <div class="tool-bar">
-      <el-button type="primary" v-if="checkAuth('cms:channel:add')" @click="columnAddEdit(true, 'father')" size="small">添加</el-button>
+      <el-button type="primary" v-if="checkAuth('cms:channel:add')" @click="columnAddEdit(true, 'father')" size="mini">添加</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%">
       <el-table-column prop="channelName" label="栏目名称" min-width="250" show-overflow-tooltip>
@@ -17,7 +17,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="channelCode" label="栏目编码" min-width="80"/>
+      <el-table-column prop="channelCode" label="栏目编码" min-width="100"/>
       <el-table-column prop="hiddenFlag" label="状态">
         <template slot-scope="scope">
           <span v-if="scope.row.hiddenFlag == 1">隐藏</span>
@@ -267,6 +267,7 @@ export default {
   margin:30px;
   .tool-bar {
     margin-top:22px;
+    margin-bottom:22px;
   }
   .pagination {
     margin-top:20px;
@@ -290,11 +291,11 @@ export default {
       display: inline-block;
       vertical-align: middle;
     }
-    tr {
-      td {
-        padding:0px;
-      }
-    }
+    // tr {
+    //   td {
+    //     padding:0px;
+    //   }
+    // }
   }
 }
 </style>

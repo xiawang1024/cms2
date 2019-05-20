@@ -32,7 +32,7 @@
                 style="height:100%;"
               > 
                 <div>
-                  <el-button type="primary" size="small" @click="saveDocument">添加</el-button>
+                  <el-button type="primary" size="mini" @click="saveDocument">添加</el-button>
                   <!-- <el-button type="primary" size="small" @click="choosed">选中</el-button> -->
                 </div>
                 <!-- <document-lists ref="multipleSelect" :table-data="documentsData" :multiple = "list"/> -->

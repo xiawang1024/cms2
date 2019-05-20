@@ -16,9 +16,9 @@
         :on-remove="handleRemove"
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
-        class="editor-slide-upload"
+        class="upload-file"
         :action="upURL"
-        list-type="picture-card"
+       
       >
         <el-button
           size="small"
@@ -75,6 +75,8 @@ export default {
     handleSuccess(response, file) {
       const uid = file.uid
       const objKeyArr = Object.keys(this.listObj)
+      console.log(objKeyArr, 'objKeyArr')
+      console.log(this.listObj, 'this.listObj')
       for (let i = 0, len = objKeyArr.length; i < len; i++) {
         if (this.listObj[objKeyArr[i]].uid === uid) {
           this.listObj[objKeyArr[i]].url = baseUrl.DOWN_URL + '/' + response.result.filePath,
@@ -82,6 +84,7 @@ export default {
           return
         }
       }
+      this.handleSubmit()
     },
     handleRemove(file) {
       const uid = file.uid
@@ -94,20 +97,28 @@ export default {
       }
     },
     beforeUpload(file) {
+      console.log(file, file)
       const _self = this
-      const _URL = window.URL || window.webkitURL
+      // const _URL = window.URL || window.webkitURL
       const fileName = file.uid
       this.listObj[fileName] = {}
       return new Promise((resolve, reject) => {
-        const img = new Image()
-        img.src = _URL.createObjectURL(file)
-        img.onload = function() {
-          _self.listObj[fileName] = {
-            hasSuccess: false,
-            uid: file.uid,
-            width: this.width,
-            height: this.height
-          }
+        // const img = new Image()
+        // img.src = _URL.createObjectURL(file)
+        // img.onload = function() {
+        //   _self.listObj[fileName] = {
+        //     hasSuccess: false,
+        //     uid: file.uid,
+        //     width: this.width,
+        //     height: this.height
+        //   }
+        // }
+        _self.listObj[fileName] = {
+          hasSuccess: false,
+          uid: file.uid,
+          width: this.width,
+          height: this.height,
+          type: file.type
         }
         resolve(true)
       })

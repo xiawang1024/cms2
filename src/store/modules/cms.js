@@ -8,8 +8,9 @@ const webSite = {
     },
     docInformation: {
       baseInfor: '',
-      attachmentsList: '',
-      relationList: ''
+      attachmentsList: [],
+      relationList: '',
+      coverImagesList: []
     }
   },
   mutations: {
@@ -30,6 +31,9 @@ const webSite = {
     },
     SET_ATTACHMENTS_LIST: (state, attachmentsList) => {
       state.docInformation.attachmentsList = attachmentsList
+    },
+    SET_COVER_LIST: (state, coverImagesList) => {
+      state.docInformation.coverImagesList = coverImagesList
     },
     SET_RELATION_LIST: (state, relationList) => {
       state.docInformation.relationList = relationList
@@ -54,6 +58,9 @@ const webSite = {
     },
     setAttachmentsList: ({ commit }, attachmentsList) => {
       commit('SET_ATTACHMENTS_LIST', attachmentsList)
+    },
+    setCoverList: ({ commit }, coverImagesList) => {
+      commit('SET_COVER_LIST', coverImagesList)
     },
     setRelationList: ({ commit }, relationList) => {
       commit('SET_RELATION_LIST', relationList)

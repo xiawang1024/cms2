@@ -3,11 +3,11 @@
     <el-row :gutter="10">
       <el-col :xs="12" :sm="12" :md="18" :lg="18" :xl="18">
         <el-form ref="docContentForm" :model="docContentForm" :rules="rules" label-width="80px" class="docContentForm">
-          <el-form-item label="文档标题" prop="articleTitle">
-            <el-input v-model="docContentForm.articleTitle" placeholder="请输入文档标题"/>
+          <el-form-item label="正文标题" prop="articleTitle">
+            <el-input v-model="docContentForm.articleTitle" maxlength="80" placeholder="请输入正文标题" />
           </el-form-item>
           <el-form-item label="首页标题" prop="contentTitle">
-            <el-input v-model="docContentForm.contentTitle" placeholder="请输入首页标题"/>
+            <el-input v-model="docContentForm.contentTitle" maxlength="80" placeholder="请输入首页标题" />
           </el-form-item>
           <el-form-item label="">
             <div class="grid-content bg-purple">
@@ -17,8 +17,9 @@
         </el-form>
         <div class="btn-list">
           <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
-          <el-button type = "primary" size="small" @click = "save('docContentForm', '0')">存草稿</el-button>
-          <el-button type = "primary" size="small" @click = "save('docContentForm', '11')">保存并发布</el-button>
+          <!-- <el-button type = "primary" size="mini" @click = "save('docContentForm', '0', 'saveOnly')">保存</el-button> -->
+          <el-button type = "primary" size="mini" @click = "save('docContentForm', '0')">存草稿</el-button>
+          <el-button type = "primary" size="mini" @click = "save('docContentForm', '11')">保存并发布</el-button>
           <!-- <el-button type = "primary" size="small" @click = "save('docContentForm')">保存并发布</el-button> -->
           <!-- <el-button type = "primary" size="small" @click = "save">保存并关闭</el-button>
           <el-button type = "primary" size="small" @click = "save">保存并发布</el-button> -->
@@ -62,6 +63,7 @@
 import Tinymce from '@/components/Tinymce'
 import { createDocument, editDocument, editQuoteDocument } from '@/api/cms/article'
 import { mapGetters } from 'vuex'
+import { handleDate } from '@/utils/date-filter'
 export default {
   name: 'ImageText',
   components: { Tinymce },
@@ -151,6 +153,7 @@ export default {
               name: 'articleOrigin',
               type: 'select',
               placeholder: '请选择',
+              required: true,
               options: []
             },
             {
@@ -244,13 +247,21 @@ export default {
         label: ''
       })
     },
-    createDoc(formData) {
+    goEdit(docId) {
+      const select = { id: '1', label: '新建文档', docId: docId}
+      this.$store.dispatch('setContextMenu', select)
+    },
+    createDoc(formData, saveType) {
       var _this = this
       return new Promise((resolve, reject) => {
         createDocument(formData)
           .then((response) => {
             _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            this.goBack()
+            if(saveType === 'saveOnly') {
+              this.goEdit(response.data.result.articleId)
+            } else {
+              this.goBack()
+            } 
             resolve()
             _this.isLoading = false
           })
@@ -260,7 +271,8 @@ export default {
           })
       })
     },
-    editDoc(formData) {
+    editDoc(formData, saveType) {
+      console.log(saveType, 'edit')
       var _this = this
       if(this.contextMenu.articleType == 3) {
         return new Promise((resolve, reject) => {
@@ -329,7 +341,7 @@ export default {
       }
       return resoultObj
     },
-    save(formName, publishType) {
+    save(formName, publishType, saveType) {
       // this.$refs.otherForm.updateRule()
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       // 获取扩展字段的值
@@ -346,6 +358,9 @@ export default {
       resoultObj.channelId = this.channelId
       resoultObj.articleStatus = publishType
       // 标签字段处理
+      if(typeof resoultObj.articleShowStyle == 'object') {
+        resoultObj.articleShowStyle = ''
+      }
       let chooseTags = []
       resoultObj.tagIds.forEach((ele) => {
         this.tagList.forEach((son) => {
@@ -365,33 +380,58 @@ export default {
       if (!resoultObj.contentBody) {
         resoultObj.contentBody = ''
       }
+     
+      if(resoultObj.publishTime) {
+        resoultObj.publishTime =  handleDate(resoultObj.publishTime)
+      }
+      // console.log(Date.parse(resoultObj.publishTime), 2222)
+      // console.log(handleDate(resoultObj.publishTime), 2222)
+      
+      // 展现形式null处理
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$refs.otherForm.getDataAsync().then(data => {
             if (!data) {
               return
             }
-            if(this.contextMenu.docId) {
-              if(this.getDocInformation.attachmentsList) {
-                resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
-              } else {
-                resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
+            this.$refs.baseForm.getDataAsync().then(data => {
+              if (!data) {
+                return
               }
-              resoultObj.articleId = this.contextMenu.docId
-              this.editDoc(resoultObj)
-            } else {
-              if(this.getDocInformation.attachmentsList) {
-                resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+              if(this.contextMenu.docId) {
+                if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
+                  resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+                } else {
+                  resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
+                }
+                resoultObj.articleId = this.contextMenu.docId
+                console.log(resoultObj.articleAttachmentsList, 'resoultObj.articleAttachmentsList')
+                this.editDoc(resoultObj, saveType)
               } else {
-                resoultObj.articleAttachmentsList = []
+                if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
+                  resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+                  resoultObj.coverImagesList =this.getDocInformation.coverImagesList
+                } else {
+                  resoultObj.articleAttachmentsList = []
+                }
+                this.createDoc(resoultObj, saveType)
               }
-              this.createDoc(resoultObj)
-            }
+            }).catch(err => {
+              console.log('====err====', err)
+            })
           }).catch(err => {
             console.log('====err====', err)
           })
         } else {
           this.$refs.otherForm.getDataAsync().then(data => {
+            if (!data) {
+              return
+            }
+          }).catch(err => {
+            console.log('====err====', err)
+          })
+          this.$refs.baseForm.getDataAsync().then(data => {
             if (!data) {
               return
             }

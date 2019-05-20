@@ -26,9 +26,9 @@
       <el-table-column prop="templateFormat" label="适用平台"/>
       <el-table-column prop="templateDescription" label="描述"/>
       <el-table-column prop="createTime" label="创建时间"/>
-      <el-table-column label="操作">
+      <el-table-column label="操作" fixed="right" width="150">
         <template slot-scope="scope">
-          <el-button size="mini" type="prime" @click="handleAlter(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="primary" @click="handleAlter(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>

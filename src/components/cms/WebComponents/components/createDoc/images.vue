@@ -10,16 +10,18 @@
         </div>
       </template>
     </v-form>
-    <div>
+    <div class="images-btn">
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
-      <el-button type = "primary" size="small" @click = "save('docContentForm', '0')">存草稿</el-button>
-      <el-button type = "primary" size="small" @click = "save('docContentForm', '11')">保存并发布</el-button>
+      <!-- <el-button type = "primary" size="mini" @click = "save('docContentForm', '0', 'saveOnly')">保存</el-button> -->
+      <el-button type = "primary" size="mini" @click = "save('docContentForm', '0')">存草稿</el-button>
+      <el-button type = "primary" size="mini" @click = "save('docContentForm', '11')">保存并发布</el-button>
     </div>
   </div>
 </template>
 <script>
 import { createDocument, editDocument } from '@/api/cms/article'
 import { mapGetters } from 'vuex'
+import { handleDate } from '@/utils/date-filter'
 export default {
   name: 'Images',
   props: {
@@ -190,13 +192,21 @@ export default {
         label: ''
       })
     },
-    createDoc(formData) {
+    goEdit(docId) {
+      const select = { id: '1', label: '新建文档', docId: docId}
+      this.$store.dispatch('setContextMenu', select)
+    },
+    createDoc(formData, saveType) {
       var _this = this
       return new Promise((resolve, reject) => {
         createDocument(formData)
           .then((response) => {
             _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            this.goBack()
+            if(saveType === 'saveOnly') {
+              this.goEdit(response.data.result.articleId)
+            } else {
+              this.goBack()
+            } 
             resolve()
             _this.isLoading = false
           })
@@ -206,13 +216,17 @@ export default {
           })
       })
     },
-    editDoc(formData) {
+    editDoc(formData, saveType) {
       var _this = this
       return new Promise((resolve, reject) => {
         editDocument(formData)
           .then((response) => {
             _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            this.goBack()
+            if(saveType === 'saveOnly') {
+              this.goEdit(response.data.result.articleId)
+            } else {
+              this.goBack()
+            } 
             resolve()
             _this.isLoading = false
           })
@@ -249,7 +263,7 @@ export default {
       }
       return resoultObj
     },
-    save(formName, publishType) {
+    save(formName, publishType, saveType) {
       this.$refs.form.getDataAsync().then(data => {
         if (!data) {
           return
@@ -279,21 +293,25 @@ export default {
         if (!resoultObj.contentBody) {
           resoultObj.contentBody = ''
         }
+        if(resoultObj.publishTime) {
+          resoultObj.publishTime =  handleDate(resoultObj.publishTime)
+        }
         if(this.contextMenu.docId) {
-          if(this.getDocInformation.attachmentsList) {
+          if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
             resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
           } else {
             resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
           }
           resoultObj.articleId = this.contextMenu.docId
-          this.editDoc(resoultObj)
+          this.editDoc(resoultObj, saveType)
         } else {
-          if(this.getDocInformation.attachmentsList) {
+          if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
             resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+            resoultObj.coverImagesList =this.getDocInformation.coverImagesList
           } else {
             resoultObj.articleAttachmentsList = []
           }
-          this.createDoc(resoultObj)
+          this.createDoc(resoultObj, saveType)
         }
       })
     }
@@ -314,6 +332,9 @@ export default {
     .el-checkbox {
       margin-right: 10px;
     }
+  }
+  .images-btn{
+    padding-left:80px;
   }
 }
 </style>
