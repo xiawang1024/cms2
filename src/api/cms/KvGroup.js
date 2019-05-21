@@ -3,6 +3,7 @@ import request from '@/utils/request'
 // import QS from "qs"
 let  Cpath='http://172.20.5.103:50350/kvconfig'
 // let Cpath="http://192.168.0.105:8089"
+// let Cpath='';
 
 //配置组管理
 //分页条件检索应用
@@ -19,7 +20,7 @@ export function getAllGroup(pageNo,pageSize,data) {
 export function groupSave(obj) {
   
   return request({
-    url: Cpath+'/kvgroup/updateKVGroup?kvGroupId='+obj.id+'&description='+obj.description+'&sort='+obj.sort+'&tag='+obj.tag,
+    url: Cpath+'/kvgroup/updateKVGroup?id='+obj.id+'&tenantId ='+obj.tenantId +'&description='+obj.description+'&tag='+obj.tag+'&sort='+obj.sort,
     method: 'put',
     
   })
