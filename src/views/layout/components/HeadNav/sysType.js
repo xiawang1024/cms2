@@ -1,24 +1,43 @@
 const sysType = [
   {
-    type: '0',
+    type: 'cms',
     value: 'CMS'
   },
   {
-    type: '1',
+    type: 'userCenter',
     value: '用户中心'
   },
   {
-    type: '2',
+    type: 'interaction',
     value: '互动中心'
   },
   {
-    type: '3',
+    type: 'program',
     value: '节目编单'
   },
   {
-    type: '4',
+    type: 'newsCommand',
     value: '新闻指挥'
   }
 ]
-
+// {
+//   type: 'cms',
+//   route: cmsRouterMap
+// },
+// {
+//   type: 'userCenter',
+//   route: userRouterMap
+// },
+// {
+//   type: 'interaction',
+//   route: internalRouterMap
+// },
+// {
+//   type: 'program',
+//   route: programRouterMap
+// },
+// {
+//   type: 'newsCommand',
+//   route: newscommandRouterMap
+// }
 export default sysType

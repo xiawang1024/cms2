@@ -49,15 +49,17 @@ var toTree = (data)=> {
   })
   return val
 }
+const defaultSysList = ['cms', 'userCenter', 'interaction', 'program','newsCommand']
 const user = {
   state: {
     token: getAuth(),
     name: '',
     avatar: 'http://www.hndt.com/podcast/976/1131/res/EEghUGNE.jpg?1511506999379',
     authorities: [],
-    sysList: ['0', '1', '2', '3','4'],
+    // sysList: ['0', '1', '2', '3','4'],
+    sysList: [],
     // sysType: '0',
-    sysType: window.sessionStorage.getItem('sysType') || '0',
+    sysType: window.sessionStorage.getItem('sysType') || 'cms',
     setting: {
       articlePlatform: []
     },
@@ -123,10 +125,13 @@ const user = {
           .then((response) => {
             const data = response.data
             commit('SET_TOKEN', data.access_token)
-            commit('SET_SYS_TYPE', '0')
+            // commit('SET_SYS_TYPE', 'cms')
             setAuth(data)
             // getCurrentInfor()
             // userCurrent()
+            if(response.data.code == '600') {
+              reject(response.data)
+            }
             resolve()
           })
           .catch((error) => {
@@ -171,11 +176,11 @@ const user = {
     },
     // 获取用户信息
     GetUserInfo({ commit, state }) {
+      let getSysList = []
       return new Promise((resolve, reject) => {
         getUserInfo(state.token)
           .then((response) => {
             const data = response.data
-
             if (data.user_authorities.permissionCodeList && data.user_authorities.permissionCodeList.length > 0) {
               // 验证返回的authorities是否是一个非空数组
 
@@ -186,7 +191,21 @@ const user = {
             /**
              * 子系统列表
              */
-            // commit('SET_SYS_LIST', data.sysList)
+            // data.user_authorities.permissionCodeList.forEach((ele) => {
+            //   if(defaultSysList.includes(ele)) {
+            //     getSysList.push(ele)
+            //   }
+            // })
+            getSysList = defaultSysList.filter(item => {
+              return data.user_authorities.permissionCodeList.includes(item)
+            })
+            let resSysList = window.sessionStorage.getItem('sysType') ? window.sessionStorage.getItem('sysType') : getSysList[0]
+            console.log(getSysList, 'getSysList11')
+            commit('SET_SYS_LIST', getSysList)
+            commit('SET_SYS_TYPE',resSysList)
+            // this.$store.dispatch('selectSysType', `${sysType}`)
+            // console.log(getSysList, '111111')
+            // data.user_authorities.permissionCodeList
             commit('SET_NAME', data.name)
             commit('SET_TENANT_ID', data.tenant_id)
             resolve(data)
@@ -203,8 +222,8 @@ const user = {
         logout(state.token)
           .then(() => {
             commit('SET_TOKEN', '')
-
             commit('SET_AUTHORITIES', [])
+            commit('SET_SYS_TYPE', '')
             removeAuth()
             resolve()
           })
@@ -217,9 +236,8 @@ const user = {
     // 前端 登出
     FedLogOut({ commit }) {
       return new Promise((resolve) => {
-        console.log('loginOut')
         commit('SET_TOKEN', '')
-
+        commit('SET_SYS_TYPE', '')
         commit('SET_AUTHORITIES', [])
         removeAuth()
         resolve()
@@ -246,6 +264,8 @@ const user = {
      * 选择子系统，动态修改路由 
      */
     selectSysType({ commit, dispatch, getters, state }, sysType) {
+      console.log(getters.authorities, 'getters.authorities')
+      console.log(sysType, 'sysType111')
       commit('SET_SYS_TYPE', sysType)
       router.push({ path: '/' })
       dispatch('delAllViews') // 清除tagViews
@@ -255,7 +275,7 @@ const user = {
          */
         router.addRoutes(getters.addRouters)
       }) // 动态修改权限后 重绘侧边菜单
-      if (sysType === '2') {
+      if (sysType === 'interaction') {
         var redirectUrl = ''
         return new Promise((resolve, reject) => {
           UserCurrent()

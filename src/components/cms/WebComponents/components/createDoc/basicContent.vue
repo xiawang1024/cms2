@@ -1,7 +1,11 @@
 <template>
   <div class="basicContent-wrap">
+    <!-- {{contextMenu}} -->
     <div class="tool-bar clearfix">
-      <el-form ref="form" :model="typeForm" label-width="80px">
+      <div v-if="contextMenu.articleType && contextMenu.articleType == 3" class="quote-tille">
+        <span>文档类型： 引用</span>
+      </div>
+      <el-form ref="form" :model="typeForm" label-width="80px" v-else>
         <el-form-item label="文档类型">
           <el-select v-model="typeForm.articleType" placeholder="请选择">
             <el-option
@@ -13,10 +17,11 @@
         </el-form-item>
       </el-form>
     </div>
-    <imageText ref="imageText" :extends-list="extendsList" :other-settings="otherSettings" :tag-list="tagList" :source-list="sourceList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 0"/>
+    <imageText ref="imageText" :extends-list="extendsList" :other-settings="otherSettings" :tag-list="tagList" :source-list="sourceList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 0 || contextMenu.articleType == 3"/>
     <images ref="images" :extends-list="extendsList" :images-setting="imagesSeting" :tag-list="tagList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 1"/>
     <splicing ref="splicing" :channel-id = "channelId" :doc-infor="docInfor" :tag-list = "tagList" v-if="typeForm.articleType == 2"/>
-    <reproduce ref="reproduce" :channel-id = "channelId" :doc-infor="docInfor" :reproduce-setting="reproduceSetting" :tag-list = "tagList" v-if="typeForm.articleType == 3"/>
+    <reproduce ref="reproduce" :channel-id = "channelId" :doc-infor="docInfor" :reproduce-setting="reproduceSetting" :tag-list = "tagList" v-if="typeForm.articleType == 4"/>
+    <!-- <quote v-if="typeForm.articleType == 3"></quote> -->
   </div>
 </template>
 <script>
@@ -24,14 +29,15 @@ import imageText from './imageText'
 import images from './images.vue'
 import splicing from './splicing.vue'
 import reproduce from './reproduce.vue'
+import quote from './quote'
 import { columnInfor } from '@/api/cms/columnManage'
-import { documentInfor } from '@/api/cms/article'
+import { documentInfor, documentQuoteInfor } from '@/api/cms/article'
 import { fetchDictByDictName } from "@/api/cms/dict"
 import {otherSettings, imagesSeting, reproduceSetting, defultItems} from './setting.js'
 import { mapGetters } from 'vuex'
 export default {
   name: 'BasicContent',
-  components: { imageText, images, splicing, reproduce },
+  components: { imageText, images, splicing, reproduce, quote },
   props: {
    activeName: {
      default: '',
@@ -62,8 +68,8 @@ export default {
         }, {
           value: 2,
           label: '拼条'
-        }, {
-          value: 3,
+        },{
+          value: 4,
           label: '转载'
         }],
         otherSettings: otherSettings,
@@ -76,6 +82,7 @@ export default {
     ...mapGetters(['treeTags', 'contextMenu'])
   },
   watch: {
+    // 存储文章信息
     activeName(val, oldVal) {
       console.log(oldVal, '3333')
       if(oldVal == 'basicContent' && this.typeForm.articleType == 0) {
@@ -87,7 +94,7 @@ export default {
       if(oldVal == 'basicContent' && this.typeForm.articleType == 2) {
         this.$store.dispatch('setBaseInfor', this.$refs.splicing.getSubmitData())
       }
-      if(oldVal == 'basicContent' && this.typeForm.articleType == 3) {
+      if(oldVal == 'basicContent' && this.typeForm.articleType == 4) {
         this.$store.dispatch('setBaseInfor', this.$refs.reproduce.getSubmitData())
       }
     }
@@ -97,6 +104,17 @@ export default {
     this.getColumnInfor(this.treeTags[this.treeTags.length - 1].id)
     this.channelId = this.treeTags[this.treeTags.length - 1].id
     this.fetchDict()
+  },
+  mounted() {
+    if(this.contextMenu.articleType == 3) {
+      this.otherSettings[0].items.forEach((ele) => {
+        ele.disabled = true
+      })
+    } else {
+      this.otherSettings[0].items.forEach((ele) => {
+        ele.disabled = false
+      })
+    }
   },
   methods: {
     handleSave() {},
@@ -155,14 +173,28 @@ export default {
             _this.reproduceSetting[0].items[3].options = _this.tagList
             this.$nextTick(() => {
               _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList)
+              if(_this.contextMenu.articleType == 3) {
+                this.otherSettings[0].items.forEach((ele) => {
+                  ele.disabled = true
+                })
+              }
             })
+            //未设置标签字段时标签不显示
             if(!_this.tagList.length) {
               _this.otherSettings[0].items[0].hidden = true
               _this.imagesSeting[0].items[6].hidden = true
               _this.reproduceSetting[0].items[3].hidden = true
+            } else {
+              _this.otherSettings[0].items[0].hidden = false
+              _this.imagesSeting[0].items[6].hidden = false
+              _this.reproduceSetting[0].items[3].hidden = false
             }
             if(_this.contextMenu.docId) {
-              _this.getDocumentInfor(_this.contextMenu.docId)
+              if(_this.contextMenu.articleType == 3) {
+                _this.getQuoteDocumentInfor(_this.contextMenu.docId)
+              } else {
+                _this.getDocumentInfor(_this.contextMenu.docId)
+              }
             } else {
               // 扩展字段必填触发updateForm
               this.$nextTick(() => {
@@ -184,6 +216,25 @@ export default {
       var _this = this
       return new Promise((resolve, reject) => {
         documentInfor(id)
+          .then((response) => {
+            _this.docInfor = response.data.result
+            _this.typeForm.articleType = response.data.result.articleType ? response.data.result.articleType : 0
+            if(_this.docInfor.extFieldsList && _this.docInfor.extFieldsList.length) {
+              _this.docInfor.extFieldsList.forEach((ele) => {
+                _this.docInfor[ele.label] = ele.fieldValue
+              })
+            }
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    getQuoteDocumentInfor(id) {
+      var _this = this
+      return new Promise((resolve, reject) => {
+        documentQuoteInfor(id)
           .then((response) => {
             _this.docInfor = response.data.result
             _this.typeForm.articleType = response.data.result.articleType ? response.data.result.articleType : 0
@@ -240,6 +291,12 @@ export default {
       .el-form-item__content{
         text-align: left;
       }
+    }
+    .quote-tille{
+      font-size: 14px;
+      color: #606266;
+      line-height: 40px;
+      padding-left:12px;
     }
   }
 }

@@ -23,10 +23,10 @@ export const currentDoc = [
     id: '6',
     label: '移动到'
   },
-  // {
-  //   id: '7',
-  //   label: '引用到'
-  // }
+  {
+    id: '7',
+    label: '引用到'
+  }
 ]
 
 
@@ -124,11 +124,11 @@ export const typeOptions = [
   {
     id: 3,
     label: '引用'
-  }
-  // {
-  //   id: '4',
-  //   label: '外链'
-  // },
+  },
+  {
+    id: 4,
+    label: '转载'
+  },
   // {
   //   id: '6',
   //   label: '转载'

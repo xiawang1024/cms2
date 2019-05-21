@@ -10,7 +10,7 @@ const webSite = {
   path: `/${cmsPath}/website`,
   component: Layout,
   // redirect: `${cmsPath}/website/doc`,
-  meta: { title: 'webSite', icon: 'webSite', role: 'cms' },
+  meta: { title: 'webSite', icon: 'webSite', role: 'cms:webSite' },
   name: 'website',
   children: [
     /**
@@ -30,7 +30,7 @@ const webSite = {
       path: 'document',
       component: () => import(`@/${path}/publishDocument`),
       name: 'PublishDocument',
-      meta: { title: 'publishDocument', icon: 'docSource', role: 'cms' }
+      meta: { title: 'publishDocument', icon: 'docSource', role: 'cms:article' }
     },
     {
       /**
@@ -39,7 +39,7 @@ const webSite = {
       path: 'column',
       component: () => import(`@/${path}/columnManage`),
       name: 'ColumnManage',
-      meta: { title: 'columnManage', icon: 'docSource', role: 'cms' }
+      meta: { title: 'columnManage', icon: 'docSource', role: 'cms:channel' }
     },
     {
       /**
