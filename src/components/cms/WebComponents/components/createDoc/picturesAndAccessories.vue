@@ -2,9 +2,9 @@
   <div class="upload-file">
     <div class="type-choose">
       <el-radio-group v-model="fileType" size="mini" @change="typeChange">
-        <el-radio-button label="0">上传图片</el-radio-button>
-        <el-radio-button label="1">上传音频</el-radio-button>
+        <!-- <el-radio-button label="0">上传图片</el-radio-button> -->
         <el-radio-button label="2">上传视频</el-radio-button>
+        <el-radio-button label="1">上传音频</el-radio-button>
         <el-radio-button label="3">其他</el-radio-button>
       </el-radio-group>
     </div>
@@ -14,7 +14,7 @@
           <v-form ref="imageForm" :form-settings="imageSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail" @removeFile="removeFile"/>
           <!-- <v-form ref="videoForm" :form-settings="videoSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail"/> -->
         </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="10" :xl="10" :offset="1">
+        <el-col :xs="24" :sm="12" :md="12" :lg="10" :xl="10" >
           <div v-if="rightCardShow">
             <v-form ref="vForm" :form-settings="fileSettings" :form-data="singleData" label-width="80px" :show-button = "showButton">
               <template slot="information">
@@ -74,7 +74,7 @@ export default {
   data () {
     return {
       showPreview: false,
-      fileType: '0',
+      fileType: '2',
       form: {
         name: ''
       },
@@ -82,14 +82,24 @@ export default {
       formData: {},
       imageSettings: [{
         items: [
+          // {
+          //   label: '图片',
+          //   name: 'contentImagesList',
+          //   type: 'img',
+          //   required: false,
+          //   // hasTextInput: true,
+          //   hidden: false,
+          //   maxSize: 1024*5
+          // },
           {
-            label: '图片',
-            name: 'contentImagesList',
-            type: 'img',
+            label: '视频',
+            name: 'contentVideosList',
+            type: 'video',
             required: false,
+            maxSize: 1024*800,
+            limit: 1,
             // hasTextInput: true,
-            hidden: false,
-            maxSize: 1024*5
+            hidden: false
           },
           {
             label: '音频',
@@ -99,16 +109,6 @@ export default {
             // hasTextInput: true,
             maxSize: 1024*800,
             limit: 1,
-            hidden: true
-          },
-          {
-            label: '视频',
-            name: 'contentVideosList',
-            type: 'video',
-            required: false,
-            maxSize: 1024*800,
-            limit: 1,
-            // hasTextInput: true,
             hidden: true
           },
           {
@@ -259,23 +259,23 @@ export default {
           break
         case '1':
           this.imageSettings[0].items[1].hidden = false
-          this.imageSettings[0].items[0].hidden = true
+          // this.imageSettings[0].items[0].hidden = true
           this.imageSettings[0].items[2].hidden = true
-          this.imageSettings[0].items[3].hidden = true
+          this.imageSettings[0].items[0].hidden = true
           this.fileSettings[0].items[3].hidden = true
           break
         case '2':
           this.imageSettings[0].items[1].hidden = true
-          this.imageSettings[0].items[0].hidden = true
-          this.imageSettings[0].items[2].hidden = false
-          this.imageSettings[0].items[3].hidden = true
+          // this.imageSettings[0].items[0].hidden = true
+          this.imageSettings[0].items[0].hidden = false
+          this.imageSettings[0].items[2].hidden = true
           this.fileSettings[0].items[3].hidden = true
           break
         case '3':
-          this.imageSettings[0].items[1].hidden = true
           this.imageSettings[0].items[0].hidden = true
-          this.imageSettings[0].items[2].hidden = true
-          this.imageSettings[0].items[3].hidden = false
+          // this.imageSettings[0].items[0].hidden = true
+          this.imageSettings[0].items[1].hidden = true
+          this.imageSettings[0].items[2].hidden = false
           this.fileSettings[0].items[3].hidden = true
           break
       }
@@ -331,23 +331,23 @@ export default {
     },
     getSubmitData() {
       let articleAttachmentsList = []
-      let imageFile = this.addCategory(this.$refs.imageForm.formModel.contentImagesList, 'IMG')
+      // let imageFile = this.addCategory(this.$refs.imageForm.formModel.contentImagesList, 'IMG')
       let videoFile = this.addCategory(this.$refs.imageForm.formModel.contentVideosList, 'VIDEO')
       let audioFile = this.addCategory(this.$refs.imageForm.formModel.contentAudioList, 'AUDIO') 
       let otherFile = this.addCategory(this.$refs.imageForm.formModel.articleAttachmentsList, 'OTHER')
-      let articleAttachmentsListCombine = articleAttachmentsList.concat(imageFile, videoFile, audioFile, otherFile)
+      let articleAttachmentsListCombine = articleAttachmentsList.concat(videoFile, audioFile, otherFile)
       return articleAttachmentsListCombine
     },
     save(publishType) {
       let articleAttachmentsList = []
       let resoultObj = this.docInformation
       resoultObj.channelId = this.treeTags[this.treeTags.length - 1].id
-      let imageFile = this.addCategory(this.$refs.imageForm.formModel.contentImagesList, 'IMG')
+      // let imageFile = this.addCategory(this.$refs.imageForm.formModel.contentImagesList, 'IMG')
       let videoFile = this.addCategory(this.$refs.imageForm.formModel.contentVideosList, 'VIDEO')
       let audioFile = this.addCategory(this.$refs.imageForm.formModel.contentAudioList, 'AUDIO') 
       let otherFile = this.addCategory(this.$refs.imageForm.formModel.articleAttachmentsList, 'OTHER')
       resoultObj.articleStatus = publishType
-      let articleAttachmentsListCombine = articleAttachmentsList.concat(imageFile, videoFile, audioFile, otherFile)
+      let articleAttachmentsListCombine = articleAttachmentsList.concat(videoFile, audioFile, otherFile)
       resoultObj.articleAttachmentsList = articleAttachmentsListCombine
       if(this.contextMenu.docId) {
         resoultObj.articleId = this.contextMenu.docId
