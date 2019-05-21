@@ -23,13 +23,16 @@
       <el-table-column prop="iosurl" label="苹果下载链接"/>
       <el-table-column prop="androidURL" label="安卓下载链接"/>
       <el-table-column prop="sort" label="排序"/>
-      <el-table-column prop="createTime" label="创建时间" :formatter="formatDate"/>
-
+      <el-table-column prop="createTime" label="时间" width="190" :formatter="formatDate">
+        <template slot-scope="scope1">
+          <span>创建: {{ scope1.row.createTime }}</span>
+          <span>修改: {{ scope1.row.updateTime }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini" type="text" @click="handleDetail(scope.row.id,scope.row)">详情</el-button>
-          <el-button size="mini" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -70,9 +73,9 @@ import {
 } from "@/api/cms/appConfig.js";
 export default {
   name: "AppConfig",
-  
+
   data() {
-    var validateNumber=(rule, value, callback) => {
+    var validateNumber = (rule, value, callback) => {
       if (value < 0) {
         callback(new Error("请输入正数！"));
       } else {
@@ -173,10 +176,12 @@ export default {
               valueType: "number",
               disabled: false,
               placeholder: "请输入序列号",
-              rule:[{
+              rule: [
+                {
                   validator: validateNumber,
-                  trigger: 'blur'
-              }]
+                  trigger: "blur"
+                }
+              ]
             }
           ]
         }
@@ -260,10 +265,12 @@ export default {
               valueType: "number",
               disabled: false,
               placeholder: "请输入序列号",
-              rule:[{
+              rule: [
+                {
                   validator: validateNumber,
-                  trigger: 'blur'
-              }]
+                  trigger: "blur"
+                }
+              ]
             }
           ]
         }
@@ -278,13 +285,7 @@ export default {
               valueType: "string",
               required: true,
               placeholder: "请输入app名字",
-              rule: [
-                {
-                  required: true,
-                  validator: this.validatePass,
-                  trigger: "blur"
-                }
-              ]
+              disabled: true
             },
             {
               label: "版本",
@@ -346,10 +347,12 @@ export default {
               valueType: "number",
               disabled: false,
               placeholder: "请输入序列号",
-              rule:[{
+              rule: [
+                {
                   validator: validateNumber,
-                  trigger: 'blur'
-              }]
+                  trigger: "blur"
+                }
+              ]
             }
           ]
         }
@@ -404,10 +407,12 @@ export default {
               valueType: "number",
               disabled: false,
               placeholder: "请输入序列号",
-              rule:[{
+              rule: [
+                {
                   validator: validateNumber,
-                  trigger: 'blur'
-              }]
+                  trigger: "blur"
+                }
+              ]
             }
           ]
         }
@@ -420,9 +425,13 @@ export default {
   },
   methods: {
     formatDate(row) {
-      let date = row.createTime.replace("T", " ");
-      date = date.replace(".000+0000", "");
-      return date;
+      if (row) {
+        let date = row.createTime.replace("T", " ");
+        date = date.replace(".000+0000", "");
+        return date;
+      } else {
+        return "暂无数据";
+      }
     },
     addAppConfig() {
       this.handleType = "add";

@@ -22,10 +22,7 @@
       <el-table-column prop="sort" label="排序"/>            
       <el-table-column label="操作" fixed="right" width="200">
         <template slot-scope="scope">
-          <!-- <el-button size="mini" type="prime" @click="commentForm(2, scope.row)">编辑</el-button> -->
-          <!-- <el-button size="mini" type="warning" @click="handleSerch(scope.row.id,scope.row.description)">详情</el-button> -->
           <el-button size="mini" type="primary" @click="commentForm(2, scope.row)">编辑</el-button>
-          
           <el-button size="mini" type="success" @click="handleSerch(scope.row.id,scope.row.description)">详情</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
@@ -57,6 +54,7 @@ import {getAllGroup,groupSave,deleteGroup,addGroupRequest,getAppDetail} from "@/
 export default {
     data(){
         return {
+          handdleID:'',
             searchKv:"",
             tenant:{
               kvGroupId:'',
@@ -109,7 +107,7 @@ export default {
                     name: 'sort',
                     type: 'text',
                     required: true,
-                    // valueType:'number',
+                    value:1,
                     placeholder: '请输入数字'
                     
                   },{
@@ -150,8 +148,9 @@ export default {
             this.formData={}
             this.formSettings[0].items[3].hidden=true;
             this.formSettings[0].items[0].required=true;
-            this.formSettings[0].items[1].required=true;
-            this.formSettings[0].items[2].required=true;
+            this.formSettings[0].items[1].required=false;
+            this.formSettings[0].items[2].required=false;
+              this.formSettings[0].items[1].value=1;
 
             //新增
 
@@ -162,8 +161,13 @@ export default {
             this.formData={}
             
             // this.formSettings[0].items[3].hidden=true
-            this.formSettings[0].items[3].hidden=true
-            this.formData=b
+            this.formSettings[0].items[3].hidden=true;
+            this.formSettings[0].items[0].required=true;
+            this.formSettings[0].items[1].required=false;
+            this.formSettings[0].items[2].required=false;
+
+            this.formData=b;
+            this.handdleID=b.id;
 
           }else if(a==3){
             //检索
@@ -173,7 +177,7 @@ export default {
                item.required=false;
              })
             // this.formSettings[0].items[3].hidden=false
-            this.formSettings[0].items[3].hidden=false
+             this.formSettings[0].items[1].value=''
 
 
           }
@@ -184,15 +188,7 @@ export default {
         let sendPass=true;
           if(this.handleType=="新增"){
             //新增接口
-             let patt=/^[A-Za-z0-9]+$/;
-             if(!patt.test(row.tenantId)){
-               sendPass=false;
-               return  _this.$message({                       
-                        type: 'error',
-                        message: '请在tenantId栏目输入字母或者数字!'
-                       });
-
-             }
+             
              let patt1=/^[0-9]+$/;
              if(!patt1.test(row.sort)){
                sendPass=false;
@@ -214,15 +210,7 @@ export default {
             }
           }else if(this.handleType=="编辑"){
             //修改接口
-               let patt=/^[0-9]+$/;
-             if(!patt.test(row.id)){
-               sendPass=false;
-               return  _this.$message({                       
-                        type: 'error',
-                        message: '请在tenantId栏目输入字母或者数字!'
-                       });
-
-             }
+              
              let patt1=/^[0-9]+$/;
              if(!patt1.test(row.sort)){
                sendPass=false;
@@ -237,7 +225,10 @@ export default {
                 description:row.description,
                 sort:row.sort,
                 tag:row.tag,
-                id:row.id
+                id:_this.handdleID,
+                tenantId:this.$store.getters.tenantId
+
+
               };
               this.handleEditeSave();
             }

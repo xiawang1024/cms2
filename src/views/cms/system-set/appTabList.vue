@@ -38,7 +38,7 @@
   </div>
 </template>
 <script>
-import { initNavigation, editNavigation } from "@/api/cms/appConfig.js";
+import { initNavigation, editNavigation,enableNavigation } from "@/api/cms/appConfig.js";
 export default {
   name: "AppTabList",
   data() {
@@ -83,11 +83,11 @@ export default {
               name: "description",
               type: "text",
               valueType: "string",
-              disabled: false,
+              disabled: true,
               placeholder: "请输入描述"
             },
             {
-              label: "图标1",
+              label: "图标（未选中）",
               name: "icon0",
               type: "img",
               disabled: false,
@@ -104,7 +104,7 @@ export default {
               ]
             },
             {
-              label: "图标2",
+              label: "图标（选中）",
               name: "icon1",
               type: "img",
               disabled: false,
@@ -126,7 +126,7 @@ export default {
               type: "number",
               value: 1,
               valueType: "number",
-              disabled: false,
+              disabled: true,
               placeholder: "请输入序列号",
               rule: [
                 {
@@ -152,18 +152,17 @@ export default {
   },
   methods: {
     handleEdite(index, row) {
-      console.log(row,"row");
+      console.log(row, "row");
       (this.currentRow.id = row.id), (this.currentRow.enable = row.enable);
-      this.formData={
-         name: row.name,
+      this.formData = {
+        name: row.name,
         description: row.description,
-        icon0: [{url:row.icon0}],
-        icon1: [{url:row.icon1}],
+        icon0: row.icon0 ? [{ url: row.icon0 }] : [],
+        icon1: row.icon1 ? [{ url: row.icon1 }] : [],
         sort: row.sort,
         ...this.currentRow
-      }
+      };
       this.dialogVisible = true;
-      
     },
     submitSave(res) {
       //保存触发
@@ -173,7 +172,7 @@ export default {
         icon0: res.icon0[0].url,
         icon1: res.icon1[0].url,
         sort: res.sort,
-        ...this.currentRow
+        id: this.currentRow.id
       };
       console.log(data);
 
@@ -230,7 +229,37 @@ export default {
     },
     //切换选中状态
     startUsing(row) {
-      this.editTabContent(row);
+      
+      let data={
+        id:row.id,
+        enable:row.enable
+      }
+       var _this = this;
+      return new Promise((resolve, reject) => {
+        enableNavigation(data)
+          .then(response => {
+            console.log(response, "点击修改");
+            if (response.data.result.description === "null") {
+              response.data.result.description = "";
+            }
+            if (response.data.code == "0") {
+              this.$message({
+                type: "success",
+                message: response.data.msg
+              });
+              _this.getFullTab();
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data.msg
+              });
+            }
+            resolve();
+          })
+          .catch(reject => {
+            console.log(reject);
+          });
+      });
     }
   }
 };
@@ -245,11 +274,10 @@ export default {
 .icon {
   width: 60px;
 }
-/deep/  .el-checkbox__label {
-  font-size: 12px
+/deep/ .el-checkbox__label {
+  font-size: 12px;
 }
 /deep/.selectbox {
-  
   margin-left: 10px;
 }
 </style>
