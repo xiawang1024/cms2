@@ -1,101 +1,42 @@
 <template>
   <div class="box">
     <div class="tool-bar">
-      <el-button
-        size="mini"
-        type="primary"
-        @click="backFoword"
-        v-show="!pageFlag"
-      >返回</el-button>
-      <el-button
-        size="mini"
-        type="primary"
-        @click="searchAppConfig"
-      >检索</el-button>
-      <el-button
-        size="mini"
-        type="primary"
-        @click="addAppConfig"
-      >新增</el-button>
+      <el-button size="mini" type="primary" @click="backFoword" v-show="!pageFlag">返回</el-button>
+      <el-button size="mini" type="primary" @click="searchAppConfig">检索</el-button>
+      <el-button size="mini" type="primary" @click="addAppConfig">新增</el-button>
     </div>
 
     <el-table :data="fullApp">
-      <el-table-column
-        prop="name"
-        label="app名字"
-      />
-      <el-table-column
-        prop="version"
-        label="版本"
-      />
-      <el-table-column
-        prop="description"
-        label="描述"
-      />
-      <el-table-column
-        prop="startingImage"
-        label="启动页"
-      >
+      <el-table-column prop="name" label="app名字"/>
+      <el-table-column prop="version" label="版本"/>
+      <el-table-column prop="description" label="描述"/>
+      <el-table-column prop="startingImage" label="启动页">
         <template slot-scope="scope">
-          <img
-            :src="scope.row.startingImage"
-            class="icon"
-          >
+          <img :src="scope.row.startingImage" class="icon">
         </template>
       </el-table-column>
-      <el-table-column
-        prop="icon"
-        label="APP图标"
-      >
+      <el-table-column prop="icon" label="APP图标">
         <template slot-scope="scope">
-          <img
-            :src="scope.row.icon"
-            class="icon"
-          >
+          <img :src="scope.row.icon" class="icon">
         </template>
       </el-table-column>
-      <el-table-column
-        prop="iosurl"
-        label="苹果下载链接"
-      />
-      <el-table-column
-        prop="androidURL"
-        label="安卓下载链接"
-      />
-      <el-table-column
-        prop="sort"
-        label="排序"
-      />
-      <el-table-column
-        prop="createTime"
-        label="创建时间"
-        :formatter="formatDate"
-      />
-
+      <el-table-column prop="iosurl" label="苹果下载链接"/>
+      <el-table-column prop="androidURL" label="安卓下载链接"/>
+      <el-table-column prop="sort" label="排序"/>
+      <el-table-column prop="createTime" label="时间" width="190" :formatter="formatDate">
+        <template slot-scope="scope1">
+          <span>创建: {{ scope1.row.createTime }}</span>
+          <span>修改: {{ scope1.row.updateTime }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            @click="handleEdit(scope.$index, scope.row)"
-          >编辑</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            @click="handleDetail(scope.row.id,scope.row)"
-          >详情</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            @click="handleDelete(scope.$index, scope.row)"
-          >删除</el-button>
+          <el-button size="mini" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="text" @click="handleDetail(scope.row.id,scope.row)">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog
-      :visible.sync="dialogVisible"
-      :title="dialogTitle"
-    >
+    <el-dialog :visible.sync="dialogVisible" :title="dialogTitle">
       <v-form
         ref="vform"
         :form-settings="formSettings"
@@ -117,9 +58,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-
   </div>
-
 </template>
 
 <script>
@@ -129,11 +68,20 @@ import {
   findAppInfoById,
   searchAappinfo,
   deleteAppInfo,
-  updateAppInfo
+  updateAppInfo,
+  checkName
 } from "@/api/cms/appConfig.js";
 export default {
   name: "AppConfig",
+
   data() {
+    var validateNumber = (rule, value, callback) => {
+      if (value < 0) {
+        callback(new Error("请输入正数！"));
+      } else {
+        callback();
+      }
+    };
     return {
       currentUser: this.$store.getters.tenantId,
       currentId: "",
@@ -159,7 +107,14 @@ export default {
               valueType: "string",
               disabled: false,
               required: true,
-              placeholder: "请输入app名字"
+              placeholder: "请输入app名字",
+              rule: [
+                {
+                  required: true,
+                  validator: this.validatePass,
+                  trigger: "blur"
+                }
+              ]
             },
             {
               label: "版本",
@@ -213,14 +168,6 @@ export default {
               required: true,
               placeholder: "请输入下载URL"
             },
-            // {
-            //   label: "安卓下载链接",
-            //   name: "androidURL",
-            //   type: "text",
-            //   valueType: "string",
-            //   disabled: false,
-            //   placeholder: "请输入下载URL"
-            // },
             {
               label: "排序",
               name: "sort",
@@ -228,28 +175,18 @@ export default {
               value: 1,
               valueType: "number",
               disabled: false,
-              placeholder: "请输入序列号"
+              placeholder: "请输入序列号",
+              rule: [
+                {
+                  validator: validateNumber,
+                  trigger: "blur"
+                }
+              ]
             }
           ]
         }
-      ]
-    };
-  },
-  created() {
-    //请求app列表数据
-    this.getAppList(this.pageNo, this.pageSize, { tenantId: this.currentUser });
-  },
-  methods: {
-    formatDate(row) {
-      let date = row.createTime.replace("T", " ");
-      date = date.replace(".000+0000", "");
-      return date;
-    },
-    addAppConfig() {
-      this.handleType = "add";
-      this.dialogTitle = "添加";
-      this.formData = {};
-      this.formSettings = [
+      ],
+      addData: [
         {
           items: [
             {
@@ -259,7 +196,14 @@ export default {
               valueType: "string",
               disabled: false,
               required: true,
-              placeholder: "请输入app名字"
+              placeholder: "请输入app名字",
+              rule: [
+                {
+                  required: true,
+                  validator: this.validatePass,
+                  trigger: "blur"
+                }
+              ]
             },
             {
               label: "版本",
@@ -313,14 +257,6 @@ export default {
               required: true,
               placeholder: "请输入下载URL"
             },
-            // {
-            //   label: "安卓下载链接",
-            //   name: "androidURL",
-            //   type: "text",
-            //   valueType: "string",
-            //   disabled: false,
-            //   placeholder: "请输入下载URL"
-            // },
             {
               label: "排序",
               name: "sort",
@@ -328,40 +264,18 @@ export default {
               value: 1,
               valueType: "number",
               disabled: false,
-              placeholder: "请输入序列号"
+              placeholder: "请输入序列号",
+              rule: [
+                {
+                  validator: validateNumber,
+                  trigger: "blur"
+                }
+              ]
             }
           ]
         }
-      ];
-      this.dialogVisible = true;
-    },
-    handleDetail(row) {
-      this.$router.push({
-        path: "appTabList",
-        query: {
-          appId: row
-        }
-      });
-    },
-    handleEdit(index, row) {
-      this.currentRow = index;
-      this.handleType = "edit";
-      this.dialogTitle = "编辑";
-      this.currentId = row.id;
-      console.log(row, "row");
-      this.formData = {
-        appName: row.name,
-        androidURL: [{ url: row.androidURL }],
-        description: row.description,
-        icon: [{ url: row.icon }],
-        id: row.id,
-        IOSURL: row.iosurl,
-        sort: row.sort,
-        startingImage: [{ url: row.startingImage }],
-        tenantId: row.tenantId,
-        version: row.version
-      };
-      this.formSettings = [
+      ],
+      editData: [
         {
           items: [
             {
@@ -369,9 +283,9 @@ export default {
               name: "appName",
               type: "text",
               valueType: "string",
-              disabled: true,
               required: true,
-              placeholder: "请输入app名字"
+              placeholder: "请输入app名字",
+              disabled: true
             },
             {
               label: "版本",
@@ -425,14 +339,6 @@ export default {
               required: true,
               placeholder: "请输入下载URL"
             },
-            // {
-            //   label: "安卓下载链接",
-            //   name: "androidURL",
-            //   type: "text",
-            //   valueType: "string",
-            //   disabled: false,
-            //   placeholder: "请输入下载URL"
-            // },
             {
               label: "排序",
               name: "sort",
@@ -440,11 +346,127 @@ export default {
               value: 1,
               valueType: "number",
               disabled: false,
-              placeholder: "请输入序列号"
+              placeholder: "请输入序列号",
+              rule: [
+                {
+                  validator: validateNumber,
+                  trigger: "blur"
+                }
+              ]
             }
           ]
         }
-      ];
+      ],
+      searchConfig: [
+        {
+          items: [
+            {
+              label: "app名字",
+              name: "appName",
+              type: "text",
+              valueType: "string",
+              disabled: false,
+              placeholder: "请输入app名字"
+            },
+            {
+              label: "版本",
+              name: "version",
+              type: "text",
+              valueType: "string",
+              disabled: false,
+              placeholder: "请输入版本号"
+            },
+            {
+              label: "描述",
+              name: "description",
+              type: "text",
+              valueType: "string",
+              disabled: false,
+              placeholder: "请输入描述"
+            },
+            {
+              label: "苹果下载链接",
+              name: "IOSURL",
+              type: "text",
+              valueType: "string",
+              disabled: false,
+              placeholder: "请输入下载URL"
+            },
+            {
+              label: "安卓下载链接",
+              name: "androidURL",
+              type: "text",
+              valueType: "string",
+              disabled: false,
+              placeholder: "请输入下载URL"
+            },
+            {
+              label: "排序",
+              name: "sort",
+              type: "number",
+              valueType: "number",
+              disabled: false,
+              placeholder: "请输入序列号",
+              rule: [
+                {
+                  validator: validateNumber,
+                  trigger: "blur"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+  },
+  created() {
+    //请求app列表数据
+    this.getAppList(this.pageNo, this.pageSize, { tenantId: this.currentUser });
+  },
+  methods: {
+    formatDate(row) {
+      if (row) {
+        let date = row.createTime.replace("T", " ");
+        date = date.replace(".000+0000", "");
+        return date;
+      } else {
+        return "暂无数据";
+      }
+    },
+    addAppConfig() {
+      this.handleType = "add";
+      this.dialogTitle = "添加";
+      this.formData = {};
+      this.formSettings = this.addData;
+      this.dialogVisible = true;
+    },
+    handleDetail(row) {
+      this.$router.push({
+        path: "appTabList",
+        query: {
+          appId: row
+        }
+      });
+    },
+    handleEdit(index, row) {
+      this.currentRow = index;
+      this.handleType = "edit";
+      this.dialogTitle = "编辑";
+      this.currentId = row.id;
+      console.log(row, "row");
+      this.formData = {
+        appName: row.name,
+        androidURL: [{ url: row.androidURL }],
+        description: row.description,
+        icon: [{ url: row.icon }],
+        id: row.id,
+        IOSURL: row.iosurl,
+        sort: row.sort,
+        startingImage: [{ url: row.startingImage }],
+        tenantId: row.tenantId,
+        version: row.version
+      };
+      this.formSettings = this.editData;
 
       this.dialogVisible = true;
     },
@@ -495,79 +517,7 @@ export default {
       // console.log(this.formData);
       // this.formSettings.items.value.replace(/[^0-9]+/g, "");
       //检索的栏目显示
-      this.formSettings = [
-        {
-          items: [
-            {
-              label: "app名字",
-              name: "appName",
-              type: "text",
-              valueType: "string",
-              disabled: false,
-              placeholder: "请输入app名字",
-              required: true
-            },
-            {
-              label: "版本",
-              name: "version",
-              type: "text",
-              valueType: "string",
-              disabled: false,
-              placeholder: "请输入版本号"
-            },
-            {
-              label: "描述",
-              name: "description",
-              type: "text",
-              valueType: "string",
-              disabled: false,
-              placeholder: "请输入描述"
-            },
-            // {
-
-            //     label: '启动页图片',
-            //     name: 'startingImage',
-            //     type: 'img',
-            //     limit:1,
-            //     disabled: false,
-            //     placeholder: '请输入启动页图片URL'
-            // },
-            // {
-            //   label: "APP图标",
-            //   name: "icon",
-            //   type: "img",
-            //   limit: 1,
-            //   disabled: false,
-            //   placeholder: "请输入APP图标URL"
-            // },
-            {
-              label: "苹果下载链接",
-              name: "IOSURL",
-              type: "text",
-              valueType: "string",
-              disabled: false,
-              placeholder: "请输入下载URL"
-            },
-            {
-              label: "安卓下载链接",
-              name: "androidURL",
-              type: "text",
-              valueType: "string",
-              disabled: false,
-              placeholder: "请输入下载URL"
-            },
-            {
-              label: "排序",
-              name: "sort",
-              type: "number",
-              valueType: "number",
-              disabled: false,
-              placeholder: "请输入序列号"
-            }
-          ]
-        }
-      ];
-
+      this.formSettings = this.searchConfig;
       this.dialogVisible = true;
       // console.log(this.formSettings.items);
     },
@@ -746,6 +696,26 @@ export default {
                 type: "error",
                 message: response.data.msg
               });
+            }
+            resolve();
+          })
+          .catch(reject => {
+            console.log(reject);
+          });
+      });
+    },
+    validatePass(rule, value, callback) {
+      let data = {
+        tenantId: this.currentUser,
+        name: value
+      };
+      return new Promise((resolve, reject) => {
+        checkName(data)
+          .then(response => {
+            if (response.data.result == true) {
+              callback();
+            } else {
+              callback(new Error("名称重复,请重新输入"));
             }
             resolve();
           })
