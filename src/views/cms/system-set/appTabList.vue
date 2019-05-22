@@ -64,7 +64,7 @@ export default {
     return {
       fullTabList: [],
       dialogVisible: false,
-      dialogTitle: "添加",
+      dialogTitle: "编辑",
       formData: {},
       formSettings: [
         {
@@ -76,7 +76,7 @@ export default {
               valueType: "string",
               disabled: false,
               required: true,
-              placeholder: "请输入列表名字"
+              placeholder: "请输入列表名字（勿超过三个字）"
             },
             {
               label: "描述",
@@ -126,7 +126,7 @@ export default {
               type: "number",
               value: 1,
               valueType: "number",
-              disabled: true,
+              disabled: false,
               placeholder: "请输入序列号",
               rule: [
                 {
