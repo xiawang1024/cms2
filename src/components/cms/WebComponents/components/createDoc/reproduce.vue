@@ -154,7 +154,7 @@ export default {
     getSubmitData() {
       let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
       // resoultObj.channelId = this.channelId
-      resoultObj.articleType = 3
+      resoultObj.articleType = 4
       resoultObj.seoKeywords = ''
       resoultObj.articleOrigin = ''
       resoultObj.articleAuthor = ''
@@ -189,7 +189,7 @@ export default {
         let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
         resoultObj.channelId = this.channelId
         resoultObj.articleStatus = publishType
-        resoultObj.articleType = 3
+        resoultObj.articleType = 4
         resoultObj.seoKeywords = ''
         resoultObj.articleOrigin = ''
         resoultObj.articleAuthor = ''
