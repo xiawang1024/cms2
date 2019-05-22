@@ -14,7 +14,7 @@
           <v-form ref="imageForm" :form-settings="imageSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail" @removeFile="removeFile"/>
           <!-- <v-form ref="videoForm" :form-settings="videoSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail"/> -->
         </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="10" :xl="10" :offset="1">
+        <el-col :xs="24" :sm="12" :md="12" :lg="10" :xl="10">
           <div v-if="rightCardShow">
             <v-form ref="vForm" :form-settings="fileSettings" :form-data="singleData" label-width="80px" :show-button = "showButton">
               <template slot="information">
@@ -23,15 +23,16 @@
                     <img :src="filedetail.url" alt="">
                   </div>
                   <div class="file-video" v-if="fileType == '2'">
-                    <video :src="filedetail.url" controls="controls" height="200px"/>
+                    <video :src="filedetail.url" controls="controls" height="150px"/>
                   </div>
                   <div class="file-video" v-if="fileType == '1'">
-                    <video :src="filedetail.url" controls="controls" height="100px"/>
+                    <video :src="filedetail.url" controls="controls" height="50px"/>
                   </div>
                   <div class="desc">
-                    <div>{{ filedetail.name }}</div>
-                    <div v-if="filedetail.createTime">{{ parseInt(filedetail.createTime)|timeFilter }}</div>
-                    <div v-if="filedetail.size">{{ Math.floor(filedetail.size / 1024) }} kb</div>
+                    <div>图片名称：{{ filedetail.name }}</div>
+                    <div class="word-break">文件路径:{{ filedetail.url }}</div>
+                    <div v-if="filedetail.createTime">日期：{{ parseInt(filedetail.createTime)|timeFilter }}</div>
+                    <div v-if="filedetail.size">大小:{{ Math.floor(filedetail.size / 1024) }} kb</div>
                   </div>
                 </div>
               </template>
@@ -431,6 +432,9 @@ export default {
             .desc {
               div {
                 color: #C0C4CC;
+              }
+              .word-break{
+                word-break: break-all;
               }
             }
          }
