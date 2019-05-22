@@ -102,7 +102,7 @@ import SizeSelect from '@/components/public/SizeSelect'
 import LangSelect from '@/components/public/LangSelect'
 import ThemePicker from '@/components/public/ThemePicker'
 import SysType from './sysType.vue'
-import { fetchDictByDictName} from "@/api/cms/dict"
+import { fetchDictAllByDictName} from "@/api/cms/dict"
 
 
 export default {
@@ -127,7 +127,7 @@ export default {
     // 查询站点名称
     fetchDict() {
       return new Promise((resolve, reject) => {
-        fetchDictByDictName('站点设置')
+        fetchDictAllByDictName('站点设置')
           .then(response => {
             let siteName = response.data.result ? response.data.result.details[0].dictDetailValue + '内容发布子系统' : '内容发布子系统'
             this.$store.dispatch('SetSiteName', siteName)

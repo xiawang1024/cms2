@@ -69,7 +69,7 @@ export default {
           value: 2,
           label: '拼条'
         },{
-          id: 4,
+          value: 4,
           label: '转载'
         }],
         otherSettings: otherSettings,
@@ -94,7 +94,7 @@ export default {
       if(oldVal == 'basicContent' && this.typeForm.articleType == 2) {
         this.$store.dispatch('setBaseInfor', this.$refs.splicing.getSubmitData())
       }
-      if(oldVal == 'basicContent' && this.typeForm.articleType == 3) {
+      if(oldVal == 'basicContent' && this.typeForm.articleType == 4) {
         this.$store.dispatch('setBaseInfor', this.$refs.reproduce.getSubmitData())
       }
     }
@@ -184,6 +184,10 @@ export default {
               _this.otherSettings[0].items[0].hidden = true
               _this.imagesSeting[0].items[6].hidden = true
               _this.reproduceSetting[0].items[3].hidden = true
+            } else {
+              _this.otherSettings[0].items[0].hidden = false
+              _this.imagesSeting[0].items[6].hidden = false
+              _this.reproduceSetting[0].items[3].hidden = false
             }
             if(_this.contextMenu.docId) {
               if(_this.contextMenu.articleType == 3) {
