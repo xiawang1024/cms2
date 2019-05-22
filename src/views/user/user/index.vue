@@ -8,7 +8,7 @@
     <button-group
       :button-array="buttonArray"
       @list-click="listClick()"
-      @create-click="createClick" @able-click="enableFlagClick('1')" @disable-click="enableFlagClick('0')"
+      @create-click="createClick" @able-click="enableFlagClick('1')" @disable-click="enableFlagClick('0')" @googlecheck-click="googleCheckClick"
       @role-click="roleClick" @roles-click="rolesClick"
       @edit-click="editClick"/>
     <!-- 表格的数据展示，参数放置到 tableConfig 中进行传入。 -->
@@ -43,7 +43,7 @@ import PapSearch from '@/components/pap/search/index'
 import PapTable from '@/components/pap/table/index'
 import ButtonGroup from '@/components/pap/button-group/index'
 import ElFormRenderer from '@/components/el-form-renderer'
-import { UserList, UserCreate, UserUpdate, UserRoleRelSave, UsersRolesRelSave, UserRoleRelRoleInfoByUserId, UserModifyEnableFlagByUserIds, UserCheckCode } from '@/api/user/user'
+import { UserList, UserCreate, UserUpdate, UserRoleRelSave, UsersRolesRelSave, UserRoleRelRoleInfoByUserId, UserModifyEnableFlagByUserIds, UserCheckCode, RemoveGoogleCheckBinding } from '@/api/user/user'
 import Role from '@/views/user/role'
 
 export default {
@@ -74,7 +74,8 @@ export default {
         {name: '状态', icon:'el-icon-document', click: 'query',
           details:[
             {name: '启用', auth: true, icon: 'el-icon-circle-check-outline', click: 'able-click'},
-            {name: '禁用', auth: true, icon: 'el-icon-circle-close-outline', click: 'disable-click'}
+            {name: '禁用', auth: true, icon: 'el-icon-circle-close-outline', click: 'disable-click'},
+            {name: '清空Google校验', auth: true, icon: 'el-icon-circle-close-outline', click: 'googlecheck-click'}
           ]
         },
         {name: '批量操作', icon:'el-icon-document', click: 'query',
@@ -230,6 +231,27 @@ export default {
       return new Promise((resolve, reject) => {
         UserModifyEnableFlagByUserIds(obj).then(async res => {
           console.log(res)
+          _this.getList()
+        }).catch(err => {
+          console.log('err: ', err)
+          reject(err)
+        })
+      })
+    },
+    googleCheckClick () {
+      var _this = this
+      var multiSelection = _this.$refs["user-table"].multipleSelection
+      var userIds = []
+      for(var i = 0; i < multiSelection.length; i++) {
+        userIds.push(multiSelection[i].userId)
+      }
+      var obj = {
+        userIds: userIds
+      }
+      return new Promise((resolve, reject) => {
+        RemoveGoogleCheckBinding(obj).then(async res => {
+          console.log(res)
+          _this.$refs["user-table"].$refs["pap-base-table"].clearSelection()
           _this.getList()
         }).catch(err => {
           console.log('err: ', err)
