@@ -84,7 +84,7 @@ export default {
           ]
         },
       ],
-      
+
       // 表格
       tableConfig: {
         // 多页选中数据回显，分页记录保存选中的数据
@@ -102,11 +102,11 @@ export default {
       },
       // 表格选择的值
       multipleSelection: [],
-      
+
       // 搜索框
       searchForm: [
         {$id: 'userName', $type: 'input', $label: '姓名', $default: '',
-	        $el: { placeholder: '请输入', style: 'width: 200px' }
+          $el: { placeholder: '请输入', style: 'width: 200px' }
         }
       ],
       // 用户管理

@@ -33,17 +33,17 @@
       </el-table-column>
       <el-table-column label="设置" width="300">
         <template slot-scope="scope">
-          <el-button type="text" @click="columnTemplate(scope.row)" v-if="checkAuth('cms:channel:template')">栏目模板</el-button>
-          <el-button type="text" @click="extendsWord(scope.row)" v-if="checkAuth('cms:channel:extendsWord')">扩展字段</el-button>
-          <el-button type="text" @click="tagSetting(scope.row)" v-if="checkAuth('cms:channel:tagSetting')">标签设置</el-button>
-          <el-button type="text" @click="waterSetting(scope.row)" v-if="checkAuth('cms:channel:waterSetting')">水印设置</el-button>
+          <el-button type="text" size="small" @click="columnTemplate(scope.row)" v-if="checkAuth('cms:channel:template')">栏目模板</el-button>
+          <el-button type="text" size="small" @click="extendsWord(scope.row)" v-if="checkAuth('cms:channel:extendsWord')">扩展字段</el-button>
+          <el-button type="text" size="small" @click="tagSetting(scope.row)" v-if="checkAuth('cms:channel:tagSetting')">标签设置</el-button>
+          <el-button type="text" size="small" @click="waterSetting(scope.row)" v-if="checkAuth('cms:channel:waterSetting')">水印设置</el-button>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button type="text" v-if="checkAuth('cms:channel:edit')" @click="columnAddEdit(false, '', scope.row.channelId)">编辑</el-button>
-          <el-button type="text" v-if="checkAuth('cms:channel:delete')" @click="columnDel(scope.row)" >删除</el-button>
-          <el-button type="text" @click="columnAddEdit(true, 'child', scope.row.channelId)" v-if="checkAuth('cms:channel:add')">添加</el-button>
+          <el-button type="text" size="small" v-if="checkAuth('cms:channel:edit')" @click="columnAddEdit(false, '', scope.row.channelId)">编辑</el-button>
+          <el-button type="text" size="small" v-if="checkAuth('cms:channel:delete')" @click="columnDel(scope.row)" >删除</el-button>
+          <el-button type="text" size="small" @click="columnAddEdit(true, 'child', scope.row.channelId)" v-if="checkAuth('cms:channel:add')">添加</el-button>
         </template>
       </el-table-column>
     </el-table>

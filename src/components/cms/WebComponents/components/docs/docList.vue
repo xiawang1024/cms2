@@ -20,9 +20,9 @@
         <template slot-scope="scope">
           <span v-if="checkAuth('cms:article:stick')" class="titleClick" @click="editDoc(scope.row)">{{ scope.row.articleTitle }}</span>
           <span v-else>{{ scope.row.articleTitle }}</span>
-          <icon name="file-alt" title="正文有图" v-if="scope.row.contentImagesList && scope.row.contentImagesList.length"/>
-          <icon name="file-image" title="附件有图" v-if="documentHasImg(scope.row.articleAttachmentsList)"/>
-          <icon name="arrow-circle-up" title="置顶" v-if="scope.row.topFlag == 1"/>
+          <i class="el-icon-picture-outline" title="正文有图" v-if="scope.row.contentImagesList && scope.row.contentImagesList.length"/>
+          <i class="el-icon-folder-opened" title="附件有图" v-if="documentHasImg(scope.row.articleAttachmentsList)"/>
+          <i class="el-icon-top" title="置顶" v-if="scope.row.topFlag == 1"/>
           <i class="iconfont iconlink" title="引用" v-if="scope.row.articleType ==3"/>
         </template>
       </el-table-column>
@@ -85,14 +85,14 @@
         </template>
       </el-table-column>
       <el-table-column prop="createUser" label="撰稿人" width="100" show-overflow-tooltip/>
-      <el-table-column prop="clickNum" label="点击" width="50"/>
-      <el-table-column fixed="right" label="操作" width="110">
+      <el-table-column prop="clickNum" label="点击" min-width="100"/>
+      <el-table-column fixed="right" label="操作" width="130">
         <template slot-scope="scope">
           <el-button v-if="checkAuth('cms:article:stick')" type="text" size="small" @click.stop="setTop(scope.row.articleId)">置顶</el-button>
           <el-button v-if="checkAuth('cms:article:edit')" type="text" size="small" @click.stop="editDoc(scope.row)">编辑</el-button>
           <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">撤销</el-button>
           <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">审核</el-button> -->
-          <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">删除</el-button> -->
+          <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

@@ -34,7 +34,15 @@ Object.keys(filters).forEach((key) => {
 })
 
 Vue.config.productionTip = false
-
+// 移动端禁止访问
+router.beforeEach((to, from, next) => {
+  if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+    // router.replace({path: '/404'});
+    alert('禁止访问')
+  } else {
+    next()
+  }
+})
 new Vue({
   el: '#app',
   router,
@@ -42,6 +50,11 @@ new Vue({
   i18n,
   render: (h) => h(App)
 })
+
+// router.onError(function() {
+//   console.log(1111)
+//   router.replace({path: '/404'});
+// })
 // router.beforeEach((to, from, next) => {
 //   // 侧边栏路由已经动态生成ok 一期特殊需求 首页为站点设置
 //   if (!(store.getters.addRouters.length == 0 && store.getters.addRouters[0].redirect == "/404")) {
