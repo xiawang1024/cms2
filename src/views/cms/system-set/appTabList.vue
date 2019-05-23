@@ -50,7 +50,10 @@ export default {
       }
     };
     var validatePass1 = (rule, value, callback) => {
-      let type = value[0].url.split(".").reverse()[0];
+      if(value==''||value==null){
+          callback(new Error("请上传图片！"));
+      }else{
+        let type = value[0].url.split(".").reverse()[0];
       type = type.toLowerCase();
       console.log(type, "判断值！");
 
@@ -59,6 +62,8 @@ export default {
       } else {
         callback();
       }
+      }
+      
     };
 
     return {
