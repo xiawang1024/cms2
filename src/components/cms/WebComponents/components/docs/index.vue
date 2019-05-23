@@ -2,7 +2,7 @@
   <div class="docs-wrap">
     <DocHead @searchList = "searchList" :multiple-list="multipleList" :source-list="sourceList" @handelSuccess = "handelSuccess"/>
     <doc-list :table-data="tableData" ref="documentList" @handelSuccess="handelSuccess" @multipleChoose="multipleChoose" :page-num="pageNum" :page-size="pageSize" :search-data="searchData" />
-    <DocFoot :total="totalCount" @sizeChange = "sizeChange" @pageChange="pageChange"/>
+    <DocFoot :total="totalCount" :current-page.sync="currentPage" :page-size.sync="pageSize" @sizeChange = "sizeChange" @pageChange="pageChange"/>
     <!-- {{ treeTags }}
     {{ contextMenu }} -->
   </div>
@@ -26,6 +26,7 @@ export default {
       tableData: [],
       pageNum: 1,
       pageSize: 10,
+      currentPage: 1,
       totalCount: 0,
       searchData: {},
       channelId: '',
@@ -41,6 +42,7 @@ export default {
       if(val) {
         this.pageNum = 1;
         this.pageSize = 10;
+        this.currentPage = 1
         this.channelId = val[val.length - 1].id
         this.documentList(val)
       }
@@ -49,8 +51,9 @@ export default {
   created() {
     if(this.contextMenu.id == '0') {
       if(this.treeTags && this.treeTags.length) {
-        this.pageNum = 1;
-        this.pageSize = 10;
+        this.pageNum = this.contextMenu.pageNum ? this.contextMenu.pageNum : 1
+        this.pageSize = this.contextMenu.pageSize ? this.contextMenu.pageSize : 10
+        this.currentPage = this.contextMenu.pageNum ? this.contextMenu.pageNum : 1
         this.channelId = this.treeTags[this.treeTags.length - 1].id
         this.documentList()
       }
@@ -104,8 +107,6 @@ export default {
     documentList() {
       var _this = this
       _this.searchData.channelId = this.channelId
-      // _this.searchData.sortBy = 'topFlag'
-      // _this.searchData.deleteFlag = 0
       return new Promise((resolve, reject) => {
         documentList(_this.searchData, _this.pageNum, _this.pageSize)
           .then((response) => {

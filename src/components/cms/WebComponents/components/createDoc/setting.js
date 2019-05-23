@@ -232,7 +232,7 @@ export const imagesSeting = [
         label: '展现形式',
         name: 'articleShowStyle',
         type: 'select',
-        required: true,
+        // required: true,
         options: [
           {
             label: '正文标题和描述',
@@ -327,7 +327,7 @@ export const reproduceSetting = [
         label: '展现形式',
         name: 'articleShowStyle',
         type: 'select',
-        required: true,
+        // required: true,
         options: [
           {
             label: '正文标题和描述',

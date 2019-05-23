@@ -244,7 +244,9 @@ export default {
     goBack() {
       this.$store.dispatch('setContextMenu', {
         id: '0',
-        label: ''
+        label: '',
+        pageNum: this.contextMenu.pageNum,
+        pageSize: this.contextMenu.pageSize,
       })
     },
     goEdit(docId) {
@@ -312,7 +314,8 @@ export default {
         extendsFields = this.extendsList.map((ele) => {
           return {
             label: ele.label,
-            fieldValue: resoultObj[ele.label]
+            fieldValue: resoultObj[ele.label],
+            required: ele.required
           }
         })
       }

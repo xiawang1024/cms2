@@ -104,7 +104,9 @@ export default {
     goBack() {
       this.$store.dispatch('setContextMenu', {
         id: '0',
-        label: ''
+        label: '',
+        pageNum: this.contextMenu.pageNum,
+        pageSize: this.contextMenu.pageSize,
       })
     },
     goEdit(docId) {

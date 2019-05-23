@@ -356,6 +356,7 @@ export default {
       } else {
         resoultObj = Object.assign(resoultObj, this.getDocInformation.baseInfor)
         resoultObj.coverImagesList =this.getDocInformation.coverImagesList
+        console.log(resoultObj, 'resoultObj')
         if(!resoultObj.articleTitle && resoultObj.articleType !==2) {
           this.$message.warning('正文标题不能为空')
           return
@@ -363,6 +364,18 @@ export default {
         if(!resoultObj.contentTitle) {
           this.$message.warning('首页标题不能为空')
           return
+        }
+        if(!resoultObj.articleOrigin && resoultObj.articleType !==2 && resoultObj.articleType !==3) {
+          this.$message.warning('文章来源不能为空')
+          return
+        }
+        if(resoultObj.extFieldsList && resoultObj.extFieldsList.length && resoultObj.articleType ==0) {
+          for(let i=0; i<resoultObj.extFieldsList.length; i++) {
+           if(resoultObj.extFieldsList[i].required && !resoultObj.extFieldsList[i].fieldValue) {
+              this.$message.warning(`${resoultObj.extFieldsList[i].label}不能为空`)
+              return
+            }
+          }
         }
         this.createDoc(resoultObj)
       }
