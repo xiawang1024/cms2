@@ -25,7 +25,7 @@ const manageClue = {
       meta: {
         title: 'discloseList',
         icon: 'discloseList',
-        role: 'newcommond:baoliaoList'
+        role: 'newsCommand:baoliao'
       }
     },
     {
@@ -35,7 +35,6 @@ const manageClue = {
     meta: {
       title: 'addDisclose',
       icon: 'addDisclose',
-    role: 'newsCommand'
     },
     hidden: true
   },
@@ -46,7 +45,6 @@ const manageClue = {
     meta: {
       title: 'discloseDetails',
       icon: 'discloseDetails',
-    role: 'newsCommand'
     },
     hidden: true
   }

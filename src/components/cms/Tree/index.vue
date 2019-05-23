@@ -173,7 +173,9 @@ export default {
         if (direct === 'left') {
           this.$store.dispatch('setContextMenu', {
             id: '0',
-            label: ''
+            label: '',
+            pageNum: 1,
+            pageSize: 10
           })
         } else {
           this.$store.dispatch('setContextMenu', {})

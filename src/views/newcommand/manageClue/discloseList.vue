@@ -2,12 +2,6 @@
 
   <div class="column-manages">
 
-    <!-- <div class="topdiv">
-      <div class="topdivLeft">爆料列表</div>
-      <div class="topdivRight">
-        <el-button @click="reloadlist" icon="el-icon-refresh" type="primary">刷新</el-button>
-      </div>
-    </div> -->
     <div class="auditBtn">
       <div
         @click="auditBtnsClik(0,$event)"
@@ -46,7 +40,7 @@
     <div class="tool-bar">
       <el-button
         type="primary"
-        v-if="checkAuth('cms:channel:add')"
+        v-if="checkAuth('newcommond:baoliao:add')"
         @click="columnAddEdit('addDisclose','')"
         size="small"
       >添加爆料</el-button>
@@ -80,7 +74,7 @@
       </el-table-column>·
       <el-table-column min-width="220" align="left" prop="breakingTime" label="爆料时间"/>
       <el-table-column min-width="220" align="left" label="操作">
-        <template v-if="checkAuth('cms:channel:operation')" slot-scope="scope">
+        <template slot-scope="scope">
           <div style="text-align:left">
             <el-button
               type="success"
@@ -90,11 +84,11 @@
             <el-button
               type="primary"
               size="mini"
-              v-if="checkAuth('cms:channel:delete')"
+              v-if="checkAuth('newcommond:baoliao:editor')"
               @click="columnAddEdit('columnAddEdit',scope.row.id)"
             >编辑</el-button>
             <el-button
-              v-if="scope.row.auditStatus==0"
+              v-if="scope.row.auditStatus==0 && checkAuth('newcommond:baoliao:audit')"
               @click="columnAddEdit('discloseAudit',scope.row.id)"
               type="danger"
               size="mini"
