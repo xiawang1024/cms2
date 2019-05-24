@@ -328,9 +328,9 @@ export default {
           let newformData1 = formData1;
           newformData1.id = _this.discloseId;
           newformData1.newsOrigin = 0;
-          let hnrToken = JSON.parse(localStorage.getItem("hnDt_token"));
-          hnrToken = hnrToken.access_token;
-          newformData1.hnrToken = hnrToken;
+          // let hnrToken = JSON.parse(localStorage.getItem("hnDt_token"));
+          // hnrToken = hnrToken.access_token;
+          // newformData1.hnrToken = hnrToken;
           editDisclose(newformData1)
             .then(response => {
               _this.$message({
@@ -347,9 +347,9 @@ export default {
         });
       } else {
         return new Promise((resolve, reject) => {
-          let hnrToken = JSON.parse(localStorage.getItem("hnDt_token"));
-          hnrToken = hnrToken.access_token;
-          formData1.hnrToken = hnrToken;
+          // let hnrToken = JSON.parse(localStorage.getItem("hnDt_token"));
+          // hnrToken = hnrToken.access_token;
+          // formData1.hnrToken = hnrToken;
           formData1.newsOrigin = 0;
           createDisclose(formData1)
             .then(response => {
