@@ -239,9 +239,9 @@ export default {
       });
     },
     amendDiscloseStateBtn(num) {
-      let hnrToken = localStorage.getItem("hnDt_token");
+      // let hnrToken = localStorage.getItem("hnDt_token");
       let queryObj = {
-        hnrToken: hnrToken,
+        // hnrToken: hnrToken,
         id: this.discloseId,
         auditStatus: num
       };
