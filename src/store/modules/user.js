@@ -200,7 +200,6 @@ const user = {
               return data.user_authorities.permissionCodeList.includes(item)
             })
             let resSysList = window.sessionStorage.getItem('sysType') ? window.sessionStorage.getItem('sysType') : getSysList[0]
-            console.log(getSysList, 'getSysList11')
             commit('SET_SYS_LIST', getSysList)
             commit('SET_SYS_TYPE',resSysList)
             // this.$store.dispatch('selectSysType', `${sysType}`)
@@ -264,8 +263,6 @@ const user = {
      * 选择子系统，动态修改路由 
      */
     selectSysType({ commit, dispatch, getters, state }, sysType) {
-      console.log(getters.authorities, 'getters.authorities')
-      console.log(sysType, 'sysType111')
       commit('SET_SYS_TYPE', sysType)
       router.push({ path: '/' })
       dispatch('delAllViews') // 清除tagViews
