@@ -146,10 +146,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       new UglifyJsPlugin({
         uglifyOptions: {
           mangle: {
-            safari10: true,
-            warnings: false,
-            drop_debugger: true,
-            drop_console: true
+            safari10: true
           }
         },
         sourceMap: config.build.productionSourceMap,
