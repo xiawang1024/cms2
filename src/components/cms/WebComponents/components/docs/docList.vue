@@ -356,7 +356,7 @@ export default {
       window.open(link)
     },
     editDoc(row) {
-      const select = { id: '1', label: '新建文档', docId: row.articleId, articleType: row.articleType}
+      const select = { id: '1', label: '新建文档', docId: row.articleId, articleType: row.articleType, pageNum: this.pageNum, pageSize: this.pageSize}
       this.$store.dispatch('setContextMenu', select)
       this.$store.dispatch('setAttachmentsList', [])
     }

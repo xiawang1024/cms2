@@ -231,6 +231,18 @@ export default {
           this.$message.warning('首页标题不能为空')
           return
         }
+        if(!params.articleOrigin && params.articleType !==2 && params.articleType !==3) {
+          this.$message.warning('文章来源不能为空')
+          return
+        }
+        if(params.extFieldsList && params.extFieldsList.length && params.articleType == 0) {
+          for(let i=0; i<params.extFieldsList.length; i++) {
+            if(params.extFieldsList[i].required && !params.extFieldsList[i].fieldValue) {
+              this.$message.warning(`${params.extFieldsList[i].label}不能为空`)
+              return
+            }
+          }
+        }
         this.addCover(params)
       }
     },

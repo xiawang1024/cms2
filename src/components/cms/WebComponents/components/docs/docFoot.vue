@@ -5,7 +5,7 @@
       :page-sizes="[10, 20, 30, 40]"
       :page-size="pageSize"
       :total="total"
-      layout="total, sizes, prev, pager, next, jumper"
+      layout="total, sizes, prev, pager, next"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
@@ -16,24 +16,36 @@ export default {
   name: 'DocFoot',
   props: {
     total: {
-    type: Number,
-    default: 0
+      type: Number,
+      default: 0
+    },
+    currentPage: {
+      type: Number,
+      default: 1
+    },
+    pageSize: {
+      type: Number,
+      default: 1
     }
   },
   data() {
     return {
-      currentPage: 1,
-      pageSize: 10
+      // currentPage: 1,
+      // pageSize: 10
     }
+  },
+  watch: {
   },
   methods: {
     handleSizeChange(val) {
-      this.pageSize = val
+      // this.pageSize = val
       this.$emit('sizeChange', val)
+      this.$emit('update:pageSize', val)
     },
     handleCurrentChange(val) {
-      this.currentPage = val
+      // this.currentPage = val
       this.$emit('pageChange', val)
+      this.$emit('update:currentPage', val)
     }
   }
 }

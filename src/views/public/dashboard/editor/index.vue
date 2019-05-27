@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
-    <div class="clearfix">
+    <div class="index-bgc"/>
+    <!-- <div class="clearfix">
       <pan-thumb
         :image="avatar"
         style="float: left"
@@ -21,7 +22,7 @@
         :src="emptyGif"
         class="emptyGif"
       >
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -50,7 +51,18 @@ export default {
   width: 45%;
   margin: 0 auto;
 }
-
+.index-bgc{
+  background-color: #e3e3e3;
+  background-image: url('../pic/bgc.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  // width: 376px;
+  // height: 168px;
+  width: 300px;
+  height: 150px;
+  margin: 0 auto;
+  margin-top:100px;
+}
 .dashboard-editor-container {
   background-color: #e3e3e3;
   min-height: 100vh;
