@@ -345,15 +345,30 @@ export default {
       return resoultObj
     },
     save(formName, publishType, saveType) {
+      console.log(this.extendsList, 'this.extendsList.')
       // this.$refs.otherForm.updateRule()
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       // 获取扩展字段的值
       let extendsFields = []
       if(this.extendsList.length) {
         extendsFields = this.extendsList.map((ele) => {
-          return {
-            label: ele.label,
-            fieldValue: resoultObj[ele.label]
+          if(ele.type == 'datetime') {
+            if(resoultObj[ele.label]) {
+              return {
+                label: ele.label,
+                fieldValue: handleDate(resoultObj[ele.label])
+              }
+            } else {
+              return {
+                label: ele.label,
+                fieldValue: resoultObj[ele.label]
+              }
+            }
+          } else {
+            return {
+              label: ele.label,
+              fieldValue: resoultObj[ele.label]
+            }
           }
         })
       }
