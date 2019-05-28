@@ -219,7 +219,10 @@ export default {
     // 删除频率信息
     remove(row) {
       this.$confirm('是否删除该频率?该操作会删除所有与该频率相关联的信息', '提示', {
-					type: 'warning'
+          type: 'warning'
+          
+
+          
 				}).then(() => {
         this.listLoading = true
         removeChannel(row.channelId).then((res) => {
@@ -236,7 +239,7 @@ export default {
     },
     // 改变点播状态
     changeVodStatus(row, status) {
-      this.$confirm('是否点击/关闭点播?', '提示', {
+      this.$confirm('是否开启/关闭点播?', '提示', {
 					type: 'warning'
 				}).then(() => {
         this.listLoading = true
@@ -261,7 +264,7 @@ export default {
     },
     handleSizeChange(val) {
       this.searchData.limit = val
-      this.getList()``
+      this.getList()
     },
     handleCurrentChange(val) {
       this.searchData.page = val

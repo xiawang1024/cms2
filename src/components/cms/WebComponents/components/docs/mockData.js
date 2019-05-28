@@ -31,14 +31,10 @@ export const currentDoc = [
 
 
 export const currentColumn = [
-  // {
-  //   id: '1',
-  //   label: '栏目首页'
-  // },
-  // {
-  //   id: '1',
-  //   label: '栏目首页'
-  // },
+  {
+    id: '1',
+    label: '栏目首页'
+  },
   {
     id: '3',
     label: '修改栏目'
