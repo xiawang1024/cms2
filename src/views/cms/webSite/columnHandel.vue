@@ -39,6 +39,7 @@
 import { columnInfor, addColumn, editColumn, isColumnRepet } from '@/api/cms/columnManage'
 import { fetchDictByDictName } from '@/api/cms/dict'
 import { fetchComponentList } from '@/api/cms/component'
+import { mapGetters } from 'vuex'
 export default {
   name: 'ColumnHandel',
   // components: { Upload },
@@ -48,6 +49,12 @@ export default {
       default: function() {
         return {}
       }
+    },
+    columnRow: {
+      default: () => {
+        return {}
+      },
+      type: Object
     }
   },
   data() {
@@ -121,6 +128,16 @@ export default {
               activeValue: 1,
               inactiveValue: 0,
               activeColor: '#13ce66',
+              value: 0,
+              type: 'switch',
+              hidden: true
+            },
+            {
+              label: '是否允许发布文章',
+              name: 'pubArticleFlag',
+              activeValue: 1,
+              inactiveValue: 0,
+              activeColor: '#13ce66',
               value: 1,
               type: 'switch',
               hidden: true
@@ -188,11 +205,16 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters(['treeTags'])
+  },
   mounted() {
+    console.log(this.columnRow)
     this.routeQuery = this.$route.query
-    this.isEdit = Boolean((!this.routeQuery.isAdd || this.routeQuery.isAdd === 'false') && this.routeQuery.channelId)
+    this.isEdit = !this.columnRow.isAdd
     this.getColumnInfor()
     this.fetchComponentList()
+    // 获取栏目类型
     this.getColumns()
   },
   methods: {
@@ -261,7 +283,7 @@ export default {
     getColumnInfor() {
       var _this = this
       return new Promise((resolve, reject) => {
-        columnInfor(_this.routeQuery.channelId)
+        columnInfor(this.columnRow.channelId)
           .then((response) => {
             if(_this.isEdit) {
               _this.formData = response.data.result
@@ -287,7 +309,8 @@ export default {
               _this.formData = {
                 parentChannelNames: response.data.result.channelName,
                 hiddenFlag: 0,
-                appShowFlag: 1
+                appShowFlag: 0,
+                pubArticleFlag: 1
               }
             }
             resolve()
@@ -298,8 +321,6 @@ export default {
       })
     },
     submitSave(formData) {
-      console.log("formDataformDataformDataformData")
-      console.log(formData)
       this.isLoading = true
       var _this = this
       let iconUrlArray = []
@@ -310,20 +331,19 @@ export default {
       }
       formData.iconUrl = iconUrlArray.length ? iconUrlArray.join(',') : ''
       if (!this.isEdit) {
-        formData.parentChannelId = _this.routeQuery.channelId ? _this.routeQuery.channelId : ''
+        formData.parentChannelId = _this.columnRow.channelId ? _this.columnRow.channelId : ''
         if(!formData.parentChannelId) {
           delete formData.parentChannelId
         }
         return new Promise((resolve, reject) => {
           addColumn(formData)
             .then((response) => {
-              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-              // 快速添加
-              // _this.gotoListPage(_this)
+              _this.$message({ showClose: true, message: '操作成功!', type: 'success' })
               this.formData = {
                 parentChannelNames: formData.parentChannelNames
               }
               this.$store.dispatch('GetColumnAll')
+              this.$emit('closePage')
               resolve()
               _this.isLoading = false
             })
@@ -333,7 +353,6 @@ export default {
             })
         })
       } else {
-        console.log(formData, 'formData')
         formData.parentChannelId = _this.formData.parentChannelId ? _this.formData.parentChannelId : ''
         formData.stampSetting = _this.formData.stampSetting
         formData.tagRule = _this.formData.tagRule
@@ -343,14 +362,29 @@ export default {
           delete formData.parentChannelId
         }
         return new Promise((resolve, reject) => {
-          formData.channelId = _this.routeQuery.channelId
-          console.log(_this.formData, 1111)
+          formData.channelId = _this.columnRow.channelId
           editColumn(formData)
             .then((response) => {
-              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-              _this.gotoListPage(_this)
+              _this.$message({ showClose: true, message: '操作成功!', type: 'success' })
               _this.isLoading = false
               this.$store.dispatch('GetColumnAll')
+              this.$emit('closePage')
+              //    webSiteTags[webSiteTags.length - 1].label = response.data.result.channelName
+              // webSiteTags[webSiteTags.length - 1].pubArticleFlag = response.data.result.pubArticleFlag
+              // this.$store.dispatch('setTreeTags', webSiteTags)
+              // let webSiteTags = this.treeTags.slice()
+              // webSiteTags[webSiteTags.length - 1].label = response.data.result.channelName
+              // webSiteTags[webSiteTags.length - 1].pubArticleFlag = response.data.result.pubArticleFlag
+              // this.$store.dispatch('setTreeTags', webSiteTags)
+              console.log(this.treeTags, 'this.treeTags')
+              if(this.treeTags && this.treeTags.length) {
+                let webSiteTags = this.treeTags.slice()
+                if(webSiteTags[webSiteTags.length - 1].id == response.data.result.channelId) {
+                 webSiteTags[webSiteTags.length - 1].pubArticleFlag = response.data.result.pubArticleFlag
+                 console.log(webSiteTags, 'zzzz')
+                 this.$store.dispatch('setTreeTags', webSiteTags)
+                }
+              }
               resolve()
             })
             .catch((error) => {
@@ -360,29 +394,28 @@ export default {
         })
       }
     },
-    isActive(route) {
-      return route.path === this.$route.path
-    },
-    gotoListPage(context) {
-      context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {
-        if (context.isActive(context.$route)) {
-          const latestView = visitedViews.slice(-1)[0]
-          if (latestView) {
-            context.$router.push(latestView)
-          } else {
-            context.$router.push('/')
-          }
-        }
-      })
+    // isActive(route) {
+    //   return route.path === this.$route.path
+    // },
+    // gotoListPage(context) {
+    //   context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {
+    //     if (context.isActive(context.$route)) {
+    //       const latestView = visitedViews.slice(-1)[0]
+    //       if (latestView) {
+    //         context.$router.push(latestView)
+    //       } else {
+    //         context.$router.push('/')
+    //       }
+    //     }
+    //   })
 
-    }
+    // }
   }
 }
 </script>
 
 <style lang="scss">
 .colunm-add-edit {
-  margin: 30px;
   .el-form {
     .el-select {
       .el-input {

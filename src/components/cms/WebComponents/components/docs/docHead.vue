@@ -1,7 +1,6 @@
 <template>
   <div class="doc-head">
     <div class="left">
-      <!-- {{ treeTags }} -->
       <el-dropdown v-if="checkAuth('cms:article:doc')" size="mini" @command="handleCommand" placement="bottom-start">
         <el-button
           type="success"
@@ -29,7 +28,7 @@
           >{{ item.label }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-button v-if="checkAuth('cms:article:add')" type="primary" size="mini" icon="el-icon-plus" @click="createDocument"
+      <el-button v-if="checkAuth('cms:article:add')" type="primary" size="mini" icon="el-icon-plus" @click="createDocument" :disabled="!Boolean(treeTags[treeTags.length - 1].pubArticleFlag)"
       >新建文档</el-button>
     </div>
     <div class="right">

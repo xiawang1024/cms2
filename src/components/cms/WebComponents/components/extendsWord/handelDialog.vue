@@ -3,6 +3,7 @@
     :visible.sync="dialogVisible"
     :before-close="handleClose"
     :title="params.type === 'add' ? '添加字段' : '编辑字段'"
+    append-to-body
     width="500px">
     <!-- <el-form :model="extendFieldForm" label-position="top">
       <el-form-item label="名称">
