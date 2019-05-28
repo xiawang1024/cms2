@@ -147,6 +147,11 @@ const webpackConfig = merge(baseWebpackConfig, {
         uglifyOptions: {
           mangle: {
             safari10: true
+          },
+          compress: {
+            warnings: false,
+            drop_debugger: true,
+            drop_console: true
           }
         },
         sourceMap: config.build.productionSourceMap,

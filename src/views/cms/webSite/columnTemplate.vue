@@ -82,6 +82,14 @@ import { fetchList } from '@/api/cms/template'
 import { columnInfor, editColumn, columnTemplateList } from '@/api/cms/columnManage'
 export default {
   name: 'ColumnTemplate',
+  props: {
+    columnRow: {
+      default: () => {
+        return {}
+      },
+      type: Object
+    }
+  },
   data() {
     return {
       tableData: [],
@@ -114,7 +122,8 @@ export default {
     }
   },
   mounted() {
-    this.channelId = this.$route.query.channelId
+    console.log(this.columnRow, 'this.columnRow')
+    this.channelId = this.columnRow.channelId
     this.fetchList()
     this.getColumnInfor()
     // this.columnTemplateList()
@@ -150,7 +159,7 @@ export default {
     getColumnInfor() {
       var _this = this
       return new Promise((resolve, reject) => {
-        columnInfor(_this.$route.query.channelId)
+        columnInfor(this.channelId)
           .then((response) => {
             _this.columnData = response.data.result
             // _this.tagRule = response.data.result.tagRule ? response.data.result.tagRule :  _this.tagRule
@@ -239,8 +248,7 @@ export default {
         _this.columnData.templateIds = templateIds.length ? templateIds.join(',') : ''
         editColumn(_this.columnData)
           .then((response) => {
-            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            _this.gotoListPage(_this)
+            _this.$message({ showClose: true, message: '操作成功!', type: 'success' })
             _this.isLoading = false
             resolve()
           })
@@ -249,28 +257,12 @@ export default {
             reject(error)
           })
       })
-    },
-    gotoListPage(context) {
-      context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {
-        if (context.isActive(context.$route)) {
-          const latestView = visitedViews.slice(-1)[0]
-          if (latestView) {
-            context.$router.push(latestView)
-          } else {
-            context.$router.push('/')
-          }
-        }
-      })
-      context.$router.push({
-        path: '/cms/website/column'
-      })
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .column-template {
-  margin: 30px;
   border-bottom: 1px solid #e8e8e8;
   padding-bottom:20px;
   .used-template {
