@@ -16,7 +16,7 @@ import webSite from './routers/cms/webSite'
 import systemSet from './routers/cms/systemSet'
 // import systemStatus from './routers/cms/systemStatus'
 import personAndAuthor from './routers/cms/personAndAuthor'
-// import checkSetting from './routers/cms/checkSetting'
+import checkSetting from './routers/cms/checkSetting'
 // import extensions from './routers/cms/extensions'
 const cmsRouterMap = [webSite, systemSet, personAndAuthor, checkSetting]
 
