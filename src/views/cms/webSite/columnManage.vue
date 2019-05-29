@@ -340,11 +340,12 @@ export default {
 
 <style lang='scss'>
 .column-manage {
-  margin:30px;
+  padding-left:20px;
   .tool-bar {
     margin-top:22px;
     margin-bottom:22px;
     text-align: left;
+    padding-left:5px;
   }
   .pagination {
     margin-top:20px;
