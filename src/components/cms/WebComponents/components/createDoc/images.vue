@@ -263,6 +263,11 @@ export default {
       if (!resoultObj.contentBody) {
         resoultObj.contentBody = ''
       }
+      // 时间格式处理
+      if(resoultObj.publishTime) {
+        resoultObj.publishTime =  handleDate(resoultObj.publishTime)
+      }
+      resoultObj.channelId = this.channelId
       return resoultObj
     },
     save(formName, publishType, saveType) {

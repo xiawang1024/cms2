@@ -108,7 +108,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['contextMenu', 'getDocInformation'])
+    ...mapGetters(['contextMenu', 'treeTags', 'getDocInformation'])
   },
   watch: {
     activeName(val, oldVal) {
@@ -219,7 +219,9 @@ export default {
       } else {
         // 新增文章是添加封面
         // this.addCover()
+        
         let params =this.getDocInformation.baseInfor 
+        params.channelId = this.treeTags[this.treeTags.length - 1].id
         params.articleAttachmentsList = this.getDocInformation.attachmentsList
         params.coverImagesList = this.$refs.imageForm.formModel.contentImagesList
         params.articleStatus = type
@@ -231,7 +233,7 @@ export default {
           this.$message.warning('首页标题不能为空')
           return
         }
-        if(!params.articleOrigin && params.articleType !==2 && params.articleType !==3) {
+        if(!params.articleOrigin && params.articleType !==2 && params.articleType !==4) {
           this.$message.warning('文章来源不能为空')
           return
         }
@@ -263,6 +265,7 @@ export default {
       })
     },
     addCover(params) {
+      console.log(params, '封面添加')
       return new Promise((resolve, reject) => {
         createDocument(params)
           .then((response) => {

@@ -288,6 +288,7 @@ export default {
       })
     },
     createDoc(formData) {
+      console.log(formData, '附件添加')
       var _this = this
       return new Promise((resolve, reject) => {
         createDocument(formData)
@@ -365,7 +366,7 @@ export default {
           this.$message.warning('首页标题不能为空')
           return
         }
-        if(!resoultObj.articleOrigin && resoultObj.articleType !==2 && resoultObj.articleType !==3) {
+        if(!resoultObj.articleOrigin && resoultObj.articleType !==2 && resoultObj.articleType !==4) {
           this.$message.warning('文章来源不能为空')
           return
         }
