@@ -327,7 +327,7 @@ export default {
         return new Promise((resolve, reject) => {
           let newformData1 = formData1;
           newformData1.id = _this.discloseId;
-          newformData1.newsOrigin = 0;
+          newformData1.newsOrigin = _this.formData.newsOrigin;
           // let hnrToken = JSON.parse(localStorage.getItem("hnDt_token"));
           // hnrToken = hnrToken.access_token;
           // newformData1.hnrToken = hnrToken;
