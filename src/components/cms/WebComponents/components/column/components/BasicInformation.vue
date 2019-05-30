@@ -113,6 +113,15 @@ export default {
               type: 'switch'
             },
             {
+              label: '是否允许发布文章',
+              name: 'pubArticleFlag',
+              activeValue: 1,
+              inactiveValue: 0,
+              activeColor: '#13ce66',
+              value: 1,
+              type: 'switch'
+            },
+            {
               label: '其他数据',
               name: 'extra',
               type: 'textarea',
@@ -302,6 +311,7 @@ export default {
               console.log(this.treeTags, '11')
               let webSiteTags = this.treeTags.slice()
               webSiteTags[webSiteTags.length - 1].label = response.data.result.channelName
+              webSiteTags[webSiteTags.length - 1].pubArticleFlag = response.data.result.pubArticleFlag
               this.$store.dispatch('setTreeTags', webSiteTags)
               resolve()
             })

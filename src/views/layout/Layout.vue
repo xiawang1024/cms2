@@ -60,7 +60,10 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "~@/styles/mixin.scss";
-
+.hndt-admin{
+  height: 100%;
+  overflow: hidden;
+}
 .app-wrapper {
   @include clearfix;
   position: relative;

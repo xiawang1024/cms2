@@ -99,15 +99,15 @@ const systemSet = {
       meta: { title: 'componentEdit', icon: 'componentEdit', role: 'cms' },
       hidden: true
     },
-    {
-      /**
-       * 帮助文档管理
-       */
-      path: 'helpDoc',
-      component: () => import(`@/${path}/helpDoc`),
-      name: 'helpDoc',
-      meta: { title: 'helpDoc', icon: 'helpDoc', role: 'cms:helpDoc' }
-    },
+    // {
+    //   /**
+    //    * 帮助文档管理
+    //    */
+    //   path: 'helpDoc',
+    //   component: () => import(`@/${path}/helpDoc`),
+    //   name: 'helpDoc',
+    //   meta: { title: 'helpDoc', icon: 'helpDoc', role: 'cms:helpDoc' }
+    // },
     {
       /**
        * 帮助文档添加与修改

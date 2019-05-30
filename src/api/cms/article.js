@@ -41,6 +41,14 @@ export function topDocument(id) {
     // data: data
   })
 }
+// 取消置顶
+export function untopDocument(id) {
+  return request({
+    url: '/cms/article/untop/' + id,
+    method: 'post'
+    // data: data
+  })
+}
 //删除单个文章
 export function deleteDocument(data) {
   return request({

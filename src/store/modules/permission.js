@@ -65,6 +65,7 @@ const permission = {
   },
   actions: {
     GenerateRoutes({ commit, getters }, data) {
+      console.log('GenerateRoutes')
       return new Promise((resolve) => {
         const { authorities } = data
         let asyncSysRouterMap = null

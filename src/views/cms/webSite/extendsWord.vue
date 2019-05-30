@@ -36,24 +36,32 @@ export default {
   components: {
     handelDialog
   },
+  props: {
+    columnRow: {
+      default: () => {
+        return {}
+      },
+      type: Object
+    }
+  },
   data() {
     return {
       extFieldsList: [],
       dialogVisible: false,
       params: {},
-      routeQuery: {}
+      // routeQuery: {}
     }
   },
   mounted() {
-    this.routeQuery = this.$route.query
-    this.params.channelId = this.$route.query.channelId
+    // this.routeQuery = this.$route.query
+    this.params.channelId = this.columnRow.channelId
     this.getColumnInfor()
   },
   methods: {
     getColumnInfor() {
       var _this = this
       return new Promise((resolve, reject) => {
-        columnInfor(_this.routeQuery.channelId)
+        columnInfor(this.columnRow.channelId)
           .then((response) => {
             _this.extFieldsList = response.data.result.extFieldsList
             resolve()
@@ -64,9 +72,8 @@ export default {
       })
     },
     createExtends() {
-      var _this = this
       return new Promise((resolve, reject) => {
-        columnInfor(_this.routeQuery.channelId)
+        columnInfor(this.columnRow.channelId)
           .then((response) => {
             resolve()
           })
@@ -91,7 +98,7 @@ export default {
     deleteEstends(data) {
       var _this = this
       return new Promise((resolve, reject) => {
-        deleteExtendsWord(_this.routeQuery.channelId, data)
+        deleteExtendsWord(this.columnRow.channelId, data)
           .then((response) => {
             _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
             _this.getColumnInfor()
@@ -112,9 +119,8 @@ export default {
 </script>
 <style lang="scss" scoped>
   .extends-word {
-    margin: 30px;
     .extends-word-add {
-      text-align: right;
+      // text-align: right;
       margin-bottom:22px;
     }
   }

@@ -86,9 +86,10 @@
       </el-table-column>
       <el-table-column prop="createUser" label="撰稿人" width="100" show-overflow-tooltip/>
       <el-table-column prop="clickNum" label="点击" min-width="100"/>
-      <el-table-column fixed="right" label="操作" width="130">
+      <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
-          <el-button v-if="checkAuth('cms:article:stick')" type="text" size="small" @click.stop="setTop(scope.row.articleId)">置顶</el-button>
+          <el-button v-if="checkAuth('cms:article:stick') && scope.row.topFlag == 1" type="text" size="small" @click.stop="setUntop(scope.row.articleId)">取消置顶</el-button>
+          <el-button v-if="checkAuth('cms:article:stick') && scope.row.topFlag !== 1" type="text" size="small" @click.stop="setTop(scope.row.articleId)">置顶</el-button>
           <el-button v-if="checkAuth('cms:article:edit')" type="text" size="small" @click.stop="editDoc(scope.row)">编辑</el-button>
           <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">撤销</el-button>
           <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">审核</el-button> -->
@@ -102,7 +103,7 @@
 </template>
 
 <script>
-import { deleteDocument, topDocument, articalSort} from '@/api/cms/article'
+import { deleteDocument, topDocument, untopDocument, articalSort} from '@/api/cms/article'
 import reviewDialog from './review'
 import stepDialog from './step'
 import Sortable from 'sortablejs'
@@ -303,6 +304,32 @@ export default {
       }).catch(() => {  
       })
     },
+    // 取消置顶
+    setUntop(id) {
+      this.$confirm('是否取消置顶该文章?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.setUntopConform(id)
+      }).catch(() => {  
+      })
+    },
+    // 取消置顶
+    setUntopConform(id) {
+      return new Promise((resolve, reject) => {
+        untopDocument(id)
+          .then((response) => {
+            this.$emit('handelSuccess')
+            this.$message.success('取消置顶成功')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    // 置顶
     setTopConform(id) {
       return new Promise((resolve, reject) => {
         topDocument(id)

@@ -219,6 +219,7 @@ export default {
 <style lang="scss">
   .define-doucment{
     .add-btn {
+      margin-bottom:20px;
     }
     .v-form{
       max-width: 1100px;

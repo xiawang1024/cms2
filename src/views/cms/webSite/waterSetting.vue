@@ -88,6 +88,14 @@ import { columnInfor, editColumn } from '@/api/cms/columnManage'
 export default {
   name: 'ImageWatermarking',
   components: { Upload },
+  props: {
+    columnRow: {
+      default: () => {
+        return {}
+      },
+      type: Object
+    }
+  },
   data() {
     return {
       watermarkingForm: {
@@ -122,7 +130,7 @@ export default {
       isLoading: false,
       formData: {
       },
-      routeQuery: {},
+      // routeQuery: {},
       imageSetting: {
         isScaleChecked: false,
         height: '',
@@ -131,14 +139,14 @@ export default {
     }
   },
   mounted() {
-    this.routeQuery = this.$route.query
+    // this.routeQuery = this.$route.query
     this.getColumnInfor()
   },
   methods: {
     getColumnInfor() {
       var _this = this
       return new Promise((resolve, reject) => {
-        columnInfor(_this.routeQuery.channelId)
+        columnInfor(this.columnRow.channelId)
           .then((response) => {
             _this.formData = response.data.result
             _this.watermarkingForm.chooseLocation = response.data.result.stampSetting ? parseInt(response.data.result.stampSetting.coner) : 5
@@ -168,15 +176,14 @@ export default {
       }
       formData.url = iconUrlArray.length ? iconUrlArray.join(',') : ''
       return new Promise((resolve, reject) => {
-        _this.formData.channelId = _this.routeQuery.channelId
+        _this.formData.channelId = this.columnRow.channelId
         _this.formData.stampSetting = {
           coner: formData.coner,
           url: formData.url 
         }
         editColumn(_this.formData)
           .then((response) => {
-            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            _this.gotoListPage(_this)
+            _this.$message({ showClose: true, message: '操作成功!', type: 'success' })
             _this.isLoading = false
             resolve()
           })
@@ -184,21 +191,6 @@ export default {
             _this.isLoading = false
             reject(error)
           })
-      })
-    },
-    gotoListPage(context) {
-      context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {
-        if (context.isActive(context.$route)) {
-          const latestView = visitedViews.slice(-1)[0]
-          if (latestView) {
-            context.$router.push(latestView)
-          } else {
-            context.$router.push('/')
-          }
-        }
-      })
-      context.$router.push({
-        path: '/cms/website/column'
       })
     }
   }
