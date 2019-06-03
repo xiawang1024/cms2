@@ -10,7 +10,7 @@
       </el-form-item>
     </el-form>
 
-    <el-table ref="pap-base-table" :row-key="rowKeys" height="500" max-height="500" :data="currentTableData" v-loading="tableLoading" size="mini" stripe style="width: 100%; " @selection-change="handleSelectionChange">
+    <el-table ref="pap-base-table" :row-key="rowKeys" height="500" max-height="500" :data="currentTableData" v-loading="tableLoading"  stripe style="width: 100%; " @selection-change="handleSelectionChange">
 
       <el-table-column type="selection" width="55" :reserve-selection="true"></el-table-column>
         <el-table-column
