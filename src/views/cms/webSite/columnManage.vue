@@ -340,10 +340,10 @@ export default {
 
 <style lang='scss'>
 .column-manage {
-  padding-left:20px;
+  margin:30px;
   .tool-bar {
-    margin-top:22px;
-    margin-bottom:22px;
+    margin-top:18px;
+    margin-bottom:0px;
     text-align: left;
     padding-left:5px;
   }

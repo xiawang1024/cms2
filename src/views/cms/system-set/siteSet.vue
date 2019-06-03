@@ -244,9 +244,7 @@ export default {
     margin-left: 0px;
   }
 
-  .siteSet-container {
-    margin: 30px;
-  }
+
 
   .tool-bar {
     text-align: right;
@@ -254,6 +252,7 @@ export default {
   /* liyu */
     box-sizing: border-box;
     margin: 30px;
+    margin-top: 18px;
     .el-table{
       .el-input__inner{
         height:32px;
