@@ -128,15 +128,21 @@
     methods: {
       // enter 健触发
       keyupSubmit () {
+        console.log(this.$route, '$route')
         document.onkeydown=e=>{
-          let _key=window.event.keyCode;
-          if(_key===13){
-            if(this.dialogGoogleBindingVisible) {
-              this.dialogGoogleBindingHandle()
-            } else if (this.dialogGoogleDoubleCheckVisible) {
-              this.dialogGoogleDoubleCheckHandle()
-            } else {
-              this.handleGoogleLogin()
+          if(this.$route && this.$route.path == '/login') {
+            let _key=window.event.keyCode;
+            if(_key===13){
+              console.log(1233)
+              console.log(this.$route, 'this.$route')
+              console.log(this.route, 'this.route')
+              if(this.dialogGoogleBindingVisible) {
+                this.dialogGoogleBindingHandle()
+              } else if (this.dialogGoogleDoubleCheckVisible) {
+                this.dialogGoogleDoubleCheckHandle()
+              } else {
+                this.handleGoogleLogin()
+              }
             }
           }
         }
