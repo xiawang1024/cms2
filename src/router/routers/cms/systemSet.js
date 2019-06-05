@@ -36,6 +36,15 @@ const systemSet = {
     },
     {
       /**
+       * 文稿来源
+       */
+      path: 'sourceClass',
+      component: () => import(`@/${path}/sourceClass`),
+      name: 'SourceClass',
+      meta: { title: 'sourceClass', icon: 'docSource', role: 'cms' }
+    },
+    {
+      /**
        * 发布平台设置
        */
       path: 'platformSet',
