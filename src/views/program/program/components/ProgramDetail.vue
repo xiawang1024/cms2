@@ -115,7 +115,7 @@
             <el-col :span="2" style="margin-left: 5px; width: 180px">
               <el-form-item>
                 <span class="demonstration">选择栏目</span>
-                <el-select v-scroll="handleScroll" v-model="item.title" filterable placeholder="可输入关键字">
+                <el-select v-model="item.title" filterable placeholder="可输入关键字">
                   <el-option v-for="(item1, index) in columnNamesOptions" :key="index" :label="item1.column_name" :value="item1.column_name"/>
                 </el-select>
               </el-form-item>
@@ -311,12 +311,13 @@ export default {
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       this.fetchData(id)
+      this.getColumnNames()
       // this.postForm.startTime = 1554220800 *1000
     }
   },
   mounted() {
     //初始化栏目选项 因数据过大防止渲染过慢，分页加载
-    this.getColumnNames()
+    
   },
   methods: {
     getChannelOptions() {
@@ -325,16 +326,12 @@ export default {
         this.channelOptions = response.data.result;
       })
     },
-    getColumnNames() {
+    getColumnNames(channelId) {
       // let userid = this.$store.getters.tenantId
-      fetchColumnNames(this.postForm.channelId).then(response => {
+      fetchColumnNames(channelId).then(response => {
         // this.columnNamesOptions = [...this.columnNamesOptions, ...response.data.result];
         this.columnNamesOptions = response.data.result;
       })
-    },
-    handleScroll () {
-      this.formData.pageIndex++
-      this.getColumnNames()
     },
     fetchData(id) {
       // this.postForm.startTime = 1554220800 *1000
@@ -349,6 +346,7 @@ export default {
         }
         this.programs = JSON.parse(response.data.result.programlistInfo)
         this.loading = false
+        this.getColumnNames(this.postForm.channelId)
 
       }).catch(err => {
         console.log(err)
@@ -413,7 +411,7 @@ export default {
           return item.channel_id === vId        //筛选出匹配数据
       });
       this.postForm.channel_name = obj.channel_name
-      this.getColumnNames()
+      this.getColumnNames(this.postForm.channelId)
     },
     setRange(range) {
      if(range == "workday"){
