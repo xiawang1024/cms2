@@ -13,15 +13,24 @@
   </el-dialog>
 </template>
 <script>
+import { addClass, editClass } from "@/api/cms/sourceClass";
 export default {
   props: {
     dialogVisible: {
       default: false,
       type: Boolean
     },
-    title: {
-      default: '添加',
-      type: String
+    handelTpye: {
+      default: ()=> {
+        return {}
+      },
+      type: Object
+    },
+    sourceList: {
+      default: ()=> {
+        return []
+      },
+      type: Array
     }
   },
   data() {
@@ -62,7 +71,13 @@ export default {
               name: 'sourceIdsList',
               type: 'select',
               placeholder: '请选择',
-              options: []
+              options: [],
+              multiple: true
+            },
+           {
+              label: '排序',
+              name: 'seqNo',
+              type: 'number'
             },
             {
               label: '备注',
@@ -76,12 +91,92 @@ export default {
       ]
     }
   },
+  computed: {
+    title() {
+      if(this.handelTpye.type === 'add') {
+        return '添加'
+      } else {
+        return '编辑'
+      }
+    }
+  },
+  watch: {
+    dialogVisible(val) {
+      if(val) {
+        this.formSettings[0].items[2].options = this.sourceList
+      }
+      if(this.handelTpye.type === 'edit') {
+        this.formData = this.handelTpye.row
+        if(this.handelTpye.row.details && this.handelTpye.row.details.length) {
+          this.formData.sourceIdsList = this.handelTpye.row.details.map((ele) => {
+            return ele.dictDetailSourceId
+          })
+        }
+      } else {
+        this.formData = {}
+      }
+    }
+  },
   methods: {
     handleClose() {
       this.$emit('update:dialogVisible', false)
     },
-    submitSave() {
-
+    submitSave(data) {
+      if(!data.sourceIdsList) {
+        data.sourceIdsList = []
+      }
+      // 添加
+      if(this.handelTpye.type === 'add') {
+        if(this.handelTpye.row) {
+          data.parentSourceMatrixId = this.handelTpye.row.sourceMatrixId
+        }
+        this.addClass(data)
+      }
+      // 编辑
+      if(this.handelTpye.type === 'edit') {
+        data.sourceMatrixId = this.handelTpye.row.sourceMatrixId
+        data.parentSourceMatrixId = this.handelTpye.row.parentSourceMatrixId
+        this.editClass(data)
+      }
+      // return new Promise((resolve, reject) => {
+      //   addClass(data)
+      //     .then(response => {
+      //       this.$message.success('添加成功')
+      //       this.$emit('update:dialogVisible', false)
+      //       resolve()
+      //     })
+      //     .catch(error => {
+      //       reject(error)
+      //     });
+      // });
+    },
+    addClass(data) {
+      return new Promise((resolve, reject) => {
+        addClass(data)
+          .then(response => {
+            this.$message.success('添加成功')
+            this.$emit('update:dialogVisible', false)
+            this.$emit('handelSuccess')
+            resolve()
+          })
+          .catch(error => {
+            reject(error)
+          });
+      });
+    },
+    editClass(data) {
+      return new Promise((resolve, reject) => {
+        editClass(data)
+          .then(response => {
+            this.$message.success('编辑成功')
+            this.$emit('update:dialogVisible', false)
+              this.$emit('handelSuccess')
+            resolve()
+          })
+          .catch(error => {
+            reject(error)
+          });
+      });
     }
   }
 }
