@@ -166,7 +166,6 @@ export default
             //   // _this.searchSettings[0].options = _this.toTree(response.data.result.content)
             // })
             this.treeData = this.toTree(response.data.result.content)
-            console.log( this.treeData )
             resolve()
           })
           .catch((error) => {

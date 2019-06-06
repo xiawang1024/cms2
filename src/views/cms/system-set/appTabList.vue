@@ -38,7 +38,11 @@
   </div>
 </template>
 <script>
-import { initNavigation, editNavigation,enableNavigation } from "@/api/cms/appConfig.js";
+import {
+  initNavigation,
+  editNavigation,
+  enableNavigation
+} from "@/api/cms/appConfig.js";
 export default {
   name: "AppTabList",
   data() {
@@ -50,20 +54,19 @@ export default {
       }
     };
     var validatePass1 = (rule, value, callback) => {
-      if(value==''||value==null){
-          callback(new Error("请上传图片！"));
-      }else{
-        let type = value[0].url.split(".").reverse()[0];
-      type = type.toLowerCase();
-      console.log(type, "判断值！");
-
-      if (type != "png") {
-        callback(new Error("请上传PNG格式图片！"));
+      if (value == "" || value == null) {
+        callback(new Error("请上传图片！"));
       } else {
-        callback();
+        let type = value[0].url.split(".").reverse()[0];
+        type = type.toLowerCase();
+        console.log(type, "判断值！");
+
+        if (type != "png") {
+          callback(new Error("请上传PNG格式图片！"));
+        } else {
+          callback();
+        }
       }
-      }
-      
     };
 
     return {
@@ -234,12 +237,11 @@ export default {
     },
     //切换选中状态
     startUsing(row) {
-      
-      let data={
-        id:row.id,
-        enable:row.enable
-      }
-       var _this = this;
+      let data = {
+        id: row.id,
+        enable: row.enable
+      };
+      var _this = this;
       return new Promise((resolve, reject) => {
         enableNavigation(data)
           .then(response => {
