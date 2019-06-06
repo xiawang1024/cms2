@@ -416,7 +416,7 @@ export default {
       });
       this.postForm.channel_name = obj.channel_name
       this.getColumnNames(this.postForm.channelId)
-    },
+   },
     setRange(range) {
      if(range == "workday"){
        this.weekSet = ["1", "2", "3", "4", "5"]
