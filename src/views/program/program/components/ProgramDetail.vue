@@ -326,10 +326,10 @@ export default {
       })
     },
     getColumnNames() {
-      let userid = this.$store.getters.tenantId
-      fetchColumnNames(userid, this.formData.pageIndex, this.formData.pageSize).then(response => {
-        this.columnNamesOptions = [...this.columnNamesOptions, ...response.data.result];
-        // this.columnNamesOptions = response.data.result;
+      // let userid = this.$store.getters.tenantId
+      fetchColumnNames(this.postForm.channelId).then(response => {
+        // this.columnNamesOptions = [...this.columnNamesOptions, ...response.data.result];
+        this.columnNamesOptions = response.data.result;
       })
     },
     handleScroll () {
@@ -413,6 +413,7 @@ export default {
           return item.channel_id === vId        //筛选出匹配数据
       });
       this.postForm.channel_name = obj.channel_name
+      this.getColumnNames()
     },
     setRange(range) {
      if(range == "workday"){

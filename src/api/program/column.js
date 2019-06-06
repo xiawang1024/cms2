@@ -8,11 +8,11 @@ export function fetchList(query) {
   })
 }
 
-export function fetchColumnNames(userid, page, limit) {
+export function fetchColumnNames(channelId) {
   return request({
     url: '/system/column/findNameList',
     method: 'get',
-    params: {userid, page, limit}
+    params: {channelId}
   })
 }
 
