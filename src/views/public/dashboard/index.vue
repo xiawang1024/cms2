@@ -29,3 +29,9 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  .dashboard-container{
+    overflow: hidden !important;
+    height: calc(100vh + 85px) !important ;
+  }
+</style>

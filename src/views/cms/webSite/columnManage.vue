@@ -342,9 +342,10 @@ export default {
 .column-manage {
   margin:30px;
   .tool-bar {
-    margin-top:22px;
-    margin-bottom:22px;
+    margin-top:18px;
+    margin-bottom:0px;
     text-align: left;
+    padding-left:5px;
   }
   .pagination {
     margin-top:20px;

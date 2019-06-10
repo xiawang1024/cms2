@@ -4,7 +4,7 @@
       <el-button type="primary" @click="handelWord('add')" size="small">创建扩展字段</el-button>
       <el-button @click="onReturn" size="small">返回</el-button>
     </div>
-    <el-table :data="extFieldsList" style="width: 100%" size="small">
+    <el-table :data="extFieldsList" style="width: 100%">
       <el-table-column prop="label" label="字段名称" min-width="180"/>
       <el-table-column prop="type" label="字段类型" min-width="120">
         <template slot-scope="scope">
@@ -127,6 +127,7 @@ export default {
   .extends-word-document {
     margin: 20px;
     .extends-word-add {
+      margin-bottom:20px;
       // text-align: right;
     }
   }

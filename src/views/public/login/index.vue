@@ -72,14 +72,14 @@
     </el-dialog>
 
     <el-dialog class="doublecheck" title="Google二次验证(请查看APP中的动态口令)" :visible.sync="dialogGoogleDoubleCheckVisible" width="30%">
-      <el-form >
+      <el-form label-width="80px">
         <el-form-item label="动态口令" style="background: none">
-          <el-input v-model="dialogGoogleInputSecondCheckkey" style="border: none;"/>
+          <el-input v-model="dialogGoogleInputSecondCheckkey" style="border: none;" class="input-32"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogGoogleDoubleCheckVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogGoogleDoubleCheckHandle">确 定</el-button>
+        <el-button @click="dialogGoogleDoubleCheckVisible = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="dialogGoogleDoubleCheckHandle" size="small">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -121,7 +121,32 @@
         }
       }
     },
+    created() {
+      // enter键触发
+      this.keyupSubmit()
+    },
     methods: {
+      // enter 健触发
+      keyupSubmit () {
+        console.log(this.$route, '$route')
+        document.onkeydown=e=>{
+          if(this.$route && this.$route.path == '/login') {
+            let _key=window.event.keyCode;
+            if(_key===13){
+              console.log(1233)
+              console.log(this.$route, 'this.$route')
+              console.log(this.route, 'this.route')
+              if(this.dialogGoogleBindingVisible) {
+                this.dialogGoogleBindingHandle()
+              } else if (this.dialogGoogleDoubleCheckVisible) {
+                this.dialogGoogleDoubleCheckHandle()
+              } else {
+                this.handleGoogleLogin()
+              }
+            }
+          }
+        }
+      },
       showPwd() {
         if (this.passwordType === 'password') {
           this.passwordType = ''
@@ -141,10 +166,12 @@
                 _this.dialogGoogleBindingSecretKey = res.data.result.secretKey
                 _this.handleGoogleQrCode();
                 _this.dialogGoogleBindingVisible = true
+                _this.keyupSubmit()
               }
               if(res.data.result.bindingFlag == 1) {
                 // 已绑定
                 _this.dialogGoogleDoubleCheckVisible = true
+                _this.keyupSubmit()
               }
 
             } else {
@@ -279,6 +306,17 @@
       background: rgba(0, 0, 0, 0.1);
       border-radius: 5px;
       color: #454545;
+    }
+  }
+ .doublecheck{
+    .input-32 {
+      input{
+        height: 32px;
+        line-height: 32px;
+      }
+    }
+    .el-dialog__headerbtn{
+      right:10px;
     }
   }
 </style>

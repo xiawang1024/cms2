@@ -9,7 +9,6 @@
     </div>
     <el-table
       :data="imageGroupList"
-      size="mini"
       style="width: 100%"
       highlight-current-row
     >
@@ -361,6 +360,9 @@ export default {
 </script>
 <style lang="scss">
 .imageGroup-wrap{
+  .tool-bar{
+    margin-bottom:20px;
+  }
   .image-setting{
     .form-section{
       border-bottom:none;

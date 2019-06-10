@@ -77,6 +77,7 @@ export default {
     systemSet: '系统设置',
     siteSet: '站点设置',
     docSource: '文稿来源',
+    sourceClass: '来源分类',
     platformSet: '发布平台设置',
     temManager: '模板管理',
     temEdit: '模板新增或修改',

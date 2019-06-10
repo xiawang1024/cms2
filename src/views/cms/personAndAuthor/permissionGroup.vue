@@ -1,7 +1,7 @@
 <template>
   <div class="permissionGroup-container">
     <v-search :search-settings="searchSettings" @search="search"/>
-    <el-table :data="tableData" style="width: 100%" size="small" highlight-current-row>
+    <el-table :data="tableData" style="width: 100%" highlight-current-row>
       <el-table-column prop="userCode" label="用户编码"/>
       <el-table-column prop="userName" label="用户名"/>
       <el-table-column prop="enableFlag" label="用户状态">

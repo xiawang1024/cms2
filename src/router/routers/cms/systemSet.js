@@ -36,6 +36,15 @@ const systemSet = {
     },
     {
       /**
+       * 文稿来源
+       */
+      path: 'sourceClass',
+      component: () => import(`@/${path}/sourceClass`),
+      name: 'SourceClass',
+      meta: { title: 'sourceClass', icon: 'docSource', role: 'cms' }
+    },
+    {
+      /**
        * 发布平台设置
        */
       path: 'platformSet',
@@ -99,15 +108,15 @@ const systemSet = {
       meta: { title: 'componentEdit', icon: 'componentEdit', role: 'cms' },
       hidden: true
     },
-    {
-      /**
-       * 帮助文档管理
-       */
-      path: 'helpDoc',
-      component: () => import(`@/${path}/helpDoc`),
-      name: 'helpDoc',
-      meta: { title: 'helpDoc', icon: 'helpDoc', role: 'cms:helpDoc' }
-    },
+    // {
+    //   /**
+    //    * 帮助文档管理
+    //    */
+    //   path: 'helpDoc',
+    //   component: () => import(`@/${path}/helpDoc`),
+    //   name: 'helpDoc',
+    //   meta: { title: 'helpDoc', icon: 'helpDoc', role: 'cms:helpDoc' }
+    // },
     {
       /**
        * 帮助文档添加与修改

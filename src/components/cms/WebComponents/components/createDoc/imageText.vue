@@ -310,14 +310,32 @@ export default {
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       // 获取扩展字段的值
       let extendsFields = []
+      // 扩展字段时间处理
       if(this.extendsList.length) {
         extendsFields = this.extendsList.map((ele) => {
-          return {
-            label: ele.label,
-            fieldValue: resoultObj[ele.label],
-            required: ele.required
+          if(ele.type == 'datetime') {
+            if(resoultObj[ele.label]) {
+              return {
+                label: ele.label,
+                fieldValue: handleDate(resoultObj[ele.label])
+              }
+            } else {
+              return {
+                label: ele.label,
+                fieldValue: resoultObj[ele.label]
+              }
+            }
+          } else {
+            return {
+              label: ele.label,
+              fieldValue: resoultObj[ele.label]
+            }
           }
         })
+      }
+      // 发布时间转化
+      if(resoultObj.publishTime) {
+        resoultObj.publishTime =  handleDate(resoultObj.publishTime)
       }
       resoultObj.extFieldsList = extendsFields
       resoultObj.channelId = this.channelId
@@ -350,6 +368,7 @@ export default {
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       // 获取扩展字段的值
       let extendsFields = []
+      // 扩展字段时间处理
       if(this.extendsList.length) {
         extendsFields = this.extendsList.map((ele) => {
           if(ele.type == 'datetime') {

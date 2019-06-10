@@ -1206,6 +1206,9 @@ export default {
 </script>
 <style lang="scss">
 .v-form {
+  .save-btn{
+    margin-bottom:30px;
+  }
   .imageHandel {
     margin-top: 85px;
     margin-bottom: 16px;

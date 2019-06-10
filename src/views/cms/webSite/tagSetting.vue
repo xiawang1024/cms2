@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="column-mange-tag">
     <div class="tag-setting">
       <el-form :model="tagRule" >
         <el-row :gutter="30">
@@ -136,7 +136,9 @@
         </el-row>
       </el-form>
     </div>
-    <el-button type="primary" size="mini" class="submit-btn" @click="submit" :loading="isLoading">保存</el-button>
+    <div>
+      <el-button type="primary" size="mini" class="submit-btn" @click="submit" :loading="isLoading">保存</el-button>
+    </div>
   </div>
 </template>
 
@@ -249,22 +251,25 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.tag-setting {
-  border-bottom: 1px solid #e8e8e8;
-  .el-form {
-    .el-form-item {
-      .el-form-item__label {
-        width:20px;
-      }
-      .el-input__inner {
-        height: 32px;
-        line-height: 32px;
+<style lang="scss" >
+.column-mange-tag{
+  .tag-setting {
+    border-bottom: 1px solid #e8e8e8;
+    .el-form {
+      .el-form-item {
+        .el-form-item__label {
+          width:20px;
+        }
+        .el-input__inner {
+          height: 32px;
+          line-height: 32px;
+        }
       }
     }
   }
-}
-.submit-btn {
-  margin-left: 50px;
+  .submit-btn {
+    margin-left: 20px;
+    margin-top:30px;
+  }
 }
 </style>
