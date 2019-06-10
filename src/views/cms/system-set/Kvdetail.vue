@@ -19,7 +19,7 @@
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
-            <el-form-item label="文档内容">
+            <el-form-item label="值">
               <span>{{ props.row.value }}</span>
             </el-form-item>
           </el-form>
@@ -29,7 +29,6 @@
       <el-table-column prop="description" label="描述"/>
       <el-table-column prop="name" label="名字"/>
       <el-table-column prop="valueType" label="字段类型" :formatter="formatValueType"/>
-      <el-table-column prop="value" label="值"/>
       <el-table-column prop="createTime" label="创建时间" :formatter="formatDate"/>
       <el-table-column label="操作">
         <template slot-scope="scope">
