@@ -58,11 +58,11 @@ export default {
               options: [
                 {
                   label: '视频',
-                  value: '1'
+                  value: 'sp'
                 },
                 {
                   label: '矩阵',
-                  value: '2'
+                  value: 'jz'
                 }
               ]
             },
@@ -83,7 +83,6 @@ export default {
               label: '备注',
               name: 'sourceMatrixRemark',
               type: 'textarea',
-              required: true,
               placeholder: '请输入备注'
             }
           ]
