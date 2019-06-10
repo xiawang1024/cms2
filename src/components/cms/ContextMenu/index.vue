@@ -22,7 +22,7 @@
 </template>
 
 <script>
-const MENU_LIST = [
+var MENU_LIST = [
   {
     id: '1',
     label: '新建文档',
@@ -105,6 +105,10 @@ export default {
       default: ()=> {
         []
       }
+    },
+    allowDoc: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -128,7 +132,36 @@ export default {
       // console.log(val, 'val')
     },
     visible(val) {
-      console.log(val, 'val')
+      if(this.allowDoc) {
+        this.menuList = [
+          {
+            id: '1',
+            label: '新建文档',
+            control: true
+          },
+          {
+            id: '4',
+            label: '修改栏目'
+          },
+          {
+            id: '5',
+            label: '建立子栏目'
+          },
+        ]
+      } else {
+        this.menuList = [
+          {
+            id: '4',
+            label: '修改栏目'
+          },
+          {
+            id: '5',
+            label: '建立子栏目'
+          },
+        ]
+      }
+    },
+    allowDoc(val) {
     }
   },
   mounted() {
@@ -162,6 +195,7 @@ export default {
     color: #C0C4CC;
     font-size: 12px;
     padding-left: 6px;
+    padding-top:6px;
   }
   .el-menu-item {
     padding: 0 6px !important;

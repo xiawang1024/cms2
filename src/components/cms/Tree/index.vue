@@ -26,6 +26,7 @@
       :top="menuTop"
       :is-create="isCreate"
       :choosed-tag="treeTags"
+      :allow-doc="allowDoc"
     />
   </div>
 </template>
@@ -63,7 +64,8 @@ export default {
       defaultChecked: [],
       // 是否为父栏目且无子栏目
       isCreate: false,
-      expandedKeys: []
+      expandedKeys: [],
+      allowDoc: 0
     }
   },
   computed: {
@@ -102,6 +104,8 @@ export default {
     },
     // TODO:右键点击
     handleNodeContextmenu(event, object, node, element) {
+      // console.log(object.pubArticleFlag, 'object')
+      this.allowDoc = object.pubArticleFlag
       if((object.parentChannelId == -1 || !object.parentChannelId) && object.children) {
         this.isCreate = false
       } else {
