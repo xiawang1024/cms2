@@ -4,9 +4,9 @@
       <v-search :search-settings="searchSettings" @search="searchItem"/>
     </div> -->
     <div class="tool-bar">
-      <el-button type="primary" size="small" @click="addCheck">添加</el-button>
+      <el-button type="primary" size="mini" @click="addCheck">添加</el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%" highlight-current-row size="small">
+    <el-table :data="tableData" style="width: 100%" highlight-current-row >
       <el-table-column prop="configName" label="配置名称" min-width="250" show-overflow-tooltip/>
       <!-- <el-table-column prop="channelCode" label="排序" min-width="80"/> -->
       <el-table-column prop="multiAudit" label="是否启用">
@@ -109,6 +109,17 @@
               </div>
             </div>
           </template>
+          <template slot="test">
+            <div>
+              <div style="height: 300px;">
+                <el-steps direction="vertical" :active="1">
+                  <el-step title="步骤 1" icon="el-icon-user-solid"/>
+                  <el-step title="步骤 2" icon="el-icon-user-solid"/>
+                  <el-step title="步骤 3" description="这是一段很长很长很长的描述性文字" icon="el-icon-user-solid"/>
+                </el-steps>
+              </div>
+            </div>
+          </template>
         </v-form>
       </template>
     </v-page>
@@ -186,6 +197,12 @@ export default {
             {
               label: '审批人设置',
               name: 'checkPeopleSet',
+              type: 'slot',
+              placeholder: '',
+            },
+            {
+              label: '测试',
+              name: 'test',
               type: 'slot',
               placeholder: '',
             }
