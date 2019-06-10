@@ -2,7 +2,7 @@ import request from "@/utils/request";
 // import baseUrl from '@/config/base-url'
 // import QS from "qs"
 // let  Cpath='http://172.20.5.103:50350/kvconfig'
-// let Cpath="http://192.168.0.105:8089"
+// let Cpath="http://192.168.7.40:53040/kvconfig"
 let Cpath = "/kvconfig";
 
 //配置组管理
@@ -11,7 +11,10 @@ export function getAllGroup(pageNo, pageSize, data) {
   return request({
     url: Cpath + "/kvgroup/page?pageNo=" + pageNo + "&pageSize=" + pageSize,
     method: "post",
-    data: data
+    data: data,
+    loadingConfig:{
+      noLoading:true
+    }
   });
 }
 
@@ -30,7 +33,10 @@ export function groupSave(obj) {
       obj.tag +
       "&sort=" +
       obj.sort,
-    method: "put"
+    method: "put",
+    loadingConfig:{
+      noLoading:true
+    }
   });
 }
 //添加组
@@ -46,7 +52,10 @@ export function addGroupRequest(obj) {
       obj.sort +
       "&tag=" +
       obj.tag,
-    method: "post"
+    method: "post",
+    loadingConfig:{
+      noLoading:true
+    }
   });
 }
 
@@ -54,7 +63,10 @@ export function addGroupRequest(obj) {
 export function deleteGroup(kvGroupId) {
   return request({
     url: Cpath + "/kvgroup/deleteKVGroupById?kvGroupId=" + kvGroupId,
-    method: "delete"
+    method: "delete",
+    loadingConfig:{
+      noLoading:true
+    }
   });
 }
 
@@ -62,38 +74,37 @@ export function deleteGroup(kvGroupId) {
 export function getAppDetail(id) {
   return request({
     url: Cpath + "/kvgroup/findKVGroupById?kvGroupId=" + id,
-    method: "get"
+    method: "get",
+    loadingConfig:{
+      noLoading:true
+    }
   });
 }
 
 //配置组属性管理
 
 //添加配置组属性
-
-export function addGroupAttribute(obj) {
+export function addGroupAttribute(data) {
   return request({
     url:
       Cpath +
-      "/kvfield/addKVField?groupId=" +
-      obj.groupId +
-      "&description=" +
-      obj.description +
-      "&name=" +
-      obj.name +
-      "&valueType=" +
-      obj.valueType +
-      "&value=" +
-      obj.value,
-    method: "post"
+      "/kvfield/addKVField",
+      data,
+    method: "post",
+    loadingConfig:{
+      noLoading:true
+    }
   });
 }
-
 //删除配置组属性
 
 export function deleteGroupAttribute(kvFieldId) {
   return request({
     url: Cpath + "/kvfield/deleteKVGroupById?kvFieldId=" + kvFieldId,
-    method: "delete"
+    method: "delete",
+    loadingConfig:{
+      noLoading:true
+    }
   });
 }
 
@@ -101,7 +112,10 @@ export function deleteGroupAttribute(kvFieldId) {
 export function getGroupAttributeBykvFieldId(kvFieldId) {
   return request({
     url: Cpath + "/kvfield/findKVFieldById?kvFieldId=" + kvFieldId,
-    method: "get"
+    method: "get",
+    loadingConfig:{
+      noLoading:true
+    }
   });
 }
 
@@ -111,26 +125,25 @@ export function getAllField(pageNo, pageSize, obj) {
   return request({
     url: Cpath + "/kvfield/page?pageNo=" + pageNo + "&pageSize=" + pageSize,
     method: "post",
-    data: obj
+    data: obj,
+    loadingConfig:{
+      noLoading:true
+    }
+    
   });
 }
 
 //更新配置组属性
 
-export function updateFieldAttribute(obj) {
+export function updateFieldAttribute(data) {
   return request({
     url:
       Cpath +
-      "/kvfield/updateKVField?kvFieldId=" +
-      obj.id +
-      "&description=" +
-      obj.description +
-      "&name=" +
-      obj.name +
-      "&valueType=" +
-      obj.valueType +
-      "&value=" +
-      obj.value,
-    method: "put"
+      "/kvfield/updateKVField" ,
+      data,
+    method: "put",
+    loadingConfig:{
+      noLoading:true
+    }
   });
 }

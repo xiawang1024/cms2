@@ -91,6 +91,7 @@ export default {
     appTabList:'app导航配置',
     appTopList:'app顶部列表',
     appPages:'app页面配置',
+    liveCharts:'统计报表',
     systemStatus: '系统状态',
     logs: '日志',
     backTask: '后台任务',

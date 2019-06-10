@@ -49,6 +49,7 @@
                 :check-on-click-node="true"
                 :props="defaultProps"
                 @check="addColumn"
+                check-strictly
               />
             </el-scrollbar>
           </div>
