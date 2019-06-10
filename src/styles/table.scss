@@ -1,0 +1,27 @@
+
+.el-table {
+  td{
+    padding: 0;
+    height: 36px;
+  }
+  th{
+    padding-bottom:6px;
+  }
+  .el-button--small{
+    padding: 10px 0px;
+  }
+  // .el-button--mini{
+  //   padding: 5px 15px;
+  // }
+  .el-button{
+    margin: 0 0;
+  }
+  .el-button + .el-button {
+    margin: 0 0;
+    margin-top:0;
+  }
+  .el-button--success , .el-button--primary, .el-button--danger, .el-button--warning {
+    margin-top:0px !important;
+    margin-bottom:0px !important;
+  }
+}

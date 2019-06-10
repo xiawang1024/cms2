@@ -26,10 +26,16 @@ export default {
 .app-main {
   /*84 = navbar + tags-view = 50 +34 */
   min-height: calc(100vh - 84px);
+  height:calc(100vh - 84px);
   width: 100%;
   position: relative;
   overflow: hidden;
   transition: all 0.1s !important;
+  padding-bottom:85px;
+}
+.app-main > div:first-child{
+  height: 100%;
+  overflow-y: auto;
 }
 </style>
 

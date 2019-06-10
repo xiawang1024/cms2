@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="column-mange-template">
     <div class="column-template">
       <el-row :gutter="30">
         <el-col :xs="24" :sm="10" :md="10" :lg="10" :xl="10">
@@ -72,7 +72,7 @@
         </el-col>
       </el-row>
     </div>
-    <div>
+    <div class="btn">
       <el-button type="primary" size="mini" class="save-btn" @click="submitSave" :loading="isLoading">保存</el-button>
     </div>
   </div>
@@ -107,11 +107,11 @@ export default {
     columnType(val) {
       switch (val) {
         case 'own':
-          this.channelId = this.$route.query.channelId
+          this.channelId = this.columnRow.channelId
           this.fetchList()
           break
         case 'father':
-          this.channelId = this.$route.query.parentChannelId
+          this.channelId = this.columnRow.parentChannelId
           this.fetchList()
           break
         case 'global':
@@ -262,6 +262,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+// .column-mange-template {
+//   .
+// }
+.btn{
+  margin-top:30px;
+  margin-bottom:20px;
+}
 .column-template {
   border-bottom: 1px solid #e8e8e8;
   padding-bottom:20px;

@@ -14,7 +14,7 @@
       </router-link>
     </div>
 
-    <el-table v-loading="listLoading" :data="list" fit highlight-current-row size="small" style="width: 100%">
+    <el-table v-loading="listLoading" :data="list" fit highlight-current-row style="width: 100%">
       <el-table-column label="ID" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.channelId }}</span>
@@ -219,7 +219,10 @@ export default {
     // 删除频率信息
     remove(row) {
       this.$confirm('是否删除该频率?该操作会删除所有与该频率相关联的信息', '提示', {
-					type: 'warning'
+          type: 'warning'
+          
+
+          
 				}).then(() => {
         this.listLoading = true
         removeChannel(row.channelId).then((res) => {

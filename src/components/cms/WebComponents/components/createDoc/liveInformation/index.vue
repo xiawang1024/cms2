@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="column-live-infor">
     <div class="add-btn">
       <el-button type="primary" size="mini" @click="handelLive">添加</el-button>
     </div>
@@ -135,6 +135,7 @@ export default {
 <style lang="scss">
   .column-live-infor{
     .add-btn {
+      margin-bottom:20px;
     }
   }
 </style>

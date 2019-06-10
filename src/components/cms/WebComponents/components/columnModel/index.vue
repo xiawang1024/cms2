@@ -4,9 +4,9 @@
       <v-search :search-settings="searchSettings" @search="searchItem" ref="vSearch"/>
     </div>
     <div class="tool-bar">
-      <el-button type="primary" v-if="checkAuth('cms:channel:add')" @click="modelAddEdit('add')" size="small">添加</el-button>
+      <el-button type="primary" v-if="checkAuth('cms:channel:add')" @click="modelAddEdit('add')" size="mini">添加</el-button>
     </div>
-    <el-table :data="tableData" style="width:100%" size="small" highlight-current-row>
+    <el-table :data="tableData" style="width:100%" highlight-current-row>
       <el-table-column prop="templateName" label="模板名称"/>
       <el-table-column prop="templateType" label="类别" width="120px">
         <template slot-scope="scope">
@@ -333,7 +333,10 @@ export default {
 <style lang='scss'>
 .column-template-manage {
   .tool-bar {
-    margin-top:22px;
+    margin-top:20px;
+    margin-bottom:20px;
+    text-align: left;
+    padding-left:8px;
   }
   .pagination {
     margin-top:20px;

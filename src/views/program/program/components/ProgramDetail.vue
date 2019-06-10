@@ -367,8 +367,12 @@ export default {
       let over  = endTimeArr.sort();
 
       for(let i=1;i<begin.length;i++){
-          if (begin[i] <= over[i-1]){
+          if (begin[i] < over[i-1]){
               alert("排单时间有重叠！");
+              return false;
+          } 
+          if (begin[i] >= over[i]){
+              alert("一档节目开始时间必须小于结束时间！");
               return false;
           }
       }

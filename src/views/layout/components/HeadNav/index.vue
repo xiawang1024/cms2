@@ -104,7 +104,6 @@ import ThemePicker from '@/components/public/ThemePicker'
 import SysType from './sysType.vue'
 import { fetchDictAllByDictName} from "@/api/cms/dict"
 
-
 export default {
   components: {
     SysType,
@@ -143,8 +142,11 @@ export default {
     },
     logout() {
       this.$store.dispatch('FedLogOut').then(() => {
-        location.reload() // In order to re-instantiate the vue-router object to avoid bugs
-        this.$store.dispatch('selectSysType', '')
+       // location.reload() // In order to re-instantiate the vue-router object to avoid bugs
+        // this.$store.dispatch('selectSysType', '')
+        console.log(111)
+        location.reload()
+        // router.push({ path: '/login' })
       })
     }
   }

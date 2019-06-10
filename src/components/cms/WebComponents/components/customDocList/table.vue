@@ -2,7 +2,6 @@
   <el-table
     :data="list"
     style="width: 100%"
-    size="mini"
     highlight-current-row>
     <el-table-column
       prop="documentName"
