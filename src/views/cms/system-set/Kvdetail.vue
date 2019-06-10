@@ -378,7 +378,8 @@ export default {
           this.addGroupAttribute.value = row.valuearr[0].url;
         }
         if (this.selectRow == 7) {
-          this.addGroupAttribute.value = encodeURI(row.valueJson);
+          // this.addGroupAttribute.value = encodeURI(row.valueJson);
+           this.addGroupAttribute.value = row.valueJson;
           if (
             this.addGroupAttribute.value == "" ||
             this.addGroupAttribute.value == null
@@ -650,6 +651,11 @@ export default {
                 message: "更新成功!"
               });
               _this.getList();
+            }else{
+               this.$message({
+                type: "error",
+                message: response.data.result.message
+              });
             }
             this.dialogVisible = false;
           })
