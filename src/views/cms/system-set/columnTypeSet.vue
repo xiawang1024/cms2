@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { fetchDictByDictName, createDict, updateDict } from '@/api/cms/dict'
+import { fetchDictAllByDictName, createDict, updateDict } from '@/api/cms/dict'
 export default {
   name: 'ColumnType',
   data() {
@@ -134,7 +134,7 @@ export default {
     fetchDict() {
       var _this = this
       return new Promise((resolve, reject) => {
-        fetchDictByDictName(_this.dictObj.dictName)
+        fetchDictAllByDictName(_this.dictObj.dictName)
           .then((response) => {
             _this.dictObj = response.data.result
             if (_this.dictObj.details === null) {

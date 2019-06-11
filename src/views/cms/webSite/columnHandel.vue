@@ -37,7 +37,7 @@
 <script>
 // const Upload = _ => import('@/components/cms/Upload/upload')
 import { columnInfor, addColumn, editColumn, isColumnRepet } from '@/api/cms/columnManage'
-import { fetchDictByDictName } from '@/api/cms/dict'
+import { fetchDictAllByDictName } from '@/api/cms/dict'
 import { fetchComponentList } from '@/api/cms/component'
 import { mapGetters } from 'vuex'
 export default {
@@ -248,10 +248,10 @@ export default {
     getColumns() {
       var _this = this
       return new Promise((resolve, reject) => {
-        fetchDictByDictName('栏目类型')
+        fetchDictAllByDictName('栏目类型')
           .then((response) => {
             if (response.data.result.details && response.data.result.details.length) {
-              _this.formSettings[0].items[10].options = response.data.result.details.map((ele) => {
+              _this.formSettings[0].items[11].options = response.data.result.details.map((ele) => {
                 return {
                   label: ele.dictDetailName,
                   value: ele.dictDetailValue
