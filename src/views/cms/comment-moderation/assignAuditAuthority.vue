@@ -2,7 +2,7 @@
   <div class="helpdoc-container">
     <div class="tool-bar">
       <div class="leftAside">
-        <el-button size="mini" type="primary" @click="seeUser">查看用户</el-button>
+        <el-button size="mini" type="primary" @click.stop="seeUser">查看用户</el-button>
         <el-button
           size="mini"
           type="primary"
@@ -68,11 +68,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="220">
                   <template slot-scope="scope">
-                    <el-button
-                      size="mini"
-                      type="primary"
-                      @click="cleanLimite(scope.$index, scope.row)"
-                    >删除权限</el-button>
+                    <el-button size="mini" type="primary" @click.stop="deletUserRight(scope.$index, scope.row)">删除权限</el-button>
                     <el-button
                       size="mini"
                       type="success"
@@ -117,6 +113,25 @@
         <el-button size="mini" type="primary" @click="submitSave">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="查看当前栏目用户" :visible.sync="dialogTableVisible">
+      <el-table :data="gridData" max-height="400"
+      >
+        <el-table-column prop="userName" label="姓名" />
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button
+              class="rightAside"
+              size="mini"
+              type="danger"
+              @click.stop="cleanLimite(scope.$index, scope.row)"
+            >删除权限</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="dialogTableVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -125,7 +140,7 @@ import splitPane from "vue-splitpane";
 import { columnListAny } from "@/api/cms/columnManage";
 import mixins from "@/components/cms/mixins";
 import { UserList } from "@/api/user/user";
-import { saveAudit,deleteLimite } from "@/api/cms/reviewComment";
+import { saveAudit, deleteLimite, seeUser } from "@/api/cms/reviewComment";
 
 export default {
   name: "AssignAuditAuthority",
@@ -147,10 +162,12 @@ export default {
       searchFlag: false,
       searchAttributeById: "",
       dialogVisible: false,
+      dialogTableVisible:false,
       fullUserList: [],
       selectUser: [],
       columnList: [],
-      result: []
+      result: [],
+      gridData: []
     };
   },
   mounted() {
@@ -244,7 +261,6 @@ export default {
     //条件查询
     handleSearch() {
       // var _this = this;
-
       //条件查询接口
       // if (1) {
       //   _this.searchFlag = true;
@@ -257,13 +273,54 @@ export default {
       this.$refs.tree.setCheckedKeys([]);
       this.result = [];
       this.selectUser = [];
-      this.defaultCheck=[];
+      this.defaultCheck = [];
     },
     //账号搜索
     search() {
       //接口
     },
-    seeUser() {},
+    seeUser() {
+      if (this.result.length==0) {
+        this.$message({
+          type: "error",
+          message: "请选择查看的栏目"
+        });
+        return false;
+      } else if (this.result.length > 1) {
+        this.$message({
+          type: "error",
+          message: "请选择一个栏目进行查看"
+        });
+        return false;
+      } else {
+         this.userDetaiRequest(this.result[0]);
+        this.dialogTableVisible=true;
+       
+      }
+    },
+
+    userDetaiRequest(userId) {
+      // var _this = this;
+      return new Promise((resolve, reject) => {
+        seeUser(userId)
+          .then(response => {
+            if (response.data.code == 0) {
+              this.gridData = response.data.result;
+              console.log(this.gridData, "tankaun");
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data.msg
+              });
+            }
+
+            resolve();
+          })
+          .catch(reject => {
+            console.log(reject);
+          });
+      });
+    },
     submitSave() {
       let content = [];
       this.result = this.$refs.tree.getCheckedNodes().map(ele => {
@@ -284,7 +341,7 @@ export default {
             userInfo.push({
               userId: element,
               createUser: item.createUser,
-              userName:item.userName
+              userName: item.userName
             });
           }
         });
@@ -299,15 +356,14 @@ export default {
       return new Promise((resolve, reject) => {
         saveAudit(data)
           .then(response => {
-            if (response.data.code == '0') {
+            if (response.data.code == "0") {
               this.$message({
                 type: "success",
                 message: response.data.msg
               });
-             
+
               _this.getUserList();
               _this.handleReset();
-             
             } else {
               this.$message({
                 type: "error",
@@ -322,27 +378,37 @@ export default {
           });
       });
     },
-    cleanLimite(index,row){
-      return new Promise((resolve,reject)=>{
-        deleteLimite(row.userId)
-        .then(res=>{
-          if(res.data==0){
-            this.$message({
-              type:'success',
-              message:res.data.msg
-            })
-          }else{
-            this.$message({
-              type:'error',
-              message:res.data.msg
-            })
-          }
-          resolve();
-        })
-        .catch(reject=>{
-          console.log(reject)
-        })
-      })
+    deletUserRight(index,row){
+      this.getUserUCID(row.userId)
+    },
+    //根据用户id查询ucid
+    getUserUCID(userId) {
+
+    },
+
+    cleanLimite(index, row) {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        deleteLimite(row.ucId)
+          .then(res => {
+            if (res.data.code == 0) {
+              this.$message({
+                type: "success",
+                message: res.data.msg
+              });
+              _this.seeUser();
+            } else {
+              this.$message({
+                type: "error",
+                message: res.data.msg
+              });
+            }
+            resolve();
+          })
+          .catch(reject => {
+            console.log(reject);
+          });
+      });
     }
   }
 };
