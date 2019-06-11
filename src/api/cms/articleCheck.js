@@ -18,9 +18,9 @@ export function editCheck(data) {
   })
 }
 // 删除审核
-export function deleteCheck(data) {
+export function getProcess(data) {
   return request({
-    url: '/cmsnews/auditConfig/deleteAuditConfig',
+    url: '/cmsnews/auditProcess/queryAuditProcess',
     method: 'post',
     data,
     requestBodyType: 'formData'
@@ -34,10 +34,12 @@ export function getCheckInfor(id) {
   })
 }
 // 审核列表
-export function getCheckList(pageNum, pageSize) {
+export function checkArticleList(data) {
   return request({
-    url: `/cmsnews/auditConfig/queryAuditConfig?pageNo=${pageNum}&pageSize=${pageSize}`,
-    method: 'get',
+    url: `/cmsnews/auditProcess/toDoListaArticle`,
+    method: 'post',
+    data,
+    requestBodyType: 'formData',
     loadingConfig: {
     }
   })
