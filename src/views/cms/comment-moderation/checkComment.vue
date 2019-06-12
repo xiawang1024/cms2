@@ -18,9 +18,9 @@
         </el-dropdown>
         <div class="block">
           <el-cascader
+            :props="{ checkStrictly: true }"
             v-model="columnSelection"
             :options="options"
-            :props="{ expandTrigger: 'hover' }"
             @change="handleChange"
             size="mini"
           />
@@ -58,7 +58,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="source" min-width="100" label="来源" :formatter="sourceStatus"/>
-      <el-table-column prop="createTime" min-width="100" label="评论时间"/>
+      <el-table-column prop="createTime" min-width="135" label="评论时间"/>
       <el-table-column width="280" label="操作">
         <template slot-scope="scope">
           <el-button
@@ -72,7 +72,7 @@
             size="mini"
             type="primary"
             @click.stop="handleRefuse(scope.$index, scope.row)"
-          >未通过</el-button>
+          >拒绝</el-button>
           <el-button
             v-if="scope.row.top==false"
             size="mini"
@@ -84,7 +84,7 @@
             size="mini"
             type="primary"
             @click.stop="handleTop(scope.$index, scope.row)"
-          >取消置顶</el-button>
+          >取消</el-button>
           <el-button
             size="mini"
             type="danger"
@@ -131,8 +131,8 @@ export default {
       columnSelection: [],
       currentChannelId: "",
       reviewType: "default",
-      topStatus:'default',
-      dropValue:'显示全部'
+      topStatus: "default",
+      dropValue: "显示全部"
     };
   },
   created() {
@@ -290,8 +290,7 @@ export default {
       let params = {
         pageNo: this.pageNo,
         pageSize: this.pageSize,
-        // userId: JSON.parse(localStorage.getItem("BaseInfor")).userId
-        userId: "1134031750142496768"
+        userId: JSON.parse(localStorage.getItem("BaseInfor")).userId
       };
       console.log(params, "canshu");
       this.requestCriticsmList(params);
@@ -329,7 +328,10 @@ export default {
           .then(res => {
             if (res.data.code == "0") {
               console.log(res, "ressss");
-              _this.options = _this.myTree(res.data.result);
+              _this.$nextTick(()=>{
+                 _this.options = _this.myTree(res.data.result);
+              })
+             
             } else {
               _this.$message({
                 type: "error",
@@ -346,8 +348,8 @@ export default {
     search() {},
     resetChoice() {
       this.reviewType = "default";
-      this.topStatus='default';
-      this.dropValue='显示全部'
+      this.topStatus = "default";
+      this.dropValue = "显示全部";
       this.pageNo = 1;
       this.pageSize = 10;
       this.totalCount = 0;
@@ -402,16 +404,15 @@ export default {
         channelId: this.currentChannelId,
         pageNo: this.pageNo,
         pageSize: this.pageSize,
-        // userId: JSON.parse(localStorage.getItem("BaseInfor")).userId
-        userId: "1131754289413361664",
-        top:''
+        userId: JSON.parse(localStorage.getItem("BaseInfor")).userId,
+        top: ""
       };
-      if(this.topStatus==='default'){
-        params.top=''
-      }else if(this.topStatus==='top'){
-        params.top=true
-      }else if(this.topStatus==='untop'){
-        params.top=false
+      if (this.topStatus === "default") {
+        params.top = "";
+      } else if (this.topStatus === "top") {
+        params.top = true;
+      } else if (this.topStatus === "untop") {
+        params.top = false;
       }
 
       console.log(params, "canshu");
@@ -452,21 +453,21 @@ export default {
       this.totalCount = 0;
       console.log(command);
       if (command === "showAll") {
-        this.dropValue='显示全部'
+        this.dropValue = "显示全部";
         this.reviewType = "default";
-        this.topStatus='default';
+        this.topStatus = "default";
         this.showAll();
       }
       if (command === "showTopColumn") {
-        this.dropValue='显示置顶'
+        this.dropValue = "显示置顶";
         this.reviewType = "top";
-        this.topStatus='top'
+        this.topStatus = "top";
         this.showTopColumn();
       }
       if (command === "showDeTopColumn") {
-        this.dropValue='显示未置顶'
+        this.dropValue = "显示未置顶";
         this.reviewType = "untop";
-        this.topStatus='untop';
+        this.topStatus = "untop";
         this.showDeTopColumn();
       }
     },
@@ -479,8 +480,7 @@ export default {
         pageNo: this.pageNo,
         pageSize: this.pageSize,
         top: true,
-        // userId: JSON.parse(localStorage.getItem("BaseInfor")).userId
-        userId: "1131754289413361664"
+        userId: JSON.parse(localStorage.getItem("BaseInfor")).userId
       };
       this.requestCriticsmList(params);
     },
@@ -489,8 +489,7 @@ export default {
         pageNo: this.pageNo,
         pageSize: this.pageSize,
         top: false,
-        // userId: JSON.parse(localStorage.getItem("BaseInfor")).userId
-        userId: "1131754289413361664"
+        userId: JSON.parse(localStorage.getItem("BaseInfor")).userId
       };
       this.requestCriticsmList(params);
     },

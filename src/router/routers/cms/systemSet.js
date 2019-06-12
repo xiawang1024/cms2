@@ -193,14 +193,25 @@ const systemSet = {
     },
     {
       /**
-       * 统计报表
+       * umeng统计报表
        */
       path: 'liveCharts',
       component: () => import(`@/${path}/liveCharts`),
       name: 'liveCharts',
       meta: { title: 'liveCharts', icon: 'appConfig', role: 'cms' },
-      hidden:true
+      // hidden:true
     },
+    {
+      /**
+       * web统计报表
+       */
+      path: 'webSiteCharts',
+      component: () => import(`@/${path}/webSiteCharts`),
+      name: 'webSiteCharts',
+      meta: { title: 'webSiteCharts', icon: 'appConfig', role: 'cms' },
+      // hidden:true
+    },
+    
     
   ]
 }

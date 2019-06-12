@@ -15,12 +15,12 @@
         class="searchinput"
         size="mini"
         style="width:180px;"
-        v-model="searchAttributeById"
+        v-model="searchAttribute"
         placeholder="请输入查询姓名"
         prefix-icon="el-icon-search"
         clearable
-        @keyup.enter.native="search"
-        @change="search"
+        @keyup.enter.native="handleSearch"
+        @change="handleSearch"
       />
       <div class="rightAside">
         <el-button size="mini" type="primary" @click="handleSearch" icon="el-icon-search">查询</el-button>
@@ -113,9 +113,9 @@
         <el-button size="mini" type="primary" @click="submitSave">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="查看当前栏目用户" :visible.sync="dialogTableVisible">
-      <el-table :data="gridData" max-height="400"
-      >
+    <el-dialog title="查看当前栏目用户" max-height="400" :visible.sync="dialogTableVisible">
+      <el-table :data="gridData" max-height="400" >
+        >
         <el-table-column prop="userName" label="姓名" />
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -140,7 +140,7 @@ import splitPane from "vue-splitpane";
 import { columnListAny } from "@/api/cms/columnManage";
 import mixins from "@/components/cms/mixins";
 import { UserList } from "@/api/user/user";
-import { saveAudit, deleteLimite, seeUser } from "@/api/cms/reviewComment";
+import { saveAudit, deleteLimite, seeUser,getUserInfo } from "@/api/cms/reviewComment";
 
 export default {
   name: "AssignAuditAuthority",
@@ -160,7 +160,7 @@ export default {
       searchData: { userName: "" },
       userList: [],
       searchFlag: false,
-      searchAttributeById: "",
+      searchAttribute: "",
       dialogVisible: false,
       dialogTableVisible:false,
       fullUserList: [],
@@ -260,6 +260,7 @@ export default {
     },
     //条件查询
     handleSearch() {
+
       // var _this = this;
       //条件查询接口
       // if (1) {
@@ -294,7 +295,7 @@ export default {
         return false;
       } else {
          this.userDetaiRequest(this.result[0]);
-        this.dialogTableVisible=true;
+        
        
       }
     },
@@ -307,6 +308,7 @@ export default {
             if (response.data.code == 0) {
               this.gridData = response.data.result;
               console.log(this.gridData, "tankaun");
+              this.dialogTableVisible=true;
             } else {
               this.$message({
                 type: "error",
@@ -383,7 +385,25 @@ export default {
     },
     //根据用户id查询ucid
     getUserUCID(userId) {
+      return new Promise((resolve,reject)=>{
+         getUserInfo({userId:userId})
+         .then(response=>{
+           if(response.data.code==0){
+             //删除操作
 
+           }else{
+              this.$message({
+                type: "error",
+                message: response.data.msg
+              });
+           }
+           resolve();
+         })
+         .catch(reject=>{
+           console.log(reject)
+         })
+      })
+     
     },
 
     cleanLimite(index, row) {
@@ -410,6 +430,7 @@ export default {
           });
       });
     }
+    
   }
 };
 </script>
@@ -453,4 +474,8 @@ export default {
   position: relative;
   width: 100%;
 }
+/deep/.el-table td{
+  padding: 8px 0;
+}
+
 </style>

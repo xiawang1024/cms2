@@ -84,3 +84,14 @@ export function seeUser(userId) {
     method: "get"
   });
 }
+
+//查询权限用户信息
+
+export function getUserInfo(data) {
+
+  return request({
+    url: Cpath + `/permission/get-user-with-permission`,
+    method: "get",
+    data,
+  });
+}
