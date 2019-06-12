@@ -15,7 +15,10 @@ export function getProcess(data) {
     url: '/cmsnews/auditProcess/queryAuditProcess',
     method: 'post',
     data,
-    requestBodyType: 'formData'
+    requestBodyType: 'formData',
+    loadingConfig: {
+      noLoading: true
+    }
   })
 }
 // 审核详情
@@ -33,6 +36,16 @@ export function checkArticleList(data) {
     data,
     requestBodyType: 'formData',
     loadingConfig: {
+    }
+  })
+}
+// 获取文章详情
+export function documentInfor(id) {
+  return request({
+    url: '/cms/article/' + id,
+    method: 'get',
+    loadingConfig: {
+      target: '.el-dialog__body'
     }
   })
 }

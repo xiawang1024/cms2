@@ -17,9 +17,9 @@ const personAndAuthor = {
        * 权限分组
        */
       path: 'articleCheck',
-      component: () => import(`@/${path}/index`),
+      component: () => import(`@/${path}/articleCheck`),
       name: 'articleCheck',
-      meta: { title: 'articleCheck', icon: 'permissionGroup', role: 'cms' }
+      meta: { title: 'articleCheck', icon: 'check', role: 'cms' }
     }
   ]
 }

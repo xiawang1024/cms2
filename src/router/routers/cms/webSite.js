@@ -30,7 +30,7 @@ const webSite = {
       path: 'document',
       component: () => import(`@/${path}/publishDocument`),
       name: 'PublishDocument',
-      meta: { title: 'publishDocument', icon: 'docSource', role: 'cms:article' }
+      meta: { title: 'publishDocument', icon: 'clipboard', role: 'cms:article' }
     },
     {
       /**
@@ -39,7 +39,7 @@ const webSite = {
       path: 'column',
       component: () => import(`@/${path}/columnManage`),
       name: 'ColumnManage',
-      meta: { title: 'columnManage', icon: 'docSource', role: 'cms:channel' }
+      meta: { title: 'columnManage', icon: 'systemFunc', role: 'cms:channel' }
     },
     {
       /**

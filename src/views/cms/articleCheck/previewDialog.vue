@@ -2,17 +2,38 @@
   <el-dialog
     title="文章详情"
     :visible.sync="dialogVisible"
-    width="50%"
+    width="60%"
     class="check-preview-dialog"
     :before-close="handleClose">
-    <!-- <span slot="footer" class="dialog-footer">
-      <el-button @click="$emit('update:dialogVisible', false)">取 消</el-button>
-      <el-button type="primary">确 定</el-button>
-    </span> -->
+    <div v-if="documentInfor.articleId">
+      <h3>{{ documentInfor.articleTitle }}</h3>
+      <div>
+        {{ documentInfor.createTime }}
+        <span v-if="documentInfor.createUser">{{ documentInfor.createUser }}</span>
+      </div>
+      <div v-if="documentInfor.articleType =='1'">
+        <el-row :gutter="20" >
+          <el-col :span="6" v-for="(ele, index) in imageList" :key="index">
+            <div class="image-list">
+              <img :src="ele.url" alt="">
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+      <div v-if="documentInfor.articleType =='3'">
+        <!-- <span>转载地址 </span>
+        <a :href="documentInfor.linkTo">{{ documentInfor.linkTo }}</a> -->
+        转载地址
+        <div class="link-to">
+          <span size="small" class="link-url" @click="openLink(documentInfor.linkTo)">{{ documentInfor.linkTo }}</span>
+        </div>
+      </div>
+      <div v-html="documentInfor.contentBody"/>
+    </div>
   </el-dialog>
 </template>
 <script>
-import { documentInfor } from '@/api/cms/article'
+import { documentInfor } from '@/api/cms/articleCheck'
 export default {
   props: {
     dialogVisible: {
@@ -26,6 +47,8 @@ export default {
   },
   data() {
     return {
+      documentInfor: {},
+      imageList: []
     }
   },
   watch: {
@@ -36,40 +59,27 @@ export default {
     }
   },
   methods: {
+    openLink(val) {
+      window.open(val)
+    },
+    differenceFile(articleAttachmentsList, type) {
+      let arrResoult = []
+      if(articleAttachmentsList && articleAttachmentsList.length) {
+        arrResoult = articleAttachmentsList.filter((ele) => {
+          return ele.category === type
+        })
+      }
+      return arrResoult
+    },
     handleClose() {
       this.$emit('update:dialogVisible', false)
     },
-    // handelCheck(state) {
-    //   console.log(1111)
-    //   let data = {
-    //     id: this.rowData.id,
-    //     auditOpinion: this.form.auditOpinion,
-    //     state: state
-    //   }
-    //   return new Promise((resolve, reject) => {
-    //     checkHandel(data)
-    //       .then((response) => {
-    //         this.$emit('update:dialogVisible', false)
-    //         this.$message.success('操作成功')
-    //         this.$emit('handelSuccess')
-    //         resolve()
-    //       })
-    //       .catch((error) => {
-    //         reject(error)
-    //       })
-    //   })
-    // },
     getDocumentInfor(id) {
       return new Promise((resolve, reject) => {
         documentInfor(id)
           .then((response) => {
-            // _this.docInfor = response.data.result
-            // _this.typeForm.articleType = response.data.result.articleType ? response.data.result.articleType : 0
-            // if(_this.docInfor.extFieldsList && _this.docInfor.extFieldsList.length) {
-            //   _this.docInfor.extFieldsList.forEach((ele) => {
-            //     _this.docInfor[ele.label] = ele.fieldValue
-            //   })
-            // }
+            this.documentInfor = response.data.result
+            this.imageList = this.differenceFile(response.data.result.articleAttachmentsList, 'IMG')
             resolve()
           })
           .catch((error) => {
@@ -81,9 +91,26 @@ export default {
 }
 </script>
 <style lang="scss">
-  .article-check-dialog{
-   label{
-     font-weight: normal;
-   }
+  .check-preview-dialog{
+    .el-dialog__header{
+      border-bottom: 1px solid #ebeef5;
+    }
+    .el-dialog__body{
+      padding-top: 10px;
+    }
+    .link-to{
+      overflow: hidden;
+      .link-url{
+        cursor: pointer;
+        color: rgb(64, 158, 255)
+      }
+    }
+    .image-list {
+      height: 150px;
+      width:auto;
+      img{
+        height:100%;
+      }
+    }
   }
 </style>
