@@ -1,23 +1,15 @@
 import request from '@/utils/request'
-// 添加审核设置
-export function addCheck(data) {
+
+//审核
+export function checkHandel(data) {
   return request({
-    url: '/cmsnews/auditConfig/saveAuditConfig',
+    url: '/cmsnews/auditProcess/updateAuditProcess',
     method: 'post',
     data,
     requestBodyType: 'formData'
   })
 }
-//修改审核和
-export function editCheck(data) {
-  return request({
-    url: '/cmsnews/auditConfig/updateAuditConfig',
-    method: 'post',
-    data,
-    requestBodyType: 'formData'
-  })
-}
-// 删除审核
+// 查看审核进度
 export function getProcess(data) {
   return request({
     url: '/cmsnews/auditProcess/queryAuditProcess',
@@ -42,14 +34,5 @@ export function checkArticleList(data) {
     requestBodyType: 'formData',
     loadingConfig: {
     }
-  })
-}
-// 修改配置
-export function resetCheck(data) {
-  return request({
-    url: '/cmsnews/auditConfig/updateAuditConfig',
-    method: 'post',
-    data,
-    requestBodyType: 'formData'
   })
 }
