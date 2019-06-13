@@ -86,6 +86,9 @@ export default {
   methods: {
     // 标签转换
     tagListchange(val) {
+      if(!val) {
+        return
+      }
       let res = val.map((ele) => {
         return ele.tagName
       })
