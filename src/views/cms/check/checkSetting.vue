@@ -39,7 +39,7 @@
                   <el-step icon="el-icon-user-solid" v-for="(ele, index) in gradeSetting" :key="index">
                     <template slot="title">
                       <div v-if="index === 0">
-                        <div class="title fz">
+                        <div class="titles fz">
                           本人
                         </div>
                       </div>
@@ -418,7 +418,7 @@ export default {
       .title-icon{
         padding-top:4px;
       }
-      .title{
+      .titles{
         padding-left:5px;
         &.fz{
           font-size: 14px;
@@ -445,7 +445,7 @@ export default {
       // .title-icon{
       //   padding-top:4px;
       // }
-      .title{
+      .titles{
         padding-left:5px;
         &.fz{
           font-size: 14px;
