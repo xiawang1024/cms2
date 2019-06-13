@@ -1,5 +1,6 @@
 import request from "@/utils/request";
-var Cpath = "http://192.168.7.55:8093/news-comment";
+// var Cpath = "http://192.168.7.55:8093/news-comment";
+var Cpath = "/news-comment";
 import QS from "qs";
 
 export function saveAudit(data) {
