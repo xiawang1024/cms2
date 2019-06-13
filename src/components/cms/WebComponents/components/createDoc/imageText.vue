@@ -11,7 +11,7 @@
           </el-form-item>
           <el-form-item label="">
             <div class="grid-content bg-purple">
-              <Tinymce ref="editor" :height="450" v-model="docContentForm.contentBody"/>
+              <Tinymce ref="editor" :height="450" :read-only="contextMenu.articleType == 3" v-model="docContentForm.contentBody"/>
             </div>
           </el-form-item>
         </el-form>
@@ -45,10 +45,10 @@
               <v-form ref="otherForm" :form-settings="otherSettings" :form-data="formData" label-width="80px" :show-button = "showButton">
                 <template slot="set">
                   <div class="set">
-                    <el-checkbox true-label="1" false-label="0" v-model="adddocSet.topFlag">置顶</el-checkbox>
-                    <el-checkbox true-label="1" false-label="0" v-model="adddocSet.hiddenFlag">隐身</el-checkbox>
+                    <el-checkbox true-label="1" false-label="0" v-model="adddocSet.topFlag" :disabled="contextMenu.articleType == 3">置顶</el-checkbox>
+                    <el-checkbox true-label="1" false-label="0" v-model="adddocSet.hiddenFlag" :disabled="contextMenu.articleType == 3">隐身</el-checkbox>
                     <span class = "extractCode">提取码</span>
-                    <el-input v-model="adddocSet.extractCode"/>
+                    <el-input v-model="adddocSet.extractCode" :disabled="contextMenu.articleType == 3"/>
                   </div>
                 </template>
               </v-form>
@@ -61,8 +61,9 @@
 </template>
 <script>
 import Tinymce from '@/components/Tinymce'
-import { createDocument, editDocument } from '@/api/cms/article'
+import { createDocument, editDocument, editQuoteDocument } from '@/api/cms/article'
 import { mapGetters } from 'vuex'
+import { handleDate } from '@/utils/date-filter'
 export default {
   name: 'ImageText',
   components: { Tinymce },
@@ -201,7 +202,6 @@ export default {
     },
     sourceList(val) {
       if(val.length) {
-        console.log(val)
         this.baseSettings[0].items[1].options = val
       }
     },
@@ -213,7 +213,12 @@ export default {
     if(this.sourceList.length) {
       this.baseSettings[0].items[1].options = this.sourceList
     }
-
+    // 转载禁用
+    if(this.contextMenu.articleType == 3) {
+      this.baseSettings[0].items.forEach((ele) => {
+        ele.disabled = true
+      })
+    }
     this.docContentForm = {
       articleTitle: this.docInfor.articleTitle,
       contentTitle: this.docInfor.contentTitle,
@@ -239,7 +244,9 @@ export default {
     goBack() {
       this.$store.dispatch('setContextMenu', {
         id: '0',
-        label: ''
+        label: '',
+        pageNum: this.contextMenu.pageNum,
+        pageSize: this.contextMenu.pageSize,
       })
     },
     goEdit(docId) {
@@ -269,35 +276,66 @@ export default {
     editDoc(formData, saveType) {
       console.log(saveType, 'edit')
       var _this = this
-      return new Promise((resolve, reject) => {
-        editDocument(formData)
-          .then((response) => {
-            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            if(saveType === 'saveOnly') {
-              this.goEdit(response.data.result.articleId)
-            } else {
+      if(this.contextMenu.articleType == 3) {
+        return new Promise((resolve, reject) => {
+          editQuoteDocument(formData)
+            .then((response) => {
+              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
               this.goBack()
-            } 
-            resolve()
-            _this.isLoading = false
-          })
-          .catch((error) => {
-            _this.isLoading = false
-            reject(error)
-          })
-      })
+              resolve()
+              _this.isLoading = false
+            })
+            .catch((error) => {
+              _this.isLoading = false
+              reject(error)
+            })
+        })
+      } else {
+        return new Promise((resolve, reject) => {
+          editDocument(formData)
+            .then((response) => {
+              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
+              this.goBack()
+              resolve()
+              _this.isLoading = false
+            })
+            .catch((error) => {
+              _this.isLoading = false
+              reject(error)
+            })
+        })
+      }
     },
     getSubmitData() {
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       // 获取扩展字段的值
       let extendsFields = []
+      // 扩展字段时间处理
       if(this.extendsList.length) {
         extendsFields = this.extendsList.map((ele) => {
-          return {
-            label: ele.label,
-            fieldValue: resoultObj[ele.label]
+          if(ele.type == 'datetime') {
+            if(resoultObj[ele.label]) {
+              return {
+                label: ele.label,
+                fieldValue: handleDate(resoultObj[ele.label])
+              }
+            } else {
+              return {
+                label: ele.label,
+                fieldValue: resoultObj[ele.label]
+              }
+            }
+          } else {
+            return {
+              label: ele.label,
+              fieldValue: resoultObj[ele.label]
+            }
           }
         })
+      }
+      // 发布时间转化
+      if(resoultObj.publishTime) {
+        resoultObj.publishTime =  handleDate(resoultObj.publishTime)
       }
       resoultObj.extFieldsList = extendsFields
       resoultObj.channelId = this.channelId
@@ -325,15 +363,31 @@ export default {
       return resoultObj
     },
     save(formName, publishType, saveType) {
+      console.log(this.extendsList, 'this.extendsList.')
       // this.$refs.otherForm.updateRule()
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       // 获取扩展字段的值
       let extendsFields = []
+      // 扩展字段时间处理
       if(this.extendsList.length) {
         extendsFields = this.extendsList.map((ele) => {
-          return {
-            label: ele.label,
-            fieldValue: resoultObj[ele.label]
+          if(ele.type == 'datetime') {
+            if(resoultObj[ele.label]) {
+              return {
+                label: ele.label,
+                fieldValue: handleDate(resoultObj[ele.label])
+              }
+            } else {
+              return {
+                label: ele.label,
+                fieldValue: resoultObj[ele.label]
+              }
+            }
+          } else {
+            return {
+              label: ele.label,
+              fieldValue: resoultObj[ele.label]
+            }
           }
         })
       }
@@ -341,6 +395,9 @@ export default {
       resoultObj.channelId = this.channelId
       resoultObj.articleStatus = publishType
       // 标签字段处理
+      if(typeof resoultObj.articleShowStyle == 'object') {
+        resoultObj.articleShowStyle = ''
+      }
       let chooseTags = []
       resoultObj.tagIds.forEach((ele) => {
         this.tagList.forEach((son) => {
@@ -353,12 +410,22 @@ export default {
         })
       })
       resoultObj.tagIdsList = chooseTags
-      resoultObj.articleType = 0
+      // resoultObj.articleType = 0
+      resoultObj.articleType = this.contextMenu.articleType ? this.contextMenu.articleType : 0
       delete resoultObj.set
       delete resoultObj.tagIds
       if (!resoultObj.contentBody) {
         resoultObj.contentBody = ''
       }
+     
+      if(resoultObj.publishTime) {
+        resoultObj.publishTime =  handleDate(resoultObj.publishTime)
+      }
+      // console.log(Date.parse(resoultObj.publishTime), 2222)
+      // console.log(handleDate(resoultObj.publishTime), 2222)
+      
+      // 展现形式null处理
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$refs.otherForm.getDataAsync().then(data => {
@@ -370,15 +437,16 @@ export default {
                 return
               }
               if(this.contextMenu.docId) {
-                if(this.getDocInformation.attachmentsList) {
+                if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
                   resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
                 } else {
                   resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
                 }
                 resoultObj.articleId = this.contextMenu.docId
+                console.log(resoultObj.articleAttachmentsList, 'resoultObj.articleAttachmentsList')
                 this.editDoc(resoultObj, saveType)
               } else {
-                if(this.getDocInformation.attachmentsList) {
+                if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
                   resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
                   resoultObj.coverImagesList =this.getDocInformation.coverImagesList
                 } else {

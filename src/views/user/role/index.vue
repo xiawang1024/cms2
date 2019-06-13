@@ -31,7 +31,7 @@
     </el-dialog>
     <!-- 权限分配管理 弹窗组件 -->
     <el-dialog :visible.sync="dialogPermissionManagerVisible" :before-close="handleClose" title="权限分配管理">
-      <div style="height: 500px;">
+      <div>
         <permissiongroup ref="dialogPermissionRef" :button-array-props="dialogPermissionManagerButtonArrayProps" :tree-button-flag="dialogPermissionManagerTreeButtonFlag">
           <h1 slot="fotter-slot" style="float: right;">
             <el-button @click="dialogPermissionManagerVisible = false">取 消</el-button>
@@ -362,5 +362,8 @@ export default {
     justify-content: space-between;
     font-size: 14px;
     padding-right: 8px;
+  }
+  .components-container{
+    padding-bottom:20px;
   }
 </style>

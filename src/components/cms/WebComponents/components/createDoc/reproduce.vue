@@ -104,7 +104,9 @@ export default {
     goBack() {
       this.$store.dispatch('setContextMenu', {
         id: '0',
-        label: ''
+        label: '',
+        pageNum: this.contextMenu.pageNum,
+        pageSize: this.contextMenu.pageSize,
       })
     },
     goEdit(docId) {
@@ -154,7 +156,7 @@ export default {
     getSubmitData() {
       let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
       // resoultObj.channelId = this.channelId
-      resoultObj.articleType = 3
+      resoultObj.articleType = 4
       resoultObj.seoKeywords = ''
       resoultObj.articleOrigin = ''
       resoultObj.articleAuthor = ''
@@ -189,7 +191,7 @@ export default {
         let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
         resoultObj.channelId = this.channelId
         resoultObj.articleStatus = publishType
-        resoultObj.articleType = 3
+        resoultObj.articleType = 4
         resoultObj.seoKeywords = ''
         resoultObj.articleOrigin = ''
         resoultObj.articleAuthor = ''
@@ -216,10 +218,23 @@ export default {
         delete resoultObj.tagIds
         if(this.contextMenu.docId) {
           resoultObj.articleId = this.contextMenu.docId
+          // this.editDoc(resoultObj, saveType)
+          if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
+            resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+          } else {
+            resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
+          }
+          resoultObj.articleId = this.contextMenu.docId
           this.editDoc(resoultObj, saveType)
         } else {
-          resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
-          resoultObj.coverImagesList =this.getDocInformation.coverImagesList
+          if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
+            resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+            resoultObj.coverImagesList =this.getDocInformation.coverImagesList
+          } else {
+            resoultObj.articleAttachmentsList = []
+          }
+          // resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+          // resoultObj.coverImagesList =this.getDocInformation.coverImagesList
           this.createDoc(resoultObj, saveType)
         }
       })
@@ -229,7 +244,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .reproduce-wrap {
-  margin: 10px 0;
+  // margin: 10px 0;
   .set {
   .extractCode {
     margin-left: 10px;

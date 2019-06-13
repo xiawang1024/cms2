@@ -16,6 +16,7 @@ import { addLive, getLiveInfor, editLive } from '@/api/cms/article'
 import mixins from '@/components/cms/mixins'
 import { mapGetters } from 'vuex'
 import Tinymce from '@/components/Tinymce'
+import { handleDate } from '@/utils/date-filter'
 export default {
   components: {
     Tinymce
@@ -113,6 +114,11 @@ export default {
       data.articleId = this.contextMenu.docId
       data.articleLiveCommentPicUrl = data.articleLiveCommentPicUrl.length ? data.articleLiveCommentPicUrl[0].url : ''
       data.enableFlag = 1
+      console.log(data,'data11')
+      if(data.articleLiveCommentTime) {
+        console.log(123)
+        data.articleLiveCommentTime = handleDate(data.articleLiveCommentTime)
+      }
       if(this.title == '添加') {
         this.addLive(data)
       } else {

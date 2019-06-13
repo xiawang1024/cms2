@@ -9,7 +9,7 @@ const systemSet = {
   meta: {
     title: 'systemSet',
     icon: 'systemSet',
-    role: 'cms'
+    role: 'cms:systemset'
   },
   children: [
     {
@@ -22,7 +22,7 @@ const systemSet = {
       meta: {
         title: 'siteSet',
         icon: 'siteSet',
-        role: 'cms'
+        role: 'cms:siteSet'
       }
     },
     {
@@ -32,7 +32,16 @@ const systemSet = {
       path: 'docSource',
       component: () => import(`@/${path}/docSource`),
       name: 'DocSource',
-      meta: { title: 'docSource', icon: 'docSource', role: 'cms' }
+      meta: { title: 'docSource', icon: 'docSource', role: 'cms:docSource' }
+    },
+    {
+      /**
+       * 文稿来源
+       */
+      path: 'sourceClass',
+      component: () => import(`@/${path}/sourceClass`),
+      name: 'SourceClass',
+      meta: { title: 'sourceClass', icon: 'docSource', role: 'cms' }
     },
     {
       /**
@@ -41,7 +50,7 @@ const systemSet = {
       path: 'platformSet',
       component: () => import(`@/${path}/platformSet`),
       name: 'platformSet',
-      meta: { title: 'platformSet', icon: 'platformSet', role: 'cms' }
+      meta: { title: 'platformSet', icon: 'platformSet', role: 'cms:platformSet' }
     },
     {
       /**
@@ -50,7 +59,7 @@ const systemSet = {
       path: 'columnTypeSet',
       component: () => import(`@/${path}/columnTypeSet`),
       name: 'columnTypeSet',
-      meta: { title: 'columnTypeSet', icon: 'docSource', role: 'cms' }
+      meta: { title: 'columnTypeSet', icon: 'docSource', role: 'cms:columnTypeSet' }
     },
     {
       /**
@@ -59,7 +68,7 @@ const systemSet = {
       path: 'temManager',
       component: () => import(`@/${path}/temManager`),
       name: 'temManager',
-      meta: { title: 'temManager', icon: 'temManager', role: 'cms' }
+      meta: { title: 'temManager', icon: 'temManager', role: 'cms:template' }
     },
     {
       /**
@@ -78,7 +87,7 @@ const systemSet = {
       path: 'sourceManage',
       component: () => import(`@/${path}/sourceManage`),
       name: 'sourceManage',
-      meta: { title: 'sourceManage', icon: 'sourceManage', role: 'cms' }
+      meta: { title: 'sourceManage', icon: 'sourceManage', role: 'cms:sourceManage' }
     },
     {
       /**
@@ -87,7 +96,7 @@ const systemSet = {
       path: 'comComponent',
       component: () => import(`@/${path}/comComponent`),
       name: 'comComponent',
-      meta: { title: 'comComponent', icon: 'comComponent', role: 'cms' }
+      meta: { title: 'comComponent', icon: 'comComponent', role: 'cms:component' }
     },
     {
       /**
@@ -99,15 +108,15 @@ const systemSet = {
       meta: { title: 'componentEdit', icon: 'componentEdit', role: 'cms' },
       hidden: true
     },
-    {
-      /**
-       * 帮助文档管理
-       */
-      path: 'helpDoc',
-      component: () => import(`@/${path}/helpDoc`),
-      name: 'helpDoc',
-      meta: { title: 'helpDoc', icon: 'helpDoc', role: 'cms' }
-    },
+    // {
+    //   /**
+    //    * 帮助文档管理
+    //    */
+    //   path: 'helpDoc',
+    //   component: () => import(`@/${path}/helpDoc`),
+    //   name: 'helpDoc',
+    //   meta: { title: 'helpDoc', icon: 'helpDoc', role: 'cms:helpDoc' }
+    // },
     {
       /**
        * 帮助文档添加与修改
@@ -125,7 +134,7 @@ const systemSet = {
       path: 'collection',
       component: () => import(`@/${path}/form`),
       name: 'collection',
-      meta: { title: 'collection', icon: 'bee', role: 'cms' },
+      meta: { title: 'collection', icon: 'bee', role: 'cms:bee' },
     },
     {
       /**
@@ -134,7 +143,7 @@ const systemSet = {
       path: 'KvGroupController',
       component: () => import(`@/${path}/KvGroupController`),
       name: 'KvGroupController',
-      meta: { title: 'KvGroupController', icon: 'kvGroup', role: 'cms' },
+      meta: { title: 'KvGroupController', icon: 'kvGroup', role: 'cms:KvGroupController' },
       
     },
     {
@@ -190,7 +199,18 @@ const systemSet = {
       meta: { title: 'appPages', icon: 'appConfig', role: 'cms' },
       hidden:true
       
-    }
+    },
+    {
+      /**
+       * 统计报表
+       */
+      path: 'liveCharts',
+      component: () => import(`@/${path}/liveCharts`),
+      name: 'liveCharts',
+      meta: { title: 'liveCharts', icon: 'appConfig', role: 'cms' },
+      hidden:true
+    },
+    
   ]
 }
 

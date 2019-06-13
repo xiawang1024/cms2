@@ -18,7 +18,8 @@ import systemSet from './routers/cms/systemSet'
 import personAndAuthor from './routers/cms/personAndAuthor'
 // import checkSetting from './routers/cms/checkSetting'
 // import extensions from './routers/cms/extensions'
-const cmsRouterMap = [webSite, systemSet, personAndAuthor]
+import commentModeration from './routers/cms/commentModeration'
+const cmsRouterMap = [webSite, systemSet, personAndAuthor,commentModeration]
 
 /**
  * 用户中心系统路由
@@ -62,24 +63,25 @@ const newscommandRouterMap = [manageClue,commandDispatch,manuscriptClue,fileClue
 /**
  * 路由map
  */
+// ['cms', 'userCenter', 'interaction', 'program','newsCommand'],
 export const routerMap = [{
-    type: '0',
+    type: 'cms',
     route: cmsRouterMap
   },
   {
-    type: '1',
+    type: 'userCenter',
     route: userRouterMap
   },
   {
-    type: '2',
+    type: 'interaction',
     route: internalRouterMap
   },
   {
-    type: '3',
+    type: 'program',
     route: programRouterMap
   },
   {
-    type: '4',
+    type: 'newsCommand',
     route: newscommandRouterMap
   }
 ]

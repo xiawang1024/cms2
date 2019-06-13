@@ -10,7 +10,7 @@
     </div>
     
 
-    <el-table v-loading="listLoading" :data="list" fit highlight-current-row size="small" style="width: 100%">
+    <el-table v-loading="listLoading" :data="list" fit highlight-current-row style="width: 100%">
       <el-table-column label="ID" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.programlistId }}</span>
@@ -115,7 +115,7 @@ export default {
       this.listLoading = true
       fetchList(this.searchData).then(response => {
         this.list = response.data.result.content
-        this.total = response.data.result.totalElements
+        this.totalCount = response.data.result.totalElements
         this.listLoading = false
       })
     },

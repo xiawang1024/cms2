@@ -21,6 +21,7 @@
 <script>
 import { createDocument, editDocument } from '@/api/cms/article'
 import { mapGetters } from 'vuex'
+import { handleDate } from '@/utils/date-filter'
 export default {
   name: 'Images',
   props: {
@@ -188,7 +189,9 @@ export default {
     goBack() {
       this.$store.dispatch('setContextMenu', {
         id: '0',
-        label: ''
+        label: '',
+        pageNum: this.contextMenu.pageNum,
+        pageSize: this.contextMenu.pageSize,
       })
     },
     goEdit(docId) {
@@ -260,6 +263,11 @@ export default {
       if (!resoultObj.contentBody) {
         resoultObj.contentBody = ''
       }
+      // 时间格式处理
+      if(resoultObj.publishTime) {
+        resoultObj.publishTime =  handleDate(resoultObj.publishTime)
+      }
+      resoultObj.channelId = this.channelId
       return resoultObj
     },
     save(formName, publishType, saveType) {
@@ -292,8 +300,11 @@ export default {
         if (!resoultObj.contentBody) {
           resoultObj.contentBody = ''
         }
+        if(resoultObj.publishTime) {
+          resoultObj.publishTime =  handleDate(resoultObj.publishTime)
+        }
         if(this.contextMenu.docId) {
-          if(this.getDocInformation.attachmentsList) {
+          if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
             resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
           } else {
             resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
@@ -301,7 +312,7 @@ export default {
           resoultObj.articleId = this.contextMenu.docId
           this.editDoc(resoultObj, saveType)
         } else {
-          if(this.getDocInformation.attachmentsList) {
+          if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
             resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
             resoultObj.coverImagesList =this.getDocInformation.coverImagesList
           } else {
@@ -316,7 +327,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .images {
-  margin: 10px 0;
+  // margin: 10px 0;
   .set {
     .extractCode {
       margin-left: 10px;

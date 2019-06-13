@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="column-live-infor">
     <div class="add-btn">
       <el-button type="primary" size="mini" @click="handelLive">添加</el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%" highlight-current-row size="small">
+    <el-table :data="tableData" style="width: 100%" highlight-current-row >
       <el-table-column prop="articleLiveCommentUser" label="直播人" min-width="100" show-overflow-tooltip/>
       <!-- <el-table-column prop="channelCode" label="排序" min-width="80"/> -->
       <el-table-column prop="articleLiveCommentTime" label="发布时间" min-width="220">
@@ -135,6 +135,7 @@ export default {
 <style lang="scss">
   .column-live-infor{
     .add-btn {
+      margin-bottom:20px;
     }
   }
 </style>

@@ -155,6 +155,7 @@ export default {
       this.findParentNode(node)
     },
     findParentNode(node) {
+      console.log(node, 'node')
       if (node.parent) {
         this.findParentNode(node.parent)
         const nodeVal = {}
@@ -162,6 +163,7 @@ export default {
         nodeVal.label = node.data.label
         nodeVal.channelCode = node.data.channelCode,
         nodeVal.isCreate = this.isCreate
+        nodeVal.pubArticleFlag = node.data.pubArticleFlag
         this.webSitTags.push(nodeVal)
       } else {
         const webSiteTags = this.webSitTags
@@ -173,7 +175,9 @@ export default {
         if (direct === 'left') {
           this.$store.dispatch('setContextMenu', {
             id: '0',
-            label: ''
+            label: '',
+            pageNum: 1,
+            pageSize: 10
           })
         } else {
           this.$store.dispatch('setContextMenu', {})

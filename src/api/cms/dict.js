@@ -17,6 +17,16 @@ export function fetchDict(id) {
 
 export function fetchDictByDictName(dictName) {
   return request({
+    url: '/cms/dict/findarticleoriginfilterbydictname?dictName=' + dictName,
+    method: 'get',
+    // loadingConfig: {
+    //   noLoading: true
+    // }
+  })
+}
+// 获取全部来源
+export function fetchDictAllByDictName(dictName) {
+  return request({
     url: '/cms/dict/findbydictname?dictName=' + dictName,
     method: 'get',
     // loadingConfig: {

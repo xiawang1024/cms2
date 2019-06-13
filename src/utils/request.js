@@ -89,6 +89,7 @@ request.interceptors.request.use(
       // console.log(isRefreshTokenExpired())
       if (isRefreshTokenExpired()) {
         removeAuth()
+        console.log('过期')
         location.reload()
         return
       }

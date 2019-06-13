@@ -102,6 +102,19 @@ export function UserModifyEnableFlagByUserIds (data) {
 }
 
 /**
+ *  disableFlag 用户可用状态更新
+ * @param data  对象，用户对象
+ * @constructor
+ */
+export function RemoveGoogleCheckBinding (data) {
+  return request({
+    url: '/userb/user/batch/removegooglecheckbinding/' + data.userIds,
+    method: 'GET',
+    data
+  })
+}
+
+/**
  *  UserUserRelSave 组织机构下属用户信息关联关系保存
  * @param data  对象，组织机构与用户集合关联关系
  * @constructor
@@ -109,6 +122,19 @@ export function UserModifyEnableFlagByUserIds (data) {
 export function UserRoleRelSave(data) {
   return request({
     url: '/userb/userrolerel/rels',
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * 用户管理，批量用户分配批量角色
+ * @param data
+ * @constructor
+ */
+export function UsersRolesRelSave(data) {
+  return request({
+    url: '/userb/userrolerel/usersrolesrels',
     method: 'POST',
     data
   })

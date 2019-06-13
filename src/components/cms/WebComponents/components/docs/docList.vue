@@ -18,11 +18,12 @@
       </el-table-column>
       <el-table-column prop="articleTitle" label="标题" min-width="300" show-overflow-tooltip>
         <template slot-scope="scope">
-          <span v-if="checkAuth('cms:article:stick')" class="titleClick hover-color" @click="editDoc(scope.row.articleId)">{{ scope.row.articleTitle }}</span>
-          <span v-else class="hover-color">{{ scope.row.articleTitle }}</span>
-          <i class="el-icon-document fz-16" title="正文有图" v-if="scope.row.contentImagesList && scope.row.contentImagesList.length"/>
-          <i class="el-icon-picture fz-16" title="附件有图" v-if="documentHasImg(scope.row.articleAttachmentsList)"/>
-          <i class="el-icon-upload2 fz-16" title="置顶" v-if="scope.row.topFlag == 1"/>
+          <span v-if="checkAuth('cms:article:stick')" class="titleClick" @click="editDoc(scope.row)">{{ scope.row.articleTitle }}</span>
+          <span v-else>{{ scope.row.articleTitle }}</span>
+          <i class="el-icon-picture-outline" title="正文有图" v-if="scope.row.contentImagesList && scope.row.contentImagesList.length"/>
+          <i class="el-icon-folder-opened" title="附件有图" v-if="documentHasImg(scope.row.articleAttachmentsList)"/>
+          <i class="el-icon-top" title="置顶" v-if="scope.row.topFlag == 1"/>
+          <i class="iconfont iconlink" title="引用" v-if="scope.row.articleType ==3"/>
         </template>
       </el-table-column>
       <!-- <el-table-column label="查看" width="60">
@@ -68,19 +69,28 @@
         label="创建时间"
         width="155"
         show-overflow-tooltip
-      />
+      >
+        <template slot-scope="scope">
+          {{ scope.row.createTime|timeFilter }}
+        </template>
+      </el-table-column>
       <el-table-column
         prop="publishTime"
         label="发布时间"
         width="155"
         show-overflow-tooltip
-      />
-      <el-table-column prop="createUser" label="撰稿人" width="100" show-overflow-tooltip/>
-      <el-table-column prop="clickNum" label="点击" width="50"/>
-      <el-table-column fixed="right" label="操作" width="140">
+      >
         <template slot-scope="scope">
-          <el-button v-if="checkAuth('cms:article:stick')" type="text" size="small" @click.stop="setTop(scope.row.articleId)">置顶</el-button>
-          <el-button v-if="checkAuth('cms:article:edit')" type="text" size="small" @click.stop="editDoc(scope.row.articleId)">编辑</el-button>
+          {{ scope.row.publishTime|timeFilter }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="createUser" label="撰稿人" width="100" show-overflow-tooltip/>
+      <el-table-column prop="clickNum" label="点击" min-width="100"/>
+      <el-table-column fixed="right" label="操作" width="150">
+        <template slot-scope="scope">
+          <el-button v-if="checkAuth('cms:article:stick') && scope.row.topFlag == 1" type="text" size="small" @click.stop="setUntop(scope.row.articleId)">取消置顶</el-button>
+          <el-button v-if="checkAuth('cms:article:stick') && scope.row.topFlag !== 1" type="text" size="small" @click.stop="setTop(scope.row.articleId)">置顶</el-button>
+          <el-button v-if="checkAuth('cms:article:edit')" type="text" size="small" @click.stop="editDoc(scope.row)">编辑</el-button>
           <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">撤销</el-button>
           <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">审核</el-button> -->
           <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">删除</el-button>
@@ -93,7 +103,7 @@
 </template>
 
 <script>
-import { deleteDocument, topDocument, articalSort} from '@/api/cms/article'
+import { deleteDocument, topDocument, untopDocument, articalSort} from '@/api/cms/article'
 import reviewDialog from './review'
 import stepDialog from './step'
 import Sortable from 'sortablejs'
@@ -294,6 +304,32 @@ export default {
       }).catch(() => {  
       })
     },
+    // 取消置顶
+    setUntop(id) {
+      this.$confirm('是否取消置顶该文章?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.setUntopConform(id)
+      }).catch(() => {  
+      })
+    },
+    // 取消置顶
+    setUntopConform(id) {
+      return new Promise((resolve, reject) => {
+        untopDocument(id)
+          .then((response) => {
+            this.$emit('handelSuccess')
+            this.$message.success('取消置顶成功')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    // 置顶
     setTopConform(id) {
       return new Promise((resolve, reject) => {
         topDocument(id)
@@ -346,9 +382,10 @@ export default {
       // window.location.href = link
       window.open(link)
     },
-    editDoc(docId) {
-      const select = { id: '1', label: '新建文档', docId: docId}
+    editDoc(row) {
+      const select = { id: '1', label: '新建文档', docId: row.articleId, articleType: row.articleType, pageNum: this.pageNum, pageSize: this.pageSize}
       this.$store.dispatch('setContextMenu', select)
+      this.$store.dispatch('setAttachmentsList', [])
     }
   }
 }

@@ -8,7 +8,7 @@ const webSite = {
     },
     docInformation: {
       baseInfor: '',
-      attachmentsList: '',
+      attachmentsList: [],
       relationList: '',
       coverImagesList: []
     }

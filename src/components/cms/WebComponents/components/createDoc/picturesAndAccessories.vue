@@ -2,9 +2,9 @@
   <div class="upload-file">
     <div class="type-choose">
       <el-radio-group v-model="fileType" size="mini" @change="typeChange">
-        <el-radio-button label="0">上传图片</el-radio-button>
-        <el-radio-button label="1">上传音频</el-radio-button>
+        <!-- <el-radio-button label="0">上传图片</el-radio-button> -->
         <el-radio-button label="2">上传视频</el-radio-button>
+        <el-radio-button label="1">上传音频</el-radio-button>
         <el-radio-button label="3">其他</el-radio-button>
       </el-radio-group>
     </div>
@@ -14,7 +14,7 @@
           <v-form ref="imageForm" :form-settings="imageSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail" @removeFile="removeFile"/>
           <!-- <v-form ref="videoForm" :form-settings="videoSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail"/> -->
         </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="10" :xl="10" :offset="1">
+        <el-col :xs="24" :sm="12" :md="12" :lg="10" :xl="10" >
           <div v-if="rightCardShow">
             <v-form ref="vForm" :form-settings="fileSettings" :form-data="singleData" label-width="80px" :show-button = "showButton">
               <template slot="information">
@@ -23,15 +23,16 @@
                     <img :src="filedetail.url" alt="">
                   </div>
                   <div class="file-video" v-if="fileType == '2'">
-                    <video :src="filedetail.url" controls="controls" height="200px"/>
+                    <video :src="filedetail.url" controls="controls" height="150px"/>
                   </div>
                   <div class="file-video" v-if="fileType == '1'">
-                    <video :src="filedetail.url" controls="controls" height="100px"/>
+                    <video :src="filedetail.url" controls="controls" height="50px"/>
                   </div>
                   <div class="desc">
-                    <div>{{ filedetail.name }}</div>
-                    <div v-if="filedetail.createTime">{{ parseInt(filedetail.createTime)|timeFilter }}</div>
-                    <div v-if="filedetail.size">{{ Math.floor(filedetail.size / 1024) }} kb</div>
+                    <div>图片名称：{{ filedetail.name }}</div>
+                    <div class="word-break">文件路径:{{ filedetail.url }}</div>
+                    <div v-if="filedetail.createTime">日期：{{ parseInt(filedetail.createTime)|timeFilter }}</div>
+                    <div v-if="filedetail.size">大小:{{ Math.floor(filedetail.size / 1024) }} kb</div>
                   </div>
                 </div>
               </template>
@@ -74,7 +75,7 @@ export default {
   data () {
     return {
       showPreview: false,
-      fileType: '0',
+      fileType: '2',
       form: {
         name: ''
       },
@@ -82,14 +83,24 @@ export default {
       formData: {},
       imageSettings: [{
         items: [
+          // {
+          //   label: '图片',
+          //   name: 'contentImagesList',
+          //   type: 'img',
+          //   required: false,
+          //   // hasTextInput: true,
+          //   hidden: false,
+          //   maxSize: 1024*5
+          // },
           {
-            label: '图片',
-            name: 'contentImagesList',
-            type: 'img',
+            label: '视频',
+            name: 'contentVideosList',
+            type: 'video',
             required: false,
+            maxSize: 1024*800,
+            limit: 1,
             // hasTextInput: true,
-            hidden: false,
-            maxSize: 1024*5
+            hidden: false
           },
           {
             label: '音频',
@@ -99,16 +110,6 @@ export default {
             // hasTextInput: true,
             maxSize: 1024*800,
             limit: 1,
-            hidden: true
-          },
-          {
-            label: '视频',
-            name: 'contentVideosList',
-            type: 'video',
-            required: false,
-            maxSize: 1024*800,
-            limit: 1,
-            // hasTextInput: true,
             hidden: true
           },
           {
@@ -182,6 +183,7 @@ export default {
       //   }
       // }
       if(oldval == 'picturesAndAccessories') {
+        console.log(this.getSubmitData(), 'picturesAndAccessoriesData')
         this.$store.dispatch('setAttachmentsList', this.getSubmitData())
       }
     }
@@ -258,23 +260,23 @@ export default {
           break
         case '1':
           this.imageSettings[0].items[1].hidden = false
-          this.imageSettings[0].items[0].hidden = true
+          // this.imageSettings[0].items[0].hidden = true
           this.imageSettings[0].items[2].hidden = true
-          this.imageSettings[0].items[3].hidden = true
+          this.imageSettings[0].items[0].hidden = true
           this.fileSettings[0].items[3].hidden = true
           break
         case '2':
           this.imageSettings[0].items[1].hidden = true
-          this.imageSettings[0].items[0].hidden = true
-          this.imageSettings[0].items[2].hidden = false
-          this.imageSettings[0].items[3].hidden = true
+          // this.imageSettings[0].items[0].hidden = true
+          this.imageSettings[0].items[0].hidden = false
+          this.imageSettings[0].items[2].hidden = true
           this.fileSettings[0].items[3].hidden = true
           break
         case '3':
-          this.imageSettings[0].items[1].hidden = true
           this.imageSettings[0].items[0].hidden = true
-          this.imageSettings[0].items[2].hidden = true
-          this.imageSettings[0].items[3].hidden = false
+          // this.imageSettings[0].items[0].hidden = true
+          this.imageSettings[0].items[1].hidden = true
+          this.imageSettings[0].items[2].hidden = false
           this.fileSettings[0].items[3].hidden = true
           break
       }
@@ -286,6 +288,7 @@ export default {
       })
     },
     createDoc(formData) {
+      console.log(formData, '附件添加')
       var _this = this
       return new Promise((resolve, reject) => {
         createDocument(formData)
@@ -330,23 +333,23 @@ export default {
     },
     getSubmitData() {
       let articleAttachmentsList = []
-      let imageFile = this.addCategory(this.$refs.imageForm.formModel.contentImagesList, 'IMG')
+      // let imageFile = this.addCategory(this.$refs.imageForm.formModel.contentImagesList, 'IMG')
       let videoFile = this.addCategory(this.$refs.imageForm.formModel.contentVideosList, 'VIDEO')
       let audioFile = this.addCategory(this.$refs.imageForm.formModel.contentAudioList, 'AUDIO') 
       let otherFile = this.addCategory(this.$refs.imageForm.formModel.articleAttachmentsList, 'OTHER')
-      let articleAttachmentsListCombine = articleAttachmentsList.concat(imageFile, videoFile, audioFile, otherFile)
+      let articleAttachmentsListCombine = articleAttachmentsList.concat(videoFile, audioFile, otherFile)
       return articleAttachmentsListCombine
     },
     save(publishType) {
       let articleAttachmentsList = []
       let resoultObj = this.docInformation
       resoultObj.channelId = this.treeTags[this.treeTags.length - 1].id
-      let imageFile = this.addCategory(this.$refs.imageForm.formModel.contentImagesList, 'IMG')
+      // let imageFile = this.addCategory(this.$refs.imageForm.formModel.contentImagesList, 'IMG')
       let videoFile = this.addCategory(this.$refs.imageForm.formModel.contentVideosList, 'VIDEO')
       let audioFile = this.addCategory(this.$refs.imageForm.formModel.contentAudioList, 'AUDIO') 
       let otherFile = this.addCategory(this.$refs.imageForm.formModel.articleAttachmentsList, 'OTHER')
       resoultObj.articleStatus = publishType
-      let articleAttachmentsListCombine = articleAttachmentsList.concat(imageFile, videoFile, audioFile, otherFile)
+      let articleAttachmentsListCombine = articleAttachmentsList.concat(videoFile, audioFile, otherFile)
       resoultObj.articleAttachmentsList = articleAttachmentsListCombine
       if(this.contextMenu.docId) {
         resoultObj.articleId = this.contextMenu.docId
@@ -354,6 +357,7 @@ export default {
       } else {
         resoultObj = Object.assign(resoultObj, this.getDocInformation.baseInfor)
         resoultObj.coverImagesList =this.getDocInformation.coverImagesList
+        console.log(resoultObj, 'resoultObj')
         if(!resoultObj.articleTitle && resoultObj.articleType !==2) {
           this.$message.warning('正文标题不能为空')
           return
@@ -361,6 +365,18 @@ export default {
         if(!resoultObj.contentTitle) {
           this.$message.warning('首页标题不能为空')
           return
+        }
+        if(!resoultObj.articleOrigin && resoultObj.articleType !==2 && resoultObj.articleType !==4) {
+          this.$message.warning('文章来源不能为空')
+          return
+        }
+        if(resoultObj.extFieldsList && resoultObj.extFieldsList.length && resoultObj.articleType ==0) {
+          for(let i=0; i<resoultObj.extFieldsList.length; i++) {
+           if(resoultObj.extFieldsList[i].required && !resoultObj.extFieldsList[i].fieldValue) {
+              this.$message.warning(`${resoultObj.extFieldsList[i].label}不能为空`)
+              return
+            }
+          }
         }
         this.createDoc(resoultObj)
       }
@@ -430,6 +446,9 @@ export default {
             .desc {
               div {
                 color: #C0C4CC;
+              }
+              .word-break{
+                word-break: break-all;
               }
             }
          }

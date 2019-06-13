@@ -63,6 +63,7 @@ export default {
   watch: {
     columnAll(val) {
       this.tableData = val
+     
       this.barSet()
     }
   },
@@ -104,18 +105,21 @@ export default {
               {
                 channelCode: this.tableData[0].channelCode,
                 id: this.tableData[0].channelId,
-                label: this.tableData[0].channelName
+                label: this.tableData[0].channelName,
+                pubArticleFlag: this.tableData[0].pubArticleFlag
               },
               {
               channelCode: this.tableData[0].children[0].channelCode,
               id: this.tableData[0].children[0].channelId,
-              label: this.tableData[0].children[0].channelName
+              label: this.tableData[0].children[0].channelName,
+              pubArticleFlag:  this.tableData[0].children[0].pubArticleFlag
             }]
           } else {
             webSiteTags = [{
               channelCode: this.tableData[0].channelCode,
               id: this.tableData[0].channelId,
-              label: this.tableData[0].channelName
+              label: this.tableData[0].channelName,
+              pubArticleFlag: this.tableData[0].pubArticleFlag
             }]
           }
           this.$store.dispatch('setTreeTags', webSiteTags)

@@ -14,3 +14,18 @@ export function getDataAccess(id) {
     method: 'get'
   })
 }
+// 来源权限设置
+export function setSourceAccess(data) {
+  return request({
+    url: '/cms/articleoriginuserrel',
+    method: 'post',
+    data
+  })
+}
+// 来源权限读取
+export function getSourceAccess(id) {
+  return request({
+    url: `/cms/articleoriginuserrel/show/${id}`,
+    method: 'get'
+  })
+}

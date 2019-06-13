@@ -59,7 +59,7 @@
 
 <script>
 // import Cookies from "js-cookie";
-import { fetchDictByDictName, createDict, updateDict } from "@/api/cms/dict";
+import { fetchDictAllByDictName, createDict, updateDict } from "@/api/cms/dict";
 export default {
   name: "SiteSet",
   data() {
@@ -168,7 +168,7 @@ export default {
     fetchDict() {
       var _this = this;
       return new Promise((resolve, reject) => {
-        fetchDictByDictName(_this.dictObj.dictName)
+        fetchDictAllByDictName(_this.dictObj.dictName)
           .then(response => {
             _this.dictObj = response.data.result;
             if (_this.dictObj.details === null) {
@@ -244,9 +244,7 @@ export default {
     margin-left: 0px;
   }
 
-  .siteSet-container {
-    margin: 30px;
-  }
+
 
   .tool-bar {
     text-align: right;
@@ -254,6 +252,7 @@ export default {
   /* liyu */
     box-sizing: border-box;
     margin: 30px;
+    margin-top: 18px;
     .el-table{
       .el-input__inner{
         height:32px;

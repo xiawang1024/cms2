@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="column-mange-tag">
     <div class="tag-setting">
       <el-form :model="tagRule" >
         <el-row :gutter="30">
@@ -136,7 +136,9 @@
         </el-row>
       </el-form>
     </div>
-    <el-button type="primary" size="mini" class="submit-btn" @click="submit" :loading="isLoading">保存</el-button>
+    <div>
+      <el-button type="primary" size="mini" class="submit-btn" @click="submit" :loading="isLoading">保存</el-button>
+    </div>
   </div>
 </template>
 
@@ -150,6 +152,12 @@ export default {
       default: function() {
         return {}
       }
+    },
+    columnRow: {
+      default: () => {
+        return {}
+      },
+      type: Object
     }
   },
   data() {
@@ -194,7 +202,7 @@ export default {
     getColumnInfor() {
       var _this = this
       return new Promise((resolve, reject) => {
-        columnInfor(_this.routeQuery.channelId)
+        columnInfor(this.columnRow.channelId)
           .then((response) => {
             _this.columnData = response.data.result
             _this.tagRule = response.data.result.tagRule ? response.data.result.tagRule :  _this.tagRule
@@ -209,12 +217,12 @@ export default {
       this.isLoading = true
       var _this = this
       return new Promise((resolve, reject) => {
-        _this.columnData.channelId = _this.routeQuery.channelId
+        _this.columnData.channelId = this.columnRow.channelId
         _this.columnData.tagRule = _this.tagRule
         editColumn(_this.columnData)
           .then((response) => {
-            _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-            _this.gotoListPage(_this)
+            _this.$message({ showClose: true, message: '操作成功!', type: 'success' })
+            // _this.gotoListPage(_this)
             _this.isLoading = false
             resolve()
           })
@@ -224,42 +232,44 @@ export default {
           })
       })
     },
-    gotoListPage(context) {
-      context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {
-        if (context.isActive(context.$route)) {
-          const latestView = visitedViews.slice(-1)[0]
-          if (latestView) {
-            context.$router.push(latestView)
-          } else {
-            context.$router.push('/')
-          }
-        }
-      })
-      context.$router.push({
-        path: '/cms/website/column'
-      })
-    }
+    // gotoListPage(context) {
+    //   context.$store.dispatch('delView', this.$route).then(({ visitedViews }) => {
+    //     if (context.isActive(context.$route)) {
+    //       const latestView = visitedViews.slice(-1)[0]
+    //       if (latestView) {
+    //         context.$router.push(latestView)
+    //       } else {
+    //         context.$router.push('/')
+    //       }
+    //     }
+    //   })
+    //   context.$router.push({
+    //     path: '/cms/website/column'
+    //   })
+    // }
   }
 }
 </script>
 
-<style lang="scss">
-.tag-setting {
-  margin: 30px;
-  border-bottom: 1px solid #e8e8e8;
-  .el-form {
-    .el-form-item {
-      .el-form-item__label {
-        width:20px;
-      }
-      .el-input__inner {
-        height: 32px;
-        line-height: 32px;
+<style lang="scss" >
+.column-mange-tag{
+  .tag-setting {
+    border-bottom: 1px solid #e8e8e8;
+    .el-form {
+      .el-form-item {
+        .el-form-item__label {
+          width:20px;
+        }
+        .el-input__inner {
+          height: 32px;
+          line-height: 32px;
+        }
       }
     }
   }
-}
-.submit-btn {
-  margin-left: 50px;
+  .submit-btn {
+    margin-left: 20px;
+    margin-top:30px;
+  }
 }
 </style>

@@ -17,7 +17,9 @@ export const otherSettings = [
       {
         label: '发布时间',
         name: 'publishTime',
-        type: 'datetime'
+        type: 'datetime',
+        clearable: false
+        // required: true,
       },
       {
         label: '设置',
@@ -34,7 +36,7 @@ export const otherSettings = [
         label: '展现形式',
         name: 'articleShowStyle',
         type: 'select',
-        required: true,
+        // required: true,
         options: [
           {
             label: '正文标题和描述',
@@ -94,7 +96,9 @@ export const defultItems = [
   {
     label: '发布时间',
     name: 'publishTime',
-    type: 'datetime'
+    type: 'datetime',
+    clearable: false
+    // required: true
   },
   {
     label: '设置',
@@ -111,7 +115,7 @@ export const defultItems = [
     label: '展现形式',
     name: 'articleShowStyle',
     type: 'select',
-    required: true,
+    // required: true,
     options: [
       {
         label: '正文标题和描述',
@@ -206,10 +210,12 @@ export const imagesSeting = [
         type:'number',
         placeholder: '请输入点击量'
       },{
-        label:'创建时间',
-        name:'createTime',
+        label:'发布时间',
+        name:'publishTime',
         type:'datetime',
-        placeholder: '请选择'
+        placeholder: '请选择',
+        clearable: false
+        // required: true,
       },
       {
         label: '设置',
@@ -226,7 +232,7 @@ export const imagesSeting = [
         label: '展现形式',
         name: 'articleShowStyle',
         type: 'select',
-        required: true,
+        // required: true,
         options: [
           {
             label: '正文标题和描述',
@@ -321,7 +327,7 @@ export const reproduceSetting = [
         label: '展现形式',
         name: 'articleShowStyle',
         type: 'select',
-        required: true,
+        // required: true,
         options: [
           {
             label: '正文标题和描述',
