@@ -14,7 +14,7 @@
             </div>
           </div>
           <div v-else>
-            {{ index + 1 }}级审核
+            {{ ele.auditLevel + 1 }}级审核
           </div>
         </template>
         <template slot="description">
