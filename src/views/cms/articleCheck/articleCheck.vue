@@ -20,10 +20,10 @@
           <span>{{ articleStatusChange(scope.row.articleStatus) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="tagIdsList" label="标记">
+      <el-table-column prop="tagIdsList" label="标记" min-width="100" show-overflow-tooltip>
         <template slot-scope="scope">
           <span>
-            {{ scope.row.tagIdsList.join(',') }}
+            {{ tagListchange(scope.row.tagIdsList) }}
           </span>
         </template>
       </el-table-column>
@@ -84,6 +84,13 @@ export default {
     this.getCheckList()
   },
   methods: {
+    // 标签转换
+    tagListchange(val) {
+      let res = val.map((ele) => {
+        return ele.tagName
+      })
+      return res.join(',')
+    },
     // 文章类型转换
     articleTypeChange(val) {
       switch(val) {

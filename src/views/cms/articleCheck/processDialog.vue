@@ -19,7 +19,9 @@
         </template>
         <template slot="description">
           <div class="desc">
-            {{ ele.applyUser }} &nbsp; {{ ele.applyTime }}
+            <span v-if="index === 0">{{ ele.applyUser }}</span>
+            <span v-else>{{ ele.auditUser }}</span>
+            <span>{{ ele.applyTime }}</span>
           </div>
           <div v-if="index !== 0" class="desc">
             <span>{{ articleStatusChange(ele.state) }}</span>
