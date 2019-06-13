@@ -61,9 +61,6 @@ export function getColumnList(userId) {
   return request({
     url: Cpath + `/permission/get-channel-by-user?userId=` + userId,
     method: "get"
-    // loadingConfig: {
-    //   noLoading: true
-    // }
   });
 }
 //超级管理员页面用
@@ -94,4 +91,19 @@ export function getUserInfo(data) {
     method: "get",
     data,
   });
+}
+
+//
+
+
+//查询出全部有评论审核权限的用户
+
+export function getRightUser(data) {
+
+  return request({
+    url: Cpath + `/permission/get-user-with-permission?userName=${data.userName}&pageNo=${data.pageNo}&pageSize=${data.pageSize}`,
+    method: "get",
+  });
+
+
 }

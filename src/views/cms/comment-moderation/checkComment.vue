@@ -18,7 +18,7 @@
         </el-dropdown>
         <div class="block">
           <el-cascader
-            :props="{ checkStrictly: true }"
+            change-on-select
             v-model="columnSelection"
             :options="options"
             @change="handleChange"
@@ -213,7 +213,6 @@ export default {
       });
     },
     handleSelectionChange(val) {
-      console.log(val, "val2");
       this.clectIds(val);
     },
     //收集选中的评论id
@@ -224,11 +223,9 @@ export default {
       });
     },
     handleclick(val) {
-      console.log(val, "val1");
     },
     handlePass(index, row, many) {
       let data = {};
-      console.log(index, "index");
       if (many == "many") {
         data = {
           flag: true,
@@ -292,7 +289,6 @@ export default {
         pageSize: this.pageSize,
         userId: JSON.parse(localStorage.getItem("BaseInfor")).userId
       };
-      console.log(params, "canshu");
       this.requestCriticsmList(params);
     },
     requestCriticsmList(params) {
@@ -306,7 +302,6 @@ export default {
               _this.totalCount = res.data.result.totalElements;
 
               // _this.options = _this.myTree(res.data.result.content);
-              console.log("options", _this.options);
             } else {
               _this.$message({
                 type: "error",
@@ -327,7 +322,6 @@ export default {
         getColumnList(userId)
           .then(res => {
             if (res.data.code == "0") {
-              console.log(res, "ressss");
               _this.$nextTick(()=>{
                  _this.options = _this.myTree(res.data.result);
               })
@@ -367,13 +361,11 @@ export default {
       this.pageMethods();
     },
     handleSizeChange(val) {
-      console.log(val);
       this.pageNo = 1;
       this.pageSize = val;
       this.pageMethods();
     },
     handleCurrentChange(val) {
-      console.log(val);
       this.pageNo = val;
       this.pageMethods();
     },
@@ -395,8 +387,6 @@ export default {
       this.totalCount = 0;
       this.reviewType = "ColumnCheck";
       this.currentChannelId = value.reverse()[0];
-      console.log(value);
-      console.log(value.reverse()[0], "zuihouzhi");
       this.requestTreeColumn();
     },
     requestTreeColumn() {
@@ -415,7 +405,6 @@ export default {
         params.top = false;
       }
 
-      console.log(params, "canshu");
       this.requestCriticsmList(params);
     },
     //optiions 数据处理
@@ -451,7 +440,6 @@ export default {
       this.pageNo = 1;
       this.pageSize = 10;
       this.totalCount = 0;
-      console.log(command);
       if (command === "showAll") {
         this.dropValue = "显示全部";
         this.reviewType = "default";
