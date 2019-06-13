@@ -3,7 +3,7 @@
     title="文章详情"
     :visible.sync="dialogVisible"
     width="60%"
-    class="check-preview-dialog"
+    class="check-preview1-dialog"
     :before-close="handleClose">
     <div v-if="documentInfor.articleId">
       <h3>{{ documentInfor.articleTitle }}</h3>
@@ -91,7 +91,7 @@ export default {
 }
 </script>
 <style lang="scss">
-  .check-preview-dialog{
+  .check-preview1-dialog{
     .el-dialog__header{
       border-bottom: 1px solid #ebeef5;
     }
