@@ -294,7 +294,7 @@ export default {
     },
     selectClass(cId) {
       this.classIdArr = cId
-      this.postForm.classId = this.classIdArr.join(',')
+      this.postForm.classId = ','+this.classIdArr.join(',')+','
     },
     editVodRadio(v) {
       this.vodSetSet = v

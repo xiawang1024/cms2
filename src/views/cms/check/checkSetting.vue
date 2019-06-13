@@ -4,15 +4,15 @@
       <v-search :search-settings="searchSettings" @search="searchItem"/>
     </div> -->
     <div class="tool-bar">
-      <el-button type="primary" size="small" @click="addCheck">添加</el-button>
+      <el-button type="primary" size="mini" @click="addCheck">添加</el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%" highlight-current-row size="small">
+    <el-table :data="tableData" style="width: 100%" highlight-current-row >
       <el-table-column prop="configName" label="配置名称" min-width="250" show-overflow-tooltip/>
+      <el-table-column prop="configName" label="排序" min-width="100" show-overflow-tooltip/>
       <!-- <el-table-column prop="channelCode" label="排序" min-width="80"/> -->
       <el-table-column prop="multiAudit" label="是否启用">
         <template slot-scope="scope">
-          <span v-if="scope.row.multiAudit ==1">启用</span>
-          <span v-else>禁用</span>
+          <el-switch v-model="scope.row.multiAudit" @change="switchChange(scope.row)" :active-value="1" :inactive-value="0"/>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="添加时间" width="220"/>
@@ -32,88 +32,49 @@
           <template slot="chooseColumn">
             <tree-multiple :tree-data="treeData" :prop-tags="tagList" ref="treeMultiple"/>
           </template>
-          <template slot="checkPeopleSet">
-            <div class="check-people-set">
-              <div>
-                <el-steps >
-                  <el-step title="">
+          <template slot="setCheck">
+            <div>
+              <div class="check-people-column">
+                <el-steps direction="vertical">
+                  <el-step icon="el-icon-user-solid" v-for="(ele, index) in gradeSetting" :key="index">
                     <template slot="title">
-                      <div class="title fz">
-                        本人
+                      <div v-if="index === 0">
+                        <div class="title fz">
+                          本人
+                        </div>
+                      </div>
+                      <div v-else>
+                        <el-button type="text" size="small" @click="addCheckPeople(index)">添加{{ index + 1 }}级审核人员</el-button>
+                        <el-button type="danger" icon="el-icon-delete" circle size="mini" title="删除该级审核" @click="delGrade(index)" v-if="index > 2"/>
                       </div>
                     </template>
                     <template slot="description">
-                      <div class="pl-5">
+                      <div v-if="index === 0" class="pl-5">
                         一级审核为本人
                       </div>
-                    </template>
-                    <template slot="icon">
-                      <div class="title-icon">
-                        <icon name="user-alt" scale="1.2"/>
-                      </div>
-                    </template>
-                  </el-step>
-                  <el-step title="">
-                    <template slot="title">
-                      <div class="title">
-                        <el-button type="text" size="medium" @click="addFirst">添加</el-button>
-                      </div>
-                    </template>
-                    <template slot="description">
-                      <div class="pl-5">
-                        请选择二级审核相关人员
-                      </div>
-                      <div>
+                      <div v-else class="tag-set">              
                         <el-tag
                           :key="tag"
-                          v-for="tag in firstChoosedPeople"
+                          v-for="tag in ele.choosedPeople"
                           closable
-                          @close="firstTagClose(tag)">
-                          {{ tagChangeToName(tag) }}
+                          size="small"
+                          @close="delTag(tag, index)">
+                          {{ tag }}
                         </el-tag>
-                      </div>
-                    </template>
-                    <template slot="icon">
-                      <div class="title-icon">
-                        <icon name="user-alt" scale="1.2"/>
-                      </div>
-                    </template>
-                  </el-step>
-                  <el-step title="" description="">
-                    <template slot="title">
-                      <div class="title">
-                        <el-button type="text" size="medium" @click="addSecond">添加</el-button>
-                      </div>
-                    </template>
-                    <template slot="description">
-                      <div class="pl-5">
-                        请选择三级审核相关人员
-                      </div>
-                      <div>
-                        <el-tag
-                          :key="tag"
-                          v-for="tag in secondChoosedPeople"
-                          closable
-                          @close="secondTagClose(tag)">
-                          {{ tagChangeToName(tag) }}
-                        </el-tag>
-                      </div>
-                    </template>
-                    <template slot="icon">
-                      <div class="title-icon">
-                        <icon name="user-alt" scale="1.2"/>
                       </div>
                     </template>
                   </el-step>
                 </el-steps>
+                <div>
+                  <el-button type="primary" @click="addGrade" size="mini" icon="el-icon-plus">添加审核</el-button>
+                </div>
               </div>
             </div>
           </template>
         </v-form>
       </template>
     </v-page>
-    <add-people ref="peopleFirstDialog" :dialog-visible.sync="firstDialogVisible" :people-options="peopleOptions" :prop-checked="firstChoosedPeople" @peopleList="firstPeopleList"/>
-    <add-second ref="peopleSecondDialog" :dialog-visible.sync="secondDialogVisible" :people-options="peopleOptions" @peopleList="secondPeopleList" :prop-checked="secondChoosedPeople"/>
+    <set-people ref="peopleSetDialog" :dialog-visible.sync="setDialogVisible" :people-options="peopleOptions" @peopleList="setPeopleList" :prop-checked="setChoosedPeople" :index="gradeIndex"/>
   </div>
 </template>
 
@@ -121,20 +82,18 @@
 // import { fetchDictByDictName } from '@/api/cms/dict'
 import Clickoutside from 'element-ui/src/utils/clickoutside';
 import { columnList } from '@/api/cms/columnManage'
-import { addCheck, getCheckList, deleteCheck, getCheckInfor, editCheck} from '@/api/cms/check'
+import { addCheck, getCheckList, deleteCheck, getCheckInfor, editCheck, resetCheck} from '@/api/cms/check'
 import { UserList } from '@/api/user/user'
 import Pagination from '@/common/Pagination'
 import mixins from '@/components/cms/mixins'
-import addPeople from './addPeople'
-import addSecond from './addSecond'
+import setPeople from './setPeople'
 import treeMultiple from './treeMultiples'
 export default {
   name: 'ColumnManage',
   components: {
     Pagination,
-    addPeople,
-    addSecond,
-    treeMultiple
+    treeMultiple,
+    setPeople
   },
   directives: { Clickoutside },
   mixins: [mixins],
@@ -185,7 +144,7 @@ export default {
             },
             {
               label: '审批人设置',
-              name: 'checkPeopleSet',
+              name: 'setCheck',
               type: 'slot',
               placeholder: '',
             }
@@ -196,16 +155,28 @@ export default {
       treeData: [],
       tagList: [],
       visible: false,
-      firstDialogVisible: false,
-      secondDialogVisible: false,
-      firstChoosedPeople: [],
-      secondChoosedPeople: [],
+      setDialogVisible: false,
+      setChoosedPeople: [],
       // 栏目原始数据
       treeDataOrigin: [],
       // 人员数据
       peopleOptions: [],
       handelType: 'add',
-      checkId: ''
+      checkId: '',
+
+      gradeSetting: [
+        {
+          choosedPeople: []
+        },
+        {
+          choosedPeople: []
+        },
+        {
+          choosedPeople: []
+        }
+      ],
+      // 审核级别index
+      gradeIndex: 0
     }
   },
   watch:{
@@ -218,6 +189,36 @@ export default {
     this.getUserList()
   },
   methods: {
+    // 开关按钮
+    switchChange(row) {
+      let data = {
+        multiAudit: row.multiAudit,
+        id: row.id
+      }
+      return new Promise((resolve, reject) => {
+        resetCheck(data).then(async res => {
+          this.$message.success('修改成功')
+          this.getCheckList()
+          resolve()
+        })
+        .catch(err => {
+          this.getCheckList()
+          reject(err)
+        })
+      })
+    },
+    // 添加级别
+    addGrade() {
+      this.gradeSetting.push(
+        {
+          choosedPeople: []
+        }
+      )
+    },
+    // 删除级别
+    delGrade(index) {
+      this.gradeSetting.splice(index, 1)
+    },
     // 获取人员列表
     getUserList () {
       return new Promise((resolve, reject) => {
@@ -225,7 +226,7 @@ export default {
           this.peopleOptions = res.data.result.content.map((ele) => {
             return {
               label: ele.userName,
-              value: ele.userId
+              value: ele.userName
             }
           })
           resolve()
@@ -235,32 +236,17 @@ export default {
           })
       })
     },
-    tagChangeToName(tag) {
-        let tagName = {}
-        if(this.peopleOptions && this.peopleOptions.length) {
-          tagName = this.peopleOptions.find((ele) => {
-            return ele.value === tag
-          })
-        }
-        return tagName.label
+    delTag(tag, index) {
+      this.gradeSetting[index].choosedPeople.splice(this.gradeSetting[index].choosedPeople.indexOf(tag), 1);
     },
-    firstTagClose(tag) {
-      this.firstChoosedPeople.splice(this.firstChoosedPeople.indexOf(tag), 1);
+    setPeopleList(val) {
+      this.gradeSetting[this.gradeIndex].choosedPeople = val
     },
-    secondTagClose(tag) {
-      this.secondChoosedPeople.splice(this.secondChoosedPeople.indexOf(tag), 1);
-    },
-    firstPeopleList(val) {
-      this.firstChoosedPeople = val
-    },
-    secondPeopleList(val) {
-     this.secondChoosedPeople = val
-    },
-    addFirst() {
-      this.firstDialogVisible = true
-    },
-    addSecond() {
-      this.secondDialogVisible = true
+    // 添加审核人员
+    addCheckPeople(index) {
+      this.setDialogVisible = true
+      this.gradeIndex = index
+      this.setChoosedPeople = this.gradeSetting[index].choosedPeople
     },
     // 返回
     goBack() {
@@ -308,6 +294,7 @@ export default {
               })
             }
             this.tagList = getTag
+            this.gradeSetting = JSON.parse(response.data.result.auditors)
             this.firstChoosedPeople = response.data.result.twoAuditors ? response.data.result.twoAuditors.split(',') : []
             this.secondChoosedPeople = response.data.result.threeAuditors ? response.data.result.threeAuditors.split(',') : []
             resolve()
@@ -319,11 +306,10 @@ export default {
     },
     // 审核提交操作
     submitSave(data) {
-      data.twoAuditors = this.firstChoosedPeople.join(',')
-      data.threeAuditors = this.secondChoosedPeople.join(',')
       let columns = this.$refs.treeMultiple.tagList.map((ele) => {
         return ele.channelId
       })
+      data.auditors = JSON.stringify(this.gradeSetting)
       data.columns = columns.join(',')
       if(this.handelType === 'add') {
         this.hanelAddCheck(data)
@@ -419,33 +405,68 @@ export default {
 </script>
 
 <style lang='scss'>
-.check-people-set{
-  .el-step{
-    .el-step__icon{
-      width:40px;
-      height: 40px;
-    }
-    .el-step__line{
-      top:20px;
-    }
-    .title-icon{
-      padding-top:4px;
-    }
-    .title{
-      padding-left:5px;
-      &.fz{
-        font-size: 14px;
+.check-setting{
+  .check-people-set{
+    .el-step{
+      .el-step__icon{
+        width:40px;
+        height: 40px;
+      }
+      .el-step__line{
+        top:20px;
+      }
+      .title-icon{
+        padding-top:4px;
+      }
+      .title{
+        padding-left:5px;
+        &.fz{
+          font-size: 14px;
+        }
+      }
+      .el-tag{
+        margin:3px;
+      }
+      .pl-5{
+        padding-left:5px;
       }
     }
-    .el-tag{
-      margin:3px;
-    }
-    .pl-5{
-      padding-left:5px;
+  };
+  .check-people-column {
+    .el-step{
+      min-height: 100px;
+      // .el-step__icon{
+      //   width:40px;
+      //   height: 40px;
+      // }
+      // .el-step__line{
+      //   top:20px;
+      // }
+      // .title-icon{
+      //   padding-top:4px;
+      // }
+      .title{
+        padding-left:5px;
+        &.fz{
+          font-size: 14px;
+        }
+      }
+      .fz-12{
+        font-size: 12px;
+      }
+      .tag-set{
+        .el-tag{
+          margin:3px;
+        }
+      }
+      // .el-tag{
+      //   margin:3px;
+      // }
+      // .pl-5{
+      //   padding-left:5px;
+      // }
     }
   }
-};
-.check-setting {
   .form-section {
     overflow: visible;
   }

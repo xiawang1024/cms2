@@ -137,6 +137,10 @@ export default {
           margin-left: 3px;
           margin-right: 3px;
         }
+        .el-tag--small{
+          margin-top:1px;
+          margin-bottom:1px;
+        }
       }
       .input-define{
         position: relative;
@@ -161,6 +165,7 @@ export default {
           width: 100%;
           // border-color: #409eff;
           cursor: pointer;
+          height:32px;
           &:focus{
             border-color: #409eff;
           }

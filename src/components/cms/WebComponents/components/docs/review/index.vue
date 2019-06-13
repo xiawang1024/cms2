@@ -118,6 +118,9 @@ export default {
     .el-dialog__header{
       border-bottom: 1px solid #ebeef5;
     }
+    .el-dialog__body{
+      padding-top: 10px;
+    }
     .link-to{
       overflow: hidden;
       .link-url{
