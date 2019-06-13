@@ -2,7 +2,7 @@
   <div class="helpdoc-container">
     <div class="tool-bar">
       <div class="leftAside">
-        <el-button size="mini" type="primary" @click="seeUser">查看用户</el-button>
+        <el-button size="mini" type="primary" @click.stop="seeUser">查看用户</el-button>
         <el-button
           size="mini"
           type="primary"
@@ -15,12 +15,12 @@
         class="searchinput"
         size="mini"
         style="width:180px;"
-        v-model="searchAttributeById"
+        v-model="searchAttribute"
         placeholder="请输入查询姓名"
         prefix-icon="el-icon-search"
         clearable
-        @keyup.enter.native="search"
-        @change="search"
+        @keyup.enter.native="handleSearch"
+        @change="handleSearch"
       />
       <div class="rightAside">
         <el-button size="mini" type="primary" @click="handleSearch" icon="el-icon-search">查询</el-button>
@@ -32,7 +32,7 @@
       <split-pane
         :min-percent="10"
         :max-percent="30"
-        :default-percent="12"
+        :default-percent="20"
         class="pane-wrap"
         split="vertical"
         @resize="resize"
@@ -57,27 +57,11 @@
         <template slot="paneR">
           <div class="right-container">
             <el-scrollbar wrap-class="scrollbar-wrapper" style="height:100%;">
-              <el-table :data="userList" style="width: 100%" size="small" highlight-current-row>
-                <el-table-column prop="userCode" label="用户编码"/>
+              <el-table :data="haveRightUser" style="width: 100%" size="small" highlight-current-row>
                 <el-table-column prop="userName" label="用户名"/>
-                <el-table-column prop="enableFlag" label="用户状态">
+                <el-table-column label="操作" width="150" >
                   <template slot-scope="scope">
-                    <span v-if="scope.row.enableFlag == 1">启用</span>
-                    <span v-else>禁用</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="操作" width="220">
-                  <template slot-scope="scope">
-                    <el-button
-                      size="mini"
-                      type="primary"
-                      @click="cleanLimite(scope.$index, scope.row)"
-                    >删除权限</el-button>
-                    <el-button
-                      size="mini"
-                      type="success"
-                      @click="handleSource(scope.$index, scope.row)"
-                    >来源权限</el-button>
+                    <el-button size="mini" type="primary" @click.stop="seeUserRight(scope.$index, scope.row)">查看权限</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -117,6 +101,39 @@
         <el-button size="mini" type="primary" @click="submitSave">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="查看当前栏目用户" max-height="400" :visible.sync="dialogTableVisible">
+      <el-table :data="gridData" max-height="400" >
+        >
+        <el-table-column prop="userName" label="姓名" />
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button
+              class="rightAside"
+              size="mini"
+              type="danger"
+              @click.stop="cleanLimite(scope.$index, scope.row)"
+            >删除权限</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="dialogTableVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="栏目权限"
+      :visible.sync="dialogVisibleUser"
+      width="30%"
+    >
+      <el-tree :data="showUserRight" :props="defaultProps" />
+
+
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleUser = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisibleUser = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -125,7 +142,7 @@ import splitPane from "vue-splitpane";
 import { columnListAny } from "@/api/cms/columnManage";
 import mixins from "@/components/cms/mixins";
 import { UserList } from "@/api/user/user";
-import { saveAudit,deleteLimite } from "@/api/cms/reviewComment";
+import { saveAudit, deleteLimite, seeUser,getUserInfo,getRightUser,getColumnList } from "@/api/cms/reviewComment";
 
 export default {
   name: "AssignAuditAuthority",
@@ -141,21 +158,26 @@ export default {
       defaultCheck: [],
       userTotal: 0,
       pageNo: 1,
-      pageSize: 15,
+      pageSize: 10,
       searchData: { userName: "" },
       userList: [],
       searchFlag: false,
-      searchAttributeById: "",
+      searchAttribute: "",
       dialogVisible: false,
+      dialogVisibleUser:false,
+      dialogTableVisible:false,
       fullUserList: [],
       selectUser: [],
       columnList: [],
-      result: []
+      result: [],
+      gridData: [],
+      haveRightUser:[],
+      showUserRight:[],
     };
   },
   mounted() {
     this.columnSearchList();
-    this.getUserList();
+    this.requestRightUser();
     this.getFullUserList();
   },
   methods: {
@@ -177,14 +199,8 @@ export default {
     //选择栏目树
     addUser(val) {
       this.dialogVisible = true;
-      let result = this.$refs.tree.getCheckedNodes().map(ele => {
-        return ele.channelId;
-      });
-
-      console.log(result, "xuanzhongde Tree");
     },
     addColumn(val) {
-      console.log(val, "val");
       this.result = this.$refs.tree.getCheckedNodes().map(ele => {
         return ele.channelId;
       });
@@ -224,31 +240,28 @@ export default {
     //分页
     sizeChange(val) {
       this.pageSize = val;
-      this.getUserList();
+      this.requestRightUser();
     },
     pageChange(val) {
       this.pageNo = val;
-      this.getUserList();
+      this.requestRightUser();
     },
     handleSizeChange(val) {
       console.log(val);
       this.pageNo = 1;
       this.pageSize = val;
-      this.getUserList();
+      this.requestRightUser();
     },
     handleCurrentChange(val) {
       console.log(val);
       this.pageNo = val;
-      this.getUserList();
+      this.requestRightUser();
     },
     //条件查询
     handleSearch() {
-      // var _this = this;
-
-      //条件查询接口
-      // if (1) {
-      //   _this.searchFlag = true;
-      // }
+      this.pageNo=1;
+      this.pageSize=10;
+      this.requestRightUser();
     },
     //重置
     handleReset() {
@@ -257,13 +270,57 @@ export default {
       this.$refs.tree.setCheckedKeys([]);
       this.result = [];
       this.selectUser = [];
-      this.defaultCheck=[];
+      this.defaultCheck = [];
+      this.searchAttribute='';
+      this.requestRightUser();
+
     },
     //账号搜索
     search() {
       //接口
     },
-    seeUser() {},
+    seeUser() {
+      if (this.result.length==0) {
+        this.$message({
+          type: "error",
+          message: "请选择查看的栏目"
+        });
+        return false;
+      } else if (this.result.length > 1) {
+        this.$message({
+          type: "error",
+          message: "请选择单个栏目进行查看"
+        });
+        return false;
+      } else {
+         this.userDetaiRequest(this.result[0]);
+        
+       
+      }
+    },
+
+    userDetaiRequest(userId) {
+      // var _this = this;
+      return new Promise((resolve, reject) => {
+        seeUser(userId)
+          .then(response => {
+            if (response.data.code == 0) {
+              this.gridData = response.data.result;
+              this.dialogTableVisible=true;
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data.msg
+              });
+            }
+
+            resolve();
+          })
+          .catch(reject => {
+            console.log(reject);
+          });
+      });
+    },
     submitSave() {
       let content = [];
       this.result = this.$refs.tree.getCheckedNodes().map(ele => {
@@ -284,7 +341,7 @@ export default {
             userInfo.push({
               userId: element,
               createUser: item.createUser,
-              userName:item.userName
+              userName: item.userName
             });
           }
         });
@@ -294,20 +351,18 @@ export default {
         userInfo,
         content
       };
-      console.log(data);
       var _this = this;
       return new Promise((resolve, reject) => {
         saveAudit(data)
           .then(response => {
-            if (response.data.code == '0') {
+            if (response.data.code == "0") {
               this.$message({
                 type: "success",
                 message: response.data.msg
               });
-             
-              _this.getUserList();
+
+              _this.requestRightUser();
               _this.handleReset();
-             
             } else {
               this.$message({
                 type: "error",
@@ -322,28 +377,114 @@ export default {
           });
       });
     },
-    cleanLimite(index,row){
+    deletUserRight(index,row){
+      this.getUserUCID(row.userId)
+    },
+    //根据用户id查询ucid
+    getUserUCID(userId) {
       return new Promise((resolve,reject)=>{
-        deleteLimite(row.userId)
-        .then(res=>{
-          if(res.data==0){
-            this.$message({
-              type:'success',
-              message:res.data.msg
-            })
-          }else{
-            this.$message({
-              type:'error',
-              message:res.data.msg
-            })
-          }
-          resolve();
-        })
-        .catch(reject=>{
-          console.log(reject)
-        })
+         getUserInfo({userId:userId})
+         .then(response=>{
+           if(response.data.code==0){
+             //删除操作
+
+           }else{
+              this.$message({
+                type: "error",
+                message: response.data.msg
+              });
+           }
+           resolve();
+         })
+         .catch(reject=>{
+           console.log(reject)
+         })
       })
+     
+    },
+    //查询出全部有评论审核权限的用户
+    requestRightUser() {
+      var _this=this;
+        let data={
+          pageNo:this.pageNo,
+          pageSize:this.pageSize,
+          userName:this.searchAttribute
+        }
+      return new Promise((resolve,reject)=>{
+         getRightUser(data)
+         .then(response=>{
+           if(response.data.code==0){
+             _this.userTotal=response.data.result.total;
+             _this.haveRightUser=response.data.result.content;
+
+
+           }else{
+              this.$message({
+                type: "error",
+                message: response.data.msg
+              });
+           }
+           resolve();
+         })
+         .catch(reject=>{
+           console.log(reject)
+         })
+      })
+     
+    },
+    seeUserRight(index,row){
+      var _this=this;
+        this.dialogVisibleUser=true;
+
+       return new Promise((resolve,reject)=>{
+         getColumnList(row.userId)
+         .then(response=>{
+           if(response.data.code==0){
+                _this.showUserRight=_this.toTree(response.data.result)
+            
+           }else{
+              this.$message({
+                type: "error",
+                message: response.data.msg
+              });
+           }
+           resolve();
+         })
+         .catch(reject=>{
+           console.log(reject)
+         })
+      })
+
+
+
+    },
+    
+
+    cleanLimite(index, row) {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        deleteLimite(row.ucId)
+          .then(res => {
+            if (res.data.code == 0) {
+              this.$message({
+                type: "success",
+                message: res.data.msg
+              });
+              _this.seeUser();
+            } else {
+              this.$message({
+                type: "error",
+                message: res.data.msg
+              });
+            }
+            resolve();
+          })
+          .catch(reject => {
+            console.log(reject);
+          });
+      });
     }
+    
   }
 };
 </script>
@@ -380,11 +521,15 @@ export default {
 
 .right-container {
   height: 100%;
-  padding-left: 10px;
+  padding-left: 30px;
 }
 .el-select {
   display: inline-block;
   position: relative;
   width: 100%;
 }
+/deep/.el-table td{
+  padding: 8px 0;
+}
+
 </style>
