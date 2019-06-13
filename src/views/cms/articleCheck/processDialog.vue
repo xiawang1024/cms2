@@ -9,7 +9,7 @@
       <el-step icon="el-icon-success" v-for="(ele, index) in processData" :key="index">
         <template slot="title">
           <div v-if="index === 0">
-            <div class="title fz">
+            <div class="titles fz">
               提交审核
             </div>
           </div>
@@ -76,7 +76,7 @@ export default {
     .steps{
      .el-step{
         min-height: 80px;
-        .title{
+        .titles{
           font-size: 15px;
         }
         .desc{
