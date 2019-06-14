@@ -116,6 +116,7 @@ import {
   toTop,
   getColumnList
 } from "@/api/cms/reviewComment";
+import { setInterval, clearInterval } from 'timers';
 export default {
   name: "CheckComment",
   data() {
@@ -132,7 +133,8 @@ export default {
       currentChannelId: "",
       reviewType: "default",
       topStatus: "default",
-      dropValue: "显示全部"
+      dropValue: "显示全部",
+      timerassign:null,
     };
   },
   created() {
@@ -142,9 +144,20 @@ export default {
     this.$nextTick(() => {
       this.criticismList();
       this.clumnTree();
+      //轮询数据
+      this.timer();
     });
   },
+  beforeDestroy(){
+    clearInterval(this.timerassign);
+    this.timerassign=null;
+  },
   methods: {
+    timer(){
+      this.timerassign= setInterval(()=>{
+          this.pageMethods();
+      },10*1000)
+    },
     handleTop(index, row) {
       if (row.top == true) {
         this.putTop({
@@ -506,7 +519,7 @@ export default {
       }
       return data;
     }
-  }
+  },
 };
 </script>
 <style scoped>

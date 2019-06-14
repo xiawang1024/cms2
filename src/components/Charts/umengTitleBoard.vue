@@ -100,6 +100,7 @@ export default {
 <style lang="scss" scoped>
 .concactBoard {
   width: 100%;
+  min-width: 1080px;
   padding: 0 42px;
   margin: 0 auto;
   overflow: hidden;
@@ -108,7 +109,7 @@ export default {
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #dedede;
+//   border-bottom: 1px solid #dedede;
   .rightpart,
   .leftpart {
     box-sizing: border-box;
@@ -117,6 +118,7 @@ export default {
     .floor {
       background-color: #fff;
       display: flex;
+      min-width: 520px;
       .smallbox {
         width: 49.5%;
         height: 146.438px;
