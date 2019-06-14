@@ -67,19 +67,19 @@
       <span><img :src="dialogGoogleBindingQrCodeBase64" alt="二维码图片" ></span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogGoogleBindingVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogGoogleBindingHandle">确 定</el-button>
+        <el-button type="primary" @keyup.enter.native="dialogGoogleBindingHandle" @click.native.prevent="dialogGoogleBindingHandle">确 定</el-button>
       </span>
     </el-dialog>
 
     <el-dialog class="doublecheck" title="Google二次验证(请查看APP中的动态口令)" :visible.sync="dialogGoogleDoubleCheckVisible" width="30%">
-      <el-form label-width="80px">
+      <el-form label-width="80px" @submit.native.prevent>
         <el-form-item label="动态口令" style="background: none">
-          <el-input v-model="dialogGoogleInputSecondCheckkey" style="border: none;" class="input-32"/>
+          <el-input v-model="dialogGoogleInputSecondCheckkey" ref="dialogGoogleInputSecondCheckkey" style="border: none;" class="input-32"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogGoogleDoubleCheckVisible = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="dialogGoogleDoubleCheckHandle" size="small">确 定</el-button>
+        <el-button type="primary" @keyup.enter.native="dialogGoogleDoubleCheckHandle" @click.native.prevent="dialogGoogleDoubleCheckHandle" size="small">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -118,6 +118,13 @@
       $route: {
         handler: function(route) {
           this.redirect = route.query && route.query.redirect
+        }
+      },
+      dialogGoogleDoubleCheckVisible(val) {
+        if(val) {
+          this.$nextTick(() => {
+            this.$refs.dialogGoogleInputSecondCheckkey.focus()
+          })
         }
       }
     },
