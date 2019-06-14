@@ -42,3 +42,12 @@ export function getCheckList(pageNum, pageSize) {
     }
   })
 }
+// 修改配置
+export function resetCheck(data) {
+  return request({
+    url: '/cmsnews/auditConfig/updateAuditConfig',
+    method: 'post',
+    data,
+    requestBodyType: 'formData'
+  })
+}
