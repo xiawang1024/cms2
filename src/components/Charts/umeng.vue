@@ -29,28 +29,45 @@ export default {
     },
     timevalue: {
       type: Array,
-      default:()=>{["2019-04-01","2019-05-01"]}
-
+      default: () => {
+        [];
+      }
+    },
+    chartsvalue: {
+      type: Object,
+      default: function() {
+        return {
+          newUser: [],
+          activeUserInfo: [],
+          launchInfo: [],
+          totalUser: []
+        };
+      }
     }
   },
-  
+
   data() {
     return {
       chart: null,
-      xdate:[],
+      xdate: []
     };
   },
-  watch:{
-      timevalue(){
-          this.initChart();
-      }
+  watch: {
+    timevalue() {
+      this.initChart();
+    },
+    chartsvalue:function(oldValue,newValue) {
+      this.initChart();
+      
+    },
+    immediate: true,
+    deep: true
   },
-  created(){
-     
-  },
+  created() {},
   mounted() {
-    this.initChart();
-    
+    // this.$nextTick(() => {
+      this.initChart();
+    // });
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -61,12 +78,16 @@ export default {
   },
   methods: {
     initChart() {
-         this.show(this.timevalue[0],this.timevalue[1]);
+      var _this = this;
+      if (this.timevalue) {
+        this.show(this.timevalue[0], this.timevalue[1]);
+      }
+
       this.chart = echarts.init(document.getElementById(this.id));
 
-    //   const xAxisData = [];
-    //   const data = [];
-    //   const data2 = [];
+      //   const xAxisData = [];
+      //   const data = [];
+      //   const data2 = [];
 
       this.chart.setOption({
         title: {
@@ -76,7 +97,7 @@ export default {
           trigger: "axis"
         },
         legend: {
-          data: ["今日", "昨日", "7天前", "30天前"]
+          data: ["新增用户", "活跃用户", "启动次数", "累计用户"]
         },
         grid: {
           left: "3%",
@@ -92,67 +113,77 @@ export default {
         xAxis: {
           type: "category",
           boundaryGap: false,
-          data:this.xdate,
-          
+          data: this.xdate
         },
         yAxis: {
           type: "value"
         },
         series: [
           {
-            name: "今日",
+            name: "新增用户",
             type: "line",
             stack: "总量",
-            data: [120, 132, 101, 134, 90, 230, 210]
+            data: _this.chartsvalue.newUser
           },
           {
-            name: "昨日",
+            name: "活跃用户",
             type: "line",
             stack: "总量",
-            data: [220, 182, 191, 234, 290, 330, 310]
+            data: _this.chartsvalue.activeUserInfo
           },
           {
-            name: "7天前",
+            name: "启动次数",
             type: "line",
             stack: "总量",
-            data: [150, 232, 201, 154, 190, 330, 410]
+            data: _this.chartsvalue.launchInfo
           },
           {
-            name: "30天前",
+            name: "累计用户",
             type: "line",
             stack: "总量",
-            data: [320, 332, 301, 334, 390, 330, 320]
+            data: _this.chartsvalue.totalUser
           }
         ]
       });
     },
-     show(value1,value2){
-        var getDate=function(str){
-        var tempDate=new Date();
-        var list=str.split("-");
+    show(value1, value2) {
+      var getDate = function(str) {
+        var tempDate = new Date();
+        var list = str.split("-");
         tempDate.setFullYear(list[0]);
-        tempDate.setMonth(list[1]-1);
+        tempDate.setMonth(list[1] - 1);
         tempDate.setDate(list[2]);
         return tempDate;
-        }
-        var date1=getDate(value1);
-        var date2=getDate(value2);
-        if(date1>date2){
-        var tempDate=date1;
-        date1=date2;
-        date2=tempDate;
-        }
-        date1.setDate(date1.getDate()+1);
-        let allDate=[]
-        while(!(date1.getFullYear()==date2.getFullYear()&&date1.getMonth()==date2.getMonth()&&date1.getDate()==date2.getDate())){
-            allDate.push(date1.getFullYear()+"-"+(date1.getMonth()+1)+"-"+date1.getDate())
-        
-        date1.setDate(date1.getDate()+1);
-        }
-        this.xdate=allDate;
-        console.log(allDate);
-        },
+      };
+      var date1 = getDate(value1);
+      var date2 = getDate(value2);
+      if (date1 > date2) {
+        var tempDate = date1;
+        date1 = date2;
+        date2 = tempDate;
+      }
+      date1.setDate(date1.getDate() + 1);
+      let allDate = [value1];
+      while (
+        !(
+          date1.getFullYear() == date2.getFullYear() &&
+          date1.getMonth() == date2.getMonth() &&
+          date1.getDate() == date2.getDate()
+        )
+      ) {
+        allDate.push(
+          date1.getFullYear() +
+            "-" +
+            (date1.getMonth() + 1) +
+            "-" +
+            date1.getDate()
+        );
 
+        date1.setDate(date1.getDate() + 1);
+      }
+      allDate.push(value2);
+      this.xdate = allDate;
+    }
   }
 };
 </script>

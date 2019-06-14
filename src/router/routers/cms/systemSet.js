@@ -199,7 +199,7 @@ const systemSet = {
       component: () => import(`@/${path}/liveCharts`),
       name: 'liveCharts',
       meta: { title: 'liveCharts', icon: 'appConfig', role: 'cms' },
-      hidden:true
+      // hidden:true
     },
     {
       /**
@@ -209,7 +209,7 @@ const systemSet = {
       component: () => import(`@/${path}/webSiteCharts`),
       name: 'webSiteCharts',
       meta: { title: 'webSiteCharts', icon: 'appConfig', role: 'cms' },
-      hidden:true
+      // hidden:true
     },
     
     
