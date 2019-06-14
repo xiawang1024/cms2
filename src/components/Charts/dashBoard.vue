@@ -17,30 +17,30 @@
         </tr>
         <tr class="highlight ">
           <td class="normal ">今日</td>
-          <td class="rightLine" >39</td>
-          <td class="rightLine" >24</td>
-          <td class="rightLine" >22</td>
-          <td class="rightLine" >81.82%</td>
+          <td class="rightLine" >{{ dashdate[7][0] }}</td>
+          <td class="rightLine" >{{ dashdate[7][1] }}</td>
+          <td class="rightLine" >{{ dashdate[7][2] }}</td>
+          <td class="rightLine" >{{ dashdate[7][3] }}%</td>
           <td class="rightLine" >00:02:37</td>
           <td class="rightLine" >--</td>
           <td class="empty-tr0"/>
         </tr>
         <tr>
           <td class="normal">昨日</td>
-          <td class="rightLine" >101</td>
-          <td class="rightLine" >55</td>
-          <td class="rightLine" >54</td>
-          <td class="rightLine" >81.67%</td>
+          <td class="rightLine" >{{ dashdate[6][0] }}</td>
+          <td class="rightLine" >{{ dashdate[6][1] }}</td>
+          <td class="rightLine" >{{ dashdate[6][2] }}</td>
+          <td class="rightLine" >{{ dashdate[6][3] }}%</td>
           <td class="rightLine" >00:02:45</td>
           <td class="rightLine" >--</td>
           <td class="empty-tr0"/>
         </tr>
         <tr>
-          <td class="normal">预计今日</td>
-          <td class="rightLine arrow-down">47</td>
-          <td class="rightLine arrow-down">32</td>
-          <td class="rightLine arrow-down">30</td>
-          <td class="rightLine" >--</td>
+          <td class="normal">近七日</td>
+          <td class="rightLine ">{{ sevendata[0] }}</td>
+          <td class="rightLine ">{{ sevendata[1] }}</td>
+          <td class="rightLine ">{{ sevendata[2] }}</td>
+          <td class="rightLine" >{{ sevendata[3] }}%</td>
           <td class="rightLine" >--</td>
           <td class="rightLine" >--</td>
           <td class="empty-tr0"/>
@@ -90,15 +90,52 @@
 
 <script>
   export default{
-    // props:{ 
-    //   data:data
-    // },
-    data(){
-      return {
-      
-      }
+
     
-    }
+    props:{ 
+      dashdate: {
+      type: Array,
+      default: () => {
+        [];
+      }
+      }
+    },
+    data(){
+      return{
+      }
+    },
+    computed:{
+      sevendata:function(){
+        let total=[];
+
+        this.dashdate.forEach((item,index) => {
+            
+
+         item.forEach((value,order)=>{
+           if(total[order]){
+             total[order]=total[order]+value
+           }else{
+              total.push(value)
+           }
+              
+            })
+            console.log(total,'total')
+        });
+        return total
+      }
+    },
+    
+    created(){
+
+    },
+    mounted(){
+    },
+    methods:{
+      
+      
+    
+    },
+    
   }
 
 </script>

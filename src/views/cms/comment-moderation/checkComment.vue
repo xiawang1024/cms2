@@ -44,7 +44,7 @@
       <el-table-column prop="nickName" min-width="100" label="昵称" :formatter="nicName"/>
 
       <el-table-column prop="articleTitle" min-width="100" label="文章标题" show-overflow-tooltip/>
-      <el-table-column prop="comment" min-width="500" label="评论内容"/>
+      <el-table-column prop="comment" min-width="500" label="评论内容" class-name="mytextstyle"/>
       <el-table-column prop="top" min-width="100" label="置顶状态">
         <template slot-scope="scope">
           <span v-show="scope.row.top" class="colorSuccess">已置顶</span>
@@ -550,5 +550,10 @@ export default {
 }
 .colorDanger {
   color: #f56c6c;
+}
+/deep/.mytextstyle{
+  font-size: 16px;
+  letter-spacing: 1px;
+  padding: 5px 0;
 }
 </style>
