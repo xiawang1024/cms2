@@ -1,11 +1,13 @@
 import request from "@/utils/request";
 // import baseUrl from '@/config/base-url'
 let Cpath = "http://192.168.7.40:53006";
-let BaiduPath='https://api.baidu.com/json/tongji/v1/ReportService/getData'
+let BaiduPath='/baiduapi/json/tongji/v1/ReportService/getData'
 let umengPath='/baiduStatistics/umengAppList'
+//百度接口
 //获取用户的站点列表
 export function getSiteList() {
     return request({
+      
       url: Cpath + "/baiduStatistics/siteInfo/getSiteList" ,
       method: "post",
       
@@ -13,9 +15,11 @@ export function getSiteList() {
   }
 
   // 网站概况
- 
+  // export const siteProfile = (params) => post(params);
+
   export function siteProfile(data) {
     return request({
+      baseURL:'',
       url: BaiduPath  ,
       method: "post",
       data
@@ -23,7 +27,7 @@ export function getSiteList() {
     });
   }
 
-
+//-------------------------------------------------------------------
   //友盟接口
   //  获取App活跃用户数
 

@@ -16,7 +16,7 @@
         size="mini"
         style="width:180px;"
         v-model="searchAttribute"
-        placeholder="请输入查询姓名"
+        placeholder="请输入用户名"
         prefix-icon="el-icon-search"
         clearable
         @keyup.enter.native="handleSearch"

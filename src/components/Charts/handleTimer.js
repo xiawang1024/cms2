@@ -7,7 +7,7 @@ export function fun_date(aa){
     // time1=date1.getFullYear()+"-"+(date1.getMonth()+1)+"-"+date1.getDate();//time1表示当前时间
     var date2 = new Date(date1);
     date2.setDate(date1.getDate()+aa);
-    var  time2 = date2.getFullYear()+"-"+(date2.getMonth()+1)+"-"+date2.getDate();
+    var  time2 = date2.getFullYear()+"-"+( ((date2.getMonth()+1))<10?("0"+((date2.getMonth()+1))):((date2.getMonth()+1))   )+"-"+(date2.getDate()<10?('0'+date2.getDate()):date2.getDate());
     return time2
 }
 
