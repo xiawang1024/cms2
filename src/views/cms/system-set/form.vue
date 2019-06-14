@@ -129,7 +129,7 @@
               </li>
               <li>
                 <label>关键词</label>
-                <el-input name="keyword" v-model="res.keyword" type="text" class="dfinput" placeholder="请最多输入五个关键词，以 ；隔开"/>
+                <el-input name="keyWord" v-model="res.keyWord" type="text" class="dfinput" placeholder="请最多输入五个关键词，以 ；隔开"/>
               </li>
               <li>
                 <label>&nbsp;</label>
@@ -247,7 +247,7 @@ export default {
         formRule: "",
         encoding: "",
         formStandby: "",
-        keyword:''
+        keyWord:''
       },
       testData: {},
       loading: false,
@@ -268,7 +268,7 @@ export default {
         formRule: "",
         encoding: "",
         formStandby: "",
-        keyword:''
+        keyWord:''
       },
       activeName: "first",
       weChatId: "",
@@ -298,7 +298,7 @@ export default {
         formRule: "",
         encoding: "",
         formStandby: "",
-        keyword:''
+        keyWord:''
       };
       this.testData = {};
       this.selectCloumName = "";
@@ -403,7 +403,7 @@ export default {
                 formRule: "",
                 encoding: "",
                 formStandby: "",
-                keyword:''
+                keyWord:''
               };
             } else {
               if (_this.selectCloum == "") {
@@ -423,7 +423,7 @@ export default {
                   formRule: "",
                   encoding: "",
                   formStandby: "",
-                  keyword:''
+                  keyWord:''
                 };
                 alert(response.data.data);
               }
@@ -493,21 +493,21 @@ export default {
           });
       });
     },
-    handleKeyWord(val){
+    handlekeyWord(val){
       if(val){
-        let mykeyword=val;
-      mykeyword=mykeyword.replace(/；/gi,';');
-      mykeyword=mykeyword.replace(/，/gi,';');
-      mykeyword=mykeyword.replace(/,/gi,';');
-      if(mykeyword.split(';').length>5){
+        let mykeyWord=val;
+      mykeyWord=mykeyWord.replace(/；/gi,';');
+      mykeyWord=mykeyWord.replace(/，/gi,';');
+      mykeyWord=mykeyWord.replace(/,/gi,';');
+      if(mykeyWord.split(';').length>5){
          this.$message({
           type:'error',
           message:'请最多输入5个关键词'
         })
         return false;
       }
-      console.log(mykeyword)
-      return mykeyword
+      console.log(mykeyWord)
+      return mykeyWord
       }else{
         return true
       }
@@ -515,8 +515,8 @@ export default {
     },
     test() {
       let flag = this.check();
-       let mykeyword=this.handleKeyWord(this.res.keyword)
-      if (flag&&mykeyword) {
+       let mykeyWord=this.handlekeyWord(this.res.keyWord)
+      if (flag&&mykeyWord) {
         this.loading = true;
        
 
@@ -535,7 +535,7 @@ export default {
           clientLicenseId: this.clientLicenseId,
           userName: this.userName,
           formStandby: this.res.formStandby,
-          keyword:mykeyword
+          keyWord:mykeyWord
         };
         var _this = this;
         return new Promise((resolve, reject) => {
@@ -563,8 +563,8 @@ export default {
         alert("确定要修改这条规则信息吗？");
       }
       let flag = this.check();
-       let mykeyword=this.handleKeyWord(this.res.keyword)
-      if (flag&&mykeyword) {
+       let mykeyWord=this.handlekeyWord(this.res.keyWord)
+      if (flag&&mykeyWord) {
         this.loading = true;
         var sendData = {
           id: this.res.id,
@@ -582,7 +582,7 @@ export default {
           clientLicenseId: this.clientLicenseId,
           userName: this.userName,
           formStandby: this.res.formStandby,
-          keyword:mykeyword
+          keyWord:mykeyWord
         };
         var _this = this;
 
@@ -615,8 +615,8 @@ export default {
     },
     saveAs() {
       let flag = this.check();
-       let mykeyword=this.handleKeyWord(this.res.keyword)
-      if (flag&&mykeyword) {
+       let mykeyWord=this.handlekeyWord(this.res.keyWord)
+      if (flag&&mykeyWord) {
         this.loading = true;
         var sendData = {
           id: "",
@@ -634,7 +634,7 @@ export default {
           clientLicenseId: this.clientLicenseId,
           userName: this.userName,
           formStandby: this.res.formStandby,
-          keyword:mykeyword
+          keyWord:mykeyWord
         };
         var _this = this;
         return new Promise((resolve, reject) => {
