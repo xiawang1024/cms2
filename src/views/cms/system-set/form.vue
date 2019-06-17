@@ -128,6 +128,10 @@
                 <el-input name="formStandby" v-model="res.formStandby" type="text" class="dfinput"/>
               </li>
               <li>
+                <label>关键词</label>
+                <el-input name="keyWord" v-model="res.keyWord" type="text" class="dfinput" placeholder="请最多输入五个关键词，以 ；隔开"/>
+              </li>
+              <li>
                 <label>&nbsp;</label>
                 <label>&nbsp;</label>
 
@@ -242,7 +246,8 @@ export default {
         contentRule: "",
         formRule: "",
         encoding: "",
-        formStandby: ""
+        formStandby: "",
+        keyWord:''
       },
       testData: {},
       loading: false,
@@ -262,7 +267,8 @@ export default {
         contentRule: "",
         formRule: "",
         encoding: "",
-        formStandby: ""
+        formStandby: "",
+        keyWord:''
       },
       activeName: "first",
       weChatId: "",
@@ -291,7 +297,8 @@ export default {
         contentRule: "",
         formRule: "",
         encoding: "",
-        formStandby: ""
+        formStandby: "",
+        keyWord:''
       };
       this.testData = {};
       this.selectCloumName = "";
@@ -395,7 +402,8 @@ export default {
                 contentRule: "",
                 formRule: "",
                 encoding: "",
-                formStandby: ""
+                formStandby: "",
+                keyWord:''
               };
             } else {
               if (_this.selectCloum == "") {
@@ -414,7 +422,8 @@ export default {
                   contentRule: "",
                   formRule: "",
                   encoding: "",
-                  formStandby: ""
+                  formStandby: "",
+                  keyWord:''
                 };
                 alert(response.data.data);
               }
@@ -484,10 +493,33 @@ export default {
           });
       });
     },
+    handlekeyWord(val){
+      if(val){
+        let mykeyWord=val;
+      mykeyWord=mykeyWord.replace(/；/gi,';');
+      mykeyWord=mykeyWord.replace(/，/gi,';');
+      mykeyWord=mykeyWord.replace(/,/gi,';');
+      if(mykeyWord.split(';').length>5){
+         this.$message({
+          type:'error',
+          message:'请最多输入5个关键词'
+        })
+        return false;
+      }
+      console.log(mykeyWord)
+      return mykeyWord
+      }else{
+        return true
+      }
+      
+    },
     test() {
       let flag = this.check();
-      if (flag) {
+       let mykeyWord=this.handlekeyWord(this.res.keyWord)
+      if (flag&&mykeyWord) {
         this.loading = true;
+       
+
         var sendData = {
           column: this.res.clumnId,
           newslisturl: this.res.newsListUrl,
@@ -502,7 +534,8 @@ export default {
           encoding: this.res.encoding,
           clientLicenseId: this.clientLicenseId,
           userName: this.userName,
-          formStandby: this.res.formStandby
+          formStandby: this.res.formStandby,
+          keyWord:mykeyWord
         };
         var _this = this;
         return new Promise((resolve, reject) => {
@@ -530,7 +563,8 @@ export default {
         alert("确定要修改这条规则信息吗？");
       }
       let flag = this.check();
-      if (flag) {
+       let mykeyWord=this.handlekeyWord(this.res.keyWord)
+      if (flag&&mykeyWord) {
         this.loading = true;
         var sendData = {
           id: this.res.id,
@@ -547,7 +581,8 @@ export default {
           encoding: this.res.encoding,
           clientLicenseId: this.clientLicenseId,
           userName: this.userName,
-          formStandby: this.res.formStandby
+          formStandby: this.res.formStandby,
+          keyWord:mykeyWord
         };
         var _this = this;
 
@@ -580,7 +615,8 @@ export default {
     },
     saveAs() {
       let flag = this.check();
-      if (flag) {
+       let mykeyWord=this.handlekeyWord(this.res.keyWord)
+      if (flag&&mykeyWord) {
         this.loading = true;
         var sendData = {
           id: "",
@@ -597,7 +633,8 @@ export default {
           encoding: this.res.encoding,
           clientLicenseId: this.clientLicenseId,
           userName: this.userName,
-          formStandby: this.res.formStandby
+          formStandby: this.res.formStandby,
+          keyWord:mykeyWord
         };
         var _this = this;
         return new Promise((resolve, reject) => {
