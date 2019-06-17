@@ -51,7 +51,7 @@ export function getRoot() {
   })
 }
 // 根据权限栏目获取
-export function columnList(queryObj, pageNo, pageSize, sortBy='channelLevel,seqNo') {
+export function columnList(queryObj, pageNo, pageSize, sortBy='channelLevel') {
   return request({
     url: '/cms/channel/pagebyuserid?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + "&order=asc,desc",
     method: 'post',
@@ -70,7 +70,7 @@ export function columnListAll(queryObj, pageNo, pageSize, sortBy='channelLevel,s
   })
 }
 // 全部栏目获取(不分权限)
-export function columnListAny(queryObj, pageNo, pageSize, sortBy='channelLevel,seqNo') {
+export function columnListAny(queryObj, pageNo, pageSize, sortBy='channelLevel,seqNo,createtime') {
   return request({
     url: '/cms/channel/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + "&order=asc,desc",
     method: 'post',
