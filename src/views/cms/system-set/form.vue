@@ -535,7 +535,7 @@ export default {
           clientLicenseId: this.clientLicenseId,
           userName: this.userName,
           formStandby: this.res.formStandby,
-          keyWord:mykeyWord
+          keyWord:mykeyWord==true?'':mykeyWord
         };
         var _this = this;
         return new Promise((resolve, reject) => {
@@ -582,7 +582,7 @@ export default {
           clientLicenseId: this.clientLicenseId,
           userName: this.userName,
           formStandby: this.res.formStandby,
-          keyWord:mykeyWord
+          keyWord:mykeyWord==true?'':mykeyWord
         };
         var _this = this;
 
@@ -634,7 +634,7 @@ export default {
           clientLicenseId: this.clientLicenseId,
           userName: this.userName,
           formStandby: this.res.formStandby,
-          keyWord:mykeyWord
+          keyWord:mykeyWord==true?'':mykeyWord
         };
         var _this = this;
         return new Promise((resolve, reject) => {
