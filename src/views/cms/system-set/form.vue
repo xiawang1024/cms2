@@ -535,6 +535,7 @@ export default {
           clientLicenseId: this.clientLicenseId,
           userName: this.userName,
           formStandby: this.res.formStandby,
+          //处理空值情况
           keyWord:mykeyWord==true?'':mykeyWord
         };
         var _this = this;
