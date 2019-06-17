@@ -100,7 +100,7 @@ export default {
               activeValue: 0,
               inactiveValue: 1,
               activeColor: '#13ce66',
-              value: 1,
+              value: 0,
               type: 'switch'
             },
             {
@@ -109,7 +109,7 @@ export default {
               activeValue: 1,
               inactiveValue: 0,
               activeColor: '#13ce66',
-              value: 1,
+              value: 0,
               type: 'switch'
             },
             {

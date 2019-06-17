@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { fetchDictByDictName, createDict, updateDict } from "@/api/cms/dict";
+import { fetchDictAllByDictName, createDict, updateDict } from "@/api/cms/dict";
 export default {
   name: "DocSource",
   data() {
@@ -138,7 +138,7 @@ export default {
     fetchDict() {
       var _this = this;
       return new Promise((resolve, reject) => {
-        fetchDictByDictName('文稿来源')
+        fetchDictAllByDictName('文稿来源')
           .then(response => {
             _this.dictObj = response.data.result;
             if (!_this.dictObj.details) {
