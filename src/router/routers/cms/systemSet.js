@@ -209,7 +209,7 @@ const systemSet = {
       component: () => import(`@/${path}/webSiteCharts`),
       name: 'webSiteCharts',
       meta: { title: 'webSiteCharts', icon: 'appConfig', role: 'cms' },
-      hidden:true
+      // hidden:true
     },
     
     
