@@ -30,11 +30,17 @@ export default {
     if (!this.authorities.includes('admin')) {
       this.currentRole = 'editorDashboard'
     }
-    if (this.authorities.includes('nanyangradio')) {
+    this.checkUser();
+  },
+  methods:{
+    checkUser(){
+      let user=JSON.parse(localStorage.getItem('BaseInfor'))
+        console.log(user.clientLicenseId,'user')
+
+        if (user.clientLicenseId==='nanyangradio') {
       this.showChart = true
     }
-
-
+    }
   }
 }
 </script>
