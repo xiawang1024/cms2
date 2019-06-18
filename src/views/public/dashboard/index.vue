@@ -1,20 +1,24 @@
 <template>
   <div class="dashboard-container">
-    <component :is="currentRole"/>
+    <!-- <component :is="currentRole"/> -->
+    <indexCharts v-if="showChart"/>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import adminDashboard from './admin'
-import editorDashboard from './editor'
+// import adminDashboard from './admin'
+// import editorDashboard from './editor'
+import indexCharts from "@/views/cms/statisticsChart/indexchart.vue";
 
 export default {
   name: 'Dashboard',
-  components: { adminDashboard, editorDashboard },
+  // components: { adminDashboard, editorDashboard},
+  components: { indexCharts },
   data() {
     return {
-      currentRole: 'adminDashboard'
+      currentRole: 'adminDashboard',
+      showChart:false,
     }
   },
   computed: {
@@ -26,6 +30,11 @@ export default {
     if (!this.authorities.includes('admin')) {
       this.currentRole = 'editorDashboard'
     }
+    if (this.authorities.includes('nanyangradio')) {
+      this.showChart = true
+    }
+
+
   }
 }
 </script>
