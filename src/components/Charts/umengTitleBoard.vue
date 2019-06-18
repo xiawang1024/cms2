@@ -4,7 +4,7 @@
       <div class="leftpart">
         <div class="floor">
           <div class="smallbox">
-            <p class="title">新增用户（7日平均）</p>
+            <p class="mytitle">新增用户（7日平均）</p>
             <h3>{{ datavalue?datavalue.totalNewUserAverage7.toFixed(0):'--' }}</h3>
             <p>
               同比
@@ -14,7 +14,7 @@
             </p>
           </div>
           <div class="smallbox">
-            <p class="title">活跃用户（7日平均）</p>
+            <p class="mytitle">活跃用户（7日平均）</p>
             <h3>{{ datavalue?datavalue.activeUserWeekLast:'--' }}</h3>
             <p>
               同比
@@ -26,7 +26,7 @@
         </div>
         <div class="floor">
           <div class="smallbox">
-            <p class="title">新用户次日留存率（7日平均）</p>
+            <p class="mytitle">新用户次日留存率（7日平均）</p>
             <h3>{{ datavalue?datavalue.retentionAverage7.toFixed(2):'--' }}%</h3>
             <p>
               同比
@@ -36,7 +36,7 @@
             </p>
           </div>
           <div class="smallbox">
-            <p class="title">使用时长（7日平均）</p>
+            <p class="mytitle">使用时长（7日平均）</p>
             <h3>{{ datavalue?datavalue.durationAverage7.toFixed(2):'--' }}</h3>
             <p>
               同比
@@ -50,7 +50,7 @@
       <div class="rightpart">
         <div class="floor">
           <div class="smallbox">
-            <p class="title">上周总活跃用户数</p>
+            <p class="mytitle">上周总活跃用户数</p>
             <h3>{{ datavalue?datavalue.activeUserWeekLast:'--' }}</h3>
             <p>
               同比
@@ -60,7 +60,7 @@
             </p>
           </div>
           <div class="smallbox">
-            <p class="title">上月总活跃用户数</p>
+            <p class="mytitle">上月总活跃用户数</p>
             <h3>{{ datavalue?datavalue.activeUserMonthLast:'--' }}</h3>
             <p>
               同比
@@ -72,7 +72,7 @@
         </div>
         <div class="floor">
           <div class="smallbox">
-            <p class="title">启动次数(7日平均)</p>
+            <p class="mytitle">启动次数(7日平均)</p>
             <h3>{{ datavalue?datavalue.launchAverage7.toFixed(0):'--' }}</h3>
             <p>
               同比
@@ -83,7 +83,7 @@
             <p/>
           </div>
           <div class="smallbox">
-            <p class="title">累计用户数</p>
+            <p class="mytitle">累计用户数</p>
             <h3>{{ datavalue?datavalue.totalUsers:'--' }}</h3>
           </div>
         </div>
@@ -164,7 +164,7 @@ export default {
         height: 146.438px;
         padding: 20px;
         padding-left: 30px;
-        .title {
+        .mytitle {
           color: rgb(102, 102, 102);
           font-size: 14px;
         }

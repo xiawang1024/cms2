@@ -9,7 +9,7 @@
       <div class="table-list">
         <table class="list">
           <tbody class="rightLine nonerightline">
-            <tr class="title heightSize">
+            <tr class="baiduTitle heightSize">
               <th/>
               <th>浏览量(PV)</th>
               <th>访客数(UV)</th>
@@ -55,7 +55,7 @@
       <div class="rightpart">
         <div class="floor">
           <div class="smallbox">
-            <p class="title">新增用户（7日平均）</p>
+            <p class="mytitle">新增用户（7日平均）</p>
             <h3>{{ datavalue?datavalue.totalNewUserAverage7.toFixed(0):'--' }}</h3>
             <p>
               同比
@@ -65,7 +65,7 @@
             </p>
           </div>
           <div class="smallbox">
-            <p class="title">活跃用户（7日平均）</p>
+            <p class="mytitle">活跃用户（7日平均）</p>
             <h3>{{ datavalue?datavalue.activeUserWeekLast:'--' }}</h3>
             <p>
               同比
@@ -77,7 +77,7 @@
         </div>
         <div class="floor">
           <div class="smallbox">
-            <p class="title">新用户次日留存率（7日平均）</p>
+            <p class="mytitle">新用户次日留存率（7日平均）</p>
             <h3>{{ datavalue?datavalue.retentionAverage7.toFixed(2):'--' }}%</h3>
             <p>
               同比
@@ -87,7 +87,7 @@
             </p>
           </div>
           <div class="smallbox">
-            <p class="title">使用时长（7日平均）</p>
+            <p class="mytitle">使用时长（7日平均）</p>
             <h3>{{ datavalue?datavalue.durationAverage7.toFixed(2):'--' }}</h3>
             <p>
               同比
@@ -104,7 +104,7 @@
 <script>
 import Vbaidu from "@/views/cms/system-set/webSiteCharts.vue";
 import { fun_date } from "@/components/Charts/handleTimer.js";
-import { getTrend, siteProfile } from "@/api/cms/liveCharts";
+import { getTrend,getSevendayData } from "@/api/cms/liveCharts";
 export default {
   name: "Indexcharts",
   components: { Vbaidu },
@@ -113,21 +113,7 @@ export default {
       datavalue: {},
       dashdate: [],
       appkey: "5cbd29613fc19548f9000c25",
-       requestParams: {
-        header: {
-          username: "中原之声网",
-          password: "qingyuan19770963",
-          token: "a87df87040e014dc9aae104c5cddabaf",
-          account_type: 1
-        },
-        body: {
-          site_id: "13495008",
-          start_date: "20190101",
-          end_date: "2019005",
-          metrics: "pv_count,visitor_count,ip_count,bounce_ratio",
-          method: "overview/getTimeTrendRpt"
-        }
-      },
+       site_id: "13495008",
       sevendayAgo:'',
       today:''
 
@@ -199,28 +185,31 @@ export default {
     profile() {
       var _this = this;
       return new Promise((resolve, reject) => {
-        let data = this.requestParams;
-        data.body.start_date = this.sevendayAgo;
-        data.body.end_date = this.today;
-
-        siteProfile(data)
+        getSevendayData(this.site_id, this.sevendayAgo, this.today)
           .then(response => {
-            if (response.data.header.desc === "success") {
-              _this.dashdate = response.data.body.data[0].result.items[1];
+            if (response.data.code == 0) {
+              let result = JSON.parse(response.data.result);
+              _this.dashdate = result.body.data[0].result.items[1];
+              console.log(_this.dashdate, "resss");
+            } else {
+              this.$message({
+                type: "error",
+                message: "请求失败"
+              });
             }
           })
           .catch(reject => {
             console.log(reject);
           });
       });
-    }
+    },
   }
 };
 </script>
 <style lang="scss" scoped>
 .mainBox {
   width: 100%;
-  padding: 0 42px;
+  padding: 20px 42px 0 42px;
   margin: 0 auto;
   overflow: hidden;
   display: flex;
@@ -228,7 +217,6 @@ export default {
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 20px;
-  //   border-bottom: 1px solid #dedede;
   .titleright {
     padding: 0 20px;
     p {
@@ -251,7 +239,7 @@ export default {
         width: 49.5%;
         padding: 0 20px;
         padding-left: 30px;
-        .title {
+        .mytitle {
           color: rgb(102, 102, 102);
           font-size: 14px;
         }
@@ -282,21 +270,18 @@ export default {
       box-shadow: 1px 5px 5px #dedede;
       padding: 0 20px;
     }
-    .list {
-    //   margin-top: 55px;
-    }
     div.table-list table.list {
       border-collapse: collapse;
       width: 100%;
       font-size: 12px;
     }
-    .title {
+    .baiduTitle {
       border-bottom: none;
       height: 60px;
       line-height: 50px;
     }
     .heightSize{
-         height: 82px;;
+         height: 61px;;
     }
     td.normal {
       font-size: 14px;

@@ -3,7 +3,7 @@
     <div class="chartBox half">
       <dashBoard :dashdate="dashdate"/>
     </div>
-    <div >
+    <div>
       <div class="chartBox half leftMargin">
         <template>
           <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -16,7 +16,7 @@
         <baiduCharts :chartsvalue="chartsvalue" width="100%" height="300px"/>
       </div>
       <div class="clearFloat"/>
-      <div class="chartBox " >
+      <div class="chartBox">
         <template>
           <el-table :data="tableData" stripe style="width: 100%" height="400">
             <el-table-column prop="area" label="地域" width="180"/>
@@ -34,7 +34,11 @@
 <script>
 import baiduCharts from "@/components/Charts/baiduCharts.vue";
 import dashBoard from "@/components/Charts/dashBoard.vue";
-import { siteProfile } from "@/api/cms/liveCharts";
+import {
+  getSevendayData,
+  getCurrenViewer,
+  getTrendData
+} from "@/api/cms/liveCharts";
 import { fun_date } from "@/components/Charts/handleTimer.js";
 export default {
   name: "Baidu",
@@ -47,21 +51,22 @@ export default {
       beforyesteday: "",
       sevendayAgo: "",
       monthAgo: "",
-      requestParams: {
-        header: {
-          username: "中原之声网",
-          password: "qingyuan19770963",
-          token: "a87df87040e014dc9aae104c5cddabaf",
-          account_type: 1
-        },
-        body: {
-          site_id: "13495008",
-          start_date: "20190101",
-          end_date: "2019005",
-          metrics: "pv_count,visitor_count,ip_count,bounce_ratio",
-          method: "overview/getTimeTrendRpt"
-        }
-      },
+      // requestParams: {
+      //   header: {
+      //     username: "中原之声网",
+      //     password: "qingyuan19770963",
+      //     token: "a87df87040e014dc9aae104c5cddabaf",
+      //     account_type: 1
+      //   },
+      //   body: {
+      //     site_id: "13495008",
+      //     start_date: "20190101",
+      //     end_date: "2019005",
+      //     metrics: "pv_count,visitor_count,ip_count,bounce_ratio",
+      //     method: "overview/getTimeTrendRpt"
+      //   }
+      // },
+      site_id: "13495008",
       dashdate: [],
       tableData: [],
       chartsvalue: [],
@@ -76,39 +81,47 @@ export default {
   created() {
     this.timeInit();
     this.getCurrentVisitor();
-    this.profile();
-    this.getProgress(this.yesteday,this.today,'to');
-    this.getProgress(this.beforyesteday,this.yesteday,'se');
-    this.getProgress(this.sevendayAgo,this.today,'th');
-    this.getProgress(this.monthAgo,this.today,'fo');
+    // this.profile();
+    this.getProgress(this.yesteday, this.today, "to");
+    this.getProgress(this.beforyesteday, this.yesteday, "se");
+    this.getProgress(this.sevendayAgo, this.today, "th");
+    this.getProgress(this.monthAgo, this.today, "fo");
+    this.testreque();
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     timeInit() {
       let today = fun_date(0);
       this.today = today.replace(/-/gi, "");
       let yesteday = fun_date(-1);
       this.yesteday = yesteday.replace(/-/gi, "");
-       let beforyesteday = fun_date(-2);
+      let beforyesteday = fun_date(-2);
       this.beforyesteday = beforyesteday.replace(/-/gi, "");
       let sevendayAgo = fun_date(-7);
       this.sevendayAgo = sevendayAgo.replace(/-/gi, "");
       let monthAgo = fun_date(-30);
       this.monthAgo = monthAgo.replace(/-/gi, "");
     },
+    //-----------
     //获取最近七天数据
-    profile() {
+    testreque() {
       var _this = this;
       return new Promise((resolve, reject) => {
-        let data = this.requestParams;
-        data.body.start_date = this.sevendayAgo;
-        data.body.end_date = this.today;
+        // let data = this.requestParams;
+        // data.body.start_date = this.sevendayAgo;
+        // data.body.end_date = this.today;
 
-        siteProfile(data)
+        getSevendayData(this.site_id, this.sevendayAgo, this.today)
           .then(response => {
-            if (response.data.header.desc === "success") {
-              _this.dashdate = response.data.body.data[0].result.items[1];
+            if (response.data.code == 0) {
+              let result = JSON.parse(response.data.result);
+              _this.dashdate = result.body.data[0].result.items[1];
+              console.log(_this.dashdate, "resss");
+            } else {
+              this.$message({
+                type: "error",
+                message: "请求失败"
+              });
             }
           })
           .catch(reject => {
@@ -116,38 +129,76 @@ export default {
           });
       });
     },
+
+    //获取最近七天数据
+    // profile() {
+    //   var _this = this;
+    //   return new Promise((resolve, reject) => {
+    //     let data = this.requestParams;
+    //     data.body.start_date = this.sevendayAgo;
+    //     data.body.end_date = this.today;
+
+    //     siteProfile(data)
+    //       .then(response => {
+    //         if (response.data.header.desc === "success") {
+    // _this.dashdate = response.data.body.data[0].result.items[1];
+    //  console.log(_this.dashdate,'resss')
+    // }
+    //       })
+    //       .catch(reject => {
+    //         console.log(reject);
+    //       });
+    //   });
+    // },
+
+
+
     //获取实时访客信息
     getCurrentVisitor() {
       var _this = this;
       return new Promise((resolve, reject) => {
-        let data = {
-          header: {
-            username: "中原之声网",
-            password: "qingyuan19770963",
-            token: "a87df87040e014dc9aae104c5cddabaf",
-            account_type: 1
-          },
-          body: {
-            site_id: "13495008",
-            // site_id: "1453193",
-            metrics: "area,source,visit_time,visit_pages,access_page,ip",
-            method: "trend/latest/a",
-            order: "visit_pages, desc",
-            max_results: "100",
-            source: "through",
-            area: "china"
-          }
-        };
+        // let data = {
+        //   header: {
+        //     username: "中原之声网",
+        //     password: "qingyuan19770963",
+        //     token: "a87df87040e014dc9aae104c5cddabaf",
+        //     account_type: 1
+        //   },
+        //   body: {
+        //     site_id: "13495008",
+        //     // site_id: "1453193",
+        //     metrics: "area,source,visit_time,visit_pages,access_page,ip",
+        //     method: "trend/latest/a",
+        //     order: "visit_pages, desc",
+        //     max_results: "100",
+        //     source: "through",
+        //     area: "china"
+        //   }
+        // };
 
-        siteProfile(data)
+        getCurrenViewer(this.site_id)
           .then(response => {
-            if (response.data.header.desc === "success") {
-              let result = response.data.body.data[0].result.items[1];
-              _this.$nextTick(() => {
-                _this.tableData = _this.handleData(result);
+              if (response.data.code == 0) {
+              let result = JSON.parse(response.data.result);
+              let res = result.body.data[0].result.items[1];
+               _this.$nextTick(() => {
+                _this.tableData = _this.handleData(res);
               });
-
+              
+              console.log(_this.tableData, "resss");
+            } else {
+              this.$message({
+                type: "error",
+                message: "请求失败"
+              });
             }
+
+            // if (response.data.header.desc === "success") {
+            //   let result = response.data.body.data[0].result.items[1];
+            //   _this.$nextTick(() => {
+            //     _this.tableData = _this.handleData(result);
+            //   });
+            // }
           })
           .catch(reject => {
             console.log(reject);
@@ -155,42 +206,62 @@ export default {
       });
     },
     //趋势数据
-    getProgress(starttime,endtime,type) {
+    getProgress(starttime, endtime, type) {
       var _this = this;
-      let data = {
-        header: {
-          username: "中原之声网",
-          password: "qingyuan19770963",
-          token: "a87df87040e014dc9aae104c5cddabaf",
-          account_type: 1
-        },
-        body: {
-          site_id: "13495008",
-          start_date: starttime,
-          end_date: endtime,
-          metrics: "pv_count,visitor_count,ip_count ",
-          method: "trend/time/a",
-          gran: "hour",
-          area: "china"
-        }
-      };
-      siteProfile(data)
+      // let data = {
+      //   header: {
+      //     username: "中原之声网",
+      //     password: "qingyuan19770963",
+      //     token: "a87df87040e014dc9aae104c5cddabaf",
+      //     account_type: 1
+      //   },
+      //   body: {
+      //     site_id: "13495008",
+      //     start_date: starttime,
+      //     end_date: endtime,
+      //     metrics: "pv_count,visitor_count,ip_count ",
+      //     method: "trend/time/a",
+      //     gran: "hour",
+      //     area: "china"
+      //   }
+      // };
+      getTrendData(this.site_id,starttime,endtime)
         .then(response => {
-          if (response.data.header.desc === "success") {
-            let data = response.data.body.data[0].result.items[1];
-            //判断请求图表类型
-            if(type=='to'){
-                 _this.chartsvalueto = _this.handleChartData(data);
-                 _this.chartInit();
-            }else if(type=='se'){
-               _this.chartsvaluese = _this.handleChartData(data);
-            }else if(type=='th'){
-               _this.chartsvalueth= _this.handleChartData(data);
-            }else if(type=='fo'){
-              _this.chartsvaluefo= _this.handleChartData(data);
+          if (response.data.code == 0) {
+              let result = JSON.parse(response.data.result);
+              let data = result.body.data[0].result.items[1];
+                if (type == "to") {
+              _this.chartsvalueto = _this.handleChartData(data);
+              _this.chartInit();
+            } else if (type == "se") {
+              _this.chartsvaluese = _this.handleChartData(data);
+            } else if (type == "th") {
+              _this.chartsvalueth = _this.handleChartData(data);
+            } else if (type == "fo") {
+              _this.chartsvaluefo = _this.handleChartData(data);
             }
-           
-          }
+              console.log(_this.tableData, "resss");
+            } else {
+              this.$message({
+                type: "error",
+                message: "请求失败"
+              });
+            }
+
+          // if (response.data.header.desc === "success") {
+          //   let data = response.data.body.data[0].result.items[1];
+          //   //判断请求图表类型
+          //   if (type == "to") {
+          //     _this.chartsvalueto = _this.handleChartData(data);
+          //     _this.chartInit();
+          //   } else if (type == "se") {
+          //     _this.chartsvaluese = _this.handleChartData(data);
+          //   } else if (type == "th") {
+          //     _this.chartsvalueth = _this.handleChartData(data);
+          //   } else if (type == "fo") {
+          //     _this.chartsvaluefo = _this.handleChartData(data);
+          //   }
+          // }
         })
         .catch(reject => {
           console.log(reject);
@@ -204,8 +275,8 @@ export default {
           area: item[0],
           source: item[1].fromType,
           keyword: null, //无返回值，暂写为空
-          access_page:item[2],
-          ip:item[3],
+          access_page: item[2],
+          ip: item[3],
           visit_time: item[4],
           visit_pages: item[5]
         });
@@ -229,37 +300,36 @@ export default {
     handleClick(tab, event) {
       this.chartInit();
     },
-    chartInit(){
-      if(this.activeName=='first'){
-        let data=[
+    chartInit() {
+      if (this.activeName == "first") {
+        let data = [
           this.chartsvalueto[0].reverse(),
           this.chartsvalueto[1].reverse(),
           this.chartsvalueto[2].reverse()
-          ]
-         this.chartsvalue=data
-      }else if(this.activeName=='second'){
-         let data=[
+        ];
+        this.chartsvalue = data;
+      } else if (this.activeName == "second") {
+        let data = [
           this.chartsvaluese[0].reverse(),
           this.chartsvaluese[1].reverse(),
           this.chartsvaluese[2].reverse()
-          ]
-         this.chartsvalue=data
-      }else if(this.activeName=='third'){
-         let data=[
+        ];
+        this.chartsvalue = data;
+      } else if (this.activeName == "third") {
+        let data = [
           this.chartsvalueth[0].reverse(),
           this.chartsvalueth[1].reverse(),
           this.chartsvalueth[2].reverse()
-          ]
-         this.chartsvalue=data
-      }else if(this.activeName=='fourth'){
-         let data=[
+        ];
+        this.chartsvalue = data;
+      } else if (this.activeName == "fourth") {
+        let data = [
           this.chartsvaluefo[0].reverse(),
           this.chartsvaluefo[1].reverse(),
           this.chartsvaluefo[2].reverse()
-          ]
-         this.chartsvalue=data
+        ];
+        this.chartsvalue = data;
       }
-    
     }
   }
 };
@@ -279,7 +349,7 @@ export default {
   .clearFloat {
     clear: both;
     height: 20px;
-    width:100%;
+    width: 100%;
   }
   .leftMargin {
     margin-left: 1.5%;
