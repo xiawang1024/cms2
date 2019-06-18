@@ -54,7 +54,12 @@ export default {
       this.$emit('update:dialogVisible', false)
     },
     handelCheck(state) {
-      console.log(1111)
+      if(state == '2') {
+        if(!this.form.auditOpinion) {
+          this.$message.warning('请输入审核意见！')
+          return
+        }
+      }
       let data = {
         id: this.rowData.id,
         auditOpinion: this.form.auditOpinion,
