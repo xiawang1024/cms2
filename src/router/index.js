@@ -20,8 +20,9 @@ import checkSetting from './routers/cms/checkSetting'
 import articleCheck from './routers/cms/articleCheck'
 // import extensions from './routers/cms/extensions'
 import commentModeration from './routers/cms/commentModeration'
+import statisticsChart from './routers/cms/statisticsChart'
 // const cmsRouterMap = [webSite, systemSet, personAndAuthor,commentModeration]
-const cmsRouterMap = [webSite, systemSet, personAndAuthor, checkSetting, articleCheck, commentModeration]
+const cmsRouterMap = [webSite, systemSet, personAndAuthor, checkSetting, articleCheck, commentModeration,statisticsChart]
 
 /**
  * 用户中心系统路由

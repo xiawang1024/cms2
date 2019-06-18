@@ -9,7 +9,7 @@
 import { mapGetters } from 'vuex'
 // import adminDashboard from './admin'
 // import editorDashboard from './editor'
-import indexCharts from "@/views/cms/system-set/indexchart.vue";
+import indexCharts from "@/views/cms/statisticsChart/indexchart.vue";
 
 export default {
   name: 'Dashboard',

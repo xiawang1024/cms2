@@ -102,12 +102,9 @@
   </div>
 </template>
 <script>
-import Vbaidu from "@/views/cms/system-set/webSiteCharts.vue";
 import { fun_date } from "@/components/Charts/handleTimer.js";
 import { getTrend,getSevendayData } from "@/api/cms/liveCharts";
 export default {
-  name: "Indexcharts",
-  components: { Vbaidu },
   data() {
     return {
       datavalue: {},
@@ -152,12 +149,12 @@ export default {
   methods: {
       showpc(){
               this.$router.push({
-        path: "/cms/systemSet/webSiteCharts"
+        path: "/cms/statisticsChart/pcSiteCharts"
       })
       },
       showMobile(){
               this.$router.push({
-        path: "/cms/systemSet/liveCharts"
+        path: "/cms/statisticsChart/mobileCharts"
       })
       },
     fetchTrend() {

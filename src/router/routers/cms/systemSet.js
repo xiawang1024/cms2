@@ -200,37 +200,7 @@ const systemSet = {
       hidden:true
       
     },
-    {
-      /**
-       * umeng统计报表
-       */
-      path: 'liveCharts',
-      component: () => import(`@/${path}/liveCharts`),
-      name: 'liveCharts',
-      meta: { title: 'liveCharts', icon: 'appConfig', role: 'cms' },
-      // hidden:true
-    },
-    {
-      /**
-       * web统计报表
-       */
-      path: 'webSiteCharts',
-      component: () => import(`@/${path}/webSiteCharts`),
-      name: 'webSiteCharts',
-      meta: { title: 'webSiteCharts', icon: 'appConfig', role: 'cms' },
-      // hidden:true
-    },
     
-    {
-      /**
-       * 统计报表首页
-       */
-      path: 'indexchart',
-      component: () => import(`@/${path}/indexchart`),
-      name: 'indexchart',
-      meta: { title: 'indexchart', icon: 'appConfig', role: 'cms' },
-      hidden:true
-    },
     
   ]
 }

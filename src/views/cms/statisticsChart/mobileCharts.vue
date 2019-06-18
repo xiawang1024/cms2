@@ -15,7 +15,7 @@
       </div>
     </div>
    
-    <umeng id="mycharts1" height="300px" width="100%" :timevalue="timevalue" :chartsvalue="chartsvalue" />
+    <umeng id="mycharts1" height="450px" width="100%" :timevalue="timevalue" :chartsvalue="chartsvalue" />
 
   </div>
 </template>
@@ -269,7 +269,7 @@ export default {
   width: 100%;
   min-width: 1080px;
   margin: 0 auto;
-  padding: 0 0 0 30px;
+  padding: 20px 0 0 30px;
   box-sizing: border-box;
 }
 .dateselect {
