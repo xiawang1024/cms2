@@ -11,18 +11,19 @@
         >添加用户</el-button>
       </div>
 
-      <el-input
-        class="searchinput"
-        size="mini"
-        style="width:180px;"
-        v-model="searchAttribute"
-        placeholder="请输入用户名"
-        prefix-icon="el-icon-search"
-        clearable
-        @keyup.enter.native="handleSearch"
-        @change="handleSearch"
-      />
+      
       <div class="rightAside">
+        <el-input
+          class="searchinput"
+          size="mini"
+          style="width:180px;"
+          v-model="searchAttribute"
+          placeholder="请输入用户名"
+          prefix-icon="el-icon-search"
+          clearable
+          @keyup.enter.native="handleSearch"
+          @change="handleSearch"
+        />
         <el-button size="mini" type="primary" @click="handleSearch" icon="el-icon-search">查询</el-button>
         <el-button size="mini" type="primary" @click="handleReset">重置</el-button>
       </div>
