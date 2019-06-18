@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="user-user-manage">
     <el-form :inline="true" size="mini" style="margin-top: 10px;">
       <el-form-item :label="`已选数据 [ ${multipleSelection.length} ]`">
         <el-button-group>
@@ -10,7 +10,7 @@
       </el-form-item>
     </el-form>
 
-    <el-table ref="pap-base-table" :row-key="rowKeys" height="500" max-height="500" :data="currentTableData" v-loading="tableLoading"  stripe style="width: 100%; " @selection-change="handleSelectionChange">
+    <el-table ref="pap-base-table" :row-key="rowKeys" :data="currentTableData" v-loading="tableLoading"  stripe style="width: 100%; " @selection-change="handleSelectionChange">
 
       <el-table-column type="selection" width="55" :reserve-selection="true"></el-table-column>
         <el-table-column
@@ -149,3 +149,12 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  .user-user-manage{
+    .el-pagination{
+      margin-top:30px;
+      padding: 0 30px;
+      text-align: right;
+    }
+  }
+</style>
