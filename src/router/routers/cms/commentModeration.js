@@ -9,7 +9,7 @@ const path = `views/${cmsPath}/comment-moderation`
 const commentModeration = {
   path: `/${cmsPath}/comment-moderation`,
   component: Layout,
-  meta: { title: 'commentModeration', icon: 'message_unread', role: 'cms' },
+  meta: { title: 'commentModeration', icon: 'message_unread', role: 'cms:newsComment' },
   name: 'commentModeration',
   children: [
    

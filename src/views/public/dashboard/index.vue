@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <!-- <component :is="currentRole"/> -->
-    <indexCharts/>
+    <indexCharts v-if="showChart"/>
   </div>
 </template>
 
@@ -17,7 +17,8 @@ export default {
   components: { indexCharts },
   data() {
     return {
-      currentRole: 'adminDashboard'
+      currentRole: 'adminDashboard',
+      showChart:false,
     }
   },
   computed: {
@@ -29,6 +30,11 @@ export default {
     if (!this.authorities.includes('admin')) {
       this.currentRole = 'editorDashboard'
     }
+    if (this.authorities.includes('nanyangradio')) {
+      this.showChart = true
+    }
+
+
   }
 }
 </script>

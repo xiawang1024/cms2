@@ -20,7 +20,7 @@ const statisticsChart = {
       path: 'mobileCharts',
       component: () => import(`@/${path}/mobileCharts`),
       name: 'mobileCharts',
-      meta: { title: 'mobileCharts', icon: 'docSource', role: 'cms' }
+      meta: { title: 'mobileCharts', icon: 'docSource', role: 'cms:mobileCharts' }
     },
     {
         /**
@@ -29,19 +29,10 @@ const statisticsChart = {
         path: 'pcSiteCharts',
         component: () => import(`@/${path}/pcSiteCharts`),
         name: 'pcSiteCharts',
-        meta: { title: 'pcSiteCharts', icon: 'docSource', role: 'cms', }
+        meta: { title: 'pcSiteCharts', icon: 'docSource', role: 'cms:pcSiteCharts', }
       },
       
-    {
-        /**
-         * 统计报表首页
-         */
-        path: 'indexchart',
-        component: () => import(`@/${path}/indexchart`),
-        name: 'indexchart',
-        meta: { title: 'indexchart', icon: 'appConfig', role: 'cms' },
-        hidden:true
-      },
+    
    
   ]
 }

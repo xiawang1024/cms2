@@ -10,15 +10,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     // assetsPublicPath: 'http://172.20.5.2/zhaojp/admin/',
     assetsPublicPath: '/',
-    proxyTable: {
-      '/baiduapi': {
-        target: 'https://api.baidu.com',  //目标接口域名
-        changeOrigin: true,  //是否跨域
-        pathRewrite: {
-          '^/baiduapi': ''   //重写接口
-        }
-      }
-    },
+    proxyTable: {},
 
     // Various Dev Server settings
 
