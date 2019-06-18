@@ -8,13 +8,13 @@ console.log(path)
 const role = {
   path: `/${userPath}/role`,
   component: Layout,
-  meta: { title: 'role', icon: 'webSite', permission: 'admin' },
+  meta: { title: 'role', icon: 'component', permission: 'admin' },
   children: [
     {
       path: '',
       component: () => import(`@/${path}/index`),
       name: 'role',
-      meta: { title: 'role', icon: 'webSite', permission: 'admin' },
+      meta: { title: 'role', icon: 'component', permission: 'admin' },
       hidden: true
     }
   ]

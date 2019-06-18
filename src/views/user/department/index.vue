@@ -1,9 +1,8 @@
 <template>
   <div class="components-container">
-    <pap-search ref="papSearchForm" :content="searchForm"/>
+    <!-- <pap-search ref="papSearchForm" :content="searchForm"/> -->
     <!-- 根据 buttonArray 中的 click 参数，对外暴露监听其中的方法，并在当前页面中监听并实现对应的业务 -->
     <button-group :button-array="buttonArray" @list-click="listClick()" @create-click="createClick"/>
-
     <div style="margin-top: 50px;">
       <el-tree ref="tree" :data="treeData" :props="defaultProps" :expand-on-click-node="false" show-checkbox default-expand-all node-key="departmentId" highlight-current>
         <span slot-scope="{ node, data }" class="custom-tree-node">

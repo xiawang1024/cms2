@@ -281,16 +281,16 @@ export default {
 
 <style lang='scss'>
 .source-class {
-  padding-left:20px;
+  margin:30px;
   .el-tree-node__content {
     height: 32px;
     border-bottom: 1px solid #ebeef5;
   }
   .tool-bar {
-    margin-top:22px;
-    margin-bottom:22px;
-    text-align: left;
-    padding-left:5px;
+    // margin-top:22px;
+    // margin-bottom:22px;
+    // text-align: left;
+    // padding-left:5px;
   }
   .pagination {
     margin-top:20px;

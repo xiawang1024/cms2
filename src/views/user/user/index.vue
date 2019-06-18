@@ -1,16 +1,17 @@
 <template>
   <div class="components-container">
-    <pap-search ref="papSearchForm" :content="searchForm">
-      <!-- 按钮等操作建议放在外层，这里建议存放的是特殊情况的搜索框(不能通过JSON传参生成的搜索条件) -->
-      <!--<el-button type="primary" icon="el-icon-search">搜索</el-button>-->
-    </pap-search>
     <!-- 根据 buttonArray 中的 click 参数，对外暴露监听其中的方法，并在当前页面中监听并实现对应的业务 -->
-    <button-group
-      :button-array="buttonArray"
-      @list-click="listClick()"
-      @create-click="createClick" @able-click="enableFlagClick('1')" @disable-click="enableFlagClick('0')" @googlecheck-click="googleCheckClick"
-      @role-click="roleClick" @roles-click="rolesClick"
-      @edit-click="editClick"/>
+    <div class="el-card__header">
+      <v-search :search-settings="searchSettings" @search="search"/>
+    </div>
+    <div class="handel-btn">
+      <button-group
+        :button-array="buttonArray"
+        @list-click="listClick()"
+        @create-click="createClick" @able-click="enableFlagClick('1')" @disable-click="enableFlagClick('0')" @googlecheck-click="googleCheckClick"
+        @role-click="roleClick" @roles-click="rolesClick"
+        @edit-click="editClick"/>
+    </div>
     <!-- 表格的数据展示，参数放置到 tableConfig 中进行传入。 -->
     <!-- 分页条处理：每页条数变化、当前页页码条数、表格选中数据监听 -->
     <pap-table ref="user-table" v-bind="tableConfig" @handle-size-change="handleSizeChange" @handle-current-change="handleCurrentChange" @multiple-selection="multipleSelectionEmit"/>
@@ -144,7 +145,45 @@ export default {
       // 弹窗是单数据操作还是批量数量操作
       dialogRoleManagerOperationType: 'ONE',
       dialogRoleManagerTreeButtonFlag: false,
-      filename: ''
+      filename: '',
+      // 搜索组件初始化
+      searchSettings: [
+        {
+          label: '用户编码',
+          name: 'userCode',
+          placeholder: '请输入用户编码',
+          visible: true,
+          type: 'text'
+        },
+        {
+          label: '用户名',
+          name: 'userName',
+          placeholder: '请输入姓名',
+          visible: true,
+          type: 'text'
+        },
+        {
+          label: '状态',
+          name: 'enableFlag',
+          placeholder: '请选择',
+          visible: false,
+          type: 'select',
+          options: [
+            {
+              label: '启用',
+              value: 1
+            },
+            {
+              label: '禁用',
+              value: 0
+            }
+          ]
+        },
+      ],
+      // 搜索条件
+      searchData: {
+        userName: ''
+      },
       /* eslint-disable */
     }
   },
@@ -162,12 +201,19 @@ export default {
     this.getList()
   },
   methods: {
+    // 点击搜索
+    search(data) {
+      this.searchData = data
+      this.tableConfig.paginationPageNo = 1
+      this.getList()
+    },
     getList () {
       var _this = this
-      var searchFormObj = this.$refs.papSearchForm.$refs.formRender.getFormValue()
+      // var searchFormObj = this.$refs.papSearchForm.$refs.formRender.getFormValue()
+      // console.log(searchFormObj, 'searchFormObj')
       return new Promise((resolve, reject) => {
         // 开始请求登录接口
-        UserList(searchFormObj, this.tableConfig.paginationPageNo, this.tableConfig.paginationSize).then(async res => {
+        UserList(_this.searchData, this.tableConfig.paginationPageNo, this.tableConfig.paginationSize).then(async res => {
           console.log(res.data)
           _this.tableConfig.total = res.data.result.total
           _this.tableConfig.tableData = res.data.result.content
@@ -491,3 +537,10 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  .components-container{
+    .handel-btn{
+      margin-top:18px;
+    }
+  }
+</style>
