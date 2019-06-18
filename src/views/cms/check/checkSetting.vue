@@ -257,8 +257,19 @@ export default {
       this.tagList = []
       this.handelType = 'add'
       this.formData = {}
-      this.firstChoosedPeople = []
-      this.secondChoosedPeople = []
+      // this.firstChoosedPeople = []
+      // this.secondChoosedPeople = []
+      this.gradeSetting = [
+        {
+          choosedPeople: []
+        },
+        {
+          choosedPeople: []
+        },
+        {
+          choosedPeople: []
+        }
+      ]
     },
     editCheck(row) {
      this.title = "编辑配置"
@@ -306,6 +317,12 @@ export default {
     },
     // 审核提交操作
     submitSave(data) {
+      for(let i=1, len=this.gradeSetting.length; i<len; i++) {
+        if(!this.gradeSetting[i].choosedPeople.length) {
+          this.$message.warning(`${i+1}级审核人员不能为空`)
+          return
+        }
+      }
       let columns = this.$refs.treeMultiple.tagList.map((ele) => {
         return ele.channelId
       })

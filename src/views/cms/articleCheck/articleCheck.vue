@@ -33,8 +33,8 @@
       <el-table-column prop="previousAuditUser" label="审稿来源" min-width="100px" />
       <el-table-column label="操作" width="160" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="check(scope.row)" v-if="scope.row.auditMark">审核</el-button>
           <el-button size="mini" type="success" @click="lookProcess(scope.row)">查看详情</el-button>
+          <el-button size="mini" type="primary" @click="check(scope.row)" v-if="scope.row.auditMark">审核</el-button>
         </template>
       </el-table-column>
     </el-table>
