@@ -114,3 +114,14 @@ export function getSiteList() {
       
     });
   }
+  
+ 
+  //获取App整体趋势
+  export function getTrend(appkey) {
+    return request({
+     
+      url:umengPath+'/getTrend?appkey='+appkey,
+      method: "get"
+      
+    });
+  }

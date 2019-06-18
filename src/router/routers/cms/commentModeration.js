@@ -20,7 +20,7 @@ const commentModeration = {
       path: 'checkComment',
       component: () => import(`@/${path}/checkComment`),
       name: 'checkComment',
-      meta: { title: 'checkComment', icon: 'docSource', role: 'cms' }
+      meta: { title: 'checkComment', icon: 'docSource', role: 'cms:checkComment' }
     },
     {
         /**
@@ -29,7 +29,7 @@ const commentModeration = {
         path: 'assignAuditAuthority',
         component: () => import(`@/${path}/assignAuditAuthority`),
         name: 'assignAuditAuthority',
-        meta: { title: 'assignAuditAuthority', icon: 'docSource', role: 'cms', }
+        meta: { title: 'assignAuditAuthority', icon: 'docSource', role: 'cms:assignmentRight', }
       }
    
   ]

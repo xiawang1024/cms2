@@ -5,40 +5,44 @@
         <div class="floor">
           <div class="smallbox">
             <p class="title">新增用户（7日平均）</p>
-            <h3>{{ datavalue.newUsers }}</h3>
+            <h3>{{ datavalue?datavalue.totalNewUserAverage7.toFixed(0):'--' }}</h3>
             <p>
               同比
-              <span>27.742%</span>
-              <span>↑</span>
+              <span>{{ datavalue?(datavalue.totalNewUserChangePre*100).toFixed(2):'--' }}%</span>
+              <span v-if="datavalue.totalNewUserChangePre>0" class="redarrow">↑</span>
+              <span v-else class="greenarrow">↓</span>
             </p>
           </div>
           <div class="smallbox">
             <p class="title">活跃用户（7日平均）</p>
-            <h3>{{ datavalue.activityUsers }}</h3>
+            <h3>{{ datavalue?datavalue.activeUserWeekLast:'--' }}</h3>
             <p>
               同比
-              <span>27.742%</span>
-              <span>↑</span>
+              <span>{{ datavalue?datavalue.activeUserWeekChangePre.toFixed(2):'--' }}%</span>
+              <span v-if="datavalue.activeUserWeekChangePre>0" class="redarrow">↑</span>
+              <span v-else class="greenarrow">↓</span>
             </p>
           </div>
         </div>
         <div class="floor">
           <div class="smallbox">
             <p class="title">新用户次日留存率（7日平均）</p>
-            <h3>{{ datavalue.activityUsers+"--" }}</h3>
+            <h3>{{ datavalue?datavalue.retentionAverage7.toFixed(2):'--' }}%</h3>
             <p>
               同比
-              <span>27.742%</span>
-              <span>↑</span>
+              <span>{{ datavalue?datavalue.retentionChangePre.toFixed(2):'--' }}%</span>
+              <span v-if="datavalue.retentionChangePre>0" class="redarrow">↑</span>
+              <span v-else class="greenarrow">↓</span>
             </p>
           </div>
           <div class="smallbox">
             <p class="title">使用时长（7日平均）</p>
-            <h3>{{ datavalue.activityUsers+"--" }}</h3>
+            <h3>{{ datavalue?datavalue.durationAverage7.toFixed(2):'--' }}</h3>
             <p>
               同比
-              <span>27.742%</span>
-              <span>↑</span>
+              <span>{{ datavalue?datavalue.durationChangePre.toFixed(2):'--' }}%</span>
+              <span v-if="datavalue.durationChangePre>0" class="redarrow">↑</span>
+              <span v-else class="greenarrow">↓</span>
             </p>
           </div>
         </div>
@@ -46,33 +50,41 @@
       <div class="rightpart">
         <div class="floor">
           <div class="smallbox">
-            <p class="title">近7日总活跃用户数</p>
-            <h3>{{ datavalue.launches }}</h3>
+            <p class="title">上周总活跃用户数</p>
+            <h3>{{ datavalue?datavalue.activeUserWeekLast:'--' }}</h3>
             <p>
               同比
-              <span>27.742%</span>
-              <span>↑</span>
+              <span>{{ datavalue?datavalue.activeUserWeekChangePre.toFixed(2):'--' }}%</span>
+              <span v-if="datavalue.activeUserWeekChangePre>0" class="redarrow">↑</span>
+              <span v-else class="greenarrow">↓</span>
             </p>
           </div>
           <div class="smallbox">
-            <p class="title">近30日总活跃用户数</p>
-            <h3>{{ datavalue.activityUsers+"--" }}</h3>
+            <p class="title">上月总活跃用户数</p>
+            <h3>{{ datavalue?datavalue.activeUserMonthLast:'--' }}</h3>
             <p>
               同比
-              <span>27.742%</span>
-              <span>↑</span>
+              <span>{{ datavalue?datavalue.activeUserMonthChangePre.toFixed(2):"--" }}%</span>
+              <span v-if="datavalue.activeUserMonthChangePre>0" class="redarrow">↑</span>
+              <span v-else class="greenarrow">↓</span>
             </p>
           </div>
         </div>
         <div class="floor">
           <div class="smallbox">
-            <p class="title">累计用户数</p>
-            <h3>{{ datavalue.totalUsers }}</h3>
-            <p />
+            <p class="title">启动次数(7日平均)</p>
+            <h3>{{ datavalue?datavalue.launchAverage7.toFixed(0):'--' }}</h3>
+            <p>
+              同比
+              <span>{{ datavalue?datavalue.launchChangePre.toFixed(2):'--' }}%</span>
+              <span v-if="datavalue.launchChangePre>0" class="redarrow">↑</span>
+              <span v-else class="greenarrow">↓</span>
+            </p>
+            <p/>
           </div>
           <div class="smallbox">
-            <p class="title">总崩溃率</p>
-            <h3>{{ datavalue.activityUsers+"--" }}</h3>
+            <p class="title">累计用户数</p>
+            <h3>{{ datavalue?datavalue.totalUsers:'--' }}</h3>
           </div>
         </div>
       </div>
@@ -81,20 +93,48 @@
 </template>
 <script>
 export default {
-    props:{
-        datavalue:{
-            type:Object,
-            default:()=>{
-                [{}]
+  props: {
+   
+    datavalue: {
+      type: Object,
+      default: () => {
+        return {
+          activeUserAverage7: "--", //活跃用户(7日平均)
 
-            }
-        }
-    },
-    data(){
-        return{
+          activeUserChangePre: "--", //	活跃用户(7日平均)同比变化率
 
-        }
+          activeUserMonthChangePre: "--", //月总活跃用户数，最近一次的统计数据的同比变化率
+
+          activeUserMonthLast: "--", //月总活跃用户数，最近一次的统计数据
+
+          activeUserWeekChangePre: "--", //周总活跃用户数，最近一次的统计数据的同比变化率
+
+          activeUserWeekLast: "--", //周总活跃用户数，最近一次的统计数据
+
+          durationAverage7: "--", // 使用时长(7日平均)
+
+          durationChangePre: "--", //使用时长(7日平均)同比变化率
+
+          launchAverage7: "--", // 启动次数(7日平均)
+
+          launchChangePre: "--", // 启动次数(7日平均)同比变化率
+
+          retentionAverage7: "--", // 新用户次日留存率(7日平均)
+
+          retentionChangePre: "--", // 新用户次日留存率(7日平均)同比变化率
+
+          totalNewUserAverage7: "--", // 新增用户(7日平均)
+
+          totalNewUserChangePre: "--", // 新增用户(7日平均)同比变化率
+
+          totalUsers: "--" // 累计用户数
+        };
+      }
     }
+  },
+  data() {
+    return {};
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -109,7 +149,7 @@ export default {
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 20px;
-//   border-bottom: 1px solid #dedede;
+  //   border-bottom: 1px solid #dedede;
   .rightpart,
   .leftpart {
     box-sizing: border-box;
@@ -131,8 +171,13 @@ export default {
         p {
           color: rgb(153, 153, 153);
           font-size: 12px;
-          span:nth-last-child(1) {
+          .redarrow {
             color: red;
+            font-weight: bolder;
+            font-size: 18px;
+          }
+          .greenarrow {
+            color: green;
             font-weight: bolder;
             font-size: 18px;
           }

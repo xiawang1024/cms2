@@ -218,9 +218,19 @@ const systemSet = {
       component: () => import(`@/${path}/webSiteCharts`),
       name: 'webSiteCharts',
       meta: { title: 'webSiteCharts', icon: 'appConfig', role: 'cms' },
-      hidden:true
+      // hidden:true
     },
     
+    {
+      /**
+       * 统计报表首页
+       */
+      path: 'indexchart',
+      component: () => import(`@/${path}/indexchart`),
+      name: 'indexchart',
+      meta: { title: 'indexchart', icon: 'appConfig', role: 'cms' },
+      hidden:true
+    },
     
   ]
 }
