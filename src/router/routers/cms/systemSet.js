@@ -212,6 +212,16 @@ const systemSet = {
       // hidden:true
     },
     
+    {
+      /**
+       * 统计报表首页
+       */
+      path: 'indexchart',
+      component: () => import(`@/${path}/indexchart`),
+      name: 'indexchart',
+      meta: { title: 'indexchart', icon: 'appConfig', role: 'cms' },
+      hidden:true
+    },
     
   ]
 }

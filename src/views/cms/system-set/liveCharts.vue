@@ -1,7 +1,6 @@
 <template>
   <div class="mycharts">
-    <h3>图表</h3>
-    <umengTitle :datavalue="datavalue" :timevalue="timevalue"/>
+    <umengTitle :datavalue="datavalue" :timevalue="timevalue" />
     <div class="dateselect">
       <div class="block">
         <el-date-picker
@@ -23,16 +22,16 @@
 <script>
 import umeng from "@/components/Charts/umeng.vue";
 import umengTitle from "@/components/Charts/umengTitleBoard.vue";
-import {fun_date} from "@/components/Charts/handleTimer.js"
+// import {fun_date} from "@/components/Charts/handleTimer.js"
 import {
   getActiveUser,
   getAppList,
-  getDailyData,
   getDurations,
   getLaunches,
   getNewUsers,
   getRetentions,
-  getTotalUsers
+  getTotalUsers,
+  getTrend
 } from "@/api/cms/liveCharts";
 export default {
   name: "LiveCharts",
@@ -84,7 +83,7 @@ export default {
       
       this.fetchActiveUser();
       this.fetchAppList();
-      this.fetchDailyData();
+      this.fetchTrend();
       this.fetchDurations();
       this.fetchLaunches();
       this.fetchNewUsers();
@@ -120,35 +119,34 @@ export default {
       return new Promise((resolve, reject) => {
         getAppList(this.page, this.perPage)
           .then(response => {
-            console.log(response, "getAppList");
           })
           .catch(reject => {
             console.log(reject);
           });
       });
     },
-    fetchDailyData() {
-      let sevenAgo=fun_date(-7);
-      console.log(sevenAgo,'sevenAgo')
+    //调用友盟接口
+    // fetchDailyData() {
+    //   let sevenAgo=fun_date(-7);
+    //   console.log(sevenAgo,'sevenAgo')
       
-      var _this = this;
-      return new Promise((resolve, reject) => {
-        getDailyData(this.appkey, this.date)
-          .then(response => {
-            this.datavalue = JSON.parse(response.data.result).dailyData;
+    //   var _this = this;
+    //   return new Promise((resolve, reject) => {
+    //     getDailyData(this.appkey, this.date)
+    //       .then(response => {
+    //         this.datavalue = JSON.parse(response.data.result).dailyData;
 
-            console.log(_this.datavalue, "getDailyData");
-          })
-          .catch(reject => {
-            console.log(reject);
-          });
-      });
-    },
+    //         console.log(_this.datavalue, "getDailyData");
+    //       })
+    //       .catch(reject => {
+    //         console.log(reject);
+    //       });
+    //   });
+    // },
     fetchDurations() {
       return new Promise((resolve, reject) => {
         getDurations(this.appkey, this.date, this.periodType)
           .then(response => {
-            console.log(response, "getDurations");
           })
           .catch(reject => {
             console.log(reject);
@@ -197,7 +195,6 @@ export default {
           this.periodType
         )
           .then(response => {
-            console.log(response, "getRetentions");
           })
           .catch(reject => {
             console.log(reject);
@@ -219,19 +216,35 @@ export default {
               _this.$set(this.chartsvalue,'totalUser',allUser)
               // _this.chartsvalue.totalUser=allUser;
             }
-            console.log(response, "getTotalUsers");
           })
           .catch(reject => {
             console.log(reject);
           });
       });
     },
+      fetchTrend() {
+      var _this=this;
+      return new Promise((resolve, reject) => {
+        getTrend(this.appkey)
+          .then(response => {
+            if(response.data.code==0){
+              let result=response.data.result;
+              _this.datavalue=result;
+              //-------------------------------
+            }
+          })
+          .catch(reject => {
+            console.log(reject);
+          });
+      });
+    },
+
+    
     //
 
     getNewData() {
       //获取时间区间数据
 
-      console.log(this.timevalue);
       //获取新增用户数
       this.fetchNewUsers()
 
@@ -239,7 +252,6 @@ export default {
     handleClick(tab, event) {
       //获取切换区间数据
 
-      console.log(tab, event, "dianji");
     },
     // 数据处理
     formateDate(value){
@@ -262,5 +274,11 @@ export default {
 }
 .dateselect {
  padding: 15px 0 15px 40px;
+}
+/deep/.el-date-editor .el-range-separator {
+    padding: 0 0px;
+    line-height: 32px;
+    width: 5%;
+    color: #303133;
 }
 </style>

@@ -3,7 +3,7 @@
     <div class="chartBox half">
       <dashBoard :dashdate="dashdate"/>
     </div>
-    <div>
+    <div >
       <div class="chartBox half leftMargin">
         <template>
           <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -16,12 +16,13 @@
         <baiduCharts :chartsvalue="chartsvalue" width="100%" height="300px"/>
       </div>
       <div class="clearFloat"/>
-      <div class="chartBox">
+      <div class="chartBox " >
         <template>
           <el-table :data="tableData" stripe style="width: 100%" height="400">
             <el-table-column prop="area" label="地域" width="180"/>
             <el-table-column prop="source" label="来源"/>
-            <el-table-column prop="keyword" label="关键词"/>
+            <el-table-column prop="access_page" label="入口页面"/>
+            <el-table-column prop="ip" label="ip"/>
             <el-table-column prop="visit_time" label="访问时长（秒）"/>
             <el-table-column prop="visit_pages" label="访问页数"/>
           </el-table>
@@ -108,7 +109,6 @@ export default {
           .then(response => {
             if (response.data.header.desc === "success") {
               _this.dashdate = response.data.body.data[0].result.items[1];
-              console.log(_this.dashdate, "数据");
             }
           })
           .catch(reject => {
@@ -130,7 +130,7 @@ export default {
           body: {
             // site_id: "13495008",
             site_id: "1453193",
-            metrics: "area,source,keyword,visit_time,visit_pages",
+            metrics: "area,source,visit_time,visit_pages,access_page,ip",
             method: "trend/latest/a",
             order: "visit_pages, desc",
             max_results: "100",
@@ -141,14 +141,12 @@ export default {
 
         siteProfile(data)
           .then(response => {
-            console.log(response);
             if (response.data.header.desc === "success") {
               let result = response.data.body.data[0].result.items[1];
               _this.$nextTick(() => {
                 _this.tableData = _this.handleData(result);
               });
 
-              console.log(_this.tableData, "表格");
             }
           })
           .catch(reject => {
@@ -178,11 +176,9 @@ export default {
       };
       siteProfile(data)
         .then(response => {
-          console.log(response, "趋势");
           if (response.data.header.desc === "success") {
             let data = response.data.body.data[0].result.items[1];
             //判断请求图表类型
-            console.log(type,'type')
             if(type=='to'){
                  _this.chartsvalueto = _this.handleChartData(data);
                  _this.chartInit();
@@ -194,7 +190,6 @@ export default {
               _this.chartsvaluefo= _this.handleChartData(data);
             }
            
-            console.log(_this.chartsvaluese, "趋势");
           }
         })
         .catch(reject => {
@@ -209,11 +204,12 @@ export default {
           area: item[0],
           source: item[1].fromType,
           keyword: null, //无返回值，暂写为空
-          visit_time: item[2],
-          visit_pages: item[3]
+          access_page:item[2],
+          ip:item[3],
+          visit_time: item[4],
+          visit_pages: item[5]
         });
       });
-      console.log(newArr);
       return newArr;
     },
     //趋势图数据处理
@@ -228,7 +224,6 @@ export default {
           }
         });
       });
-      console.log(newArr);
       return newArr;
     },
     handleClick(tab, event) {
@@ -283,9 +278,12 @@ export default {
   }
   .clearFloat {
     clear: both;
+    height: 20px;
+    width:100%;
   }
   .leftMargin {
     margin-left: 1.5%;
+    padding-left: 20px;
   }
 }
 </style>

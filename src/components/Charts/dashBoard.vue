@@ -98,6 +98,9 @@
 
 </script>
 <style scoped>
+.overview-card-title-container{
+  margin-top: 5px;
+}
 div.table-list {
   width:100%;
   height: 353px;
@@ -106,6 +109,10 @@ div.table-list {
   padding-right: 1px;
   box-shadow: 1px 5px 5px #dedede;
   padding: 10px 20px;
+   
+}
+.list{
+  margin-top: 55px;
 }
 div.table-list table.list {
   border-collapse: collapse;

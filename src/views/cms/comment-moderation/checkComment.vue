@@ -1,9 +1,11 @@
 <template>
   <div class="helpdoc-container">
     <div class="tool-bar">
-      <el-button size="mini" type="primary" @click="handlePass('index','row','many')">批量通过</el-button>
-      <el-button size="mini" type="primary" @click="handleRefuse('index','row','many')">批量不通过</el-button>
-      <el-button size="mini" type="primary" @click="handleManyDelete">批量删除</el-button>
+      <div class="leftAside">
+        <el-button size="mini" type="primary" :disabled="!selectList.length>0" @click="handlePass('index','row','many')">批量通过</el-button>
+        <el-button size="mini" type="primary" :disabled="!selectList.length>0" @click="handleRefuse('index','row','many')">批量不通过</el-button>
+        <el-button size="mini" type="primary" :disabled="!selectList.length>0" @click="handleManyDelete">批量删除</el-button>
+      </div>
       <div class="rightAside">
         <el-dropdown size="mini" @command="handleCommand">
           <el-button type="primary" size="mini">
@@ -529,8 +531,11 @@ export default {
 .rightAside {
   float: right;
 }
+.leftAside{
+  float: left;
+}
 .tool-bar {
-  /* text-align: right; */
+  overflow: hidden;
 }
 .block {
   display: inline-block;
@@ -538,6 +543,7 @@ export default {
 .el-dropdown-link {
   cursor: pointer;
   color: #409eff;
+
 }
 .el-icon-arrow-down {
   font-size: 12px;

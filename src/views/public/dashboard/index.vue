@@ -1,17 +1,20 @@
 <template>
   <div class="dashboard-container">
-    <component :is="currentRole"/>
+    <!-- <component :is="currentRole"/> -->
+    <indexCharts/>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import adminDashboard from './admin'
-import editorDashboard from './editor'
+// import adminDashboard from './admin'
+// import editorDashboard from './editor'
+import indexCharts from "@/views/cms/system-set/indexchart.vue";
 
 export default {
   name: 'Dashboard',
-  components: { adminDashboard, editorDashboard },
+  // components: { adminDashboard, editorDashboard},
+  components: { indexCharts },
   data() {
     return {
       currentRole: 'adminDashboard'
