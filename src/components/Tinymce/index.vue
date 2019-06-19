@@ -211,6 +211,7 @@ export default {
         file_picker_callback: function(callback, value, meta) {
           var input = document.createElement('input')
           input.setAttribute('type', 'file')
+          // input.setAttribute('multiple', 'multiple')
           // input.setAttribute('accept', 'image/*')
           input.onchange = function() {
             var file = this.files[0]

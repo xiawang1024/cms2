@@ -1005,16 +1005,17 @@ export default {
     },
     // 上传文件成功回调
     handleUploadFile(name, response, file, fileList) {
-      console.log(file, "file");
-      this.formModel[name].push({
-        name: response.result.fileName,
-        url: baseUrl.DOWN_URL + response.result.filePath,
-        size: file.size,
-        createTime: file.raw.lastModified,
-        title: "",
-        desc: "",
-        coverBool: false
-      }); // [{name: xx, url: xx}]
+      window.setTimeout(()=> {
+        this.formModel[name].push({
+          name: response.result.fileName,
+          url: baseUrl.DOWN_URL + response.result.filePath,
+          size: file.size,
+          createTime: file.raw.lastModified,
+          title: "",
+          desc: "",
+          coverBool: false
+          }); // [{name: xx, url: xx}]
+      }, 50)
       this.isUploading = false;
       if (this.imgUploadText && this.imgUploadText[name]) {
         this.imgUploadText[name].push("");
@@ -1057,11 +1058,11 @@ export default {
         });
         return false;
       } else if (this.isUploading) {
-        this.$message({
-          message: `一次只能上传一个文件`,
-          type: "warning"
-        });
-        return false;
+        // this.$message({
+        //   message: `一次只能上传一个文件`,
+        //   type: "warning"
+        // });
+        // return true;
       } else {
         this.isUploading = true;
         return true;
