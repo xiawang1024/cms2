@@ -1015,11 +1015,11 @@ export default {
           desc: "",
           coverBool: false
           }); // [{name: xx, url: xx}]
-      }, 50)
-      this.isUploading = false;
-      if (this.imgUploadText && this.imgUploadText[name]) {
-        this.imgUploadText[name].push("");
-      }
+          this.isUploading = false;
+          if (this.imgUploadText && this.imgUploadText[name]) {
+            this.imgUploadText[name].push("");
+          }
+      }, 100)
     },
     // 上传文件失败回调
     handleUploadError(err, file, fileList) {
