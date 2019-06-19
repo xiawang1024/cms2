@@ -207,6 +207,6 @@ export default {
 }
 
 .tool-bar {
-  text-align: right;
+  /* text-align: right; */
 }
 </style>

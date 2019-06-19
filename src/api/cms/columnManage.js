@@ -70,9 +70,9 @@ export function columnListAll(queryObj, pageNo, pageSize, sortBy='channelLevel,s
   })
 }
 // 全部栏目获取(不分权限)
-export function columnListAny(queryObj, pageNo, pageSize, sortBy='channelLevel,seqNo,createtime') {
+export function columnListAny(queryObj, pageNo, pageSize, sortBy='channelLevel,seqNo,createTime') {
   return request({
-    url: '/cms/channel/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + "&order=asc,desc",
+    url: '/cms/channel/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + "&order=asc,desc,asc",
     method: 'post',
     data: queryObj,
     loadingConfig: {

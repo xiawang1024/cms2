@@ -8,13 +8,13 @@ console.log(path)
 const user = {
   path: `/${userPath}/user`,
   component: Layout,
-  meta: { title: 'user', icon: 'webSite', permission: 'admin' },
+  meta: { title: 'user', icon: 'peoples', permission: 'admin' },
   children: [
     {
       path: '',
       component: () => import(`@/${path}/index`),
       name: 'user',
-      meta: { title: 'user', icon: 'webSite', permission: 'admin' },
+      meta: { title: 'user', icon: 'peoples', permission: 'admin' },
       hidden: true
     }
   ]

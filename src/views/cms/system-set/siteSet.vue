@@ -240,19 +240,17 @@ export default {
 <style lang = "scss">
 .site-set-container{
   .el-button{
-    margin-top: 5px;
     margin-left: 0px;
   }
 
 
 
   .tool-bar {
-    text-align: right;
+    /* text-align: right; */
   }
   /* liyu */
     box-sizing: border-box;
     margin: 30px;
-    margin-top: 18px;
     .el-table{
       .el-input__inner{
         height:32px;
