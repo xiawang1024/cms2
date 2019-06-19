@@ -18,7 +18,9 @@ import systemSet from './routers/cms/systemSet'
 import personAndAuthor from './routers/cms/personAndAuthor'
 // import checkSetting from './routers/cms/checkSetting'
 // import extensions from './routers/cms/extensions'
-const cmsRouterMap = [webSite, systemSet, personAndAuthor]
+import commentModeration from './routers/cms/commentModeration'
+import statisticsChart from './routers/cms/statisticsChart'
+const cmsRouterMap = [webSite, systemSet, personAndAuthor,commentModeration,statisticsChart]
 
 /**
  * 用户中心系统路由
