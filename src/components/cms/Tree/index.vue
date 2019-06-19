@@ -77,9 +77,15 @@ export default {
     },
     treeData(val) {
       if (val.length) {
+        console.log(this.treeTags, 'val')
         this.treeData.forEach((ele) => {
           this.expandedKeys.push(ele.id)
         })
+        if(this.treeTags && this.treeTags.length) {
+          this.treeTags.forEach((ele) => {
+            this.expandedKeys.push(ele.id)
+          })
+        }
         // this.defaultChecked = [val[0].id]
         // this.$refs.websitTree.setCheckedNodes([{
         //   id: val[0].id,

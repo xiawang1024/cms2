@@ -1,6 +1,6 @@
 // optimus
 let BASE_URL = 'http://gw.test.dianzhenkeji.com' // 测试地址
-let UP_URL = 'http://fupload.test.dianzhenkeji.com:55030/basefile/upload?fileRefId='
+let UP_URL = 'http://fupload.test.dianzhenkeji.com/basefile/upload?fileRefId='
 let DOWN_URL = 'http://cmsres.test.dianzhenkeji.com'
 // let BASE_URL = 'http://gw.dianzhenkeji.com' // 正式地址
 // let UP_URL = 'http://fupload.dianzhenkeji.com/basefile/upload?fileRefId='
@@ -8,7 +8,7 @@ let DOWN_URL = 'http://cmsres.test.dianzhenkeji.com'
 if (process.env.NODE_ENV) {
   if (process.env.NODE_ENV == 'development') {
     BASE_URL = ' http://gw.test.dianzhenkeji.com' // 测试地址
-    UP_URL = 'http://fupload.test.dianzhenkeji.com:55030/basefile/upload?fileRefId='
+    UP_URL = 'http://fupload.test.dianzhenkeji.com/basefile/upload?fileRefId='
     DOWN_URL = 'http://cmsres.test.dianzhenkeji.com'
     // BASE_URL = 'http://gw.dianzhenkeji.com' // 正式地址
     // UP_URL = 'http://fupload.dianzhenkeji.com/basefile/upload?fileRefId='
