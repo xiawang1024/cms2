@@ -1,7 +1,11 @@
 <template>
   <div class="dashboard-container">
-    <!-- <component :is="currentRole"/> -->
     <indexCharts v-if="showChart"/>
+    <div v-if="!showChart" class="dashboard-editor-container">
+      <div class="index-bgc"/>
+    </div>
+    <!-- <component :is="currentRole"/> -->
+    
   </div>
 </template>
 
@@ -38,7 +42,7 @@ export default {
         console.log(user.clientLicenseId,'user')
 
         if (user.clientLicenseId==='nanyangradio') {
-      this.showChart = true
+        this.showChart = true
     }
     }
   }
@@ -49,4 +53,20 @@ export default {
     overflow: hidden !important;
     height: calc(100vh + 85px) !important ;
   }
+  .index-bgc{
+  background-color: #e3e3e3;
+  background-image: url('./pic/bgc.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 300px;
+  height: 150px;
+  margin: 0 auto;
+  margin-top:100px;
+}
+.dashboard-editor-container {
+  background-color: #e3e3e3;
+  height: 100%;
+  padding: 50px 0px 10px 0px;
+  
+}
 </style>

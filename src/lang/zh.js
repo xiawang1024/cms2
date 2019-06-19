@@ -63,7 +63,7 @@ export default {
     clipboardDemo: 'Clipboard',
     i18n: '国际化',
     externalLink: '外链',
-    commentModeration:'评论审核',
+    commentModeration:'新闻评论',
     assignAuditAuthority:'分配审核权限',
     checkComment:'评论审核',
     webSite: '网站',
