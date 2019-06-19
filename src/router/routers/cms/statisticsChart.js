@@ -9,7 +9,7 @@ const path = `views/${cmsPath}/statisticsChart`
 const statisticsChart = {
   path: `/${cmsPath}/statisticsChart`,
   component: Layout,
-  meta: { title: 'statisticsChart', icon: 'message_unread', role: 'cms' },
+  meta: { title: 'statisticsChart', icon: 'docSource', role: 'cms:mobileCharts' },
   name: 'statisticsChart',
   children: [
    
