@@ -34,7 +34,7 @@
 
       <el-table-column label="预览" width="50">
         <template slot-scope="scope">
-          <i class="el-icon-question" style="cursor:pointer" @click="openReview(scope.row)"/>
+          <i class="el-icon-view" style="cursor:pointer" @click="openReview(scope.row)" title="预览"/>
         </template>
       </el-table-column>
       <el-table-column prop="articleType" label="类型" width="50">
