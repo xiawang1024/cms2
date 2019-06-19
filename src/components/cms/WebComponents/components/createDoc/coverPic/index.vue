@@ -63,6 +63,7 @@ export default {
             name: 'contentImagesList',
             type: 'img',
             required: false,
+            multiple: true,
             // hasTextInput: true,
             hidden: false,
             maxSize: 1024*5
