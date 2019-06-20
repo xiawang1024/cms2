@@ -25,8 +25,10 @@ export default {
   computed: {
     ...mapGetters(['sysList', 'sysType']),
     sysTypeList: function() {
+      console.log(this.sysList,sysType,'libiao')
       return this.filterSysList(this.sysList)
     }
+    
   },
   methods: {
     selected(getType) {
