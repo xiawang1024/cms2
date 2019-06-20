@@ -1,5 +1,12 @@
 <template>
   <div class="helpdoc-container">
+    <template>
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="直播流" name="0"/>
+        <el-tab-pane label="历史流" name="1"/>
+        <el-tab-pane label="禁用流" name="2"/>
+      </el-tabs>
+    </template>
     <el-table :data="tableValue">
       <el-table-column type="index" width="50" />
       <el-table-column prop="appName" label="APP名称"/>
@@ -49,7 +56,8 @@ export default {
       pageSize: 10,
       totalCount: 0,
       sortBy: "",
-      order: ""
+      order: "",
+      activeName: '0',
     };
   },
   created() {
@@ -57,6 +65,10 @@ export default {
   },
   mounted() {},
   methods: {
+    handleClick(tab, event) {
+      this.initTableList();
+
+      },
     handleForbid() {},
     // handlePush(index, row) {
     //     console.log(row,'row')
@@ -160,7 +172,8 @@ export default {
         pageNo: this.pageNo,
         pageSize: this.pageSize,
         sortBy: this.sortBy,
-        order: this.order
+        order: this.order,
+        streamType:this.activeName
       };
       return new Promise((resolve, reject) => {
         getStreamInfo(data)

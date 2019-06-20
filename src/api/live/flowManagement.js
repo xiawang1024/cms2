@@ -67,7 +67,7 @@ export function getStreamInfo(data) {
       Cpath +
       `/stream/page?pageNo=${data.pageNo}&pageSize=${data.pageSize}&sortBy=${
         data.sortBy
-      }&order=${data.order}`,
+      }&order=${data.order}&streamType=${data.streamType}`,
     method: "post"
     // loadingConfig: {
     //   noLoading: true
