@@ -61,6 +61,12 @@ import fileClue from './routers/newCommand/fileClue'
 import liveClue from './routers/newCommand/liveClue'
 import operationRecord from './routers/newCommand/operationRecord'
 const newscommandRouterMap = [manageClue,commandDispatch,manuscriptClue,fileClue,liveClue,operationRecord]
+
+/**
+ * 直播
+ */
+import livePage from './routers/live/livePage'
+const liveRouterMap = [livePage]
 /**
  * 路由map
  */
@@ -84,6 +90,10 @@ export const routerMap = [{
   {
     type: 'newsCommand',
     route: newscommandRouterMap
+  },
+  {
+    type: 'live',
+    route: liveRouterMap
   }
 ]
 

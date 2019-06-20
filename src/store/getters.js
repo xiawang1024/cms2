@@ -47,10 +47,18 @@ const newCommand = {
   discloseClassifys: (state) => state.newCommand.discloseClassifys,
 
 }
+/**
+ * live
+ */
+const live = {
+  discloseClassifys: (state) => state.live.discloseClassifys,
+
+}
 const getters = {
   ...app,
   ...userInfo,
   ...cms,
-  ...newCommand
+  ...newCommand,
+  ...live
 }
 export default getters
