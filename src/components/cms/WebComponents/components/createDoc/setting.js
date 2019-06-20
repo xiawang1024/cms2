@@ -313,6 +313,14 @@ export const reproduceSetting = [
         required: true
       },
       {
+        label: '文档来源',
+        name: 'articleOrigin',
+        type: 'select',
+        placeholder: '请选择',
+        required: true,
+        options: []
+      },
+      {
         label:'转载地址',
         name: 'linkTo',
         type:'text',

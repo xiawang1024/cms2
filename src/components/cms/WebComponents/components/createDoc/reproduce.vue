@@ -193,7 +193,6 @@ export default {
         resoultObj.articleStatus = publishType
         resoultObj.articleType = 4
         resoultObj.seoKeywords = ''
-        resoultObj.articleOrigin = ''
         resoultObj.articleAuthor = ''
         resoultObj.seoDescription = ''
         resoultObj.createTime = ''

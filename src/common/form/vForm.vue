@@ -288,13 +288,14 @@
                 :name="'file'"
                 :limit="item.limit"
                 :before-upload="beforeUploadCallbacks[item.name]"
-                :on-success="uploadCallbacks[item.name]"
+              
                 :on-preview="handlePreviewImg"
                 :on-remove="removeCallbacks[item.name]"
                 class="upload-img"
                 :on-exceed="handelUploadExceed"
                 :on-error="handleUploadError"
                 list-type="picture"
+                :http-request="defineHttpRequest[item.name]"
                 accept="image/*"
               >
                 <el-button
@@ -570,6 +571,7 @@ import Viewer from "viewerjs";
 // import { DOWN_URL } from '@/config/base-url'
 import baseUrl from "@/config/base-url";
 import { hashCode } from "@/utils/common.js";
+import request from '@/utils/request'
 export default {
   name: "VForm",
 
@@ -662,6 +664,7 @@ export default {
       uploadCallbacks: {},
       removeCallbacks: {},
       beforeUploadCallbacks: {},
+      defineHttpRequest: {},
       // upURL: 'http://172.20.5.4:55030/basefile/upload?fileRefId=jkhjkhjkhj',
       upURL: baseUrl.UP_URL,
       upToken: null,
@@ -733,6 +736,37 @@ export default {
   },
 
   methods: {
+    // 自定义上传多图上传图片
+    defineRequest(name, file) {
+      let getfile = file.file
+      let formdata = new FormData()
+      formdata.append('file', getfile)
+      request({
+        url: this.upURL,
+        method: 'post',
+        data: formdata,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+        // requestBodyType: 'formData'
+      }).then((response) => {
+        this.formModel[name].push({
+          name: response.data.result.fileName,
+          url: baseUrl.DOWN_URL + response.data.result.filePath,
+          size: getfile.size,
+          createTime: getfile.lastModified,
+          title: "",
+          desc: "",
+          coverBool: false
+        }); // [{name: xx, url: xx}]
+        this.isUploading = false;
+        if (this.imgUploadText && this.imgUploadText[name]) {
+          this.imgUploadText[name].push("");
+        }
+      }).catch((error) => {
+        this.isUploading = false;
+      })
+    },
     // 获取上传七牛的token
     // getUpToken() {
     //   this.$service
@@ -844,6 +878,7 @@ export default {
         let tmpUploadCallback = {};
         let tmpRemoveCallback = {};
         let tmpBeforeUploadCallback = {};
+        let tempHttpRequest = {};
         this.flatFormSettings = {};
         this.formSettings.forEach(settingItem => {
           settingItem.items.forEach(item => {
@@ -953,6 +988,9 @@ export default {
               tmpBeforeUploadCallback[item.name] = file => {
                 return this.handleBeforeUploadFile(item.name, file, item);
               };
+              tempHttpRequest[item.name] = file => {
+                return this.defineRequest(item.name, file);
+              };
             }
           });
         });
@@ -960,6 +998,7 @@ export default {
         this.uploadCallbacks = tmpUploadCallback;
         this.removeCallbacks = tmpRemoveCallback;
         this.beforeUploadCallbacks = tmpBeforeUploadCallback;
+        this.defineHttpRequest = tempHttpRequest
         this.updateRule();
       }
     },
@@ -1003,23 +1042,23 @@ export default {
         }
       });
     },
-    // 上传文件成功回调
+    // 上传文件成功回调（图片上传使用了自定义http-request,原因是多图上传时会报错）
     handleUploadFile(name, response, file, fileList) {
-      window.setTimeout(()=> {
-        this.formModel[name].push({
-          name: response.result.fileName,
-          url: baseUrl.DOWN_URL + response.result.filePath,
-          size: file.size,
-          createTime: file.raw.lastModified,
-          title: "",
-          desc: "",
-          coverBool: false
+        if(file.status == 'success') {
+          this.formModel[name].push({
+            name: response.result.fileName,
+            url: baseUrl.DOWN_URL + response.result.filePath,
+            size: file.size,
+            createTime: file.raw.lastModified,
+            title: "",
+            desc: "",
+            coverBool: false
           }); // [{name: xx, url: xx}]
           this.isUploading = false;
           if (this.imgUploadText && this.imgUploadText[name]) {
             this.imgUploadText[name].push("");
           }
-      }, 100)
+        }
     },
     // 上传文件失败回调
     handleUploadError(err, file, fileList) {
