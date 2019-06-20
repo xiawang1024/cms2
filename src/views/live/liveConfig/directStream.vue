@@ -1,18 +1,23 @@
 <template>
   <div class="helpdoc-container">
     <el-table :data="tableValue">
+      <el-table-column type="index" width="50" />
       <el-table-column prop="appName" label="APP名称"/>
       <el-table-column prop="userName" label="用户名"/>
       <el-table-column prop="endTime" :formatter="formatEndTime" label="结束时间"/>
-      <el-table-column prop="stopTime" :formatter="formatStopTime" label="停止时间"/>
       <el-table-column prop="pushTime" :formatter="formatPushTime" label="推送时间"/>
       <el-table-column prop="streamType" label="视频流类型" :formatter="formatStreamType"/>
-      <el-table-column label="操作" >
-        <template slot-scope="scope" >
-          <el-button size="mini" type="success" disabled="true" @click="handleForbid(scope.$index, scope.row)">禁用</el-button>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="success"
+            :disabled="true"
+            @click="handleForbid(scope.$index, scope.row)"
+          >禁用</el-button>
           <!-- <el-button size="mini" type="prime" disabled="true"  @click="handlePush(scope.$index, scope.row)">开始推流</el-button>
           <el-button size="mini" type="success" disabled="true"  @click="handleStop(scope.$index, scope.row)">结束推流</el-button>
-          <el-button size="mini" type="danger" disabled="true"  @click="handleDelete(scope.$index, scope.row)">删除流</el-button> -->
+          <el-button size="mini" type="danger" disabled="true"  @click="handleDelete(scope.$index, scope.row)">删除流</el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -31,10 +36,10 @@
 </template>
 <script>
 import {
-  getStreamInfo,
-//   deleteStream,
-//   startPushStream,
-//   endPushStream
+  getStreamInfo
+  //   deleteStream,
+  //   startPushStream,
+  //   endPushStream
 } from "@/api/live/flowManagement.js";
 export default {
   data() {
@@ -52,9 +57,7 @@ export default {
   },
   mounted() {},
   methods: {
-      handleForbid(){
-
-      },
+    handleForbid() {},
     // handlePush(index, row) {
     //     console.log(row,'row')
     //     var _this=this;
@@ -165,7 +168,7 @@ export default {
             console.log(response);
             if (response.data.code === 0) {
               _this.tableValue = response.data.result.content;
-              _this.totalCount=response.data.result.total;
+              _this.totalCount = response.data.result.total;
             } else {
               this.$message({
                 type: "error",
@@ -179,7 +182,6 @@ export default {
           });
       });
     },
-   
 
     //时间格式化
     formatPushTime(row) {
@@ -192,8 +194,8 @@ export default {
     },
     formatEndTime(row) {
       let data = "";
-      if (row.EndTime) {
-        data = row.EndTime.replace("T", " ");
+      if (row.endTime) {
+        data = row.endTime.replace("T", " ");
         data = data.replace(".000+0000", "");
       }
       return data;
