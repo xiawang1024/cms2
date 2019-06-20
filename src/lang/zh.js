@@ -164,9 +164,9 @@ export default {
     operationsRecord: '操作记录',
     //-------直播------------------------------
     streamFileManage:'录制文件管理',
-    directStream:'直播流',
+    directStream:'直播流管理',
     liveConfig:'直播配置',
-    streamAdressManage:'直播流地址管理',
+    streamAdressManage:'视频流地址管理',
 
 
 
