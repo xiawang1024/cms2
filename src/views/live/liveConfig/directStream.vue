@@ -1,0 +1,244 @@
+<template>
+  <div class="helpdoc-container">
+    <el-table :data="tableValue">
+      <el-table-column prop="appName" label="APP名称"/>
+      <el-table-column prop="userName" label="用户名"/>
+      <el-table-column prop="endTime" :formatter="formatEndTime" label="结束时间"/>
+      <el-table-column prop="stopTime" :formatter="formatStopTime" label="停止时间"/>
+      <el-table-column prop="pushTime" :formatter="formatPushTime" label="推送时间"/>
+      <el-table-column prop="streamType" label="视频流类型" :formatter="formatStreamType"/>
+      <el-table-column label="操作" >
+        <template slot-scope="scope" >
+          <el-button size="mini" type="success" disabled="true" @click="handleForbid(scope.$index, scope.row)">禁用</el-button>
+          <!-- <el-button size="mini" type="prime" disabled="true"  @click="handlePush(scope.$index, scope.row)">开始推流</el-button>
+          <el-button size="mini" type="success" disabled="true"  @click="handleStop(scope.$index, scope.row)">结束推流</el-button>
+          <el-button size="mini" type="danger" disabled="true"  @click="handleDelete(scope.$index, scope.row)">删除流</el-button> -->
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      :current-page="pageNo"
+      :page-sizes="[10,30,60,100]"
+      :page-size="pageSize"
+      :total="totalCount"
+      background
+      layout="total, sizes, prev, pager, next, jumper"
+      style="float: right"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
+  </div>
+</template>
+<script>
+import {
+  getStreamInfo,
+//   deleteStream,
+//   startPushStream,
+//   endPushStream
+} from "@/api/live/flowManagement.js";
+export default {
+  data() {
+    return {
+      tableValue: [],
+      pageNo: 1,
+      pageSize: 10,
+      totalCount: 0,
+      sortBy: "",
+      order: ""
+    };
+  },
+  created() {
+    this.requestTableValue();
+  },
+  mounted() {},
+  methods: {
+      handleForbid(){
+
+      },
+    // handlePush(index, row) {
+    //     console.log(row,'row')
+    //     var _this=this;
+    //     let data={
+    //     tcurl:'',
+    //     name:row.userName,
+    //     live:row.streamName,
+    //     type:row.streamType
+
+    //     }
+    //  return new Promise((resolve, reject) => {
+    //     startPushStream(data)
+    //       .then(response => {
+    //         if (response.data.code == 0) {
+    //           this.$messaage({
+    //             type: "success",
+    //             message: response.data.msg
+    //           });
+    //         } else {
+    //           this.$messaage({
+    //             type: "error",
+    //             message: response.data.msg
+    //           });
+    //         }
+    //         _this.initTableList();
+    //         resolve();
+    //       })
+    //       .catch(error => {
+    //         reject(error);
+    //       });
+    //   });
+
+    // },
+    // handleStop(index, row) {
+    //     var _this=this;
+    //     let data={
+    //     name:row.userName,
+    //     live:row.streamName,
+    //     type:row.streamType
+
+    //     }
+    //  return new Promise((resolve, reject) => {
+    //     endPushStream(data)
+    //       .then(response => {
+    //         if (response.data.code == 0) {
+    //           this.$messaage({
+    //             type: "success",
+    //             message: response.data.msg
+    //           });
+    //         } else {
+    //           this.$messaage({
+    //             type: "error",
+    //             message: response.data.msg
+    //           });
+    //         }
+    //         _this.initTableList();
+    //         resolve();
+    //       })
+    //       .catch(error => {
+    //         reject(error);
+    //       });
+    //   });
+    // },
+    // handleDelete(index, row) {
+    //     var _this=this;
+    //   return new Promise((resolve, reject) => {
+    //     deleteStream(row.id)
+    //       .then(response => {
+    //         if (response.data.code == 0) {
+    //           this.$messaage({
+    //             type: "success",
+    //             message: response.data.msg
+    //           });
+    //         } else {
+    //           this.$messaage({
+    //             type: "error",
+    //             message: response.data.msg
+    //           });
+    //         }
+
+    //         _this.initTableList();
+    //         resolve();
+    //       })
+    //       .catch(error => {
+    //         reject(error);
+    //       });
+    //   });
+    // },
+    //  初始化列表
+    initTableList() {
+      this.pageNo = 1;
+      this.pageSize = 10;
+      this.sortBy = "";
+      this.order = " ";
+      this.requestTableValue();
+    },
+    requestTableValue() {
+      var _this = this;
+      let data = {
+        pageNo: this.pageNo,
+        pageSize: this.pageSize,
+        sortBy: this.sortBy,
+        order: this.order
+      };
+      return new Promise((resolve, reject) => {
+        getStreamInfo(data)
+          .then(response => {
+            console.log(response);
+            if (response.data.code === 0) {
+              _this.tableValue = response.data.result.content;
+              _this.totalCount=response.data.result.total;
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data.msg
+              });
+            }
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+   
+
+    //时间格式化
+    formatPushTime(row) {
+      let data = "";
+      if (row.pushTime) {
+        data = row.pushTime.replace("T", " ");
+        data = data.replace(".000+0000", "");
+      }
+      return data;
+    },
+    formatEndTime(row) {
+      let data = "";
+      if (row.EndTime) {
+        data = row.EndTime.replace("T", " ");
+        data = data.replace(".000+0000", "");
+      }
+      return data;
+    },
+    formatStopTime(row) {
+      let data = "";
+      if (row.stopTime) {
+        data = row.stopTime.replace("T", " ");
+        data = data.replace(".000+0000", "");
+      }
+      return data;
+    },
+
+    //数据类型格式化
+    formatStreamType(row) {
+      let data = "";
+      if (row.streamType === "0") {
+        data = "直播流";
+      } else if (row.streamType === "1") {
+        data = "历史流";
+      } else if (row.streamType === "2") {
+        data = "禁用流";
+      }
+      return data;
+    },
+
+    //分页处理
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.requestTableValue();
+    },
+    handleCurrentChange(val) {
+      this.pageNo = val;
+      this.requestTableValue();
+      //   if (this.pageFlag) {
+      //     this.getList();
+      //   } else {
+      //     this.SearchAttribute();
+      //   }
+    }
+  }
+};
+</script>
+<style lang="scss" scoped>
+.helpdoc-container {
+  margin: 30px;
+}
+</style>

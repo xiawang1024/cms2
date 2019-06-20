@@ -161,7 +161,12 @@ export default {
     liveList: '直播列表',
     connectionList: '通话列表',
     operationsRecord: '操作记录',
-  
+    //-------直播------------------------------
+    streamFileManage:'录制文件管理',
+    directStream:'直播流',
+    liveConfig:'直播配置',
+    streamAdressManage:'直播流地址管理',
+
 
 
   },

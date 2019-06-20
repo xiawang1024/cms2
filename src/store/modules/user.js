@@ -49,7 +49,7 @@ var toTree = (data)=> {
   })
   return val
 }
-const defaultSysList = ['cms', 'userCenter', 'interaction', 'program','newsCommand']
+const defaultSysList = ['cms', 'userCenter', 'interaction', 'program','newsCommand','live']
 const user = {
   state: {
     token: getAuth(),

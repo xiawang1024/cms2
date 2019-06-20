@@ -20,10 +20,6 @@ const sysType = [
     value: '新闻指挥'
   },
   {
-    type: 'newsCommand',
-    value: '新闻指挥'
-  },
-  {
     type: 'live',
     value: '直播'
   }
