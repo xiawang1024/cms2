@@ -19,7 +19,7 @@ const livePage = {
         /**
          * 直播文件管理
          */
-        path: "streamFileManage;",
+        path: "streamFileManage",
         component: () => import(`@/${path}/streamFileManage`),
         name: "streamFileManage",
         //   redirect: '/newCommand/manageClue/discloseList',
@@ -34,7 +34,7 @@ const livePage = {
         /**
          * 直播流管理
          */
-        path: "directStream;",
+        path: "directStream",
         component: () => import(`@/${path}/directStream`),
         name: "directStream",
         //   redirect: '/newCommand/manageClue/discloseList',
@@ -48,7 +48,7 @@ const livePage = {
         /**
          * 流地址管理
          */
-        path: "streamAdressManage;",
+        path: "streamAdressManage",
         component: () => import(`@/${path}/streamAdressManage`),
         name: "streamAdressManage",
         //   redirect: '/newCommand/manageClue/discloseList',
