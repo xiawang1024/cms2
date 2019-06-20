@@ -186,11 +186,11 @@ export default {
             if(!_this.tagList.length) {
               _this.otherSettings[0].items[0].hidden = true
               _this.imagesSeting[0].items[6].hidden = true
-              _this.reproduceSetting[0].items[3].hidden = true
+              _this.reproduceSetting[0].items[4].hidden = true
             } else {
               _this.otherSettings[0].items[0].hidden = false
               _this.imagesSeting[0].items[6].hidden = false
-              _this.reproduceSetting[0].items[3].hidden = false
+              _this.reproduceSetting[0].items[4].hidden = false
             }
             if(_this.contextMenu.docId) {
               if(_this.contextMenu.articleType == 3) {
