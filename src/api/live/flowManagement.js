@@ -23,14 +23,34 @@ export function streamfile(data) {
 //删除
 export function deleteStream(id) {
   return request({
-    url: Cpath + `stream?id=${id}`,
+    url: Cpath + `/stream/deletebyid?id=${id}`,
     method: "delete"
     // loadingConfig: {
     //   noLoading: true
     // }
   });
 }
+//禁用流信息
+export function disableStream(id) {
+  return request({
+    url: Cpath + `/stream/disable?id=${id}`,
+    method: "put"
+    // loadingConfig: {
+    //   noLoading: true
+    // }
+  });
+}
 
+//解禁流信息
+export function undisableStream(id) {
+  return request({
+    url: Cpath + `/stream/notdisable?id=${id}`,
+    method: "put"
+    // loadingConfig: {
+    //   noLoading: true
+    // }
+  });
+}
 //开始推流
 export function startPushStream(data) {
   return request({
@@ -52,7 +72,7 @@ export function endPushStream(data) {
     url:
       Cpath +
       `/stream/down?name=${data.name}&live=${data.live}&type=${data.type}`,
-    method: "post"
+    method: "put"
     // loadingConfig: {
     //   noLoading: true
     // }
@@ -68,7 +88,7 @@ export function getStreamInfo(data) {
       `/stream/page?pageNo=${data.pageNo}&pageSize=${data.pageSize}&sortBy=${
         data.sortBy
       }&order=${data.order}&streamType=${data.streamType}`,
-    method: "post"
+    method: "get"
     // loadingConfig: {
     //   noLoading: true
     // }

@@ -17,14 +17,20 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
+            v-show="scope.row.streamType=='1'"
             size="mini"
             type="success"
-            :disabled="true"
             @click="handleForbid(scope.$index, scope.row)"
           >禁用</el-button>
+          <el-button
+            v-show="scope.row.streamType=='2'"
+            size="mini"
+            type="success"
+            @click="handleUnForbid(scope.$index, scope.row)"
+          >解禁</el-button>
           <!-- <el-button size="mini" type="prime" disabled="true"  @click="handlePush(scope.$index, scope.row)">开始推流</el-button>
-          <el-button size="mini" type="success" disabled="true"  @click="handleStop(scope.$index, scope.row)">结束推流</el-button>
-          <el-button size="mini" type="danger" disabled="true"  @click="handleDelete(scope.$index, scope.row)">删除流</el-button>-->
+          <el-button size="mini" type="success" disabled="true"  @click="handleStop(scope.$index, scope.row)">结束推流</el-button> -->
+          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除流</el-button> 
         </template>
       </el-table-column>
     </el-table>
@@ -43,8 +49,10 @@
 </template>
 <script>
 import {
-  getStreamInfo
-  //   deleteStream,
+  getStreamInfo,
+  disableStream,
+    deleteStream,
+    undisableStream,
   //   startPushStream,
   //   endPushStream
 } from "@/api/live/flowManagement.js";
@@ -69,7 +77,6 @@ export default {
       this.initTableList();
 
       },
-    handleForbid() {},
     // handlePush(index, row) {
     //     console.log(row,'row')
     //     var _this=this;
@@ -84,12 +91,12 @@ export default {
     //     startPushStream(data)
     //       .then(response => {
     //         if (response.data.code == 0) {
-    //           this.$messaage({
+    //           this.$message({
     //             type: "success",
     //             message: response.data.msg
     //           });
     //         } else {
-    //           this.$messaage({
+    //           this.$message({
     //             type: "error",
     //             message: response.data.msg
     //           });
@@ -115,12 +122,12 @@ export default {
     //     endPushStream(data)
     //       .then(response => {
     //         if (response.data.code == 0) {
-    //           this.$messaage({
+    //           this.$message({
     //             type: "success",
     //             message: response.data.msg
     //           });
     //         } else {
-    //           this.$messaage({
+    //           this.$message({
     //             type: "error",
     //             message: response.data.msg
     //           });
@@ -133,31 +140,83 @@ export default {
     //       });
     //   });
     // },
-    // handleDelete(index, row) {
-    //     var _this=this;
-    //   return new Promise((resolve, reject) => {
-    //     deleteStream(row.id)
-    //       .then(response => {
-    //         if (response.data.code == 0) {
-    //           this.$messaage({
-    //             type: "success",
-    //             message: response.data.msg
-    //           });
-    //         } else {
-    //           this.$messaage({
-    //             type: "error",
-    //             message: response.data.msg
-    //           });
-    //         }
+    handleDelete(index, row) {
+        var _this=this;
+      return new Promise((resolve, reject) => {
+        deleteStream(row.id)
+          .then(response => {
+            if (response.data.code == 0) {
+              this.$message({
+                type: "success",
+                message: response.data.msg
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data.msg
+              });
+            }
 
-    //         _this.initTableList();
-    //         resolve();
-    //       })
-    //       .catch(error => {
-    //         reject(error);
-    //       });
-    //   });
-    // },
+            _this.initTableList();
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+    //禁用
+    handleForbid(index, row) {
+        var _this=this;
+      return new Promise((resolve, reject) => {
+        disableStream(row.id)
+          .then(response => {
+            if (response.data.code == 0) {
+              this.$message({
+                type: "success",
+                message: response.data.msg
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data.msg
+              });
+            }
+
+            _this.initTableList();
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+     //禁用
+    handleUnForbid(index, row) {
+        var _this=this;
+      return new Promise((resolve, reject) => {
+        undisableStream(row.id)
+          .then(response => {
+            if (response.data.code == 0) {
+              this.$message({
+                type: "success",
+                message: response.data.msg
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data.msg
+              });
+            }
+
+            _this.initTableList();
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
     //  初始化列表
     initTableList() {
       this.pageNo = 1;
