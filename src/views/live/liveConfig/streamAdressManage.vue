@@ -2,12 +2,11 @@
   <div class="helpdoc-container">
     <el-table :data="tableValue">
       <el-table-column type="index" width="50" />
-      <el-table-column prop="appName" width="80" label="APP名称"/>
       <el-table-column prop="userName" width="120" label="用户名"/>
       <el-table-column prop="recordBeginTime" width="180" :formatter="formatStart" label="录制开始时间"/>
       <el-table-column prop="pullStream" label="直播流地址"/>
       <el-table-column prop="pushiStream" label="推流地址"/>
-      <el-table-column prop="vodPullStream" label="点播流地址" show-overflow-tooltip />
+      <el-table-column prop="vodPullStream" label="点播流地址" />
       <el-table-column label="操作" width="180">
         <template slot-scope="scope">
           <el-button size="mini" type="prime" @click="handleEdit(scope.$index, scope.row)" :disabled="true">编辑</el-button>
