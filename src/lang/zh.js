@@ -95,6 +95,7 @@ export default {
     statisticsChart:'统计报表',
     mobileCharts:'移动端统计',
     pcSiteCharts:'PC端统计',
+    ArticleStatistics:'发稿量统计',
     systemStatus: '系统状态',
     logs: '日志',
     backTask: '后台任务',

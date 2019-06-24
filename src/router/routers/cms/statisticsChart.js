@@ -31,8 +31,16 @@ const statisticsChart = {
         name: 'pcSiteCharts',
         meta: { title: 'pcSiteCharts', icon: 'docSource', role: 'cms:pcSiteCharts', }
       },
+      {
+        /**
+         * 发稿量统计
+         */
+        path: 'ArticleStatistics',
+        component: () => import(`@/${path}/ArticleStatistics`),
+        name: 'ArticleStatistics',
+        meta: { title: 'ArticleStatistics', icon: 'docSource', role: 'cms:pcSiteCharts', }
+      },
       
-    
    
   ]
 }

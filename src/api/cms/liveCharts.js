@@ -1,10 +1,14 @@
 import request from "@/utils/request";
 // import baseUrl from '@/config/base-url'
 // let Cpath = "http://192.168.7.40:53006";
+
 let Cpath = "";
 // let BaiduPath = "/baiduapi/json/tongji/v1/ReportService/getData";
 // let BaiduPath='https://api.baidu.com/json/tongji/v1/ReportService/getData'
+
 let umengPath = "/baiduStatistics/umengAppList";
+//发稿量前缀
+let articlePath='http://192.168.7.40:53006/baiduStatistics/articleStatistics';
 
 //百度接口
 //获取用户的站点列表
@@ -142,3 +146,44 @@ export function getTrend(appkey) {
     method: "get"
   });
 }
+
+//------发稿量统计接口-----------------------------------------
+
+
+
+  //获取文章点击量和发稿量整体趋势(按频道)
+export function articleTrend(channelId) {
+  return request({
+    url: articlePath + "/getArticleTrendByChannelId?channelId=1108260929071616000" + channelId,
+    method: "get"
+  });
+}
+
+  //获取文章点击量和发稿量整体趋势(按作者)
+  export function articleTrendByAuthor(tenantId,author) {
+    return request({
+      url: articlePath + `/getArticleTrendByAuthor?tenantId=${tenantId}&author=${author}`,
+      method: "get"
+    });
+  }
+
+
+  //按频道获取文章点击次数、发稿量(每天和累计)
+
+  export function articleStatisticsByChannelId(data) {
+    return request({
+      url: articlePath + `getArticleStatisticsByChannelId?channelId=${data.channelId}&startDate=${data.startDate}&endDate=${data.endDate}`,
+      method: "get"
+    });
+
+  }
+  //按作者获取文章点击次数、发稿量(每天和累计)
+  export function articleStatisticsByAuthor(data) {
+    return request({
+      url: articlePath + `getArticleStatisticsByAuthor?tenantId=${data.tenantId}&author=${data.author}&startDate=${data.startDate}&endDate=${data.endDate}`,
+      method: "get"
+    });
+
+  }
+  
+  
