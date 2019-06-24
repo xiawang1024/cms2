@@ -10,7 +10,6 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          @change="getNewData"
         />
       </div>
     </div>
@@ -25,10 +24,10 @@ import articleTitle from "@/components/Charts/articleTitle.vue";
 // import {fun_date} from "@/components/Charts/handleTimer.js"
 import {
     articleTrend,
-  getLaunches,
-  getNewUsers,
+//   getLaunches,
+//   getNewUsers,   
   getRetentions,
-  articleStatisticsByChannelId
+  articleStatisticsByAuthor
   
 } from "@/api/cms/liveCharts";
 export default {
@@ -81,34 +80,28 @@ export default {
     Init() {
          this.fetchTrend();
       this.fetchActiveUser();
-    //   this.fetchAppList();
-    //   this.fetchDurations();
-    //   this.fetchLaunches();
-    //   this.fetchNewUsers();
-    //   this.fetchRetentions();
-    //   this.fetchTotalUsers();
     },
     //请求折线图数据
     fetchActiveUser() {
       return new Promise((resolve, reject) => {
         var _this=this;
         let data = {
-          appkey: this.appkey,
-          startDate: this.startDate,
-          endDate: this.endDate,
-          periodType: this.periodType
+          tenantId:'hndzkj',
+          author:'hndzkj',
+        //   startDate: this.startDate,
+        //   endDate: this.endDate
+          startDate:'2019-06-01',
+          endDate: '2019-06-30'
         };
-        articleStatisticsByChannelId(data)
+        articleStatisticsByAuthor(data)
           .then(response => {
              if(response.data.code==0){
-              let result=JSON.parse(response.data.result)
-                    console.log(result,'result');
-
-                _this.$set(this.chartsvalue,'articleCountDaily',_this.formateDate(result.activeUserInfo))
-                 _this.$set(this.chartsvalue,'clickNumDaily',_this.formateDate(result.activeUserInfo))
-                  _this.$set(this.chartsvalue,'articleCount',_this.formateDate(result.activeUserInfo))
-                   _this.$set(this.chartsvalue,'clickNum',_this.formateDate(result.activeUserInfo))
-              // _this.chartsvalue.activeUserInfo=_this.formateDate(result.activeUserInfo)
+                    console.log(response.data.result,'result');
+                    let result=response.data.result
+                _this.$set(this.chartsvalue,'articleCountDaily',_this.formateDate(result,'articleCountDaily'))
+                 _this.$set(this.chartsvalue,'clickNumDaily',_this.formateDate(result,'clickNumDaily'))
+                  _this.$set(this.chartsvalue,'articleCount',_this.formateDate(result,'articleCount'))
+                   _this.$set(this.chartsvalue,'clickNum',_this.formateDate(result,'clickNum'))
             }
             
             
@@ -118,39 +111,8 @@ export default {
           });
       });
     },
-    fetchLaunches() {
-      var _this=this;
-      return new Promise((resolve, reject) => {
-        getLaunches(this.appkey, this.startDate, this.endDate, this.periodType)
-          .then(response => {
-             if(response.data.code==0){
-              let result=JSON.parse(response.data.result)
-               _this.$set(this.chartsvalue,'launchInfo',_this.formateDate(result.launchInfo))
-              // _this.chartsvalue.launchInfo=_this.formateDate(result.launchInfo)
-            }
-          })
-          .catch(reject => {
-            console.log(reject);
-          });
-      });
-    },
-    fetchNewUsers() {
-      var _this=this;
-      return new Promise((resolve, reject) => {
-        getNewUsers(this.appkey, this.startDate, this.endDate, this.periodType)
-          .then(response => {
-            if(response.data.code==0){
-              let result=JSON.parse(response.data.result)
-              _this.$set(this.chartsvalue,'newUser',_this.formateDate(result.newUserInfo))
-              // _this.chartsvalue.newUser=_this.formateDate(result.newUserInfo)
-            }
-            
-          })
-          .catch(reject => {
-            console.log(reject);  
-          });
-      });
-    },
+   
+    
     fetchRetentions() {
       return new Promise((resolve, reject) => {
         getRetentions(
@@ -186,27 +148,62 @@ export default {
       });
     },
 
-    
-    //
-
-    getNewData() {
-      //获取时间区间数据
-
-      //获取新增用户数
-      this.fetchNewUsers()
-
-    },
-    handleClick(tab, event) {
-      //获取切换区间数据
-
-    },
     // 数据处理
-    formateDate(value){
-      let result=[];
+    formateDate(value,type){
+        if(type=='clickNum'){
+            let result=[];
       value.forEach((item)=>{
-        result.push(item.value)
+        result.push(item.clickNum)
       })
+      //处理没有数据的显示（）规定-1 为空值。
+      result.forEach((item,index)=>{
+           if(item=='-1'){
+               result[index]='--'
+           }
+       })
       return result;
+        }
+        if(type=='articleCountDaily'){
+            let result=[];
+      value.forEach((item)=>{
+        result.push(item.articleCountDaily)
+      })
+      result.forEach((item,index)=>{
+           if(item=='-1'){
+               result[index]='--'
+           }
+       })
+      return result;
+        }
+        if(type=='clickNumDaily'){
+            let result=[];
+      value.forEach((item)=>{
+        result.push(item.clickNumDaily)
+      })
+      result.forEach((item,index)=>{
+           if(item=='-1'){
+               result[index]='--'
+           }
+       })
+      return result;
+        }
+        if(type=='articleCount'){
+            let result=[];
+      value.forEach((item)=>{
+        result.push(item.articleCount)
+        
+      })
+    //   result.push('400')
+    //   result.push('-1')
+    //    result.push('400')
+       result.forEach((item,index)=>{
+           if(item=='-1'){
+               result[index]='--'
+           }
+       })
+      return result;
+        }
+      
     }
   }
 };

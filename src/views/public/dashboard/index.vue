@@ -41,7 +41,7 @@ export default {
       let user=JSON.parse(localStorage.getItem('BaseInfor'))
         console.log(user.clientLicenseId,'user')
 
-        if (user.clientLicenseId==='nanyangradio') {
+        if (user.clientLicenseId==='hnr1') {
         this.showChart = true
     }
     }

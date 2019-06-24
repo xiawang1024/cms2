@@ -33,12 +33,32 @@ const statisticsChart = {
       },
       {
         /**
-         * 发稿量统计
+         * 发稿量统计(按频率)
          */
-        path: 'ArticleStatistics',
-        component: () => import(`@/${path}/ArticleStatistics`),
-        name: 'ArticleStatistics',
-        meta: { title: 'ArticleStatistics', icon: 'docSource', role: 'cms:pcSiteCharts', }
+        path: 'ArticleStatisticsByChanel',
+        component: () => import(`@/${path}/ArticleStatisticsByChanel`),
+        name: 'ArticleStatisticsByChanel',
+        meta: { title: 'ArticleStatisticsByChanel', icon: 'docSource', role: 'cms:pcSiteCharts', }
+      },
+      
+      {
+        /**
+         * 发稿量统计（按作者）
+         */
+        path: 'ArticleStatisticsByAuthor',
+        component: () => import(`@/${path}/ArticleStatisticsByAuthor`),
+        name: 'ArticleStatisticsByAuthor',
+        meta: { title: 'ArticleStatisticsByAuthor', icon: 'docSource', role: 'cms:pcSiteCharts', }
+      },
+      
+      {
+        /**
+         * 发稿量统计（按租户）
+         */
+        path: 'ArticleStatisticsByTenantId',
+        component: () => import(`@/${path}/ArticleStatisticsByTenantId`),
+        name: 'ArticleStatisticsByTenantId',
+        meta: { title: 'ArticleStatisticsByTenantId', icon: 'docSource', role: 'cms:pcSiteCharts', }
       },
       
    
