@@ -221,6 +221,9 @@ export default {
         documentInfor(id)
           .then((response) => {
             _this.docInfor = response.data.result
+            if(_this.docInfor.contentBody) {
+              _this.docInfor.contentBody = _this.docInfor.contentBody.replace(/!important/g, '')
+            }
             _this.typeForm.articleType = response.data.result.articleType ? response.data.result.articleType : 0
             if(_this.typeForm.articleType == 4) {
               _this.typeForm.articleType = 0
