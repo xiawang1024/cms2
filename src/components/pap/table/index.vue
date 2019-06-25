@@ -12,7 +12,7 @@
 
     <el-table ref="pap-base-table" :row-key="rowKeys" :data="currentTableData" v-loading="tableLoading"  stripe style="width: 100%; " @selection-change="handleSelectionChange">
 
-      <el-table-column type="selection" width="55" :reserve-selection="true"></el-table-column>
+      <el-table-column type="selection" width="55" reserve-selection="true"></el-table-column>
         <el-table-column
                 v-for="(col) in currentTableColumn"
                 :key="col.prop"
