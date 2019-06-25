@@ -1,6 +1,6 @@
 <template>
   <div class="mycharts">
-    <umengTitle :datavalue="datavalue" :timevalue="timevalue" />
+    <umengTitle :datavalue="datavalue" />
     <div class="dateselect">
       <div class="block">
         <el-date-picker

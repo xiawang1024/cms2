@@ -8,7 +8,7 @@
             <h3>{{ datavalue.totalNewUserAverage7!=null?datavalue.totalNewUserAverage7.toFixed(0):'--' }}</h3>
             <p>
               同比
-              <span>{{ dnullalue.totalNewUserChangePre!=null?(datavalue.totalNewUserChangePre*100).toFixed(2):'--' }}%</span>
+              <span>{{ datavalue.totalNewUserChangePre!=null?(datavalue.totalNewUserChangePre*100).toFixed(2):'--' }}%</span>
               <span v-if="datavalue.totalNewUserChangePre>0" class="redarrow">↑</span>
               <span v-else class="greenarrow">↓</span>
             </p>
