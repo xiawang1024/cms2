@@ -1,6 +1,21 @@
 <template>
   <div class="mycharts">
-    <articleTitle :datavalue="datavalue" :timevalue="timevalue" />
+    <div class="tool-bar">
+      <el-dropdown size="mini" @command="handleCommand">
+        <el-button size="mini" type="primary" :disabled="authorList.length==0">
+          {{ nowAuthor }}
+          <i class="el-icon-arrow-down el-icon--right"/>
+        </el-button>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item
+            v-for="(item,index) in authorList"
+            :command="item.value"
+            :key="index"
+          >{{ item.label }}</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
+    <articleTitle :datavalue="datavalue"/>
     <div class="dateselect">
       <div class="block">
         <el-date-picker
@@ -10,25 +25,27 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          @change="getNewData"
         />
       </div>
     </div>
-   
-    <articleCount id="mycharts1" height="450px" width="100%" :timevalue="timevalue" :chartsvalue="chartsvalue" />
 
+    <articleCount
+      id="mycharts1"
+      height="450px"
+      width="100%"
+      :timevalue="timevalue"
+      :chartsvalue="chartsvalue"
+    />
   </div>
 </template>
 <script>
 import articleCount from "@/components/Charts/articleCount.vue";
 import articleTitle from "@/components/Charts/articleTitle.vue";
-// import {fun_date} from "@/components/Charts/handleTimer.js"
 import {
-    articleTrend,
-//   getLaunches,
-//   getNewUsers,   
-  getRetentions,
-  articleStatisticsByAuthor
-  
+  articleStatisticsByAuthor,
+  articleTrendByAuthor,
+  fullAuthorList
 } from "@/api/cms/liveCharts";
 export default {
   name: "LiveCharts",
@@ -37,13 +54,7 @@ export default {
     return {
       //uemng
       datavalue: {},
-      chartsvalue:{
-        newUser:[],
-        // activeUserInfo:[],
-        // launchInfo:[],
-        // totalUser:[],
-
-      },
+      chartsvalue: {},
       startDate: "",
       endDate: "",
       periodType: "daily",
@@ -53,93 +64,97 @@ export default {
       page: "1",
       timevalue: [],
       activeName: "first",
-      channelId:'1108260929071616000' //暂时写死
+      channelId: "1108260929071616000",
+      authorList: [],
+      nowAuthor: "请选择查看的作者",
+      author: "hndzkj",
+      tenantId: "hndzkj"
     };
   },
   created() {
     this.getTime();
-    
-     this.Init();
-   
+     this.InitInfo();  //获取租户 ，作者  暂时写死
+    this.Init();
   },
-  mounted(){
-   
-    
-  },
+  mounted() {},
   methods: {
-
-    getTime(){
-      let date=new Date();
-      let year=date.getFullYear('yyyy')
-      let mon=date.getMonth('MM');
-      let day=date.getDate('dd');
-      this.startDate=year+'-'+(mon<10?('0'+mon):mon)+'-'+((day-1<10)?('0'+(day-1)):(day-1));
-      this.endDate=year+'-'+((mon+1<10)?('0'+(mon+1)):(mon+1))+'-'+(day<10?('0'+day):day);
-      this.timevalue=[this.startDate,this.endDate];
+    InitInfo() {
+      this.tenantId = JSON.parse(
+        localStorage.getItem("BaseInfor")
+      ).clientLicenseId;
+      this.author = JSON.parse(localStorage.getItem("BaseInfor")).userName;
+      this.getAuthorList();
     },
     Init() {
-         this.fetchTrend();
+      this.fetchTrend();
       this.fetchActiveUser();
+    },
+    //请求全部作者列表
+    getAuthorList() {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        fullAuthorList(this.tenantId)
+          .then(response => {
+            if (response.data.code == 0) {
+              let result = response.data.result;
+              _this.authorList = result;
+            }
+          })
+          .catch(reject => {
+            console.log(reject);
+          });
+      });
     },
     //请求折线图数据
     fetchActiveUser() {
       return new Promise((resolve, reject) => {
-        var _this=this;
+        var _this = this;
         let data = {
-          tenantId:'hndzkj',
-          author:'hndzkj',
-        //   startDate: this.startDate,
-        //   endDate: this.endDate
-          startDate:'2019-06-01',
-          endDate: '2019-06-30'
+          tenantId: this.tenantId,
+          author: this.author,
+          startDate: this.startDate,
+          endDate: this.endDate
         };
         articleStatisticsByAuthor(data)
           .then(response => {
-             if(response.data.code==0){
-                    console.log(response.data.result,'result');
-                    let result=response.data.result
-                _this.$set(this.chartsvalue,'articleCountDaily',_this.formateDate(result,'articleCountDaily'))
-                 _this.$set(this.chartsvalue,'clickNumDaily',_this.formateDate(result,'clickNumDaily'))
-                  _this.$set(this.chartsvalue,'articleCount',_this.formateDate(result,'articleCount'))
-                   _this.$set(this.chartsvalue,'clickNum',_this.formateDate(result,'clickNum'))
+            if (response.data.code == 0) {
+              let result = response.data.result;
+              _this.$set(
+                this.chartsvalue,
+                "articleCountDaily",
+                _this.formateDate(result, "articleCountDaily")
+              );
+              _this.$set(
+                this.chartsvalue,
+                "clickNumDaily",
+                _this.formateDate(result, "clickNumDaily")
+              );
+              _this.$set(
+                this.chartsvalue,
+                "articleCount",
+                _this.formateDate(result, "articleCount")
+              );
+              _this.$set(
+                this.chartsvalue,
+                "clickNum",
+                _this.formateDate(result, "clickNum")
+              );
             }
-            
-            
           })
           .catch(reject => {
             console.log(reject);
           });
       });
     },
-   
-    
-    fetchRetentions() {
+    //获取文章点击量和发稿量整体趋势(按作者)
+    fetchTrend() {
+      var _this = this;
       return new Promise((resolve, reject) => {
-        getRetentions(
-          this.appkey,
-          this.startDate,
-          this.endDate,
-          this.periodType
-        )
+        articleTrendByAuthor(this.tenantId, this.author)
           .then(response => {
-          })
-          .catch(reject => {
-            console.log(reject);
-          });
-      });
-    },
-
-
-    
-        //获取文章点击量和发稿量整体趋势(按频道)
-      fetchTrend() {
-      var _this=this;
-      return new Promise((resolve, reject) => {
-        articleTrend(this.channelId)
-          .then(response => {
-            if(response.data.code==0){
-              let result=response.data.result;
-              _this.datavalue=result;
+            if (response.data.code == 0) {
+              let result = response.data.result;
+              _this.datavalue = result;
             }
           })
           .catch(reject => {
@@ -149,66 +164,100 @@ export default {
     },
 
     // 数据处理
-    formateDate(value,type){
-        if(type=='clickNum'){
-            let result=[];
-      value.forEach((item)=>{
-        result.push(item.clickNum)
-      })
-      //处理没有数据的显示（）规定-1 为空值。
-      result.forEach((item,index)=>{
-           if(item=='-1'){
-               result[index]='--'
-           }
-       })
-      return result;
+    formateDate(value, type) {
+      if (type == "clickNum") {
+        let result = [];
+        value.forEach(item => {
+          result.push(item.clickNum);
+        });
+        //处理没有数据的显示（）规定-1 为空值。
+        result.forEach((item, index) => {
+          if (item == "-1") {
+            result[index] = "--";
+          }
+        });
+        return result.reverse();
+      }
+      if (type == "articleCountDaily") {
+        let result = [];
+        value.forEach(item => {
+          result.push(item.articleCountDaily);
+        });
+        result.forEach((item, index) => {
+          if (item == "-1") {
+            result[index] = "--";
+          }
+        });
+        return result.reverse();
+      }
+      if (type == "clickNumDaily") {
+        let result = [];
+        value.forEach(item => {
+          result.push(item.clickNumDaily);
+        });
+        result.forEach((item, index) => {
+          if (item == "-1") {
+            result[index] = "--";
+          }
+        });
+        return result.reverse();
+      }
+      if (type == "articleCount") {
+        let result = [];
+        value.forEach(item => {
+          result.push(item.articleCount);
+        });
+        result.forEach((item, index) => {
+          if (item == "-1") {
+            result[index] = "--";
+          }
+        });
+        return result.reverse();
+      }
+    },
+    //频道切换
+    handleCommand(command) {
+      this.author = command;
+      this.authorList.forEach(item => {
+        if (item.value == command) {
+          this.nowAuthor = item.label;
         }
-        if(type=='articleCountDaily'){
-            let result=[];
-      value.forEach((item)=>{
-        result.push(item.articleCountDaily)
-      })
-      result.forEach((item,index)=>{
-           if(item=='-1'){
-               result[index]='--'
-           }
-       })
-      return result;
-        }
-        if(type=='clickNumDaily'){
-            let result=[];
-      value.forEach((item)=>{
-        result.push(item.clickNumDaily)
-      })
-      result.forEach((item,index)=>{
-           if(item=='-1'){
-               result[index]='--'
-           }
-       })
-      return result;
-        }
-        if(type=='articleCount'){
-            let result=[];
-      value.forEach((item)=>{
-        result.push(item.articleCount)
-        
-      })
-    //   result.push('400')
-    //   result.push('-1')
-    //    result.push('400')
-       result.forEach((item,index)=>{
-           if(item=='-1'){
-               result[index]='--'
-           }
-       })
-      return result;
-        }
-      
+      });
+      this.Init();
+    },
+    //日期选择
+    getNewData() {
+      this.startDate = this.timevalue[0];
+      this.endDate = this.timevalue[1];
+      this.fetchActiveUser();
+    },
+    getTime() {
+      let date = new Date();
+      let year = date.getFullYear("yyyy");
+      let mon = date.getMonth("MM");
+      let day = date.getDate("dd");
+      this.startDate =
+        year +
+        "-" +
+        (mon < 10 ? "0" + mon : mon) +
+        "-" +
+        (day - 1 < 10 ? "0" + (day - 1) : day - 1);
+      this.endDate =
+        year +
+        "-" +
+        (mon + 1 < 10 ? "0" + (mon + 1) : mon + 1) +
+        "-" +
+        (day < 10 ? "0" + day : day);
+      this.timevalue = [this.startDate, this.endDate];
     }
   }
 };
 </script>
 <style scoped>
+.tool-bar {
+  text-align: right;
+  padding: 0 42px;
+}
 .mycharts {
   width: 100%;
   min-width: 1080px;
@@ -217,12 +266,12 @@ export default {
   box-sizing: border-box;
 }
 .dateselect {
- padding: 15px 0 15px 40px;
+  padding: 15px 0 15px 40px;
 }
 /deep/.el-date-editor .el-range-separator {
-    padding: 0 0px;
-    line-height: 32px;
-    width: 5%;
-    color: #303133;
+  padding: 0 0px;
+  line-height: 32px;
+  width: 5%;
+  color: #303133;
 }
 </style>

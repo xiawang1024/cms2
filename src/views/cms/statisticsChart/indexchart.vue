@@ -1,100 +1,197 @@
 <template>
-  <div class="mainBox">
-    <div class="leftSection">
-      <div class="titleright">
-        <h4>pc端统计</h4>
-        <p>
-          <span @click="showpc">查看详情>></span>
-        </p>
+  <div>
+    <div class="mainBox">
+      <div class="leftSection">
+        <div class="titleright">
+          <h4>pc端统计</h4>
+          <p>
+            <span @click="showpc">查看详情>></span>
+          </p>
+        </div>
+        <!--  -->
+        <div class="table-list">
+          <table class="list">
+            <tbody class="rightLine nonerightline">
+              <tr class="baiduTitle heightSize">
+                <th/>
+                <th>浏览量(PV)</th>
+                <th>访客数(UV)</th>
+                <th>IP数</th>
+                <th>跳出率</th>
+              </tr>
+              <tr class="highlight heightSize">
+                <td class="normal">今日</td>
+                <td class="rightLine">{{ dashdate.length==0?'--':dashdate[7][0] }}</td>
+                <td class="rightLine">{{ dashdate.length==0?'--':dashdate[7][1] }}</td>
+                <td class="rightLine">{{ dashdate.length==0?'--':dashdate[7][2] }}</td>
+                <td class="nonerightline">{{ dashdate.length==0?'--':((dashdate[7][3])*100) }}%</td>
+              </tr>
+              <tr class="heightSize">
+                <td class="normal">昨日</td>
+                <td class="rightLine">{{ dashdate.length==0?'--':dashdate[6][0] }}</td>
+                <td class="rightLine">{{ dashdate.length==0?'--':dashdate[6][1] }}</td>
+                <td class="rightLine">{{ dashdate.length==0?'--':dashdate[6][2] }}</td>
+                <td class="nonerightline">{{ dashdate.length==0?'--':((dashdate[6][3])*100) }}%</td>
+              </tr>
+              <tr class="heightSize">
+                <td class="normal">近七日</td>
+                <td class="rightLine">{{ sevendata==null?'--':sevendata[0] }}</td>
+                <td class="rightLine">{{ sevendata==null?'--':sevendata[1] }}</td>
+                <td class="rightLine">{{ sevendata==null?'--':sevendata[2] }}</td>
+                <td class="nonerightline">{{ sevendata==null?'--':((sevendata[3]*100)) }}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!--  -->
       </div>
-      <!--  -->
-      <div class="table-list">
-        <table class="list">
-          <tbody class="rightLine nonerightline">
-            <tr class="baiduTitle heightSize">
-              <th/>
-              <th>浏览量(PV)</th>
-              <th>访客数(UV)</th>
-              <th>IP数</th>
-              <th>跳出率</th>
-            </tr>
-            <tr class="highlight heightSize">
-              <td class="normal">今日</td>
-              <td class="rightLine">{{ dashdate==null?'--':dashdate[7][0] }}</td>
-              <td class="rightLine">{{ dashdate==null?'--':dashdate[7][1] }}</td>
-              <td class="rightLine">{{ dashdate==null?'--':dashdate[7][2] }}</td>
-              <td class="nonerightline">{{ dashdate==null?'--':dashdate[7][3] }}%</td>
-            </tr>
-            <tr class="heightSize">
-              <td class="normal">昨日</td>
-              <td class="rightLine">{{ dashdate==null?'--':dashdate[6][0] }}</td>
-              <td class="rightLine">{{ dashdate==null?'--':dashdate[6][1] }}</td>
-              <td class="rightLine">{{ dashdate==null?'--':dashdate[6][2] }}</td>
-              <td class="nonerightline">{{ dashdate==null?'--':dashdate[6][3] }}%</td>
-            </tr>
-            <tr class="heightSize">
-              <td class="normal">近七日</td>
-              <td class="rightLine">{{ sevendata==null?'--':sevendata[0] }}</td>
-              <td class="rightLine">{{ sevendata==null?'--':sevendata[1] }}</td>
-              <td class="rightLine">{{ sevendata==null?'--':sevendata[2] }}</td>
-              <td class="nonerightline">{{ sevendata==null?'--':sevendata[3] }}%</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <!--  -->
-    </div>
-    <div class="rightSection">
-      <div class="titleright">
-        <h4>移动端统计</h4>
-        <p>
-          <span @click="showMobile">查看详情>></span>
-        </p>
-      </div>
+      <div class="rightSection">
+        <div class="titleright">
+          <h4>移动端统计</h4>
+          <p>
+            <span @click="showMobile">查看详情>></span>
+          </p>
+        </div>
 
-      <div class="rightpart">
-        <div class="floor">
-          <div class="smallbox">
-            <p class="mytitle">新增用户（7日平均）</p>
-            <h3>{{ datavalue.totalNewUserAverage7!=null?datavalue.totalNewUserAverage7.toFixed(0):'--' }}</h3>
-            <p>
-              同比
-              <span>{{ datavalue.totalNewUserChangePre!=null?(datavalue.totalNewUserChangePre*100).toFixed(2):'--' }}%</span>
-              <span v-if="datavalue.totalNewUserChangePre>0" class="redarrow">↑</span>
-              <span v-else class="greenarrow">↓</span>
-            </p>
+        <div class="rightpart">
+          <div class="floor">
+            <div class="smallbox">
+              <p class="mytitle">新增用户（7日平均）</p>
+              <h3>{{ datavalue.totalNewUserAverage7!=null?datavalue.totalNewUserAverage7.toFixed(0):'--' }}</h3>
+              <p>
+                同比
+                <span>{{ datavalue.totalNewUserChangePre!=null?(datavalue.totalNewUserChangePre*100).toFixed(2):'--' }}%</span>
+                <span v-if="datavalue.totalNewUserChangePre>0" class="redarrow">↑</span>
+                <span v-else class="greenarrow">↓</span>
+              </p>
+            </div>
+            <div class="smallbox">
+              <p class="mytitle">活跃用户（7日平均）</p>
+              <h3>{{ datavalue.activeUserWeekLast!=null?datavalue.activeUserWeekLast:'--' }}</h3>
+              <p>
+                同比
+                <span>{{ datavalue.activeUserWeekChangePre!=null?(datavalue.activeUserWeekChangePre*100).toFixed(2):'--' }}%</span>
+                <span v-if="datavalue.activeUserWeekChangePre>0" class="redarrow">↑</span>
+                <span v-else class="greenarrow">↓</span>
+              </p>
+            </div>
           </div>
-          <div class="smallbox">
-            <p class="mytitle">活跃用户（7日平均）</p>
-            <h3>{{ datavalue.activeUserWeekLast!=null?datavalue.activeUserWeekLast:'--' }}</h3>
-            <p>
-              同比
-              <span>{{ datavalue.activeUserWeekChangePre!=null?datavalue.activeUserWeekChangePre.toFixed(2):'--' }}%</span>
-              <span v-if="datavalue.activeUserWeekChangePre>0" class="redarrow">↑</span>
-              <span v-else class="greenarrow">↓</span>
-            </p>
+          <div class="floor">
+            <div class="smallbox">
+              <p class="mytitle">新用户次日留存率（7日平均）</p>
+              <h3>{{ datavalue.retentionAverage7!=null?(datavalue.retentionAverage7*100).toFixed(2):'--' }}%</h3>
+              <p>
+                同比
+                <span>{{ datavalue.retentionChangePre!=null?(datavalue.retentionChangePre*100).toFixed(2):'--' }}%</span>
+                <span v-if="datavalue.retentionChangePre>0" class="redarrow">↑</span>
+                <span v-else class="greenarrow">↓</span>
+              </p>
+            </div>
+            <div class="smallbox">
+              <p class="mytitle">使用时长（7日平均）</p>
+              <h3>{{ datavalue.durationAverage7!=null?datavalue.durationAverage7.toFixed(2):'--' }}</h3>
+              <p>
+                同比
+                <span>{{ datavalue.durationChangePre!=null?(datavalue.durationChangePre*100).toFixed(2):'--' }}%</span>
+                <span v-if="datavalue.durationChangePre>0" class="redarrow">↑</span>
+                <span v-else class="greenarrow">↓</span>
+              </p>
+            </div>
           </div>
         </div>
-        <div class="floor">
-          <div class="smallbox">
-            <p class="mytitle">新用户次日留存率（7日平均）</p>
-            <h3>{{ datavalue.retentionAverage7!=null?(datavalue.retentionAverage7*100).toFixed(2):'--' }}%</h3>
-            <p>
-              同比
-              <span>{{ datavalue.retentionChangePre!=null?(datavalue.retentionChangePre*100).toFixed(2):'--' }}%</span>
-              <span v-if="datavalue.retentionChangePre>0" class="redarrow">↑</span>
-              <span v-else class="greenarrow">↓</span>
-            </p>
+      </div>
+    </div>
+    <div class="mainBox">
+      <div class="rightSection">
+        <div class="titleright">
+          <h4>发稿量统计</h4>
+        </div>
+
+        <div class="rightpart">
+          <div class="floor">
+            <div class="smallbox">
+              <p class="mytitle">发稿量（7日平均）</p>
+              <h3>{{ chartValue.articleCountAverageWeek==null?'--':chartValue.articleCountAverageWeek }}</h3>
+              <p>
+                同比
+                <span>{{ chartValue.articleCountAverageWeekChangePre==null?'--':(chartValue.articleCountAverageWeekChangePre*100).toFixed(2) }}%</span>
+                <span v-if="chartValue.articleCountAverageWeekChangePre>0" class="redarrow">↑</span>
+                <span v-else class="greenarrow">↓</span>
+              </p>
+            </div>
+            <div class="smallbox">
+              <p class="mytitle">发稿量（月平均）</p>
+              <h3>{{ chartValue.articleCountAverageMonth==null?'--':chartValue.articleCountAverageMonth }}</h3>
+              <p>
+                同比
+                <span>{{ chartValue.articleCountAverageMonthChangePre==null?'--':(chartValue.articleCountAverageMonthChangePre*100).toFixed(2) }}%</span>
+                <span v-if="chartValue.articleCountAverageMonthChangePre>0" class="redarrow">↑</span>
+                <span v-else class="greenarrow">↓</span>
+              </p>
+            </div>
           </div>
-          <div class="smallbox">
-            <p class="mytitle">使用时长（7日平均）</p>
-            <h3>{{ datavalue.durationAverage7!=null?datavalue.durationAverage7.toFixed(2):'--' }}</h3>
-            <p>
-              同比
-              <span>{{ datavalue.durationChangePre!=null?(datavalue.durationChangePre*100).toFixed(2):'--' }}%</span>
-              <span v-if="datavalue.durationChangePre>0" class="redarrow">↑</span>
-              <span v-else class="greenarrow">↓</span>
-            </p>
+          <div class="floor">
+            <div class="smallbox">
+              <p class="mytitle">昨日发稿量</p>
+              <h3>{{ chartValue.articleCountDailyYesterday==null?'--':chartValue.articleCountDailyYesterday }}</h3>
+              <p>
+                同比
+                <span>{{ chartValue.articleCountDailyYesterdayChangePre==null?'--':(chartValue.articleCountDailyYesterdayChangePre*100).toFixed(2) }}%</span>
+                <span v-if="chartValue.articleCountDailyYesterdayChangePre>0" class="redarrow">↑</span>
+                <span v-else class="greenarrow">↓</span>
+              </p>
+            </div>
+            <div class="smallbox">
+              <p class="mytitle">总发稿量</p>
+              <h3>{{ chartValue.articleCount==null?'--':chartValue.articleCount }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rightSection">
+        <div class="titleright">
+          <h4>点击量统计</h4>
+        </div>
+
+        <div class="rightpart">
+          <div class="floor">
+            <div class="smallbox">
+              <p class="mytitle">上周平均点击量</p>
+              <h3>{{ chartValue.clickNumAverageWeek==null?'--':chartValue.clickNumAverageWeek }}</h3>
+              <p>
+                同比
+                <span>{{ chartValue.clickNumAverageWeekChangePre==null?'--': (chartValue.clickNumAverageWeekChangePre*100).toFixed(2) }}%</span>
+                <span v-if="chartValue.clickNumAverageWeekChangePre>0" class="redarrow">↑</span>
+                <span v-else class="greenarrow">↓</span>
+              </p>
+            </div>
+            <div class="smallbox">
+              <p class="mytitle">上月平均点击量数</p>
+              <h3>{{ chartValue.clickNumAverageMonth==null?'--':chartValue.clickNumAverageMonth }}</h3>
+              <p>
+                同比
+                <span>{{ chartValue.clickNumAverageMonthChangePre==null?'--':(chartValue.clickNumAverageMonthChangePre*100).toFixed(2) }}%</span>
+                <span v-if="chartValue.clickNumAverageMonthChangePre>0" class="redarrow">↑</span>
+                <span v-else class="greenarrow">↓</span>
+              </p>
+            </div>
+          </div>
+          <div class="floor">
+            <div class="smallbox">
+              <p class="mytitle">昨日点击量</p>
+              <h3>{{ chartValue.clickNumDailyYesterday==null?'--':chartValue.clickNumDailyYesterday }}</h3>
+              <p>
+                同比
+                <span>{{ chartValue.clickNumDailyYesterdayChangePre==null?'--':(chartValue.clickNumDailyYesterdayChangePre*100).toFixed(2) }}%</span>
+                <span v-if="chartValue.clickNumDailyYesterdayChangePre>0" class="redarrow">↑</span>
+                <span v-else class="greenarrow">↓</span>
+              </p>
+              <p/>
+            </div>
+            <div class="smallbox">
+              <p class="mytitle">累计点击量</p>
+              <h3>{{ chartValue.clickNum==null?'--':chartValue.clickNum }}</h3>
+            </div>
           </div>
         </div>
       </div>
@@ -103,11 +200,33 @@
 </template>
 <script>
 import { fun_date } from "@/components/Charts/handleTimer.js";
-import { getTrend, siteProfile } from "@/api/cms/liveCharts";
+import {
+  getTrend,
+  siteProfile,
+  articleTrendByAuthor
+} from "@/api/cms/liveCharts";
+// import articleTitle from "@/components/Charts/articleTitle.vue";
 export default {
   data() {
     return {
       datavalue: {},
+      chartValue: {
+        activeUserAverage7: null,
+        activeUserChangePre: null,
+        activeUserMonthChangePre: null,
+        activeUserMonthLast: null,
+        activeUserWeekChangePre: null,
+        activeUserWeekLast: null,
+        durationAverage7: null,
+        durationChangePre: null,
+        launchAverage7: null,
+        launchChangePre: null,
+        retentionAverage7: null,
+        retentionChangePre: null,
+        totalNewUserAverage7: null,
+        totalNewUserChangePre: null,
+        totalUsers: null
+      },
       dashdate: [],
       appkey: "5cbd29613fc19548f9000c25",
       site_id: "13495008",
@@ -125,36 +244,23 @@ export default {
         siteId: "13495008",
         source: "string",
         startDate: "20190601"
-      }
+      },
+      tenantId: "",
+      author: "",
+      sevendata:null,
     };
-  },
-  computed: {
-    //七天数据计算
-    sevendata: function() {
-      let total = [];
-      let reactValue = [];
-      this.dashdate.forEach((item, index) => {
-        item.forEach((value, order) => {
-          if (total[order]) {
-            total[order] = total[order] + value;
-          } else {
-            total.push(value);
-          }
-        });
-      });
-      total.forEach(item => {
-        reactValue.push(parseInt(item / 8));
-      });
-      return reactValue;
-    }
   },
   created() {
     this.timeInit();
+    this.InitInfo();
     this.fetchTrend();
     this.profile();
+    this.authorTrend();
   },
   mounted() {},
   methods: {
+
+
     showpc() {
       this.$router.push({
         path: "/cms/statisticsChart/pcSiteCharts"
@@ -180,6 +286,12 @@ export default {
           });
       });
     },
+    InitInfo() {
+      this.tenantId = JSON.parse(
+        localStorage.getItem("BaseInfor")
+      ).clientLicenseId;
+      this.author = JSON.parse(localStorage.getItem("BaseInfor")).userName;
+    },
     timeInit() {
       let today = fun_date(0);
       this.today = today.replace(/-/gi, "");
@@ -198,6 +310,49 @@ export default {
             if (response.data.code === 0) {
               let result = JSON.parse(response.data.result);
               _this.dashdate = result.body.data[0].result.items[1];
+              _this.getSevenData();
+            }
+          })
+          .catch(reject => {
+            console.log(reject);
+          });
+      });
+    },
+    getSevenData(){
+      //七天数据计算
+    
+      let total = [];
+      let reactValue = [];
+      if(this.dashdate.length!=0){
+        this.dashdate.forEach((item, index) => {
+        item.forEach((value, order) => {
+          if (total[order]) {
+            total[order] = total[order] + value;
+          } else {
+            total.push(value);
+          }
+        });
+      });
+      total.forEach(item => {
+        reactValue.push(parseInt(item / 8));
+      });
+       this.sevendata=reactValue
+      }else{
+       this.sevendata= null;
+      }
+     
+    
+    },
+
+    //获取文章点击量和发稿量整体趋势(按作者)
+    authorTrend() {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        articleTrendByAuthor(this.tenantId, this.author)
+          .then(response => {
+            if (response.data.code == 0) {
+              let result = response.data.result;
+              _this.chartValue = result;
             }
           })
           .catch(reject => {
@@ -219,6 +374,8 @@ export default {
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 20px;
+  min-width: 1180px;
+
   .titleright {
     padding: 0 20px;
     p {
