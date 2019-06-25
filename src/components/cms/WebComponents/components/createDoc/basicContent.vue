@@ -1,9 +1,12 @@
 <template>
   <div class="basicContent-wrap">
     <!-- {{contextMenu}} -->
-    <div class="tool-bar clearfix">
+    <div class="tool-bars clearfix">
       <div v-if="contextMenu.articleType && contextMenu.articleType == 3" class="quote-tille">
         <span>文档类型： 引用</span>
+      </div>
+      <div v-else-if="contextMenu.articleType && contextMenu.articleType == 4" class="quote-tille">
+        <span>文档类型： 转载</span>
       </div>
       <el-form ref="form" :model="typeForm" label-width="80px" v-else>
         <el-form-item label="文档类型">
@@ -170,7 +173,7 @@ export default {
             }
             _this.otherSettings[0].items[0].options = _this.tagList
             _this.imagesSeting[0].items[6].options = _this.tagList
-            _this.reproduceSetting[0].items[3].options = _this.tagList
+            _this.reproduceSetting[0].items[4].options = _this.tagList
             this.$nextTick(() => {
               _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList)
               if(_this.contextMenu.articleType == 3) {
@@ -183,11 +186,11 @@ export default {
             if(!_this.tagList.length) {
               _this.otherSettings[0].items[0].hidden = true
               _this.imagesSeting[0].items[6].hidden = true
-              _this.reproduceSetting[0].items[3].hidden = true
+              _this.reproduceSetting[0].items[4].hidden = true
             } else {
               _this.otherSettings[0].items[0].hidden = false
               _this.imagesSeting[0].items[6].hidden = false
-              _this.reproduceSetting[0].items[3].hidden = false
+              _this.reproduceSetting[0].items[4].hidden = false
             }
             if(_this.contextMenu.docId) {
               if(_this.contextMenu.articleType == 3) {
@@ -219,6 +222,9 @@ export default {
           .then((response) => {
             _this.docInfor = response.data.result
             _this.typeForm.articleType = response.data.result.articleType ? response.data.result.articleType : 0
+            if(_this.typeForm.articleType == 4) {
+              _this.typeForm.articleType = 0
+            }
             if(_this.docInfor.extFieldsList && _this.docInfor.extFieldsList.length) {
               _this.docInfor.extFieldsList.forEach((ele) => {
                 _this.docInfor[ele.label] = ele.fieldValue
@@ -263,6 +269,7 @@ export default {
                 }
               })
               _this.imagesSeting[0].items[2].options = _this.sourceList
+              _this.reproduceSetting[0].items[2].options = _this.sourceList
             }
             resolve();
           })
@@ -278,7 +285,7 @@ export default {
 .basicContent-wrap {
   margin: 0;
   margin-bottom: 30px;
-  .tool-bar{
+  .tool-bars{
     label {
       font-weight: normal;
     }
