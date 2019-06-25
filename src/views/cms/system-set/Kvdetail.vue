@@ -365,7 +365,7 @@ export default {
           );
           if (
             this.addGroupAttribute.value == "" ||
-            this.addGroupAttribute.value == null
+            this.addGroupAttribute.value == null|| this.addGroupAttribute.value =="Invalid date"
           ) {
             return this.$message({
               type: "error",
