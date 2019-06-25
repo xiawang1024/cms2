@@ -1,10 +1,13 @@
 import request from "@/utils/request";
 // import baseUrl from '@/config/base-url'
 // let Cpath = "http://192.168.7.40:53006";
+
 let Cpath = "";
-// let BaiduPath = "/baiduapi/json/tongji/v1/ReportService/getData";
-// let BaiduPath='https://api.baidu.com/json/tongji/v1/ReportService/getData'
+// let umengPath = "http://192.168.7.40:53006/baiduStatistics/umengAppList";
 let umengPath = "/baiduStatistics/umengAppList";
+//发稿量前缀
+// let articlePath='http://192.168.7.40:53006/baiduStatistics/articleStatistics';
+let articlePath='/baiduStatistics/articleStatistics';
 
 //百度接口
 //获取用户的站点列表
@@ -14,43 +17,17 @@ export function getSiteList() {
     method: "post"
   });
 }
-
-//获取最近七天信息
-export function getSevendayData(siteId,startDate,endDate) {
-  return request({
-    url: Cpath + `/baiduStatistics/siteInfo/getTimeTrendRpt?siteId=${siteId}&startDate=${startDate}&endDate=${endDate}`,
-    method: "get"
-  });
-}
-//获取实时访客信息
-export function getCurrenViewer(siteId) {
-  return request({
-    url: Cpath + `/baiduStatistics/siteInfo/getTrendLatest?siteId=${siteId}`,
-    method: "get"
-  });
-}
-
-
-//获取趋势数据
-export function getTrendData(siteId,startDate,endDate) {
-  return request({
-    url: Cpath + `/baiduStatistics/siteInfo/getTrendTime?siteId=${siteId}&startDate=${startDate}&endDate=${endDate}`,
-    method: "get"
-  });
-}
 // 网站概况
-// export const siteProfile = (params) => post(params);
-//原百度接口，弃用
-// export function siteProfile(data) {
-//   return request({
-//     baseURL: "",
-//     url: BaiduPath,
-//     method: "post",
-//     data
-//   });
-// }
+export function siteProfile(data) {
+  return request({
+    url:Cpath+`/baiduStatistics/siteInfo/getData` ,
+    method: "post",
+    data
+  });
+}
 
-//-------------------------------------------------------------------
+
+
 //友盟接口
 //  获取App活跃用户数
 
@@ -142,3 +119,67 @@ export function getTrend(appkey) {
     method: "get"
   });
 }
+
+//------发稿量统计接口-----------------------------------------
+
+
+//根据租户id获取所有的作者和频道(频道id和频道name)
+
+export function fullChanelList(tenantId) {
+  return request({
+    url: articlePath + `/getArticleStatisticsUserByTenantId?tenantId=${tenantId}&flag=1`,
+    method: "get"
+  });
+}
+export function fullAuthorList(tenantId) {
+  return request({
+    url: articlePath + `/getArticleStatisticsUserByTenantId?tenantId=${tenantId}&flag=0`,
+    method: "get"
+  });
+}
+
+  //获取文章点击量和发稿量整体趋势(按频道)
+export function articleTrend(channelId) {
+  return request({
+    url: articlePath + "/getArticleTrendByChannelId?channelId=" + channelId,
+    method: "get"
+  });
+}
+
+  //获取文章点击量和发稿量整体趋势(按作者)
+  export function articleTrendByAuthor(tenantId,author) {
+    return request({
+      url: articlePath + `/getArticleTrendByAuthor?tenantId=${tenantId}&author=${author}`,
+      method: "get"
+    });
+  }
+  //获取文章点击量和发稿量整体趋势(总站)
+  export function articleTrendBytenantId(tenantId) {
+    return request({
+      url: articlePath + `/getArticleTrendTotal?tenantId=${tenantId}`,
+      method: "get"
+    });
+  }
+
+
+
+  //按频道获取文章点击次数、发稿量(每天和累计)
+
+  export function articleStatisticsByChannelId(data) {
+    return request({
+      url: articlePath + `/getArticleStatisticsByChannelId?channelId=${data.channelId}&startDate=${data.startDate}&endDate=${data.endDate}`,
+      method: "get"
+    });
+
+  }
+
+  //按作者获取文章点击次数、发稿量(每天和累计)
+  export function articleStatisticsByAuthor(data) {
+    return request({
+      url: articlePath + `/getArticleStatisticsByAuthor?tenantId=${data.tenantId}&author=${data.author}&startDate=${data.startDate}&endDate=${data.endDate}`,
+      method: "get"
+    });
+
+  }
+  
+  

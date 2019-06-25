@@ -11,31 +11,27 @@
           <th>访客数(UV)</th>
           <th>IP数</th>
           <th>跳出率</th>
-          <th>平均访问时长</th>
         </tr>
         <tr class="highlight ">
           <td class="normal ">今日</td>
-          <td class="rightLine" >{{ dashdate[7][0] }}</td>
-          <td class="rightLine" >{{ dashdate[7][1] }}</td>
-          <td class="rightLine" >{{ dashdate[7][2] }}</td>
-          <td class="rightLine" >{{ dashdate[7][3] }}%</td>
-          <td class=" nonerightline" >00:02:37</td>
+          <td class="rightLine">{{ dashdate==null?'--':dashdate[7][0] }}</td>
+          <td class="rightLine">{{ dashdate==null?'--':dashdate[7][1] }}</td>
+          <td class="rightLine">{{ dashdate==null?'--':dashdate[7][2] }}</td>
+          <td class="nonerightline">{{ dashdate==null?'--':((dashdate[7][3])*100 ) }}%</td>
         </tr>
         <tr>
           <td class="normal">昨日</td>
-          <td class="rightLine" >{{ dashdate[6][0] }}</td>
-          <td class="rightLine" >{{ dashdate[6][1] }}</td>
-          <td class="rightLine" >{{ dashdate[6][2] }}</td>
-          <td class="rightLine" >{{ dashdate[6][3] }}%</td>
-          <td class="nonerightline" >00:02:45</td>
+          <td class="rightLine">{{ dashdate==null?'--':dashdate[6][0] }}</td>
+          <td class="rightLine">{{ dashdate==null?'--':dashdate[6][1] }}</td>
+          <td class="rightLine">{{ dashdate==null?'--':dashdate[6][2] }}</td>
+          <td class="nonerightline">{{ dashdate==null?'--':((dashdate[6][3])*100) }}%</td>
         </tr>
         <tr>
           <td class="normal">近七日</td>
-          <td class="rightLine  ">{{ sevendata[0] }}</td>
-          <td class="rightLine  ">{{ sevendata[1] }}</td>
-          <td class="rightLine  ">{{ sevendata[2] }}</td>
-          <td class="rightLine " >{{ sevendata[3] }}%</td>
-          <td class="nonerightline " >--</td>
+          <td class="rightLine">{{ sevendata==null?'--':sevendata[0] }}</td>
+          <td class="rightLine">{{ sevendata==null?'--':sevendata[1] }}</td>
+          <td class="rightLine">{{ sevendata==null?'--':sevendata[2] }}</td>
+          <td class="nonerightline">{{ sevendata==null?'--':((sevendata[3])*100) }}%</td>
         </tr>
       </tbody>
     </table>
@@ -51,7 +47,7 @@
       dashdate: {
       type: Array,
       default: () => {
-        [];
+        null;
       }
       }
     },
