@@ -99,26 +99,39 @@ export default {
       if (this.tenantId == "dxtv") {
          this.visitorData = {
           area: "china",
-          domain: "nydt.cn",
+          domain: "hnr.cn",
           maxResults: "0",
           metrics: "area,source,visit_time,visit_pages,access_page,ip",
           method: "trend/latest/a",
           order: "visit_pages, desc",
-          siteId: "13495008",
+          siteId: "1453193",
           source: "through"
         };
         this.progressData = {
           area: "china",
-          domain: "nydt.cn",
+          domain: "hnr.cn",
           endDate: "20190624",
           gran: "hour",
           maxResults: "0",
           metrics: "pv_count,visitor_count,ip_count ",
           method: "trend/time/a",
-          siteId: "13495008",
+          siteId: "1453193",
           source: "string",
           startDate: "20190601"
         };
+        this.requestParams= {
+        area: "china",
+        domain: "hnr.cn", //关键参数
+        endDate: "20190624",
+        gran: "day",
+        maxResults: "0",
+        method: "overview/getTimeTrendRpt",
+        metrics: "pv_count,visitor_count,ip_count,bounce_ratio",
+        order: "",
+        siteId: "1453193",//关键参数
+        source: "string",
+        startDate: "20190601"
+      }
       }
       if (this.tenantId == "nanyangradio") {
         this.visitorData = {
@@ -260,7 +273,7 @@ export default {
             } else if (type == "fo") {
               _this.chartsvaluefo = _this.handleChartData(data);
             }
-            console.log(_this.tableData, "resss");
+            // console.log(_this.tableData, "resss");
           } else {
             this.$message({
               type: "error",

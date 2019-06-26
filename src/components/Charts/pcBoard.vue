@@ -14,17 +14,17 @@
         </tr>
         <tr class="highlight ">
           <td class="normal ">今日</td>
-          <td class="rightLine">{{ dashdate==null?'--':dashdate[7][0] }}</td>
-          <td class="rightLine">{{ dashdate==null?'--':dashdate[7][1] }}</td>
-          <td class="rightLine">{{ dashdate==null?'--':dashdate[7][2] }}</td>
-          <td class="nonerightline">{{ dashdate==null?'--':((dashdate[7][3])*100 ).toFixed(2) }}%</td>
+          <td class="rightLine">{{ dashdate.length==0?'--':dashdate[7][0] }}</td>
+          <td class="rightLine">{{ dashdate.length==0?'--':dashdate[7][1] }}</td>
+          <td class="rightLine">{{ dashdate.length==0?'--':dashdate[7][2] }}</td>
+          <td class="nonerightline">{{ dashdate.length==0?'--':((dashdate[7][3])*100 ).toFixed(2) }}%</td>
         </tr>
         <tr>
           <td class="normal">昨日</td>
-          <td class="rightLine">{{ dashdate==null?'--':dashdate[6][0] }}</td>
-          <td class="rightLine">{{ dashdate==null?'--':dashdate[6][1] }}</td>
-          <td class="rightLine">{{ dashdate==null?'--':dashdate[6][2] }}</td>
-          <td class="nonerightline">{{ dashdate==null?'--':((dashdate[6][3])*100).toFixed(2) }}%</td>
+          <td class="rightLine">{{ dashdate.length==0?'--':dashdate[6][0] }}</td>
+          <td class="rightLine">{{ dashdate.length==0?'--':dashdate[6][1] }}</td>
+          <td class="rightLine">{{ dashdate.length==0?'--':dashdate[6][2] }}</td>
+          <td class="nonerightline">{{ dashdate.length==0?'--':((dashdate[6][3])*100).toFixed(2) }}%</td>
         </tr>
         <tr>
           <td class="normal">近七日</td>
@@ -59,8 +59,10 @@
       //七天数据计算
       sevendata:function(){
         let total=[];
-        let reactValue=[];
-        this.dashdate.forEach((item,index) => {
+        let reactValue=null;
+        if( this.dashdate.length>0){
+          reactValue=[];
+           this.dashdate.forEach((item,index) => {
          item.forEach((value,order)=>{
            if(total[order]){
              total[order]=total[order]+value
@@ -75,6 +77,8 @@
               reactValue.push(parseInt(item/8))
             })
             console.log(total,'total')
+        }
+       
         return reactValue
       }
     },
@@ -85,7 +89,6 @@
     mounted(){
     },
     methods:{
-      
       
     
     },
