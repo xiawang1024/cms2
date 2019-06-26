@@ -34,9 +34,7 @@
 <script>
 import baiduCharts from "@/components/Charts/baiduCharts.vue";
 import pcBoard from "@/components/Charts/pcBoard.vue";
-import {
-  siteProfile
-} from "@/api/cms/liveCharts";
+import { siteProfile } from "@/api/cms/liveCharts";
 import { fun_date } from "@/components/Charts/handleTimer.js";
 export default {
   name: "Baidu",
@@ -49,18 +47,9 @@ export default {
       beforyesteday: "",
       sevendayAgo: "",
       monthAgo: "",
+      visitorData: {},
+      progressData: {},
       requestParams: {
-        area: "china",
-        domain: "nydt.cn",
-        endDate: "20190624",
-        gran: "day",
-        maxResults: "0",
-        method: "overview/getTimeTrendRpt",
-        metrics: "pv_count,visitor_count,ip_count,bounce_ratio",
-        order: "",
-        siteId: "13495008",
-        source: "string",
-        startDate: "20190601"
       },
       site_id: "13495008",
       dashdate: [],
@@ -71,11 +60,14 @@ export default {
       chartsvalueth: [],
       chartsvaluefo: [],
 
-      activeName: "first"
+      activeName: "first",
+      tenantId: ""
     };
   },
   created() {
     this.timeInit();
+    this.InitInfo();
+    this.initParams();
     this.getCurrentVisitor();
     this.profile();
     this.getProgress(this.yesteday, this.today, "to");
@@ -98,7 +90,74 @@ export default {
       this.monthAgo = monthAgo.replace(/-/gi, "");
       console.log(this.sevendayAgo, "7tian");
     },
-
+    InitInfo() {
+      this.tenantId = JSON.parse(
+        localStorage.getItem("BaseInfor")
+      ).clientLicenseId;
+    },
+    initParams() {
+      if (this.tenantId == "dxtv") {
+         this.visitorData = {
+          area: "china",
+          domain: "nydt.cn",
+          maxResults: "0",
+          metrics: "area,source,visit_time,visit_pages,access_page,ip",
+          method: "trend/latest/a",
+          order: "visit_pages, desc",
+          siteId: "13495008",
+          source: "through"
+        };
+        this.progressData = {
+          area: "china",
+          domain: "nydt.cn",
+          endDate: "20190624",
+          gran: "hour",
+          maxResults: "0",
+          metrics: "pv_count,visitor_count,ip_count ",
+          method: "trend/time/a",
+          siteId: "13495008",
+          source: "string",
+          startDate: "20190601"
+        };
+      }
+      if (this.tenantId == "nanyangradio") {
+        this.visitorData = {
+          area: "china",
+          domain: "nydt.cn",
+          maxResults: "0",
+          metrics: "area,source,visit_time,visit_pages,access_page,ip",
+          method: "trend/latest/a",
+          order: "visit_pages, desc",
+          siteId: "13495008",
+          source: "through"
+        };
+        this.progressData = {
+          area: "china",
+          domain: "nydt.cn",
+          endDate: "20190624",
+          gran: "hour",
+          maxResults: "0",
+          metrics: "pv_count,visitor_count,ip_count ",
+          method: "trend/time/a",
+          siteId: "13495008",
+          source: "string",
+          startDate: "20190601"
+        };
+        this.requestParams= {
+        area: "china",
+        domain: "nydt.cn",
+        endDate: "20190624",
+        gran: "day",
+        maxResults: "0",
+        method: "overview/getTimeTrendRpt",
+        metrics: "pv_count,visitor_count,ip_count,bounce_ratio",
+        order: "",
+        siteId: "13495008",
+        source: "string",
+        startDate: "20190601"
+      }
+      }
+    },
     //获取最近七天数据
     profile() {
       var _this = this;
@@ -124,18 +183,18 @@ export default {
     getCurrentVisitor() {
       var _this = this;
       return new Promise((resolve, reject) => {
-        let data = {
-          area: "china",
-          domain: "nydt.cn",
-          maxResults: "0",
-          metrics: "area,source,visit_time,visit_pages,access_page,ip",
-          method: "trend/latest/a",
-          order: "visit_pages, desc",
-          siteId: "13495008",
-          source: "through"
-        };
+        // let data = {
+        //   area: "china",
+        //   domain: "nydt.cn",
+        //   maxResults: "0",
+        //   metrics: "area,source,visit_time,visit_pages,access_page,ip",
+        //   method: "trend/latest/a",
+        //   order: "visit_pages, desc",
+        //   siteId: "13495008",
+        //   source: "through"
+        // };
 
-        siteProfile(data)
+        siteProfile(this.visitorData)
           .then(response => {
             if (response.data.code == 0) {
               let result = JSON.parse(response.data.result);
@@ -160,31 +219,31 @@ export default {
     //趋势数据
     getProgress(starttime, endtime, type) {
       var _this = this;
-      let data = {
-        area: "china",
-        domain: "nydt.cn",
-        endDate: "20190624",
-        gran: "hour",
-        maxResults: "0",
-        metrics: "pv_count,visitor_count,ip_count ",
-        method: "trend/time/a",
-        siteId: "13495008",
-        source: "string",
-        startDate: "20190601"
-      };
+      // let data = {
+      //   area: "china",
+      //   domain: "nydt.cn",
+      //   endDate: "20190624",
+      //   gran: "hour",
+      //   maxResults: "0",
+      //   metrics: "pv_count,visitor_count,ip_count ",
+      //   method: "trend/time/a",
+      //   siteId: "13495008",
+      //   source: "string",
+      //   startDate: "20190601"
+      // };
+      let data = this.progressData;
       if (type == "to") {
-        data.endDate=this.today;
-        data.startDate=this.yesteday;
-        
+        data.endDate = this.today;
+        data.startDate = this.yesteday;
       } else if (type == "se") {
-        data.endDate=this.today;
-        data.startDate=this.beforyesteday;
+        data.endDate = this.today;
+        data.startDate = this.beforyesteday;
       } else if (type == "th") {
-       data.endDate=this.today;
-        data.startDate=this.sevendayAgo;
+        data.endDate = this.today;
+        data.startDate = this.sevendayAgo;
       } else if (type == "fo") {
-        data.endDate=this.today;
-        data.startDate=this.monthAgo;
+        data.endDate = this.today;
+        data.startDate = this.monthAgo;
       }
       siteProfile(data)
         .then(response => {
