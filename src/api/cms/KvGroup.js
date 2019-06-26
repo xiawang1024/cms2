@@ -113,9 +113,9 @@ export function getGroupAttributeBykvFieldId(kvFieldId) {
   return request({
     url: Cpath + "/kvfield/findKVFieldById?kvFieldId=" + kvFieldId,
     method: "get",
-    loadingConfig:{
-      noLoading:true
-    }
+    // loadingConfig:{
+    //   noLoading:true
+    // }
   });
 }
 

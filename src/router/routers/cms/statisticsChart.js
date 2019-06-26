@@ -9,7 +9,7 @@ const path = `views/${cmsPath}/statisticsChart`
 const statisticsChart = {
   path: `/${cmsPath}/statisticsChart`,
   component: Layout,
-  meta: { title: 'statisticsChart', icon: 'docSource', role: 'cms:mobileCharts' },
+  meta: { title: 'statisticsChart', icon: 'tongji', role: 'cms:mobileCharts' },
   name: 'statisticsChart',
   children: [
    
@@ -20,7 +20,7 @@ const statisticsChart = {
       path: 'mobileCharts',
       component: () => import(`@/${path}/mobileCharts`),
       name: 'mobileCharts',
-      meta: { title: 'mobileCharts', icon: 'docSource', role: 'cms:mobileCharts' }
+      meta: { title: 'mobileCharts', icon: 'apponly', role: 'cms:mobileCharts' }
     },
     {
         /**
@@ -29,10 +29,38 @@ const statisticsChart = {
         path: 'pcSiteCharts',
         component: () => import(`@/${path}/pcSiteCharts`),
         name: 'pcSiteCharts',
-        meta: { title: 'pcSiteCharts', icon: 'docSource', role: 'cms:pcSiteCharts', }
+        meta: { title: 'pcSiteCharts', icon: 'pc', role: 'cms:pcSiteCharts', }
+      },
+      {
+        /**
+         * 发稿量统计(按频率)
+         */
+        path: 'ArticleStatisticsByChanel',
+        component: () => import(`@/${path}/ArticleStatisticsByChanel`),
+        name: 'ArticleStatisticsByChanel',
+        meta: { title: 'ArticleStatisticsByChanel', icon: 'pindao', role: 'cms:pcSiteCharts', }
       },
       
-    
+      {
+        /**
+         * 发稿量统计（按作者）
+         */
+        path: 'ArticleStatisticsByAuthor',
+        component: () => import(`@/${path}/ArticleStatisticsByAuthor`),
+        name: 'ArticleStatisticsByAuthor',
+        meta: { title: 'ArticleStatisticsByAuthor', icon: 'zuozhe', role: 'cms:pcSiteCharts', }
+      },
+      
+      {
+        /**
+         * 发稿量统计（按租户）
+         */
+        path: 'ArticleStatisticsByTenantId',
+        component: () => import(`@/${path}/ArticleStatisticsByTenantId`),
+        name: 'ArticleStatisticsByTenantId',
+        meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms:pcSiteCharts', }
+      },
+      
    
   ]
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="mainBox">
     <div class="chartBox half">
-      <dashBoard :dashdate="dashdate"/>
+      <pcBoard :dashdate="dashdate"/>
     </div>
     <div>
       <div class="chartBox half leftMargin">
@@ -33,16 +33,12 @@
 </template>
 <script>
 import baiduCharts from "@/components/Charts/baiduCharts.vue";
-import dashBoard from "@/components/Charts/dashBoard.vue";
-import {
-  getSevendayData,
-  getCurrenViewer,
-  getTrendData
-} from "@/api/cms/liveCharts";
+import pcBoard from "@/components/Charts/pcBoard.vue";
+import { siteProfile } from "@/api/cms/liveCharts";
 import { fun_date } from "@/components/Charts/handleTimer.js";
 export default {
   name: "Baidu",
-  components: { dashBoard, baiduCharts },
+  components: { pcBoard, baiduCharts },
   data() {
     return {
       name: "webSiteCharts",
@@ -51,21 +47,10 @@ export default {
       beforyesteday: "",
       sevendayAgo: "",
       monthAgo: "",
-      // requestParams: {
-      //   header: {
-      //     username: "中原之声网",
-      //     password: "qingyuan19770963",
-      //     token: "a87df87040e014dc9aae104c5cddabaf",
-      //     account_type: 1
-      //   },
-      //   body: {
-      //     site_id: "13495008",
-      //     start_date: "20190101",
-      //     end_date: "2019005",
-      //     metrics: "pv_count,visitor_count,ip_count,bounce_ratio",
-      //     method: "overview/getTimeTrendRpt"
-      //   }
-      // },
+      visitorData: {},
+      progressData: {},
+      requestParams: {
+      },
       site_id: "13495008",
       dashdate: [],
       tableData: [],
@@ -75,18 +60,20 @@ export default {
       chartsvalueth: [],
       chartsvaluefo: [],
 
-      activeName: "first"
+      activeName: "first",
+      tenantId: ""
     };
   },
   created() {
     this.timeInit();
+    this.InitInfo();
+    this.initParams();
     this.getCurrentVisitor();
-    // this.profile();
+    this.profile();
     this.getProgress(this.yesteday, this.today, "to");
     this.getProgress(this.beforyesteday, this.yesteday, "se");
     this.getProgress(this.sevendayAgo, this.today, "th");
     this.getProgress(this.monthAgo, this.today, "fo");
-    this.testreque();
   },
   mounted() {},
   methods: {
@@ -101,27 +88,102 @@ export default {
       this.sevendayAgo = sevendayAgo.replace(/-/gi, "");
       let monthAgo = fun_date(-30);
       this.monthAgo = monthAgo.replace(/-/gi, "");
+      console.log(this.sevendayAgo, "7tian");
     },
-    //-----------
+    InitInfo() {
+      this.tenantId = JSON.parse(
+        localStorage.getItem("BaseInfor")
+      ).clientLicenseId;
+    },
+    initParams() {
+      if (this.tenantId == "dxtv") {
+         this.visitorData = {
+          area: "china",
+          domain: "hnr.cn",
+          maxResults: "0",
+          metrics: "area,source,visit_time,visit_pages,access_page,ip",
+          method: "trend/latest/a",
+          order: "visit_pages, desc",
+          siteId: "1453193",
+          source: "through"
+        };
+        this.progressData = {
+          area: "china",
+          domain: "hnr.cn",
+          endDate: "20190624",
+          gran: "hour",
+          maxResults: "0",
+          metrics: "pv_count,visitor_count,ip_count ",
+          method: "trend/time/a",
+          siteId: "1453193",
+          source: "string",
+          startDate: "20190601"
+        };
+        this.requestParams= {
+        area: "china",
+        domain: "hnr.cn", //关键参数
+        endDate: "20190624",
+        gran: "day",
+        maxResults: "0",
+        method: "overview/getTimeTrendRpt",
+        metrics: "pv_count,visitor_count,ip_count,bounce_ratio",
+        order: "",
+        siteId: "1453193",//关键参数
+        source: "string",
+        startDate: "20190601"
+      }
+      }
+      if (this.tenantId == "nanyangradio") {
+        this.visitorData = {
+          area: "china",
+          domain: "nydt.cn",
+          maxResults: "0",
+          metrics: "area,source,visit_time,visit_pages,access_page,ip",
+          method: "trend/latest/a",
+          order: "visit_pages, desc",
+          siteId: "13495008",
+          source: "through"
+        };
+        this.progressData = {
+          area: "china",
+          domain: "nydt.cn",
+          endDate: "20190624",
+          gran: "hour",
+          maxResults: "0",
+          metrics: "pv_count,visitor_count,ip_count ",
+          method: "trend/time/a",
+          siteId: "13495008",
+          source: "string",
+          startDate: "20190601"
+        };
+        this.requestParams= {
+        area: "china",
+        domain: "nydt.cn",
+        endDate: "20190624",
+        gran: "day",
+        maxResults: "0",
+        method: "overview/getTimeTrendRpt",
+        metrics: "pv_count,visitor_count,ip_count,bounce_ratio",
+        order: "",
+        siteId: "13495008",
+        source: "string",
+        startDate: "20190601"
+      }
+      }
+    },
     //获取最近七天数据
-    testreque() {
+    profile() {
       var _this = this;
+      let data = this.requestParams;
+      data.startDate = _this.sevendayAgo;
+      data.endDate = _this.today;
       return new Promise((resolve, reject) => {
-        // let data = this.requestParams;
-        // data.body.start_date = this.sevendayAgo;
-        // data.body.end_date = this.today;
-
-        getSevendayData(this.site_id, this.sevendayAgo, this.today)
+        siteProfile(data)
           .then(response => {
-            if (response.data.code == 0) {
+            if (response.data.code === 0) {
               let result = JSON.parse(response.data.result);
               _this.dashdate = result.body.data[0].result.items[1];
               console.log(_this.dashdate, "resss");
-            } else {
-              this.$message({
-                type: "error",
-                message: "请求失败"
-              });
             }
           })
           .catch(reject => {
@@ -130,61 +192,30 @@ export default {
       });
     },
 
-    //获取最近七天数据
-    // profile() {
-    //   var _this = this;
-    //   return new Promise((resolve, reject) => {
-    //     let data = this.requestParams;
-    //     data.body.start_date = this.sevendayAgo;
-    //     data.body.end_date = this.today;
-
-    //     siteProfile(data)
-    //       .then(response => {
-    //         if (response.data.header.desc === "success") {
-    // _this.dashdate = response.data.body.data[0].result.items[1];
-    //  console.log(_this.dashdate,'resss')
-    // }
-    //       })
-    //       .catch(reject => {
-    //         console.log(reject);
-    //       });
-    //   });
-    // },
-
-
-
     //获取实时访客信息
     getCurrentVisitor() {
       var _this = this;
       return new Promise((resolve, reject) => {
         // let data = {
-        //   header: {
-        //     username: "中原之声网",
-        //     password: "qingyuan19770963",
-        //     token: "a87df87040e014dc9aae104c5cddabaf",
-        //     account_type: 1
-        //   },
-        //   body: {
-        //     site_id: "13495008",
-        //     // site_id: "1453193",
-        //     metrics: "area,source,visit_time,visit_pages,access_page,ip",
-        //     method: "trend/latest/a",
-        //     order: "visit_pages, desc",
-        //     max_results: "100",
-        //     source: "through",
-        //     area: "china"
-        //   }
+        //   area: "china",
+        //   domain: "nydt.cn",
+        //   maxResults: "0",
+        //   metrics: "area,source,visit_time,visit_pages,access_page,ip",
+        //   method: "trend/latest/a",
+        //   order: "visit_pages, desc",
+        //   siteId: "13495008",
+        //   source: "through"
         // };
 
-        getCurrenViewer(this.site_id)
+        siteProfile(this.visitorData)
           .then(response => {
-              if (response.data.code == 0) {
+            if (response.data.code == 0) {
               let result = JSON.parse(response.data.result);
               let res = result.body.data[0].result.items[1];
-               _this.$nextTick(() => {
+              _this.$nextTick(() => {
                 _this.tableData = _this.handleData(res);
               });
-              
+
               console.log(_this.tableData, "resss");
             } else {
               this.$message({
@@ -192,13 +223,6 @@ export default {
                 message: "请求失败"
               });
             }
-
-            // if (response.data.header.desc === "success") {
-            //   let result = response.data.body.data[0].result.items[1];
-            //   _this.$nextTick(() => {
-            //     _this.tableData = _this.handleData(result);
-            //   });
-            // }
           })
           .catch(reject => {
             console.log(reject);
@@ -209,28 +233,37 @@ export default {
     getProgress(starttime, endtime, type) {
       var _this = this;
       // let data = {
-      //   header: {
-      //     username: "中原之声网",
-      //     password: "qingyuan19770963",
-      //     token: "a87df87040e014dc9aae104c5cddabaf",
-      //     account_type: 1
-      //   },
-      //   body: {
-      //     site_id: "13495008",
-      //     start_date: starttime,
-      //     end_date: endtime,
-      //     metrics: "pv_count,visitor_count,ip_count ",
-      //     method: "trend/time/a",
-      //     gran: "hour",
-      //     area: "china"
-      //   }
+      //   area: "china",
+      //   domain: "nydt.cn",
+      //   endDate: "20190624",
+      //   gran: "hour",
+      //   maxResults: "0",
+      //   metrics: "pv_count,visitor_count,ip_count ",
+      //   method: "trend/time/a",
+      //   siteId: "13495008",
+      //   source: "string",
+      //   startDate: "20190601"
       // };
-      getTrendData(this.site_id,starttime,endtime)
+      let data = this.progressData;
+      if (type == "to") {
+        data.endDate = this.today;
+        data.startDate = this.yesteday;
+      } else if (type == "se") {
+        data.endDate = this.today;
+        data.startDate = this.beforyesteday;
+      } else if (type == "th") {
+        data.endDate = this.today;
+        data.startDate = this.sevendayAgo;
+      } else if (type == "fo") {
+        data.endDate = this.today;
+        data.startDate = this.monthAgo;
+      }
+      siteProfile(data)
         .then(response => {
           if (response.data.code == 0) {
-              let result = JSON.parse(response.data.result);
-              let data = result.body.data[0].result.items[1];
-                if (type == "to") {
+            let result = JSON.parse(response.data.result);
+            let data = result.body.data[0].result.items[1];
+            if (type == "to") {
               _this.chartsvalueto = _this.handleChartData(data);
               _this.chartInit();
             } else if (type == "se") {
@@ -240,28 +273,13 @@ export default {
             } else if (type == "fo") {
               _this.chartsvaluefo = _this.handleChartData(data);
             }
-              console.log(_this.tableData, "resss");
-            } else {
-              this.$message({
-                type: "error",
-                message: "请求失败"
-              });
-            }
-
-          // if (response.data.header.desc === "success") {
-          //   let data = response.data.body.data[0].result.items[1];
-          //   //判断请求图表类型
-          //   if (type == "to") {
-          //     _this.chartsvalueto = _this.handleChartData(data);
-          //     _this.chartInit();
-          //   } else if (type == "se") {
-          //     _this.chartsvaluese = _this.handleChartData(data);
-          //   } else if (type == "th") {
-          //     _this.chartsvalueth = _this.handleChartData(data);
-          //   } else if (type == "fo") {
-          //     _this.chartsvaluefo = _this.handleChartData(data);
-          //   }
-          // }
+            // console.log(_this.tableData, "resss");
+          } else {
+            this.$message({
+              type: "error",
+              message: "请求失败"
+            });
+          }
         })
         .catch(reject => {
           console.log(reject);

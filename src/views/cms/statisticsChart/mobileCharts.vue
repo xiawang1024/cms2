@@ -1,6 +1,6 @@
 <template>
   <div class="mycharts">
-    <umengTitle :datavalue="datavalue" :timevalue="timevalue" />
+    <umengTitle :datavalue="datavalue" />
     <div class="dateselect">
       <div class="block">
         <el-date-picker
@@ -51,16 +51,18 @@ export default {
       endDate: "",
       periodType: "daily",
       date: "2019-05-01",
-      appkey: "5cbd29613fc19548f9000c25",
+      appkey: "",
       perPage: "15",
       page: "1",
       timevalue: [],
-      activeName: "first"
+      activeName: "first",
+      tenantId:'',
     };
   },
   created() {
     this.getTime();
-    
+    this.InitInfo();
+    this.initParams();
      this.Init();
    
   },
@@ -79,6 +81,11 @@ export default {
       this.endDate=year+'-'+((mon+1<10)?('0'+(mon+1)):(mon+1))+'-'+(day<10?('0'+day):day);
       this.timevalue=[this.startDate,this.endDate];
     },
+     InitInfo() {
+      this.tenantId = JSON.parse(
+        localStorage.getItem("BaseInfor")
+      ).clientLicenseId;
+    },
     Init() {
       
       this.fetchActiveUser();
@@ -89,6 +96,19 @@ export default {
       this.fetchNewUsers();
       this.fetchRetentions();
       this.fetchTotalUsers();
+    },
+     initParams(){
+      if(this.tenantId=='dxtv'){
+        
+        this.appkey= "5b15ff3bf43e4808920000a6";
+
+      }
+      if(this.tenantId=='nanyangradio'){
+        
+        this.appkey= "5cbd29613fc19548f9000c25";
+
+      }
+      
     },
     //请求数据umeng
     fetchActiveUser() {
