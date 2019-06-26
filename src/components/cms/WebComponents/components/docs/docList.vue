@@ -88,12 +88,12 @@
       <el-table-column prop="clickNum" label="点击" min-width="100"/>
       <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
-          <el-button v-if="checkAuth('cms:article:stick') && scope.row.topFlag == 1" type="text" size="small" @click.stop="setUntop(scope.row.articleId)">取消置顶</el-button>
-          <el-button v-if="checkAuth('cms:article:stick') && scope.row.topFlag !== 1" type="text" size="small" @click.stop="setTop(scope.row.articleId)">置顶</el-button>
-          <el-button v-if="checkAuth('cms:article:edit')" type="text" size="small" @click.stop="editDoc(scope.row)">编辑</el-button>
+          <el-button :disabled="scope.row.articleStatus == 1" v-if="checkAuth('cms:article:stick') && scope.row.topFlag == 1" type="text" size="small" @click.stop="setUntop(scope.row.articleId)">取消置顶</el-button>
+          <el-button :disabled="scope.row.articleStatus == 1" v-if="checkAuth('cms:article:stick') && scope.row.topFlag !== 1" type="text" size="small" @click.stop="setTop(scope.row.articleId)">置顶</el-button>
+          <el-button :disabled="scope.row.articleStatus == 1" v-if="checkAuth('cms:article:edit')" type="text" size="small" @click.stop="editDoc(scope.row)">编辑</el-button>
           <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">撤销</el-button>
           <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">审核</el-button> -->
-          <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">删除</el-button>
+          <el-button :disabled="scope.row.articleStatus == 1" v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
