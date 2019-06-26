@@ -24,21 +24,21 @@
                 <td class="rightLine">{{ dashdate.length==0?'--':dashdate[7][0] }}</td>
                 <td class="rightLine">{{ dashdate.length==0?'--':dashdate[7][1] }}</td>
                 <td class="rightLine">{{ dashdate.length==0?'--':dashdate[7][2] }}</td>
-                <td class="nonerightline">{{ dashdate.length==0?'--':((dashdate[7][3])*100) }}%</td>
+                <td class="nonerightline">{{ dashdate.length==0?'--':((dashdate[7][3])*100).toFixed(2) }}%</td>
               </tr>
               <tr class="heightSize">
                 <td class="normal">昨日</td>
                 <td class="rightLine">{{ dashdate.length==0?'--':dashdate[6][0] }}</td>
                 <td class="rightLine">{{ dashdate.length==0?'--':dashdate[6][1] }}</td>
                 <td class="rightLine">{{ dashdate.length==0?'--':dashdate[6][2] }}</td>
-                <td class="nonerightline">{{ dashdate.length==0?'--':((dashdate[6][3])*100) }}%</td>
+                <td class="nonerightline">{{ dashdate.length==0?'--':((dashdate[6][3])*100).toFixed(2) }}%</td>
               </tr>
               <tr class="heightSize">
                 <td class="normal">近七日</td>
                 <td class="rightLine">{{ sevendata==null?'--':sevendata[0] }}</td>
                 <td class="rightLine">{{ sevendata==null?'--':sevendata[1] }}</td>
                 <td class="rightLine">{{ sevendata==null?'--':sevendata[2] }}</td>
-                <td class="nonerightline">{{ sevendata==null?'--':((sevendata[3]*100)) }}%</td>
+                <td class="nonerightline">{{ sevendata==null?'--':((sevendata[3]*100).toFixed(2)) }}%</td>
               </tr>
             </tbody>
           </table>
@@ -228,22 +228,22 @@ export default {
         totalUsers: null
       },
       dashdate: [],
-      appkey: "5cbd29613fc19548f9000c25",
-      site_id: "13495008",
+      appkey: "",
+      site_id: "",
       sevendayAgo: "",
       today: "",
       requestParams: {
-        area: "china",
-        domain: "nydt.cn",
-        endDate: "20190624",
-        gran: "day",
-        maxResults: "0",
-        method: "overview/getTimeTrendRpt",
-        metrics: "pv_count,visitor_count,ip_count,bounce_ratio",
-        order: "",
-        siteId: "13495008",
-        source: "string",
-        startDate: "20190601"
+        // area: "china",
+        // domain: "nydt.cn",
+        // endDate: "20190624",
+        // gran: "day",
+        // maxResults: "0",
+        // method: "overview/getTimeTrendRpt",
+        // metrics: "pv_count,visitor_count,ip_count,bounce_ratio",
+        // order: "",
+        // siteId: "13495008",
+        // source: "string",
+        // startDate: "20190601"
       },
       tenantId: "",
       author: "",
@@ -253,6 +253,7 @@ export default {
   created() {
     this.timeInit();
     this.InitInfo();
+    this.initParams();
     this.fetchTrend();
     this.profile();
     this.authorTrend();
@@ -291,6 +292,46 @@ export default {
         localStorage.getItem("BaseInfor")
       ).clientLicenseId;
       this.author = JSON.parse(localStorage.getItem("BaseInfor")).userName;
+    },
+    //根据租户设置参数
+    initParams(){
+      if(this.tenantId=='dxtv'){
+        this.requestParams= {
+        area: "china",
+        domain: "hnr.cn",
+        endDate: "20190624",
+        gran: "day",
+        maxResults: "0",
+        method: "overview/getTimeTrendRpt",
+        metrics: "pv_count,visitor_count,ip_count,bounce_ratio",
+        order: "",
+        siteId: "1453193",
+        source: "string",
+        startDate: "20190601"
+        }
+        this.appkey= "5b15ff3bf43e4808920000a6";
+      this.site_id= "1453193";
+
+      }
+      if(this.tenantId=='nanyangradio'){
+        this.requestParams= {
+        area: "china",
+        domain: "nydt.cn",
+        endDate: "20190624",
+        gran: "day",
+        maxResults: "0",
+        method: "overview/getTimeTrendRpt",
+        metrics: "pv_count,visitor_count,ip_count,bounce_ratio",
+        order: "",
+        siteId: "13495008",
+        source: "string",
+        startDate: "20190601"
+        }
+        this.appkey= "5cbd29613fc19548f9000c25";
+      this.site_id= "13495008";
+
+      }
+      
     },
     timeInit() {
       let today = fun_date(0);
