@@ -350,8 +350,8 @@ export default {
         if (this.selectRow == 4) {
           this.addGroupAttribute.value = row.valuenumber;
           if (
-            this.addGroupAttribute.value == "" ||
-            this.addGroupAttribute.value == null
+            this.addGroupAttribute.value == null||this.addGroupAttribute.value.toString() == ""
+            
           ) {
             return this.$message({
               type: "error",
@@ -601,6 +601,7 @@ export default {
           });
       });
     },
+    
     handleEdit(a, b) {
       var _this = this;
       for (let i = 0; i < 3; i++) {
@@ -609,6 +610,28 @@ export default {
       for (let i = 3; i < 12; i++) {
         _this.formSettings[0].items[i].hidden = true;
       }
+      this.getDetailConfig(b.id);
+    },
+    //根据配置组属性id 查询配置
+    getDetailConfig(id){
+      var _this=this;
+      return new Promise((resolve,reject)=>{
+        getGroupAttributeBykvFieldId(id)
+        .then(response=>{
+          if(response.data.code==0){
+            console.log(response.data.code)
+            _this.showdetail(response.data.result)
+          }
+          resolve();
+        })
+        .catch(error=>{
+          reject(error)
+        })
+        
+      })
+    },
+    //回调配置写入
+    showdetail(b){
       this.formData = {};
       this.formData = {
         description: b.description,
