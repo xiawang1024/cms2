@@ -9,7 +9,7 @@ const path = `views/${cmsPath}/statisticsChart`
 const statisticsChart = {
   path: `/${cmsPath}/statisticsChart`,
   component: Layout,
-  meta: { title: 'statisticsChart', icon: 'tongji', role: 'cms:mobileCharts' },
+  meta: { title: 'statisticsChart', icon: 'tongji', role: 'cms:statisticCharts' },
   name: 'statisticsChart',
   children: [
    
@@ -38,7 +38,7 @@ const statisticsChart = {
         path: 'ArticleStatisticsByChanel',
         component: () => import(`@/${path}/ArticleStatisticsByChanel`),
         name: 'ArticleStatisticsByChanel',
-        meta: { title: 'ArticleStatisticsByChanel', icon: 'pindao', role: 'cms:pcSiteCharts', }
+        meta: { title: 'ArticleStatisticsByChanel', icon: 'pindao', role: 'cms:articleBychanel', }
       },
       
       {
@@ -48,7 +48,7 @@ const statisticsChart = {
         path: 'ArticleStatisticsByAuthor',
         component: () => import(`@/${path}/ArticleStatisticsByAuthor`),
         name: 'ArticleStatisticsByAuthor',
-        meta: { title: 'ArticleStatisticsByAuthor', icon: 'zuozhe', role: 'cms:pcSiteCharts', }
+        meta: { title: 'ArticleStatisticsByAuthor', icon: 'zuozhe', role: 'cms:articleByAuthor', }
       },
       
       {
@@ -58,7 +58,7 @@ const statisticsChart = {
         path: 'ArticleStatisticsByTenantId',
         component: () => import(`@/${path}/ArticleStatisticsByTenantId`),
         name: 'ArticleStatisticsByTenantId',
-        meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms:pcSiteCharts', }
+        meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms:articleByTenantId', }
       },
       
    
