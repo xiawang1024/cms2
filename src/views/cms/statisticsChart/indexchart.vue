@@ -229,7 +229,6 @@ export default {
       },
       dashdate: [],
       appkey: "",
-      site_id: "",
       sevendayAgo: "",
       today: "",
       requestParams: {
@@ -310,7 +309,6 @@ export default {
         startDate: "20190601"
         }
         this.appkey= "5b15ff3bf43e4808920000a6";
-      this.site_id= "1453193";
 
       }
       if(this.tenantId=='nanyangradio'){
@@ -328,7 +326,6 @@ export default {
         startDate: "20190601"
         }
         this.appkey= "5cbd29613fc19548f9000c25";
-      this.site_id= "13495008";
 
       }
       
