@@ -9,7 +9,8 @@ const path = `views/${cmsPath}/statisticsChart`
 const statisticsChart = {
   path: `/${cmsPath}/statisticsChart`,
   component: Layout,
-  meta: { title: 'statisticsChart', icon: 'tongji', role: 'cms:mobileCharts' },
+  meta: { title: 'statisticsChart', icon: 'tongji', role: 'cms:statisticCharts' },
+  // meta: { title: 'statisticsChart', icon: 'tongji', role: 'cms' },
   name: 'statisticsChart',
   children: [
    
@@ -21,6 +22,7 @@ const statisticsChart = {
       component: () => import(`@/${path}/mobileCharts`),
       name: 'mobileCharts',
       meta: { title: 'mobileCharts', icon: 'apponly', role: 'cms:mobileCharts' }
+      // meta: { title: 'mobileCharts', icon: 'apponly', role: 'cms' }
     },
     {
         /**
@@ -30,6 +32,7 @@ const statisticsChart = {
         component: () => import(`@/${path}/pcSiteCharts`),
         name: 'pcSiteCharts',
         meta: { title: 'pcSiteCharts', icon: 'pc', role: 'cms:pcSiteCharts', }
+        // meta: { title: 'pcSiteCharts', icon: 'pc', role: 'cms', }
       },
       {
         /**
@@ -38,7 +41,8 @@ const statisticsChart = {
         path: 'ArticleStatisticsByChanel',
         component: () => import(`@/${path}/ArticleStatisticsByChanel`),
         name: 'ArticleStatisticsByChanel',
-        meta: { title: 'ArticleStatisticsByChanel', icon: 'pindao', role: 'cms:pcSiteCharts', }
+        meta: { title: 'ArticleStatisticsByChanel', icon: 'pindao', role: 'cms:articleBychanel', }
+        // meta: { title: 'ArticleStatisticsByChanel', icon: 'pindao', role: 'cms', }
       },
       
       {
@@ -48,7 +52,8 @@ const statisticsChart = {
         path: 'ArticleStatisticsByAuthor',
         component: () => import(`@/${path}/ArticleStatisticsByAuthor`),
         name: 'ArticleStatisticsByAuthor',
-        meta: { title: 'ArticleStatisticsByAuthor', icon: 'zuozhe', role: 'cms:pcSiteCharts', }
+        meta: { title: 'ArticleStatisticsByAuthor', icon: 'zuozhe', role: 'cms:articleByAuthor', }
+        // meta: { title: 'ArticleStatisticsByAuthor', icon: 'zuozhe', role: 'cms', }
       },
       
       {
@@ -58,7 +63,8 @@ const statisticsChart = {
         path: 'ArticleStatisticsByTenantId',
         component: () => import(`@/${path}/ArticleStatisticsByTenantId`),
         name: 'ArticleStatisticsByTenantId',
-        meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms:pcSiteCharts', }
+        meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms:articleByTenantId', }
+        // meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms', }
       },
       
    

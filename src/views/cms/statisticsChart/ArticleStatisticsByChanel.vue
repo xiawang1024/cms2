@@ -11,7 +11,7 @@
             v-for="(item,index) in chanelList"
             :command="item.value"
             :key="index"
-          >{{ item.label }}</el-dropdown-item>
+          >{{ item.key }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -100,7 +100,8 @@ export default {
             if (response.data.code == 0) {
               let result = response.data.result;
               _this.chanelList = result;
-              _this.channelId=_this.chanelList[0].value
+              _this.channelId=_this.chanelList[0].value;
+              _this.nowChanel=_this.chanelList[0].key;
             }
           })
           .catch(reject => {
@@ -224,7 +225,7 @@ export default {
       this.channelId = command;
       this.chanelList.forEach(item => {
         if (item.value == command) {
-          this.nowChanel = item.label;
+          this.nowChanel = item.key;
         }
       });
       this.Init();

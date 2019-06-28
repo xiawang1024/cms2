@@ -35,6 +35,7 @@
       </el-table-column>
     </el-table>
     <el-pagination
+      class="pagenation"
       :current-page="pageNo"
       :page-sizes="[10,30,60,100]"
       :page-size="pageSize"
@@ -314,5 +315,8 @@ export default {
 <style lang="scss" scoped>
 .helpdoc-container {
   margin: 30px;
+}
+.pagenation{
+  margin: 30px 0;
 }
 </style>

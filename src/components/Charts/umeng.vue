@@ -122,25 +122,25 @@ export default {
           {
             name: "新增用户",
             type: "line",
-            stack: "总量",
+            // stack: "总量",
             data: _this.chartsvalue.newUser
           },
           {
             name: "活跃用户",
             type: "line",
-            stack: "总量",
+            // stack: "总量",
             data: _this.chartsvalue.activeUserInfo
           },
           {
             name: "启动次数",
             type: "line",
-            stack: "总量",
+            // stack: "总量",
             data: _this.chartsvalue.launchInfo
           },
           {
             name: "累计用户",
             type: "line",
-            stack: "总量",
+            // stack: "总量",
             data: _this.chartsvalue.totalUser
           }
         ]

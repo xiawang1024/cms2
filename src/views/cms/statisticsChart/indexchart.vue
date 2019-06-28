@@ -5,7 +5,7 @@
         <div class="titleright">
           <h4>pc端统计</h4>
           <p>
-            <span @click="showpc">查看详情>></span>
+            <span @click="showpc" v-if="checkAuth('cms:live:detail')" >查看详情>></span>
           </p>
         </div>
         <!--  -->
@@ -24,21 +24,21 @@
                 <td class="rightLine">{{ dashdate.length==0?'--':dashdate[7][0] }}</td>
                 <td class="rightLine">{{ dashdate.length==0?'--':dashdate[7][1] }}</td>
                 <td class="rightLine">{{ dashdate.length==0?'--':dashdate[7][2] }}</td>
-                <td class="nonerightline">{{ dashdate.length==0?'--':((dashdate[7][3])*100).toFixed(2) }}%</td>
+                <td class="nonerightline">{{ dashdate.length==0?'--':(dashdate[7][3]).toFixed(2) }}%</td>
               </tr>
               <tr class="heightSize">
                 <td class="normal">昨日</td>
                 <td class="rightLine">{{ dashdate.length==0?'--':dashdate[6][0] }}</td>
                 <td class="rightLine">{{ dashdate.length==0?'--':dashdate[6][1] }}</td>
                 <td class="rightLine">{{ dashdate.length==0?'--':dashdate[6][2] }}</td>
-                <td class="nonerightline">{{ dashdate.length==0?'--':((dashdate[6][3])*100).toFixed(2) }}%</td>
+                <td class="nonerightline">{{ dashdate.length==0?'--':(dashdate[6][3]).toFixed(2) }}%</td>
               </tr>
               <tr class="heightSize">
                 <td class="normal">近七日</td>
                 <td class="rightLine">{{ sevendata==null?'--':sevendata[0] }}</td>
                 <td class="rightLine">{{ sevendata==null?'--':sevendata[1] }}</td>
                 <td class="rightLine">{{ sevendata==null?'--':sevendata[2] }}</td>
-                <td class="nonerightline">{{ sevendata==null?'--':((sevendata[3]*100).toFixed(2)) }}%</td>
+                <td class="nonerightline">{{ sevendata==null?'--':((sevendata[3]).toFixed(2)) }}%</td>
               </tr>
             </tbody>
           </table>
@@ -49,7 +49,7 @@
         <div class="titleright">
           <h4>移动端统计</h4>
           <p>
-            <span @click="showMobile">查看详情>></span>
+            <span @click="showMobile" v-if="checkAuth('cms:live:detail')" >查看详情>></span>
           </p>
         </div>
 
@@ -67,11 +67,11 @@
             </div>
             <div class="smallbox">
               <p class="mytitle">活跃用户（7日平均）</p>
-              <h3>{{ datavalue.activeUserWeekLast!=null?datavalue.activeUserWeekLast:'--' }}</h3>
+              <h3>{{ datavalue.activeUserAverage7!=null?datavalue.activeUserAverage7.toFixed(0):'--' }}</h3>
               <p>
                 同比
-                <span>{{ datavalue.activeUserWeekChangePre!=null?(datavalue.activeUserWeekChangePre*100).toFixed(2):'--' }}%</span>
-                <span v-if="datavalue.activeUserWeekChangePre>0" class="redarrow">↑</span>
+                <span>{{ datavalue.activeUserChangePre!=null?(datavalue.activeUserChangePre*100).toFixed(2):'--' }}%</span>
+                <span v-if="datavalue.activeUserChangePre>0" class="redarrow">↑</span>
                 <span v-else class="greenarrow">↓</span>
               </p>
             </div>
@@ -89,7 +89,7 @@
             </div>
             <div class="smallbox">
               <p class="mytitle">使用时长（7日平均）</p>
-              <h3>{{ datavalue.durationAverage7!=null?datavalue.durationAverage7.toFixed(2):'--' }}</h3>
+              <h3>{{ datavalue.durationAverage7!=null?(datavalue.durationAverage7.toFixed(2) ):'--'|computedTime }}</h3>
               <p>
                 同比
                 <span>{{ datavalue.durationChangePre!=null?(datavalue.durationChangePre*100).toFixed(2):'--' }}%</span>
@@ -207,6 +207,40 @@ import {
 } from "@/api/cms/liveCharts";
 // import articleTitle from "@/components/Charts/articleTitle.vue";
 export default {
+  filters:{
+    computedTime(val){
+      let data='--'
+      if(val!='--'){
+        //  function formatSeconds(value) { 
+   var theTime = parseInt(val);// 秒 
+   var theTime1 = 0;// 分 
+   var theTime2 = 0;// 小时 
+  // alert(theTime); 
+   if(theTime > 60) { 
+      theTime1 = parseInt(theTime/60); 
+      theTime = parseInt(theTime%60); 
+      // alert(theTime1+"-"+theTime); 
+      if(theTime1 > 60) { 
+         theTime2 = parseInt(theTime1/60); 
+         theTime1 = parseInt(theTime1%60); 
+       } 
+   } 
+       var result = ""+(parseInt(theTime)<10?'0'+parseInt(theTime):parseInt(theTime)); 
+       if(theTime1 >= 0) { 
+       result = ""+(parseInt(theTime1)<10?'0'+parseInt(theTime1):parseInt(theTime1))+':'+result; 
+       } 
+       if(theTime2 >= 0) { 
+       result = ""+(parseInt(theTime2)<10?'0'+parseInt(theTime2):parseInt(theTime2))+':'+result; 
+       } 
+      //  return result; 
+  //  }
+   data=result
+      
+      }
+     
+      return data
+    }
+  },
   data() {
     return {
       datavalue: {},
@@ -260,7 +294,13 @@ export default {
   mounted() {},
   methods: {
 
-
+    checkAuth (authKey) {
+      if (this.$store.getters.authorities.indexOf(authKey) === -1) {
+        return false
+      } else {
+        return true
+      }
+    },
     showpc() {
       this.$router.push({
         path: "/cms/statisticsChart/pcSiteCharts"
@@ -294,23 +334,23 @@ export default {
     },
     //根据租户设置参数
     initParams(){
-      if(this.tenantId=='dxtv'){
-        this.requestParams= {
-        area: "china",
-        domain: "hnr.cn",
-        endDate: "20190624",
-        gran: "day",
-        maxResults: "0",
-        method: "overview/getTimeTrendRpt",
-        metrics: "pv_count,visitor_count,ip_count,bounce_ratio",
-        order: "",
-        siteId: "1453193",
-        source: "string",
-        startDate: "20190601"
-        }
-        this.appkey= "5b15ff3bf43e4808920000a6";
+      // if(this.tenantId=='dxtv'){
+      //   this.requestParams= {
+      //   area: "china",
+      //   domain: "hnr.cn",
+      //   endDate: "20190624",
+      //   gran: "day",
+      //   maxResults: "0",
+      //   method: "overview/getTimeTrendRpt",
+      //   metrics: "pv_count,visitor_count,ip_count,bounce_ratio",
+      //   order: "",
+      //   siteId: "1453193",
+      //   source: "string",
+      //   startDate: "20190601"
+      //   }
+      //   this.appkey= "5b15ff3bf43e4808920000a6";
 
-      }
+      // }
       if(this.tenantId=='nanyangradio'){
         this.requestParams= {
         area: "china",
