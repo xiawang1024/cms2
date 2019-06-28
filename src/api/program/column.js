@@ -8,9 +8,9 @@ export function fetchList(query) {
   })
 }
 
-export function fetchColumnNames(channelId) {
+export function findColumnList(channelId) {
   return request({
-    url: '/system/column/findNameList',
+    url: '/system/column/findColumnList',
     method: 'get',
     params: {channelId}
   })
