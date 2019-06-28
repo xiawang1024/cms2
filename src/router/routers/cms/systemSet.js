@@ -199,7 +199,9 @@ const systemSet = {
       meta: { title: 'appPages', icon: 'appConfig', role: 'cms' },
       hidden:true
       
-    }
+    },
+    
+    
   ]
 }
 
