@@ -151,6 +151,8 @@ export default {
       }
       // 存储封面图片
       if(oldVal == 'coverPic') {
+        console.log('coverPic')
+        console.log(this.$refs.imageForm.formModel.contentImagesList)
         this.$store.dispatch('setCoverList', this.$refs.imageForm.formModel.contentImagesList)
       }
     }
