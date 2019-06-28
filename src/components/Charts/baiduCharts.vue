@@ -106,19 +106,19 @@ export default {
           {
             name: "浏览次数",
             type: "line",
-            stack: "总量",
+            // stack: "总量",
             data: _this.chartsvalue[0]
           },
           {
             name: "访客数",
             type: "line",
-            stack: "总量",
+            // stack: "总量",
             data: _this.chartsvalue[1]
           },
           {
             name: "ip数",
             type: "line",
-            stack: "总量",
+            // stack: "总量",
             data: _this.chartsvalue[2]
           }
         ]

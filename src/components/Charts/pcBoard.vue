@@ -17,21 +17,21 @@
           <td class="rightLine">{{ dashdate.length==0?'--':dashdate[7][0] }}</td>
           <td class="rightLine">{{ dashdate.length==0?'--':dashdate[7][1] }}</td>
           <td class="rightLine">{{ dashdate.length==0?'--':dashdate[7][2] }}</td>
-          <td class="nonerightline">{{ dashdate.length==0?'--':((dashdate[7][3])*100 ).toFixed(2) }}%</td>
+          <td class="nonerightline">{{ dashdate.length==0?'--':(dashdate[7][3] ).toFixed(2) }}%</td>
         </tr>
         <tr>
           <td class="normal">昨日</td>
           <td class="rightLine">{{ dashdate.length==0?'--':dashdate[6][0] }}</td>
           <td class="rightLine">{{ dashdate.length==0?'--':dashdate[6][1] }}</td>
           <td class="rightLine">{{ dashdate.length==0?'--':dashdate[6][2] }}</td>
-          <td class="nonerightline">{{ dashdate.length==0?'--':((dashdate[6][3])*100).toFixed(2) }}%</td>
+          <td class="nonerightline">{{ dashdate.length==0?'--':(dashdate[6][3]).toFixed(2) }}%</td>
         </tr>
         <tr>
           <td class="normal">近七日</td>
           <td class="rightLine">{{ sevendata==null?'--':sevendata[0] }}</td>
           <td class="rightLine">{{ sevendata==null?'--':sevendata[1] }}</td>
           <td class="rightLine">{{ sevendata==null?'--':sevendata[2] }}</td>
-          <td class="nonerightline">{{ sevendata==null?'--':((sevendata[3])*100).toFixed(2) }}%</td>
+          <td class="nonerightline">{{ sevendata==null?'--':(sevendata[3]).toFixed(2) }}%</td>
         </tr>
       </tbody>
     </table>
