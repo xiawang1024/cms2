@@ -161,6 +161,10 @@
                 <el-input type="text" v-model="testData.title"/>
               </li>
               <li class="smiltextinput">
+                <label>发布时间：</label>
+                <el-input type="text" v-model="testData.creatTime"/>
+              </li>
+              <li class="smiltextinput">
                 <label>来源：</label>
                 <el-input type="text" v-model="testData.form"/>
               </li>
@@ -564,13 +568,13 @@ export default {
                 _this.testData = response.data.data;
               } else {
                 _this.loading = false;
-                alert("请求失败");
+                // alert("请求失败");
               }
               resolve();
             })
             .catch(reject => {
               _this.loading = false;
-              alert(reject);
+              // alert(reject);
             });
         });
       }
@@ -833,6 +837,7 @@ button:active {
   opacity: 0.8;
 }
 .smiltextinput {
+  margin-top: 5px;
   width: 526px;
   padding: 0 0;
   resize: none;
@@ -842,6 +847,7 @@ button:active {
   min-height: 400px !important;
 }
 .topaside {
+  margin-top: 5px;
   overflow: hidden;
 }
 .el-row {
