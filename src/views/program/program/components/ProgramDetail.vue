@@ -332,6 +332,17 @@ export default {
       findColumnList(channelId).then(response => {
         // this.columnNamesOptions = [...this.columnNamesOptions, ...response.data.result];
         this.columnListOptions = response.data.result;
+
+        this.programs.forEach((item,index)=>{
+          this.columnListOptions.forEach((ele,order)=>{
+            console.log(ele.columnName, item.title)
+            if(ele.columnName==item.title){
+              this.programs[index].logo=JSON.parse(ele.columnInfo).logo
+              this.programs[index].compere_str=JSON.parse(ele.columnInfo).compere_str
+            }
+          })
+        })
+
       })
     },
     fetchData(id) {
@@ -346,8 +357,11 @@ export default {
           this.$set(this.postForm, 'endTime', response.data.result.endtime*1000)
         }
         this.programs = JSON.parse(response.data.result.programlistInfo);
-        
         this.getColumnList(this.postForm.channelId)
+
+        
+          
+
         this.loading = false
        
 
