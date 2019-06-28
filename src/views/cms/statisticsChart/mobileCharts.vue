@@ -41,7 +41,7 @@ export default {
       //uemng
       datavalue: {},
       chartsvalue:{
-        newUser:[],
+        // newUser:[],
         // activeUserInfo:[],
         // launchInfo:[],
         // totalUser:[],
@@ -98,11 +98,11 @@ export default {
       this.fetchTotalUsers();
     },
      initParams(){
-      if(this.tenantId=='dxtv'){
+      // if(this.tenantId=='dxtv'){
         
-        this.appkey= "5b15ff3bf43e4808920000a6";
+      //   this.appkey= "5b15ff3bf43e4808920000a6";
 
-      }
+      // }
       if(this.tenantId=='nanyangradio'){
         
         this.appkey= "5cbd29613fc19548f9000c25";
@@ -124,7 +124,9 @@ export default {
           .then(response => {
              if(response.data.code==0){
               let result=JSON.parse(response.data.result)
+
                 _this.$set(this.chartsvalue,'activeUserInfo',_this.formateDate(result.activeUserInfo))
+                
               // _this.chartsvalue.activeUserInfo=_this.formateDate(result.activeUserInfo)
             }
             
@@ -230,7 +232,7 @@ export default {
               let result=response.data.result;
               let allUser=[];
               Object.values(result).forEach((item)=>{
-                allUser.push(parseInt(item))
+                allUser.push(parseInt(item.value))
                
               })
               _this.$set(this.chartsvalue,'totalUser',allUser)

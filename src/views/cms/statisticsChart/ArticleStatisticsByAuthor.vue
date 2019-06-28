@@ -11,7 +11,7 @@
             v-for="(item,index) in authorList"
             :command="item.value"
             :key="index"
-          >{{ item.label }}</el-dropdown-item>
+          >{{ item.key }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -83,6 +83,7 @@ export default {
         localStorage.getItem("BaseInfor")
       ).clientLicenseId;
       this.author = JSON.parse(localStorage.getItem("BaseInfor")).userName;
+      this.nowAuthor=this.author;
       this.getAuthorList();
     },
     Init() {
@@ -220,7 +221,7 @@ export default {
       this.author = command;
       this.authorList.forEach(item => {
         if (item.value == command) {
-          this.nowAuthor = item.label;
+          this.nowAuthor = item.key;
         }
       });
       this.Init();
