@@ -11,7 +11,7 @@
       <el-form-item>
         <el-button type="success" size="mini" @click="handelCheck('1')">通过</el-button>
         <el-button type="danger" size="mini" @click="handelCheck('2')">拒绝</el-button>
-        <el-button type="primary" size="mini" @click="handelCheck('3')">返回上一级</el-button>
+        <el-button type="primary" size="mini" @click="handelCheck('3')" v-if="rowData.auditLevel !==1">返回上一级</el-button>
       </el-form-item>
     </el-form>
     <!-- <span slot="footer" class="dialog-footer">
