@@ -114,6 +114,13 @@
               </li>
               <li>
                 <label>
+                  发布时间
+                  <span class="redTip">*</span>
+                </label>
+                <el-input name="contentrule" v-model="res.creatTime" type="text" class="dfinput"/>
+              </li>
+              <li>
+                <label>
                   编码
                   <span class="redTip">*</span>
                 </label>
@@ -152,6 +159,10 @@
               <li class="smiltextinput">
                 <label>标题：</label>
                 <el-input type="text" v-model="testData.title"/>
+              </li>
+              <li class="smiltextinput">
+                <label>发布时间：</label>
+                <el-input type="text" v-model="testData.creatTime"/>
               </li>
               <li class="smiltextinput">
                 <label>来源：</label>
@@ -244,6 +255,7 @@ export default {
         newsRule: "",
         titleRule: "",
         contentRule: "",
+        creatTime:"",
         formRule: "",
         encoding: "",
         formStandby: "",
@@ -265,6 +277,7 @@ export default {
         newsRule: "",
         titleRule: "",
         contentRule: "",
+        creatTime:"",
         formRule: "",
         encoding: "",
         formStandby: "",
@@ -295,6 +308,7 @@ export default {
         newsRule: "",
         titleRule: "",
         contentRule: "",
+        creatTime:'',
         formRule: "",
         encoding: "",
         formStandby: "",
@@ -400,6 +414,7 @@ export default {
                 newsRule: "",
                 titleRule: "",
                 contentRule: "",
+                creatTime:'',
                 formRule: "",
                 encoding: "",
                 formStandby: "",
@@ -420,6 +435,7 @@ export default {
                   newsRule: "",
                   titleRule: "",
                   contentRule: "",
+                  creatTime:'',
                   formRule: "",
                   encoding: "",
                   formStandby: "",
@@ -467,6 +483,10 @@ export default {
       }
       if (this.res.contentRule == "" || this.res.contentRule == null) {
         alert("正文标签不能为空");
+        return false;
+      }
+      if ( this.res.creatTime == null||this.res.creatTime.toString() == "" ) {
+        alert("发布时间不能为空");
         return false;
       }
       if (this.res.encoding == "" || this.res.encoding == null) {
@@ -530,6 +550,7 @@ export default {
           newsrule: this.res.newsRule,
           titlerule: this.res.titleRule,
           contentrule: this.res.contentRule,
+          creatTime:this.res.creatTime,
           formrule: this.res.formRule,
           encoding: this.res.encoding,
           clientLicenseId: this.clientLicenseId,
@@ -547,13 +568,13 @@ export default {
                 _this.testData = response.data.data;
               } else {
                 _this.loading = false;
-                alert("请求失败");
+                // alert("请求失败");
               }
               resolve();
             })
             .catch(reject => {
               _this.loading = false;
-              alert(reject);
+              // alert(reject);
             });
         });
       }
@@ -578,6 +599,7 @@ export default {
           newsrule: this.res.newsRule,
           titlerule: this.res.titleRule,
           contentrule: this.res.contentRule,
+          creatTime:this.res.creatTime,
           formrule: this.res.formRule,
           encoding: this.res.encoding,
           clientLicenseId: this.clientLicenseId,
@@ -630,6 +652,7 @@ export default {
           newsrule: this.res.newsRule,
           titlerule: this.res.titleRule,
           contentrule: this.res.contentRule,
+          creatTime:this.res.creatTime,
           formrule: this.res.formRule,
           encoding: this.res.encoding,
           clientLicenseId: this.clientLicenseId,
@@ -814,6 +837,7 @@ button:active {
   opacity: 0.8;
 }
 .smiltextinput {
+  margin-top: 5px;
   width: 526px;
   padding: 0 0;
   resize: none;
@@ -823,6 +847,7 @@ button:active {
   min-height: 400px !important;
 }
 .topaside {
+  margin-top: 5px;
   overflow: hidden;
 }
 .el-row {

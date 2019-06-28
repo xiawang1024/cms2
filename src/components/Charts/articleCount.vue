@@ -122,25 +122,25 @@ export default {
           {
             name: "每日发稿量",
             type: "line",
-            stack: "总量",
+            // stack: "总量",
             data: _this.chartsvalue.articleCountDaily
           },
           {
             name: "每日点击数",
             type: "line",
-            stack: "总量",
+            // stack: "总量",
             data: _this.chartsvalue.clickNumDaily
           },
           {
             name: "发稿总数",
             type: "line",
-            stack: "总量",
+            // stack: "总量",
             data: _this.chartsvalue.articleCount
           },
           {
             name: "点击总数",
             type: "line",
-            stack: "总量",
+            // stack: "总量",
             data: _this.chartsvalue.clickNum
           }
         ]

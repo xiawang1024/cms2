@@ -15,11 +15,11 @@
           </div>
           <div class="smallbox">
             <p class="mytitle">活跃用户（7日平均）</p>
-            <h3>{{ datavalue.activeUserWeekLast!=null?datavalue.activeUserWeekLast:'--' }}</h3>
+            <h3>{{ datavalue.activeUserAverage7!=null?datavalue.activeUserAverage7.toFixed(0):'--' }}</h3>
             <p>
               同比
-              <span>{{ datavalue.activeUserWeekChangePre!=null?(datavalue.activeUserWeekChangePre*100).toFixed(2):'--' }}%</span>
-              <span v-if="datavalue.activeUserWeekChangePre>0" class="redarrow">↑</span>
+              <span>{{ datavalue.activeUserChangePre!=null?(datavalue.activeUserChangePre*100).toFixed(2):'--' }}%</span>
+              <span v-if="datavalue.activeUserChangePre>0" class="redarrow">↑</span>
               <span v-else class="greenarrow">↓</span>
             </p>
           </div>
@@ -37,7 +37,7 @@
           </div>
           <div class="smallbox">
             <p class="mytitle">使用时长（7日平均）</p>
-            <h3>{{ datavalue.durationAverage7!=null?datavalue.durationAverage7.toFixed(2):'--' }}</h3>
+            <h3>{{ datavalue.durationAverage7!=null?datavalue.durationAverage7.toFixed(2):'--'|computedTime }}</h3>
             <p>
               同比
               <span>{{ datavalue.durationChangePre!=null?(datavalue.durationChangePre*100).toFixed(2):'--' }}%</span>
@@ -93,6 +93,41 @@
 </template>
 <script>
 export default {
+   filters:{
+    computedTime(val){
+      let data='--'
+      if(val!='--'){
+        //  function formatSeconds(value) { 
+   var theTime = parseInt(val);// 秒 
+   var theTime1 = 0;// 分 
+   var theTime2 = 0;// 小时 
+  // alert(theTime); 
+   if(theTime > 60) { 
+      theTime1 = parseInt(theTime/60); 
+      theTime = parseInt(theTime%60); 
+      // alert(theTime1+"-"+theTime); 
+      if(theTime1 > 60) { 
+         theTime2 = parseInt(theTime1/60); 
+         theTime1 = parseInt(theTime1%60); 
+       } 
+   } 
+       var result = ""+(parseInt(theTime)<10?'0'+parseInt(theTime):parseInt(theTime)); 
+       if(theTime1 >= 0) { 
+       result = ""+(parseInt(theTime1)<10?'0'+parseInt(theTime1):parseInt(theTime1))+':'+result; 
+       } 
+       if(theTime2 >= 0) { 
+       result = ""+(parseInt(theTime2)<10?'0'+parseInt(theTime2):parseInt(theTime2))+':'+result; 
+       } 
+      //  return result; 
+  //  }
+   data=result
+      
+      }
+     
+      return data
+    }
+  },
+
   props: {
    
     datavalue: {
