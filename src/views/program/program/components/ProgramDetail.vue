@@ -85,7 +85,7 @@
         <!-- 节目单start -->
         <div style="margin-top: 30px" class="form-dynamic">
           <span>节目排单</span>
-          <el-row v-for="(item) in programs" :key="item.key">
+          <el-row v-for="(item,index) in programs" :key="item.key">
             <el-col :span="2">
               <el-form-item>
                 <span class="demonstration">开始时间</span>
@@ -115,8 +115,8 @@
             <el-col :span="2" style="margin-left: 5px; width: 180px">
               <el-form-item>
                 <span class="demonstration">选择栏目</span>
-                <el-select v-model="item.title" filterable placeholder="可输入关键字">
-                  <el-option v-for="(item1, index) in columnNamesOptions" :key="index" :label="item1.column_name" :value="item1.column_name"/>
+                <el-select v-model="item.title" filterable @change="((val)=>{selectProgram(val, index)})" placeholder="可输入关键字">
+                  <el-option v-for="item1 in columnListOptions" :key="item1.columnName" :label="item1.columnName" :value="item1.columnName"/>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -164,7 +164,7 @@
 
 <script>
 import { fetchChannelAll } from '@/api/program/channel'
-import { fetchColumnNames } from '@/api/program/column'
+import { findColumnList } from '@/api/program/column'
 import { fetchProgram, createProgram } from '@/api/program/program'
 import MDinput from '@/components/MDinput'
 import Vue from 'vue'
@@ -267,8 +267,10 @@ export default {
         end: '',
         playtype: '',
         vodstatus: '',
+        logo: '',
+        compereStr: ''
       }],
-      columnNamesOptions: [],
+      columnListOptions: [],
       formData: {
         pageIndex: 0,
         pageSize: 70,
@@ -311,7 +313,6 @@ export default {
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       this.fetchData(id)
-      this.getColumnNames()
       // this.postForm.startTime = 1554220800 *1000
     }
   },
@@ -326,11 +327,11 @@ export default {
         this.channelOptions = response.data.result;
       })
     },
-    getColumnNames(channelId) {
+    getColumnList(channelId) {
       // let userid = this.$store.getters.tenantId
-      fetchColumnNames(channelId).then(response => {
+      findColumnList(channelId).then(response => {
         // this.columnNamesOptions = [...this.columnNamesOptions, ...response.data.result];
-        this.columnNamesOptions = response.data.result;
+        this.columnListOptions = response.data.result;
       })
     },
     fetchData(id) {
@@ -344,9 +345,11 @@ export default {
           this.switchstate = true
           this.$set(this.postForm, 'endTime', response.data.result.endtime*1000)
         }
-        this.programs = JSON.parse(response.data.result.programlistInfo)
+        this.programs = JSON.parse(response.data.result.programlistInfo);
+        
+        this.getColumnList(this.postForm.channelId)
         this.loading = false
-        this.getColumnNames(this.postForm.channelId)
+       
 
       }).catch(err => {
         console.log(err)
@@ -415,7 +418,18 @@ export default {
           return item.channel_id === vId        //筛选出匹配数据
       });
       this.postForm.channel_name = obj.channel_name
-      this.getColumnNames(this.postForm.channelId)
+      this.getColumnList(this.postForm.channelId)
+   },
+   //获取select
+    selectProgram(cname, index) {
+      
+      let obj1 = {}
+      obj1 = this.columnListOptions.find((item)=>{   //这里的options就是上面遍历的数据源
+          return item.columnName === cname           //筛选出匹配数据
+      });
+      this.programs[index].title = obj1.columnName
+      this.programs[index].logo = JSON.parse(obj1.columnInfo).logo
+      this.programs[index].compere_str = JSON.parse(obj1.columnInfo).compere_str
    },
     setRange(range) {
      if(range == "workday"){
@@ -443,6 +457,8 @@ export default {
         end: '',
         playtype: '',
         vodstatus: '',
+        logo: '',
+        compereStr: ''
       });
     },
     back() {

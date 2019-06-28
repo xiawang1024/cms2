@@ -73,6 +73,10 @@ export const otherSettings = [
           {
             label: '视频形式',
             value: 8
+          },
+          {
+            label: '专题',
+            value: 9
           }
         ]
       },
@@ -152,6 +156,10 @@ export const defultItems = [
       {
         label: '视频形式',
         value: 8
+      },
+      {
+        label: '专题',
+        value: 9
       }
     ]
   }
@@ -269,6 +277,10 @@ export const imagesSeting = [
           {
             label: '视频形式',
             value: 8
+          },
+          {
+            label: '专题',
+            value: 9
           }
         ]
       },
@@ -372,6 +384,10 @@ export const reproduceSetting = [
           {
             label: '视频形式',
             value: 8
+          },
+          {
+            label: '专题',
+            value: 9
           }
         ]
       },

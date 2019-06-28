@@ -63,6 +63,7 @@ export default {
   watch: {
     columnAll(val) {
       this.tableData = val
+     
       this.barSet()
     }
   },
