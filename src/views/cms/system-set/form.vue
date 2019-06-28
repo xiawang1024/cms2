@@ -114,6 +114,13 @@
               </li>
               <li>
                 <label>
+                  发布时间
+                  <span class="redTip">*</span>
+                </label>
+                <el-input name="contentrule" v-model="res.creatTime" type="text" class="dfinput"/>
+              </li>
+              <li>
+                <label>
                   编码
                   <span class="redTip">*</span>
                 </label>
@@ -244,6 +251,7 @@ export default {
         newsRule: "",
         titleRule: "",
         contentRule: "",
+        creatTime:"",
         formRule: "",
         encoding: "",
         formStandby: "",
@@ -265,6 +273,7 @@ export default {
         newsRule: "",
         titleRule: "",
         contentRule: "",
+        creatTime:"",
         formRule: "",
         encoding: "",
         formStandby: "",
@@ -295,6 +304,7 @@ export default {
         newsRule: "",
         titleRule: "",
         contentRule: "",
+        creatTime:'',
         formRule: "",
         encoding: "",
         formStandby: "",
@@ -400,6 +410,7 @@ export default {
                 newsRule: "",
                 titleRule: "",
                 contentRule: "",
+                creatTime:'',
                 formRule: "",
                 encoding: "",
                 formStandby: "",
@@ -420,6 +431,7 @@ export default {
                   newsRule: "",
                   titleRule: "",
                   contentRule: "",
+                  creatTime:'',
                   formRule: "",
                   encoding: "",
                   formStandby: "",
@@ -467,6 +479,10 @@ export default {
       }
       if (this.res.contentRule == "" || this.res.contentRule == null) {
         alert("正文标签不能为空");
+        return false;
+      }
+      if ( this.res.creatTime == null||this.res.creatTime.toString() == "" ) {
+        alert("发布时间不能为空");
         return false;
       }
       if (this.res.encoding == "" || this.res.encoding == null) {
@@ -530,6 +546,7 @@ export default {
           newsrule: this.res.newsRule,
           titlerule: this.res.titleRule,
           contentrule: this.res.contentRule,
+          creatTime:this.res.creatTime,
           formrule: this.res.formRule,
           encoding: this.res.encoding,
           clientLicenseId: this.clientLicenseId,
@@ -578,6 +595,7 @@ export default {
           newsrule: this.res.newsRule,
           titlerule: this.res.titleRule,
           contentrule: this.res.contentRule,
+          creatTime:this.res.creatTime,
           formrule: this.res.formRule,
           encoding: this.res.encoding,
           clientLicenseId: this.clientLicenseId,
@@ -630,6 +648,7 @@ export default {
           newsrule: this.res.newsRule,
           titlerule: this.res.titleRule,
           contentrule: this.res.contentRule,
+          creatTime:this.res.creatTime,
           formrule: this.res.formRule,
           encoding: this.res.encoding,
           clientLicenseId: this.clientLicenseId,
