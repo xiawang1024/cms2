@@ -20,6 +20,7 @@
         <template>
           <el-table :data="tableData" stripe style="width: 100%" height="400">
             <el-table-column prop="area" label="地域" width="180"/>
+            <el-table-column prop="start_time" label="访问时间" />
             <el-table-column prop="source" label="来源"/>
             <el-table-column prop="access_page" label="入口页面"/>
             <el-table-column prop="ip" label="ip"/>
@@ -146,9 +147,9 @@ export default {
           area: "china",
           domain: "nydt.cn",
           maxResults: "0",
-          metrics: "area,source,visit_time,visit_pages,access_page,ip",
+          metrics: "area,source,visit_time,visit_pages,access_page,ip,start_time",
           method: "trend/latest/a",
-          order: "visit_pages, desc",
+          order: "start_time, desc",
           siteId: "13495008",
           source: "through"
         };
@@ -298,13 +299,16 @@ export default {
       let newArr = [];
       val.forEach(item => {
         newArr.push({
-          area: item[0],
-          source: item[1].fromType,
+          start_time:item[0],
+          area: item[1],
+          source: item[2].fromType,
           keyword: null, //无返回值，暂写为空
-          access_page: item[2],
-          ip: item[3],
-          visit_time: item[4],
-          visit_pages: item[5]
+          access_page: item[3],
+          ip: item[4],
+          visit_time: item[5],
+          visit_pages: item[6],
+          
+          
         });
       });
       return newArr;

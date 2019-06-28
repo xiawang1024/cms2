@@ -225,7 +225,7 @@ export default {
       this.channelId = command;
       this.chanelList.forEach(item => {
         if (item.value == command) {
-          this.nowChanel = item.label;
+          this.nowChanel = item.key;
         }
       });
       this.Init();
