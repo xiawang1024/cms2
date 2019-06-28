@@ -115,8 +115,8 @@
             <el-col :span="2" style="margin-left: 5px; width: 180px">
               <el-form-item>
                 <span class="demonstration">选择栏目</span>
-                <el-select v-model="programRusult[index]" filterable @change="selectProgram(index)" placeholder="可输入关键字">
-                  <el-option v-for="item1 in columnListOptions" :key="item1.columnId" :label="item1.columnName" :value="item1"/>
+                <el-select v-model="item.title" filterable @change="((val)=>{selectProgram(val, index)})" placeholder="可输入关键字">
+                  <el-option v-for="item1 in columnListOptions" :key="item1.columnName" :label="item1.columnName" :value="item1.columnName"/>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -270,7 +270,6 @@ export default {
         logo: '',
         compereStr: ''
       }],
-      programRusult:[],
       columnListOptions: [],
       formData: {
         pageIndex: 0,
@@ -347,27 +346,7 @@ export default {
           this.$set(this.postForm, 'endTime', response.data.result.endtime*1000)
         }
         this.programs = JSON.parse(response.data.result.programlistInfo);
-        //回显节目单-------------start----------------------------
-        (this.programs || []).forEach(item => {
-          let programObj = {
-            columnName: '',
-            columnInfo: ''
-          }
-          let columnInfoObj = {
-            title: '',
-            logo: '',
-            compere_str: ''
-          }
-          this.columnInfoObj = Object.assign({}, this.columnInfoObj, {title:item.title})
-          this.columnInfoObj = Object.assign({}, this.columnInfoObj, {logo:item.logo})
-          this.columnInfoObj = Object.assign({}, this.columnInfoObj, {compere_str:item.compere_str})
-          this.programObj = Object.assign({}, this.programObj, {columnName:item.title})
-          this.programObj = Object.assign({}, this.programObj, {columnInfo:JSON.stringify(this.columnInfoObj)})
-          this.programRusult.push(this.programObj)
-        });
-        //回显节目单-------------end----------------------------
         
-          console.log(this.programRusult,'programRusult')
         this.getColumnList(this.postForm.channelId)
         this.loading = false
        
@@ -442,12 +421,15 @@ export default {
       this.getColumnList(this.postForm.channelId)
    },
    //获取select
-    selectProgram(index) {
-      console.log(this.programRusult[index], 'aaaaaaaaaa')
-      let result=JSON.parse(this.programRusult[index].columnInfo)
-      this.programs[index].title = this.programRusult[index].columnName
-      this.programs[index].logo = result.logo
-      this.programs[index].compereStr = result.compere_str
+    selectProgram(cname, index) {
+      
+      let obj1 = {}
+      obj1 = this.columnListOptions.find((item)=>{   //这里的options就是上面遍历的数据源
+          return item.columnName === cname           //筛选出匹配数据
+      });
+      this.programs[index].title = obj1.columnName
+      this.programs[index].logo = JSON.parse(obj1.columnInfo).logo
+      this.programs[index].compere_str = JSON.parse(obj1.columnInfo).compere_str
    },
     setRange(range) {
      if(range == "workday"){
