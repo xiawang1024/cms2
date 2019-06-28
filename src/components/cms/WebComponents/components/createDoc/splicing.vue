@@ -258,12 +258,11 @@ export default {
         } else {
           if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
             resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
-            resoultObj.coverImagesList =this.getDocInformation.coverImagesList
+           
           } else {
             resoultObj.articleAttachmentsList = []
           }
-          // resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
-          // resoultObj.coverImagesList =this.getDocInformation.coverImagesList
+          resoultObj.coverImagesList =this.getDocInformation.coverImagesList
           this.createDoc(resoultObj, saveType)
         }
       })

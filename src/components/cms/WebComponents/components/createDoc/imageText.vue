@@ -364,6 +364,7 @@ export default {
     },
     save(formName, publishType, saveType) {
       console.log(this.extendsList, 'this.extendsList.')
+      console.log(this.getDocInformation, 'this.getDocInformation')
       // this.$refs.otherForm.updateRule()
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       // 获取扩展字段的值
@@ -443,15 +444,14 @@ export default {
                   resoultObj.articleAttachmentsList = this.docInfor.articleAttachmentsList
                 }
                 resoultObj.articleId = this.contextMenu.docId
-                console.log(resoultObj.articleAttachmentsList, 'resoultObj.articleAttachmentsList')
                 this.editDoc(resoultObj, saveType)
               } else {
                 if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
                   resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
-                  resoultObj.coverImagesList =this.getDocInformation.coverImagesList
                 } else {
                   resoultObj.articleAttachmentsList = []
                 }
+                resoultObj.coverImagesList =this.getDocInformation.coverImagesList
                 this.createDoc(resoultObj, saveType)
               }
             }).catch(err => {
