@@ -14,9 +14,30 @@
         />
       </div>
     </div>
-   
-    <umeng id="mycharts1" height="450px" width="100%" :timevalue="timevalue" :chartsvalue="chartsvalue" />
-
+    <el-row>
+      <el-col :span="11">
+        <div class="grid-content bg-purple">
+          <umeng
+            id="mycharts1"
+            height="450px"
+            width="100%"
+            :timevalue="timevalue"
+            :chartsvalue="IosChartsValue"
+          />
+        </div>
+      </el-col>
+      <el-col :span="11" >
+        <div class="grid-content bg-purple-light">
+          <umeng
+            id="mycharts2"
+            height="450px"
+            width="100%"
+            :timevalue="timevalue"
+            :chartsvalue="androidChartsValue"
+          />
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
@@ -26,10 +47,10 @@ import umengTitle from "@/components/Charts/umengTitleBoard.vue";
 import {
   getActiveUser,
   getAppList,
-  getDurations,
+  // getDurations,
   getLaunches,
   getNewUsers,
-  getRetentions,
+  // getRetentions,
   getTotalUsers,
   getTrend
 } from "@/api/cms/liveCharts";
@@ -40,97 +61,120 @@ export default {
     return {
       //uemng
       datavalue: {},
-      chartsvalue:{
+      IosChartsValue: {
         // newUser:[],
         // activeUserInfo:[],
         // launchInfo:[],
         // totalUser:[],
-
+      },
+      androidChartsValue: {
+        // newUser:[],
+        // activeUserInfo:[],
+        // launchInfo:[],
+        // totalUser:[],
       },
       startDate: "",
       endDate: "",
       periodType: "daily",
       date: "2019-05-01",
-      appkey: "",
+      IosAppKey: "",
       perPage: "15",
       page: "1",
       timevalue: [],
       activeName: "first",
-      tenantId:'',
+      tenantId: ""
     };
   },
   created() {
     this.getTime();
     this.InitInfo();
     this.initParams();
-     this.Init();
-   
+    this.Init();
   },
-  mounted(){
-   
-    
-  },
+  mounted() {},
   methods: {
-
-    getTime(){
-      let date=new Date();
-      let year=date.getFullYear('yyyy')
-      let mon=date.getMonth('MM');
-      let day=date.getDate('dd');
-      this.startDate=year+'-'+(mon<10?('0'+mon):mon)+'-'+((day-1<10)?('0'+(day-1)):(day-1));
-      this.endDate=year+'-'+((mon+1<10)?('0'+(mon+1)):(mon+1))+'-'+(day<10?('0'+day):day);
-      this.timevalue=[this.startDate,this.endDate];
+    getTime() {
+      let date = new Date();
+      let year = date.getFullYear("yyyy");
+      let mon = date.getMonth("MM");
+      let day = date.getDate("dd");
+      this.startDate =
+        year +
+        "-" +
+        (mon < 10 ? "0" + mon : mon) +
+        "-" +
+        (day - 1 < 10 ? "0" + (day - 1) : day - 1);
+      this.endDate =
+        year +
+        "-" +
+        (mon + 1 < 10 ? "0" + (mon + 1) : mon + 1) +
+        "-" +
+        (day < 10 ? "0" + day : day);
+      
+      this.timevalue = [this.startDate, this.endDate];
     },
-     InitInfo() {
+    InitInfo() {
       this.tenantId = JSON.parse(
         localStorage.getItem("BaseInfor")
       ).clientLicenseId;
     },
     Init() {
-      
-      this.fetchActiveUser();
+      this.fetchActiveUser(this.IosAppKey ,'Ios');
+      this.fetchActiveUser(this.androidAppKey ,'android');
       this.fetchAppList();
       this.fetchTrend();
-      this.fetchDurations();
-      this.fetchLaunches();
-      this.fetchNewUsers();
-      this.fetchRetentions();
-      this.fetchTotalUsers();
+      // this.fetchDurations();
+      this.fetchLaunches(this.IosAppKey ,'Ios');
+      this.fetchLaunches(this.androidAppKey ,'android');
+      this.fetchNewUsers(this.IosAppKey ,'Ios');
+      this.fetchNewUsers(this.androidAppKey ,'android');
+      // this.fetchRetentions();
+      this.fetchTotalUsers(this.IosAppKey ,'Ios');
+      this.fetchTotalUsers(this.androidAppKey ,'android');
     },
-     initParams(){
+    initParams() {
       // if(this.tenantId=='dxtv'){
-        
-      //   this.appkey= "5b15ff3bf43e4808920000a6";
+
+      //   this.IosAppKey= "5b15ff3bf43e4808920000a6";
 
       // }
-      if(this.tenantId=='nanyangradio'){
-        
-        this.appkey= "5cbd29613fc19548f9000c25";
-
+      if (this.tenantId == "nanyangradio") {
+        this.IosAppKey = "5cbd29613fc19548f9000c25";
+        this.androidAppKey = "	5cc5930e4ca357f82b00083c";
       }
-      
     },
     //请求数据umeng
-    fetchActiveUser() {
+    fetchActiveUser(appkey,type) {
       return new Promise((resolve, reject) => {
-        var _this=this;
+        var _this = this;
         let data = {
-          appkey: this.appkey,
+          appkey:appkey,
           startDate: this.startDate,
           endDate: this.endDate,
           periodType: this.periodType
         };
         getActiveUser(data)
           .then(response => {
-             if(response.data.code==0){
-              let result=JSON.parse(response.data.result)
+            if (response.data.code == 0) {
+              let result = JSON.parse(response.data.result);
+              if(type=='android'){
+                 _this.$set(
+                this.androidChartsValue,
+                "activeUserInfo",
+                _this.formateDate(result.activeUserInfo)
+              );
 
-                _this.$set(this.chartsvalue,'activeUserInfo',_this.formateDate(result.activeUserInfo))
-                
-              // _this.chartsvalue.activeUserInfo=_this.formateDate(result.activeUserInfo)
+              }else if(type=='Ios'){
+                 _this.$set(
+                this.IosChartsValue,
+                "activeUserInfo",
+                _this.formateDate(result.activeUserInfo)
+              );
+
+              }
+             
+              // _this.IosChartsValue.activeUserInfo=_this.formateDate(result.activeUserInfo)
             }
-            
-            
           })
           .catch(reject => {
             console.log(reject);
@@ -140,8 +184,7 @@ export default {
     fetchAppList() {
       return new Promise((resolve, reject) => {
         getAppList(this.page, this.perPage)
-          .then(response => {
-          })
+          .then(response => {})
           .catch(reject => {
             console.log(reject);
           });
@@ -151,7 +194,7 @@ export default {
     // fetchDailyData() {
     //   let sevenAgo=fun_date(-7);
     //   console.log(sevenAgo,'sevenAgo')
-      
+
     //   var _this = this;
     //   return new Promise((resolve, reject) => {
     //     getDailyData(this.appkey, this.date)
@@ -165,25 +208,39 @@ export default {
     //       });
     //   });
     // },
-    fetchDurations() {
+    // fetchDurations() {
+    //   return new Promise((resolve, reject) => {
+    //     getDurations(this.IosAppKey, this.date, this.periodType)
+    //       .then(response => {})
+    //       .catch(reject => {
+    //         console.log(reject);
+    //       });
+    //   });
+    // },
+    fetchLaunches(appkey,type) {
+      var _this = this;
       return new Promise((resolve, reject) => {
-        getDurations(this.appkey, this.date, this.periodType)
+        getLaunches(appkey, this.startDate, this.endDate, this.periodType)
           .then(response => {
-          })
-          .catch(reject => {
-            console.log(reject);
-          });
-      });
-    },
-    fetchLaunches() {
-      var _this=this;
-      return new Promise((resolve, reject) => {
-        getLaunches(this.appkey, this.startDate, this.endDate, this.periodType)
-          .then(response => {
-             if(response.data.code==0){
-              let result=JSON.parse(response.data.result)
-               _this.$set(this.chartsvalue,'launchInfo',_this.formateDate(result.launchInfo))
-              // _this.chartsvalue.launchInfo=_this.formateDate(result.launchInfo)
+            if (response.data.code == 0) {
+              let result = JSON.parse(response.data.result);
+              
+              if(type=='android'){
+                 _this.$set(
+                this.androidChartsValue,
+                "launchInfo",
+                _this.formateDate(result.launchInfo)
+              );
+
+              }else if(type=='Ios'){
+                 _this.$set(
+                this.IosChartsValue,
+               "launchInfo",
+                _this.formateDate(result.launchInfo)
+              );
+
+              }
+              // _this.IosChartsValue.launchInfo=_this.formateDate(result.launchInfo)
             }
           })
           .catch(reject => {
@@ -191,52 +248,29 @@ export default {
           });
       });
     },
-    fetchNewUsers() {
-      var _this=this;
+    fetchNewUsers(appkey,type) {
+      var _this = this;
       return new Promise((resolve, reject) => {
-        getNewUsers(this.appkey, this.startDate, this.endDate, this.periodType)
+        getNewUsers(appkey, this.startDate, this.endDate, this.periodType)
           .then(response => {
-            if(response.data.code==0){
-              let result=JSON.parse(response.data.result)
-              _this.$set(this.chartsvalue,'newUser',_this.formateDate(result.newUserInfo))
-              // _this.chartsvalue.newUser=_this.formateDate(result.newUserInfo)
-            }
-            
-          })
-          .catch(reject => {
-            console.log(reject);  
-          });
-      });
-    },
-    fetchRetentions() {
-      return new Promise((resolve, reject) => {
-        getRetentions(
-          this.appkey,
-          this.startDate,
-          this.endDate,
-          this.periodType
-        )
-          .then(response => {
-          })
-          .catch(reject => {
-            console.log(reject);
-          });
-      });
-    },
-    fetchTotalUsers() {
-      var _this=this;
-      return new Promise((resolve, reject) => {
-        getTotalUsers(this.appkey, this.startDate, this.endDate)
-          .then(response => {
-            if(response.data.code==0){
-              let result=response.data.result;
-              let allUser=[];
-              Object.values(result).forEach((item)=>{
-                allUser.push(parseInt(item.value))
-               
-              })
-              _this.$set(this.chartsvalue,'totalUser',allUser)
-              // _this.chartsvalue.totalUser=allUser;
+            if (response.data.code == 0) {
+              let result = JSON.parse(response.data.result);
+              if(type=='android'){
+                 _this.$set(
+                this.androidChartsValue,
+                "newUser",
+                _this.formateDate(result.newUserInfo)
+              );
+
+              }else if(type=='Ios'){
+                 _this.$set(
+                this.IosChartsValue,
+               "newUser",
+                _this.formateDate(result.newUserInfo)
+              );
+
+              }
+              // _this.IosChartsValue.newUser=_this.formateDate(result.newUserInfo)
             }
           })
           .catch(reject => {
@@ -244,14 +278,61 @@ export default {
           });
       });
     },
-      fetchTrend() {
-      var _this=this;
+    // fetchRetentions() {
+    //   return new Promise((resolve, reject) => {
+    //     getRetentions(
+    //       this.IosAppKey,
+    //       this.startDate,
+    //       this.endDate,
+    //       this.periodType
+    //     )
+    //       .then(response => {})
+    //       .catch(reject => {
+    //         console.log(reject);
+    //       });
+    //   });
+    // },
+    fetchTotalUsers(appkey,type) {
+      var _this = this;
       return new Promise((resolve, reject) => {
-        getTrend(this.appkey)
+        getTotalUsers(appkey, this.startDate, this.endDate)
           .then(response => {
-            if(response.data.code==0){
-              let result=response.data.result;
-              _this.datavalue=result;
+            if (response.data.code == 0) {
+              let result = response.data.result;
+              let allUser = [];
+              Object.values(result).forEach(item => {
+                allUser.push(parseInt(item.value));
+              });
+              _this.$set(this.IosChartsValue, "totalUser", allUser);
+              // _this.IosChartsValue.totalUser=allUser;
+              if(type=='android'){
+                 _this.$set(
+                this.androidChartsValue,
+                "totalUser", allUser
+              );
+
+              }else if(type=='Ios'){
+                 _this.$set(
+                this.IosChartsValue,
+               "totalUser", allUser
+              );
+
+              }
+            }
+          })
+          .catch(reject => {
+            console.log(reject);
+          });
+      });
+    },
+    fetchTrend() {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        getTrend(this.IosAppKey)
+          .then(response => {
+            if (response.data.code == 0) {
+              let result = response.data.result;
+              _this.datavalue = result;
               //-------------------------------
             }
           })
@@ -261,26 +342,23 @@ export default {
       });
     },
 
-    
     //
 
     getNewData() {
       //获取时间区间数据
 
       //获取新增用户数
-      this.fetchNewUsers()
-
+      this.fetchNewUsers();
     },
     handleClick(tab, event) {
       //获取切换区间数据
-
     },
     // 数据处理
-    formateDate(value){
-      let result=[];
-      value.forEach((item)=>{
-        result.push(item.value)
-      })
+    formateDate(value) {
+      let result = [];
+      value.forEach(item => {
+        result.push(item.value);
+      });
       return result;
     }
   }
@@ -295,12 +373,12 @@ export default {
   box-sizing: border-box;
 }
 .dateselect {
- padding: 15px 0 15px 40px;
+  padding: 15px 0 15px 40px;
 }
 /deep/.el-date-editor .el-range-separator {
-    padding: 0 0px;
-    line-height: 32px;
-    width: 5%;
-    color: #303133;
+  padding: 0 0px;
+  line-height: 32px;
+  width: 5%;
+  color: #303133;
 }
 </style>

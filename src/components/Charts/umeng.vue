@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div :class="className" :id="id" :style="{height:height,width:width}"/>
+  <div class="chartBox">
+    <div :class="className" :id="id" :style="{height:height,width:width }"/>
   </div>
 </template>
 
@@ -113,7 +113,11 @@ export default {
         xAxis: {
           type: "category",
           boundaryGap: false,
-          data: this.xdate
+          data: this.xdate,
+          axisLabel:{
+            insterval:0,
+            rotate:-50,
+          }
         },
         yAxis: {
           type: "value"
@@ -188,5 +192,6 @@ export default {
 };
 </script>
 <style scoped lang='scss'>
+
 </style>
 

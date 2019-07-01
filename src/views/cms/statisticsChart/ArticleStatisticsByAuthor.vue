@@ -1,8 +1,8 @@
 <template>
   <div class="mycharts">
     <div class="tool-bar">
-      <el-dropdown size="mini" @command="handleCommand">
-        <el-button size="mini" type="primary" :disabled="authorList.length==0">
+      <el-dropdown size="mini" @command="handleCommand" v-if="checkAuth('cms:charts:author')">
+        <el-button size="mini" type="primary" :disabled="authorList.length==0" >
           {{ nowAuthor }}
           <i class="el-icon-arrow-down el-icon--right"/>
         </el-button>
@@ -250,7 +250,14 @@ export default {
         "-" +
         (day < 10 ? "0" + day : day);
       this.timevalue = [this.startDate, this.endDate];
-    }
+    },
+    checkAuth (authKey) {
+      if (this.$store.getters.authorities.indexOf(authKey) === -1) {
+        return false
+      } else {
+        return true
+      }
+    },
   }
 };
 </script>

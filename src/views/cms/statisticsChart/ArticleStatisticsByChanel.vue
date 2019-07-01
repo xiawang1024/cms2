@@ -1,7 +1,7 @@
 <template>
   <div class="mycharts">
     <div class="tool-bar">
-      <el-dropdown size="mini" @command="handleCommand">
+      <el-dropdown size="mini" @command="handleCommand" v-if="checkAuth('cms:charts:channel')" >
         <el-button size="mini" type="primary" :disabled="chanelList.length==0">
           {{ nowChanel }}
           <i class="el-icon-arrow-down el-icon--right"/>
@@ -254,7 +254,14 @@ export default {
         "-" +
         (day < 10 ? "0" + day : day);
       this.timevalue = [this.startDate, this.endDate];
-    }
+    },
+    checkAuth (authKey) {
+      if (this.$store.getters.authorities.indexOf(authKey) === -1) {
+        return false
+      } else {
+        return true
+      }
+    },
   }
 };
 </script>
