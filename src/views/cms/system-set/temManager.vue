@@ -134,7 +134,7 @@ export default {
 }
 
 .tem-manager-container {
-  margin: 30px;
+ 
 }
 
 .tool-bar {

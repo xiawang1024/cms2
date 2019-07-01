@@ -1,6 +1,6 @@
 <template>
   <div class="column-template-manage">
-    <div class="el-card__header">
+    <div class="v-search-header">
       <v-search :search-settings="searchSettings" @search="searchItem" ref="vSearch"/>
     </div>
     <div class="tool-bar">
@@ -50,7 +50,7 @@
     <v-page :visible.sync="showPage" @goBack="goBack">
       <h3 slot="title">{{ title }}</h3>
       <template slot="content">
-        <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave">
+        <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" label-width="80px">
           <template slot="templateContent">
             <div class="model-content">
               <el-row>
@@ -333,8 +333,7 @@ export default {
 <style lang='scss'>
 .column-template-manage {
   .tool-bar {
-    margin-top:20px;
-    margin-bottom:20px;
+    margin-top:10px;
     text-align: left;
     padding-left:8px;
   }

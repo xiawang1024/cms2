@@ -40,7 +40,7 @@
       </div>
     </div>
 
-    <div class="el-card__header">
+    <div class="v-search-header">
       <v-search :search-settings="searchSettings" @search="searchItem"/>
     </div>
     <div class="tool-bar">
@@ -538,7 +538,7 @@ return 'height:70px'
 }
 
 
-  margin: 30px;
+  // margin: 30px;
 
   .pagination {
     margin-top: 20px;

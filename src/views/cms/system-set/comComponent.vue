@@ -134,7 +134,7 @@ export default {
 }
 
 .com-component-container {
-  margin: 30px;
+
 }
 
 .tool-bar {

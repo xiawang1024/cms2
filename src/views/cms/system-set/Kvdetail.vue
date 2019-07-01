@@ -747,7 +747,7 @@ export default {
 </script>
   <style scoped>
 .helpdoc-container {
-  margin: 30px;
+ 
 }
 .tool-bar {
   text-align: right;

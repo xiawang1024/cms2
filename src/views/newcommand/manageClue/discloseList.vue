@@ -34,7 +34,7 @@
         <span class="auditBtnSpan">{{ discloseStatenum[2] }}</span> )
       </div>
     </div>
-    <div class="el-card__header">
+    <div class="v-search-header">
       <v-search :search-settings="searchSettings" @search="searchItem"/>
     </div>
     <div class="tool-bar">
@@ -504,7 +504,7 @@ export default {
 .auditBtnSpan {
   color: rgb(240, 72, 68);
 }
-  margin: 30px;
+  // margin: 30px;
   .pagination {
     margin-top: 20px;
     margin-bottom: 20px;

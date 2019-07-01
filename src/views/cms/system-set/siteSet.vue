@@ -1,6 +1,6 @@
 <template>
   <div class="site-set-container">
-    <div class="tool-bar">
+    <div class="handel-title">
       <el-button size="mini" type="primary" @click="handleAddDialog()">新增</el-button>
     </div>
     <el-table :data="dictObj.details" style="width: 100%">
@@ -250,7 +250,7 @@ export default {
   }
   /* liyu */
     box-sizing: border-box;
-    margin: 30px;
+    /* margin: 30px; */
     .el-table{
       .el-input__inner{
         height:32px;

@@ -489,7 +489,7 @@ export default {
   }
    margin: 30px;
   .tool-bar {
-    margin-top:22px;
+    margin-top:10px;
   }
 }
 </style>

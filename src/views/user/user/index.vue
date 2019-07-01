@@ -1,7 +1,7 @@
 <template>
   <div class="components-container">
     <!-- 根据 buttonArray 中的 click 参数，对外暴露监听其中的方法，并在当前页面中监听并实现对应的业务 -->
-    <div class="el-card__header">
+    <div class="v-search-header">
       <v-search :search-settings="searchSettings" @search="search"/>
     </div>
     <div class="handel-btn">

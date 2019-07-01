@@ -792,7 +792,7 @@ a {
   width: 650px;
 }
 .formBox {
-  margin-left: 20px;
+ 
 }
 .formbody {
   position: relative;

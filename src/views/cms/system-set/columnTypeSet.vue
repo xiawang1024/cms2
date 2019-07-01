@@ -186,7 +186,7 @@ export default {
 }
 
 .columnType-container {
-  margin: 30px;
+
 }
 
 .tool-bar {

@@ -124,7 +124,7 @@ export default {
 }
 
 .helpdoc-container {
-  margin: 30px;
+ 
 }
 
 .tool-bar {

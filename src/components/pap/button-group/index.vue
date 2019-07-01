@@ -1,5 +1,5 @@
 <template>
-	<el-row style="margin-top: 6px; float: right;">
+	<el-row >
 		<el-button size="mini" style="margin-left:5px"  v-for="(buttoninfo,index) in buttonArray" v-if="authCheck(buttoninfo.auth) && (buttoninfo.details === undefined || buttoninfo.details.length === 0)" :key='index'
       :buttoninfo='buttoninfo' :type="buttoninfo.type ? buttoninfo.type : 'primary'" :icon="buttoninfo.icon" :disabled=buttoninfo.disabled @click="onSubmit(buttoninfo.click)"
 		>{{buttoninfo.name}}

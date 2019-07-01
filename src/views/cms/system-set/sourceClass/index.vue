@@ -3,7 +3,7 @@
     <!-- <div class="el-card__header">
       <v-search :search-settings="searchSettings" @search="searchItem"/>
     </div> -->
-    <div class="tool-bar">
+    <div class="handel-title">
       <el-button type="primary" @click="handelSource('add')" size="mini">添加</el-button>
     </div>
     <div class="tree-column title-bottom">
@@ -281,7 +281,7 @@ export default {
 
 <style lang='scss'>
 .source-class {
-  margin:30px;
+  // margin:30px;
   .el-tree-node__content {
     height: 32px;
     border-bottom: 1px solid #ebeef5;

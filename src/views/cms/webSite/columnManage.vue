@@ -1,6 +1,6 @@
 <template>
   <div class="column-manage">
-    <div class="el-card__header">
+    <div class="v-search-header">
       <v-search :search-settings="searchSettings" @search="searchItem"/>
     </div>
     <div class="tool-bar">
@@ -340,9 +340,9 @@ export default {
 
 <style lang='scss'>
 .column-manage {
-  margin:30px;
+  // margin:30px;
   .tool-bar {
-    margin-top:18px;
+    margin-top:10px;
     margin-bottom:0px;
     text-align: left;
     padding-left:5px;

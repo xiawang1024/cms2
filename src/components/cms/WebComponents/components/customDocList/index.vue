@@ -1,7 +1,7 @@
 <template>
   <div class="define-doucment">
     <div class="add-btn">
-      <el-button type="primary" size="small" @click="handelDoc()">创建文档列表</el-button>
+      <el-button type="primary" size="mini" @click="handelDoc()">创建文档列表</el-button>
     </div>
     <div>
       <table-list :list="createdList" @handelSuccess = "getDefineArticleList" @editDoc="handelDoc"/>
@@ -9,7 +9,7 @@
     <v-page :visible.sync="addPage" @goBack="goBack">
       <h3 slot="title">{{ title }}</h3>
       <template slot="content">
-        <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave">
+        <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" label-width="80px">
           <template slot="list">
             <div class="choosed-list">
               <choosed-list ref="choosedList" :details-list = "detailsList"/>
@@ -219,7 +219,7 @@ export default {
 <style lang="scss">
   .define-doucment{
     .add-btn {
-      margin-bottom:20px;
+      // margin-bottom:20px;
     }
     .v-form{
       max-width: 1100px;

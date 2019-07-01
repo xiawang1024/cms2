@@ -1,6 +1,6 @@
 <template>
   <div class="class-manage">
-    <div class="el-card__header">
+    <div class="v-search-header">
       <v-search :search-settings="searchSettings" @search="searchItem"/>
     </div>
     <div class="tool-bar">
@@ -159,7 +159,7 @@ export default {
 </script>
 <style lang='scss'>
 .class-manage {
-  margin:30px;
+  // margin:30px;
   .tool-bar {
     margin-top:22px;
   }

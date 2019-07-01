@@ -417,10 +417,10 @@ export default {
   margin-left: 0px;
 }
 .kvBox {
-  margin: 30px;
+ 
 }
 .helpdoc-container {
-  margin: 30px;
+
 }
 
 .tool-bar {

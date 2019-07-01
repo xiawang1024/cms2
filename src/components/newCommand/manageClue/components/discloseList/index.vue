@@ -32,7 +32,7 @@
       </div>
     </div>
 
-    <div class="el-card__header">
+    <div class="v-search-header">
       <v-search :search-settings="searchSettings" @search="searchItem"/>
     </div>
     <div class="tool-bar">

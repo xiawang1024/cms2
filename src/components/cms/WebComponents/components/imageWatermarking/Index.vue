@@ -1,6 +1,6 @@
 <template>
   <div class="doc-water-setting">
-    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" :btn-loading = "isLoading">
+    <v-form label-width="80px" ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" :btn-loading = "isLoading">
       <template slot="coner">
         <div class="location-box">
           <el-button
@@ -223,9 +223,7 @@ export default {
     }
   }
 }
-.tool-bar {
-  text-align: right;
-}
+
 .title {
   color: #454545;
   padding: 10px 0;

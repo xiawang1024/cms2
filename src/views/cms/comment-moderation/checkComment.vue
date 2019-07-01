@@ -526,7 +526,7 @@ export default {
 </script>
 <style scoped>
 .helpdoc-container {
-  margin: 30px;
+ 
 }
 .rightAside {
   float: right;

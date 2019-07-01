@@ -729,7 +729,7 @@ export default {
 </script>
 <style scoped>
 .box {
-  margin: 30px;
+ 
 }
 .tool-bar {
   text-align: right;
