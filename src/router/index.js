@@ -16,13 +16,14 @@ import webSite from './routers/cms/webSite'
 import systemSet from './routers/cms/systemSet'
 // import systemStatus from './routers/cms/systemStatus'
 import personAndAuthor from './routers/cms/personAndAuthor'
-import checkSetting from './routers/cms/checkSetting'
-import articleCheck from './routers/cms/articleCheck'
+// 配置和文章审核
+// import checkSetting from './routers/cms/checkSetting'
+// import articleCheck from './routers/cms/articleCheck'
 // import extensions from './routers/cms/extensions'
 import commentModeration from './routers/cms/commentModeration'
 import statisticsChart from './routers/cms/statisticsChart'
 // const cmsRouterMap = [webSite, systemSet, personAndAuthor,commentModeration]
-const cmsRouterMap = [webSite, systemSet, personAndAuthor, checkSetting, articleCheck, commentModeration,statisticsChart]
+const cmsRouterMap = [webSite, systemSet, personAndAuthor, commentModeration,statisticsChart]
 
 /**
  * 用户中心系统路由
