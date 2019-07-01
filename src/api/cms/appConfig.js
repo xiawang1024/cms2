@@ -5,9 +5,9 @@ import request from "@/utils/request";
 // let Cpath = 'http://172.20.5.103:55001'
 // let Cpath = 'http://gw.test.dianzhenkeji.com' //测试环境
 // let Cpath = 'http://gw.dianzhenkeji.com' //北京正式环境
-// let Cpath = 'http://192.168.7.40:53006'
+let Cpath = 'http://192.168.7.40:53006'
 // let Cpath='http://10.50.7.11:53001'
-var Cpath = "";
+// var Cpath = "";
 
 //app配置
 
@@ -32,7 +32,7 @@ export function searchAappinfo(pageNo, pageSize, data) {
       Cpath +
       `/appinfoconfig/appinfo/queryAppInfo?tenantId=${data.tenantId}&name=${
         data.appName
-      }&version=${data.version}&description=${data.description}&IOSURL=${
+      }&version=${data.version}&versionIOS=${data.versionIOS}&description=${data.description}&IOSURL=${
         data.IOSURL
       }&androidURL=${data.androidURL}&sort=${
         data.sort

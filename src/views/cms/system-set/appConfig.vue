@@ -397,8 +397,16 @@ export default {
               placeholder: "请输入app名字"
             },
             {
-              label: "版本",
+              label: "Android版本",
               name: "version",
+              type: "text",
+              valueType: "string",
+              disabled: false,
+              placeholder: "请输入版本号"
+            },
+            {
+              label: "IOS版本",
+              name: "versionIOS",
               type: "text",
               valueType: "string",
               disabled: false,
@@ -584,7 +592,7 @@ export default {
           tenantId: this.currentUser,
           ...res
         };
-
+        console.log(this.searchData,'aaaa')
         this.seracrAppList(this.pageNo, this.pageSize, this.searchData);
       }
       this.dialogVisible = false;
