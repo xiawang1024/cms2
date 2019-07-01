@@ -5,9 +5,9 @@ import request from "@/utils/request";
 // let Cpath = 'http://172.20.5.103:55001'
 // let Cpath = 'http://gw.test.dianzhenkeji.com' //测试环境
 // let Cpath = 'http://gw.dianzhenkeji.com' //北京正式环境
-// let Cpath = 'http://192.168.7.40:53006'
+let Cpath = 'http://192.168.7.40:53006'
 // let Cpath='http://10.50.7.11:53001'
-var Cpath = "";
+// var Cpath = "";
 
 //app配置
 
@@ -50,7 +50,7 @@ export function updateAppInfo(data) {
       Cpath +
       `/appinfoconfig/appinfo/updateAppInfo?id=${data.id}&tenantId=${
         data.tenantId
-      }&name=${data.appName}&version=${data.version}&description=${
+      }&name=${data.appName}&version=${data.version}&versionIOS=${data.versionIOS}&description=${
         data.description
       }&startingImage=${data.startingImage}&icon=${data.icon}&IOSURL=${
         data.IOSURL
@@ -64,15 +64,15 @@ export function updateAppInfo(data) {
 
 //删除app信息
 
-export function deleteAppInfo(id) {
-  return request({
-    url: Cpath + "/appinfoconfig/appinfo/deleteAppInfo?id=" + id,
-    method: "delete",
-    loadingConfig: {
-      noLoading: true
-    }
-  });
-}
+// export function deleteAppInfo(id) {
+//   return request({
+//     url: Cpath + "/appinfoconfig/appinfo/deleteAppInfo?id=" + id,
+//     method: "delete",
+//     loadingConfig: {
+//       noLoading: true
+//     }
+//   });
+// }
 
 //查询app
 export function findAppInfoById(id) {
@@ -85,31 +85,16 @@ export function findAppInfoById(id) {
   });
 }
 
+
 //添加app信息
 
 export function addAppInfo(data) {
   return request({
     url:
       Cpath +
-      "/appinfoconfig/appinfo/addAppInfo?tenantId=" +
-      data.tenantId +
-      "&name=" +
-      data.appName +
-      "&version=" +
-      data.version +
-      "&description=" +
-      data.description +
-      "&startingImage=" +
-      data.startingImage +
-      "&icon=" +
-      data.icon +
-      "&IOSURL=" +
-      data.IOSURL +
-      "&androidURL=" +
-      data.androidURL +
-      "&sort=" +
-      data.sort,
+      "/appinfoconfig/appinfo/addAppInfo" ,
     method: "post",
+    data:data,
     loadingConfig: {
       noLoading: true
     }
