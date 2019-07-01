@@ -32,7 +32,7 @@ export function searchAappinfo(pageNo, pageSize, data) {
       Cpath +
       `/appinfoconfig/appinfo/queryAppInfo?tenantId=${data.tenantId}&name=${
         data.appName
-      }&version=${data.version}&description=${data.description}&IOSURL=${
+      }&version=${data.version}&versionIOS=${data.versionIOS}&description=${data.description}&IOSURL=${
         data.IOSURL
       }&androidURL=${data.androidURL}&sort=${
         data.sort
@@ -50,7 +50,7 @@ export function updateAppInfo(data) {
       Cpath +
       `/appinfoconfig/appinfo/updateAppInfo?id=${data.id}&tenantId=${
         data.tenantId
-      }&name=${data.appName}&version=${data.version}&description=${
+      }&name=${data.appName}&version=${data.version}&versionIOS=${data.versionIOS}&description=${
         data.description
       }&startingImage=${data.startingImage}&icon=${data.icon}&IOSURL=${
         data.IOSURL
@@ -64,15 +64,15 @@ export function updateAppInfo(data) {
 
 //删除app信息
 
-export function deleteAppInfo(id) {
-  return request({
-    url: Cpath + "/appinfoconfig/appinfo/deleteAppInfo?id=" + id,
-    method: "delete",
-    loadingConfig: {
-      noLoading: true
-    }
-  });
-}
+// export function deleteAppInfo(id) {
+//   return request({
+//     url: Cpath + "/appinfoconfig/appinfo/deleteAppInfo?id=" + id,
+//     method: "delete",
+//     loadingConfig: {
+//       noLoading: true
+//     }
+//   });
+// }
 
 //查询app
 export function findAppInfoById(id) {
@@ -85,31 +85,16 @@ export function findAppInfoById(id) {
   });
 }
 
+
 //添加app信息
 
 export function addAppInfo(data) {
   return request({
     url:
       Cpath +
-      "/appinfoconfig/appinfo/addAppInfo?tenantId=" +
-      data.tenantId +
-      "&name=" +
-      data.appName +
-      "&version=" +
-      data.version +
-      "&description=" +
-      data.description +
-      "&startingImage=" +
-      data.startingImage +
-      "&icon=" +
-      data.icon +
-      "&IOSURL=" +
-      data.IOSURL +
-      "&androidURL=" +
-      data.androidURL +
-      "&sort=" +
-      data.sort,
+      "/appinfoconfig/appinfo/addAppInfo" ,
     method: "post",
+    data:data,
     loadingConfig: {
       noLoading: true
     }

@@ -8,7 +8,8 @@
 
     <el-table :data="fullApp">
       <el-table-column prop="name" label="app名字"/>
-      <el-table-column prop="version" label="版本"/>
+      <el-table-column prop="version" label="Android版本"/>
+      <el-table-column prop="versionIOS" label="IOS版本"/>
       <el-table-column prop="description" label="描述"/>
       <el-table-column prop="startingImage" label="启动页">
         <template slot-scope="scope">
@@ -67,7 +68,7 @@ import {
   addAppInfo,
   findAppInfoById,
   searchAappinfo,
-  deleteAppInfo,
+  // deleteAppInfo,
   updateAppInfo,
   checkName
 } from "@/api/cms/appConfig.js";
@@ -117,12 +118,21 @@ export default {
               ]
             },
             {
-              label: "版本",
+              label: "Android版本",
               name: "version",
               type: "text",
               valueType: "string",
               disabled: false,
-              required: true,
+              // required: true,
+              placeholder: "请输入版本号"
+            },
+            {
+              label: "IOS版本",
+              name: "versionIOS",
+              type: "text",
+              valueType: "string",
+              disabled: false,
+              // required: true,
               placeholder: "请输入版本号"
             },
             {
@@ -206,12 +216,21 @@ export default {
               ]
             },
             {
-              label: "版本",
+              label: "Android版本",
               name: "version",
               type: "text",
               valueType: "string",
               disabled: false,
-              required: true,
+              // required: true,
+              placeholder: "请输入版本号"
+            },
+            {
+              label: "IOS版本",
+              name: "versionIOS",
+              type: "text",
+              valueType: "string",
+              disabled: false,
+              // required: true,
               placeholder: "请输入版本号"
             },
             {
@@ -288,12 +307,21 @@ export default {
               disabled: true
             },
             {
-              label: "版本",
+              label: "Android版本",
               name: "version",
               type: "text",
               valueType: "string",
               disabled: false,
-              required: true,
+              // required: true,
+              placeholder: "请输入版本号"
+            },
+            {
+              label: "IOS版本",
+              name: "versionIOS",
+              type: "text",
+              valueType: "string",
+              disabled: false,
+              // required: true,
               placeholder: "请输入版本号"
             },
             {
@@ -369,8 +397,16 @@ export default {
               placeholder: "请输入app名字"
             },
             {
-              label: "版本",
+              label: "Android版本",
               name: "version",
+              type: "text",
+              valueType: "string",
+              disabled: false,
+              placeholder: "请输入版本号"
+            },
+            {
+              label: "IOS版本",
+              name: "versionIOS",
               type: "text",
               valueType: "string",
               disabled: false,
@@ -464,52 +500,54 @@ export default {
         sort: row.sort,
         startingImage: [{ url: row.startingImage }],
         tenantId: row.tenantId,
-        version: row.version
+        version: row.version,
+        versionIOS:row.versionIOS
       };
       this.formSettings = this.editData;
 
       this.dialogVisible = true;
     },
-    handleDelete(b, row) {
-      var _this = this;
-      this.$confirm("此操作将永久删除该组, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          new Promise((resolve, reject) => {
-            deleteAppInfo(row.id)
-              .then(response => {
-                if (response.data.code == 0) {
-                  this.$message({
-                    type: "success",
-                    message: "删除成功!"
-                  });
-                  _this.getAppList(_this.pageNo, _this.pageSize, {
-                    tenantId: _this.currentUser
-                  });
-                } else {
-                  this.$message({
-                    type: "error",
-                    message: response.data.msg
-                  });
-                }
+    //取消删除权限
+    // handleDelete(b, row) {
+    //   var _this = this;
+    //   this.$confirm("此操作将永久删除该组, 是否继续?", "提示", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning"
+    //   })
+    //     .then(() => {
+    //       new Promise((resolve, reject) => {
+    //         deleteAppInfo(row.id)
+    //           .then(response => {
+    //             if (response.data.code == 0) {
+    //               this.$message({
+    //                 type: "success",
+    //                 message: "删除成功!"
+    //               });
+    //               _this.getAppList(_this.pageNo, _this.pageSize, {
+    //                 tenantId: _this.currentUser
+    //               });
+    //             } else {
+    //               this.$message({
+    //                 type: "error",
+    //                 message: response.data.msg
+    //               });
+    //             }
 
-                resolve();
-              })
-              .catch(reject => {
-                console.log(reject);
-              });
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
-    },
+    //             resolve();
+    //           })
+    //           .catch(reject => {
+    //             console.log(reject);
+    //           });
+    //       });
+    //     })
+    //     .catch(() => {
+    //       this.$message({
+    //         type: "info",
+    //         message: "已取消删除"
+    //       });
+    //     });
+    // },
     searchAppConfig() {
       this.handleType = "search";
       this.dialogTitle = "检索";
@@ -533,10 +571,10 @@ export default {
           tenantId: this.currentUser,
           ...res
         };
-        console.log(data, "595");
         data.icon = res.icon[0].url;
         data.startingImage = res.startingImage[0].url;
         data.androidURL = res.androidURL[0].url;
+        data.name=res.appName
         this.addApp(data);
       } else if (this.handleType == "edit") {
         let data = res;
@@ -545,6 +583,7 @@ export default {
         data.icon = res.icon[0].url;
         data.startingImage = res.startingImage[0].url;
         data.androidURL = res.androidURL[0].url;
+        console.log(data,'data')
         this.updateAPP(data);
       } else if (this.handleType == "search") {
         //获取数据
@@ -553,7 +592,7 @@ export default {
           tenantId: this.currentUser,
           ...res
         };
-
+        console.log(this.searchData,'aaaa')
         this.seracrAppList(this.pageNo, this.pageSize, this.searchData);
       }
       this.dialogVisible = false;
@@ -635,7 +674,6 @@ export default {
       return new Promise((resolve, reject) => {
         addAppInfo(data)
           .then(response => {
-            console.log(response, "696");
             if (response.data.code == "0") {
               this.$message({
                 type: "success",

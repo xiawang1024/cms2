@@ -3,12 +3,12 @@
     <el-table :data="fullTabList">
       <el-table-column prop="name" label="列表名字"/>
       <el-table-column prop="description" label="描述"/>
-      <el-table-column label="图标1">
+      <el-table-column label="图标(未选中)">
         <template slot-scope="scope">
           <img :src="scope.row.icon0" class="icon">
         </template>
       </el-table-column>
-      <el-table-column label="图标2">
+      <el-table-column label="图标（选中）">
         <template slot-scope="scope">
           <img :src="scope.row.icon1" class="icon">
         </template>
