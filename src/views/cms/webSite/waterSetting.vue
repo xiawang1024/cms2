@@ -197,31 +197,33 @@ export default {
 }
 </script>
 <style lang="scss">
-.el-button + .el-button {
-  margin: 5px 0px;
-}
+
 .water-setting {
   .el-form{
     .el-input-group__prepend {
       padding: 0 10px;
     }
   }
+  .el-button + .el-button {
+    margin: 5px 0px;
+  }
+  .tool-bar {
+    text-align: right;
+  }
+  .title {
+    color: #454545;
+    padding: 10px 0;
+    font-weight: 700;
+    border-bottom: 1px solid #444;
+    margin-bottom: 20px;
+  }
+  .location-box {
+    width: 267px;
+  }
+  .location-btn {
+    width: 30%;
+  }
 }
-.tool-bar {
-  text-align: right;
-}
-.title {
-  color: #454545;
-  padding: 10px 0;
-  font-weight: 700;
-  border-bottom: 1px solid #444;
-  margin-bottom: 20px;
-}
-.location-box {
-  width: 267px;
-}
-.location-btn {
-  width: 30%;
-}
+
 </style>
 

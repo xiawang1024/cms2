@@ -63,7 +63,7 @@
 
 <style scoped>
 	.el-row{
-		margin-bottom: 10px;
+		margin-top: 10px;
 	}
 	.el-button--text{
 		color: #000000;

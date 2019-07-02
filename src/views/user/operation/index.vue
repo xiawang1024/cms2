@@ -1,9 +1,10 @@
 <template>
   <div class="components-container">
-    <pap-search ref="papSearchForm" :content="searchForm">
-      <!-- 按钮等操作建议放在外层，这里建议存放的是特殊情况的搜索框(不能通过JSON传参生成的搜索条件) -->
-      <!--<el-button type="primary" icon="el-icon-search">搜索</el-button>-->
-    </pap-search>
+    <!-- <pap-search ref="papSearchForm" :content="searchForm">
+    </pap-search> -->
+    <div class="v-search-header">
+      <v-search :search-settings="searchSettings" @search="search"/>
+    </div>
     <!-- 根据 buttonArray 中的 click 参数，对外暴露监听其中的方法，并在当前页面中监听并实现对应的业务 -->
     <button-group :button-array="buttonArray" @list-click="listClick()" @create-click="createClick" @edit-click="editClick"/>
     <!-- 表格的数据展示，参数放置到 tableConfig 中进行传入。 -->
@@ -36,7 +37,7 @@ export default {
       /* eslint-disable */
       // 按钮组
       buttonArray: [
-        {name: '搜索', auth: true, click: 'list-click', icon: 'el-icon-search'},
+        // {name: '搜索', auth: true, click: 'list-click', icon: 'el-icon-search'},
         {name: '新建', auth: true, click: 'create-click', icon: 'el-icon-plus'},
         {name: '编辑', auth: true, click: 'edit-click', disabled: true, icon: 'el-icon-edit'}
       ],
@@ -61,18 +62,46 @@ export default {
       multipleSelection: [],
 
       // 搜索框
-      searchForm: [
-        {$id: 'sysOperationCode', $type: 'input', $label: '操作编码', $default: '',
-          $el: { placeholder: '请输入', style: 'width: 200px' }
+      // searchForm: [
+      //   {$id: 'sysOperationCode', $type: 'input', $label: '操作编码', $default: '',
+      //     $el: { placeholder: '请输入', style: 'width: 200px' }
+      //   },
+      //   {$id: 'sysOperationName', $type: 'input', $label: '操作名称', $default: '',
+      //     $el: { placeholder: '请输入', style: 'width: 200px' }
+      //   },
+      //   {$id: 'sysOperationUrl', $type: 'input', $label: '请求链接', $default: '',
+      //     $el: { placeholder: '请输入', style: 'width: 200px' }
+      //   }
+      // ],
+      searchSettings: [
+        {
+          label: '操作编码',
+          name: 'sysOperationCode',
+          placeholder: '请输入操作编码',
+          visible: true,
+          type: 'text'
         },
-        {$id: 'sysOperationName', $type: 'input', $label: '操作名称', $default: '',
-          $el: { placeholder: '请输入', style: 'width: 200px' }
+        {
+          label: '操作名称',
+          name: 'sysOperationName',
+          placeholder: '请输入操作名称',
+          visible: true,
+          type: 'text'
         },
-        {$id: 'sysOperationUrl', $type: 'input', $label: '请求链接', $default: '',
-          $el: { placeholder: '请输入', style: 'width: 200px' }
-        }
+        {
+          label: '请求链接',
+          name: 'sysOperationUrl',
+          placeholder: '请输入请求链接',
+          visible: false,
+          type: 'text'
+        },
       ],
-
+      // 搜索条件
+      searchData: {
+        sysOperationCode: '',
+        sysOperationName: '',
+        sysOperationUrl: ''
+      },
       // 弹出框表单
       dialogForm: [
         {$id: 'sysOperationId', $type: 'input', $label: '操作编号', $default: '', $enableWhen: { null: 'null' },
@@ -106,12 +135,18 @@ export default {
     this.getList()
   },
   methods: {
+    // 点击搜索
+    search(data) {
+      this.searchData = data
+      this.tableConfig.paginationPageNo = 1
+      this.getList()
+    },
     getList () {
       var _this = this
-      var searchFormObj = this.$refs.papSearchForm.$refs.formRender.getFormValue()
+      // var searchFormObj = this.$refs.papSearchForm.$refs.formRender.getFormValue()
       return new Promise((resolve, reject) => {
         // 开始请求
-        OperationList(searchFormObj, this.tableConfig.paginationPageNo, this.tableConfig.paginationSize).then(async res => {
+        OperationList(_this.searchData, this.tableConfig.paginationPageNo, this.tableConfig.paginationSize).then(async res => {
           _this.tableConfig.total = res.data.result.total
           _this.tableConfig.tableData = res.data.result.content
           // 结束
