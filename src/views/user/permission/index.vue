@@ -1,11 +1,13 @@
 <template>
   <div class="components-container">
-    <pap-search ref="papSearchForm" :content="searchForm">
-      <!-- 按钮等操作建议放在外层，这里建议存放的是特殊情况的搜索框(不能通过JSON传参生成的搜索条件) -->
-      <!--<el-button type="primary" icon="el-icon-search">搜索</el-button>-->
-    </pap-search>
+    <!-- <pap-search ref="papSearchForm" :content="searchForm">
+    </pap-search> -->
+    <div class="v-search-header">
+      <v-search :search-settings="searchSettings" @search="search"/>
+    </div>
     <!-- 根据 buttonArray 中的 click 参数，对外暴露监听其中的方法，并在当前页面中监听并实现对应的业务 -->
     <button-group :button-array="buttonArray" @list-click="listClick()" @create-click="createClick" @edit-click="editClick"/>
+    <slot name="header-slot"/>
     <!-- 表格的数据展示，参数放置到 tableConfig 中进行传入。 -->
     <!-- 分页条处理：每页条数变化、当前页页码条数、表格选中数据监听 -->
     <pap-table ref="permission-table" v-bind="tableConfig" @handle-size-change="handleSizeChange" @handle-current-change="handleCurrentChange" @multiple-selection="multipleSelectionEmit"/>
@@ -51,6 +53,10 @@ export default {
     buttonArrayProps: {
       type: Array,
       default: () => []
+    },
+    usePropsBtn: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -58,7 +64,7 @@ export default {
       /* eslint-disable */
       // 按钮组
       buttonArray: [
-        {name: '搜索', auth: true, click: 'list-click', icon: 'el-icon-search'},
+        // {name: '搜索', auth: true, click: 'list-click', icon: 'el-icon-search'},
         {name: '新建', auth: true, click: 'create-click', icon: 'el-icon-plus'},
         {name: '编辑', auth: true, click: 'edit-click', disabled: true, icon: 'el-icon-edit'}
       ],
@@ -89,7 +95,19 @@ export default {
           $el: { placeholder: '请输入', style: 'width: 200px' }
         }
       ],
-
+      searchSettings: [
+        {
+          label: '权限名称',
+          name: 'permissionName',
+          placeholder: '请输入权限名称',
+          visible: true,
+          type: 'text'
+        }
+      ],
+      // 搜索条件
+      searchData: {
+        permissionName: '',
+      },
       // 弹出框表单
       dialogForm: [
 				{$id: 'permissionId', $type: 'input', $label: '权限编号', $default: '', $enableWhen: { null: 'null' },
@@ -128,7 +146,12 @@ export default {
   watch: {
     buttonArrayProps: {
       handler (val) {
-        if (val !== undefined && val.length > 0) {
+        console.log(this.usePropsBtn, 'this.usePropsBtn')
+        console.log(val, 'val')
+        // if (val !== undefined && val.length > 0) {
+        //   this.buttonArray = val
+        // }
+        if (val && this.usePropsBtn) {
           this.buttonArray = val
         }
       },
@@ -141,6 +164,12 @@ export default {
     this.getList()
   },
   methods: {
+    // 点击搜索
+    search(data) {
+      this.searchData = data
+      this.tableConfig.paginationPageNo = 1
+      this.getList()
+    },
     getOperationInfo () {
 			this.searchOperationInfo('')
     },
@@ -179,10 +208,10 @@ export default {
     },
     getList () {
       var _this = this
-      var searchFormObj = this.$refs.papSearchForm.$refs.formRender.getFormValue()
+      // var searchFormObj = this.$refs.papSearchForm.$refs.formRender.getFormValue()
       return new Promise((resolve, reject) => {
         // 开始请求
-        PermissionList(searchFormObj, this.tableConfig.paginationPageNo, this.tableConfig.paginationSize).then(async res => {
+        PermissionList(_this.searchData , this.tableConfig.paginationPageNo, this.tableConfig.paginationSize).then(async res => {
           _this.tableConfig.total = res.data.result.total
           _this.tableConfig.tableData = res.data.result.content
           // 结束
@@ -198,12 +227,12 @@ export default {
       // 这里根据表格选中值的数据条数进行判断，将按钮中的数据进行动态维护
       if (this.multipleSelection.length !== 1) {
         // 在进行按钮组禁用/启用的过程中，有可能父组件会向当前组件传递buttonArrayProps 数据，此时buttonArray 数组的值将发生变化，故此处需要强制判断
-        if (this.buttonArray.length > 2 && this.buttonArray[2].name === '编辑') {
-          this.buttonArray[2].disabled = true
+        if (this.buttonArray.length > 1 && this.buttonArray[1].name === '编辑') {
+          this.buttonArray[1].disabled = true
         }
       } else {
-        if (this.buttonArray.length > 2 && this.buttonArray[2].name === '编辑') {
-          this.buttonArray[2].disabled = false
+        if (this.buttonArray.length > 1 && this.buttonArray[1].name === '编辑') {
+          this.buttonArray[1].disabled = false
         }
       }
     },

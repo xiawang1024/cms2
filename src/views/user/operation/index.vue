@@ -162,12 +162,12 @@ export default {
       // 这里根据表格选中值的数据条数进行判断，将按钮中的数据进行动态维护
       if (this.multipleSelection.length !== 1) {
         // 在进行按钮组禁用/启用的过程中，有可能父组件会向当前组件传递buttonArrayProps 数据，此时buttonArray 数组的值将发生变化，故此处需要强制判断
-        if (this.buttonArray.length > 2 && this.buttonArray[2].name === '编辑') {
-          this.buttonArray[2].disabled = true
+        if (this.buttonArray.length > 1 && this.buttonArray[1].name === '编辑') {
+          this.buttonArray[1].disabled = true
         }
       } else {
-        if (this.buttonArray.length > 2 && this.buttonArray[2].name === '编辑') {
-          this.buttonArray[2].disabled = false
+        if (this.buttonArray.length > 1 && this.buttonArray[1].name === '编辑') {
+          this.buttonArray[1].disabled = false
         }
       }
     },

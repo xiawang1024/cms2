@@ -6,12 +6,14 @@
     </div>
     <div class="handel-btn">
       <button-group
+        v-if="buttonArray && buttonArray.length"
         :button-array="buttonArray"
         @list-click="listClick()"
         @create-click="createClick" @able-click="enableFlagClick('1')" @disable-click="enableFlagClick('0')" @googlecheck-click="googleCheckClick"
         @role-click="roleClick" @roles-click="rolesClick"
         @edit-click="editClick"/>
     </div>
+    <slot name="header-slot"/>
     <!-- 表格的数据展示，参数放置到 tableConfig 中进行传入。 -->
     <!-- 分页条处理：每页条数变化、当前页页码条数、表格选中数据监听 -->
     <pap-table ref="user-table" v-bind="tableConfig" @handle-size-change="handleSizeChange" @handle-current-change="handleCurrentChange" @multiple-selection="multipleSelectionEmit"/>
@@ -19,8 +21,8 @@
     <el-dialog ref="dialogUserManager" :visible.sync="dialogFormVisible" :before-close="handleClose" title="用户管理" width="30%">
       <el-form-renderer ref="dialogFormRender" :inline="dialogFormInlineFlag" :class="dialogFormInlineFlag ? 'demo-form-inline' : '' " :content="dialogForm" label-width="100px"/>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormSubmit">确 定</el-button>
+        <el-button @click="dialogFormVisible = false" size="mini">取 消</el-button>
+        <el-button type="primary" @click="dialogFormSubmit" size="mini">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 角色分配管理 弹窗组件 -->
@@ -28,8 +30,8 @@
       <div style="height: 500px;">
         <role ref="dialogRoleRef" :button-array-props="dialogRoleManagerButtonArrayProps" :tree-button-flag="dialogRoleManagerTreeButtonFlag">
           <h1 slot="fotter-slot" style="float: right;">
-            <el-button @click="dialogRoleManagerVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogRoleManagerSubmit">确 定</el-button>
+            <el-button @click="dialogRoleManagerVisible = false" size="mini">取 消</el-button>
+            <el-button type="primary" @click="dialogRoleManagerSubmit" size="mini">确 定</el-button>
           </h1>
         </role>
       </div>
@@ -61,6 +63,10 @@ export default {
     buttonArrayProps: {
       type: Array,
       default: () => []
+    },
+    usePropsBtn: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -68,7 +74,7 @@ export default {
       /* eslint-disable */
       // 按钮组
       buttonArray: [
-        {name: '搜索', auth: true, click: 'list-click', icon: 'el-icon-search'},
+        // {name: '搜索', auth: true, click: 'list-click', icon: 'el-icon-search'},
         {name: '新建', auth: true, click: 'create-click', icon: 'el-icon-plus'},
         {name: '编辑', auth: true, click: 'edit-click', disabled: true, icon: 'el-icon-edit'},
         {name: '角色', auth: true, click: 'role-click', disabled: true, icon: 'el-icon-edit'},
@@ -190,7 +196,7 @@ export default {
   watch: {
     buttonArrayProps: {
       handler (val) {
-        if (val !== undefined && val.length > 0) {
+        if (val && this.usePropsBtn) {
           this.buttonArray = val
         }
       },
@@ -232,14 +238,14 @@ export default {
       // 这里根据表格选中值的数据条数进行判断，将按钮中的数据进行动态维护
       if (this.multipleSelection.length !== 1) {
         // 在进行按钮组禁用/启用的过程中，有可能父组件会向当前组件传递buttonArrayProps 数据，此时buttonArray 数组的值将发生变化，故此处需要强制判断
-        if (this.buttonArray.length > 3 && this.buttonArray[2].name === '编辑' && this.buttonArray[3].name === '角色') {
+        if (this.buttonArray.length > 3 && this.buttonArray[1].name === '编辑' && this.buttonArray[2].name === '角色') {
+          this.buttonArray[1].disabled = true
           this.buttonArray[2].disabled = true
-          this.buttonArray[3].disabled = true
         }
       } else {
-        if (this.buttonArray.length > 3 && this.buttonArray[2].name === '编辑' && this.buttonArray[3].name === '角色') {
+        if (this.buttonArray.length > 3 && this.buttonArray[1].name === '编辑' && this.buttonArray[2].name === '角色') {
+          this.buttonArray[1].disabled = false
           this.buttonArray[2].disabled = false
-          this.buttonArray[3].disabled = false
         }
       }
     },
@@ -529,10 +535,11 @@ export default {
       this.getList()
     },
     handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done();
-        }).catch(_ => {});
+      done()
+      // this.$confirm('确认关闭？')
+      //   .then(_ => {
+      //     done();
+      //   }).catch(_ => {});
     }
   }
 }
@@ -540,7 +547,7 @@ export default {
 <style lang="scss">
   .components-container{
     .handel-btn{
-      margin-top:18px;
+      // margin-top:18px;
     }
   }
 </style>

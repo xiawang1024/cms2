@@ -1,10 +1,10 @@
 <template>
   <div class="components-container">
-    <pap-search ref="papSearchForm" :content="searchForm"/>
+    <!-- <pap-search ref="papSearchForm" :content="searchForm"/> -->
     <!-- 根据 buttonArray 中的 click 参数，对外暴露监听其中的方法，并在当前页面中监听并实现对应的业务 -->
     <button-group :button-array="buttonArray" @list-click="listClick()" @create-click="createClick"/>
     <!-- -->
-    <div style="margin-top: 50px;">
+    <div style="margin-top: 10px;">
       <el-tree ref="tree" :data="treeData" :props="defaultProps" :expand-on-click-node="false" show-checkbox default-expand-all node-key="roleId" highlight-current>
         <span slot-scope="{ node, data }" class="custom-tree-node">
           <span>{{ node.label }}</span>
@@ -25,24 +25,24 @@
         </el-form-item>
       </el-form-renderer>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormSubmit">确 定</el-button>
+        <el-button @click="dialogFormVisible = false" size="mini">取 消</el-button>
+        <el-button type="primary" @click="dialogFormSubmit" size="mini">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 权限分配管理 弹窗组件 -->
     <el-dialog :visible.sync="dialogPermissionManagerVisible" :before-close="handleClose" title="权限分配管理">
       <div>
-        <permissiongroup ref="dialogPermissionRef" :button-array-props="dialogPermissionManagerButtonArrayProps" :tree-button-flag="dialogPermissionManagerTreeButtonFlag">
-          <h1 slot="fotter-slot" style="float: right;">
-            <el-button @click="dialogPermissionManagerVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogPermissionManagerSubmit">确 定</el-button>
-          </h1>
+        <permissiongroup ref="dialogPermissionRef" :use-props-btn="usePropsBtn" :button-array-props="dialogPermissionManagerButtonArrayProps" :tree-button-flag="dialogPermissionManagerTreeButtonFlag">
+          <div slot="fotter-slot" style="text-align: right">
+            <el-button @click="dialogPermissionManagerVisible = false" size="mini">取 消</el-button>
+            <el-button type="primary" @click="dialogPermissionManagerSubmit" size="mini">确 定</el-button>
+          </div>
         </permissiongroup>
       </div>
     </el-dialog>
     <!-- 角色包含用户 弹窗组件 -->
     <el-dialog :visible.sync="dialogUserShowVisible" title="角色用户依赖管理">
-      <el-table :data="dialogUserShowTableData" size="mini" stripe style="width: 100%; ">
+      <el-table :data="dialogUserShowTableData" stripe style="width: 100%; margin-bottom:20px">
         <el-table-column prop="userName" label="用户名"/>
       </el-table>
     </el-dialog>
@@ -85,7 +85,7 @@ export default {
       /* eslint-disable */
       // 按钮组
       buttonArray: [
-        {name: '搜索', auth: true, click: 'list-click', icon: 'el-icon-search'},
+        // {name: '搜索', auth: true, click: 'list-click', icon: 'el-icon-search'},
         {name: '新建', auth: true, click: 'create-click', icon: 'el-icon-plus'}
       ],
       // 搜索框
@@ -122,13 +122,15 @@ export default {
       dialogPermissionManagerRoleId: '',
       dialogPermissionManagerVisible: false,
       dialogPermissionManagerButtonArrayProps: [
-        {name: '搜索', auth: 'ROLE:LIST', click: 'list-click', icon: 'el-icon-search'},
+        // {name: '搜索', auth: 'ROLE:LIST', click: 'list-click', icon: 'el-icon-search'},
       ],
       dialogPermissionManagerTreeButtonFlag: false,
       // 角色包含用户
       dialogUserShowVisible: false,
       dialogUserShowTableData: [],
-      filename: ''
+      filename: '',
+      // 是否使用传入的btn列表
+      usePropsBtn: true
       /* eslint-disable */
     }
   },
@@ -345,10 +347,11 @@ export default {
       })
     },
     handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done();
-        }).catch(_ => {});
+       done()
+      // this.$confirm('确认关闭？')
+      //   .then(_ => {
+      //     done();
+      //   }).catch(_ => {});
     }
   }
 }

@@ -154,6 +154,7 @@ export default {
     .el-pagination{
       margin-top:30px;
       padding: 0 30px;
+      margin-bottom:20px;
       text-align: right;
     }
   }
