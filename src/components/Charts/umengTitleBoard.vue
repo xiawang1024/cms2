@@ -5,20 +5,23 @@
         <div class="floor">
           <div class="smallbox">
             <p class="mytitle">新增用户（7日平均）</p>
-            <h3>{{ datavalue.totalNewUserAverage7!=null?datavalue.totalNewUserAverage7.toFixed(0):'--' }}</h3>
+            <h3> {{ datavalue.totalNewUserAverage7|retainZeroDigits }} /  {{ datavalue.totalNewUserAverage7|retainZeroDigits }}</h3>
             <p>
               同比
-              <span>{{ datavalue.totalNewUserChangePre!=null?(datavalue.totalNewUserChangePre*100).toFixed(2):'--' }}%</span>
+              <span>{{ datavalue.totalNewUserChangePre|retainTwoPercentDigits }}%</span>
+              <span v-if="datavalue.totalNewUserChangePre>0" class="redarrow">↑</span>
+              <span v-else class="greenarrow">↓</span> / 
+              <span>{{ datavalue.totalNewUserChangePre|retainTwoPercentDigits }}%</span>
               <span v-if="datavalue.totalNewUserChangePre>0" class="redarrow">↑</span>
               <span v-else class="greenarrow">↓</span>
             </p>
           </div>
           <div class="smallbox">
             <p class="mytitle">活跃用户（7日平均）</p>
-            <h3>{{ datavalue.activeUserAverage7!=null?datavalue.activeUserAverage7.toFixed(0):'--' }}</h3>
+            <h3>{{ datavalue.activeUserAverage7|retainZeroDigits }}</h3>
             <p>
               同比
-              <span>{{ datavalue.activeUserChangePre!=null?(datavalue.activeUserChangePre*100).toFixed(2):'--' }}%</span>
+              <span>{{ datavalue.activeUserChangePre|retainTwoPercentDigits }}%</span>
               <span v-if="datavalue.activeUserChangePre>0" class="redarrow">↑</span>
               <span v-else class="greenarrow">↓</span>
             </p>
@@ -27,20 +30,20 @@
         <div class="floor">
           <div class="smallbox">
             <p class="mytitle">新用户次日留存率（7日平均）</p>
-            <h3>{{ datavalue.retentionAverage7!=null?(datavalue.retentionAverage7*100).toFixed(2):'--' }}%</h3>
+            <h3>{{ datavalue.retentionAverage7|retainTwoPercentDigits }}%</h3>
             <p>
               同比
-              <span>{{ datavalue.retentionChangePre!=null?(datavalue.retentionChangePre*100).toFixed(2):'--' }}%</span>
+              <span>{{ datavalue.retentionChangePre|retainTwoPercentDigits }}%</span>
               <span v-if="datavalue.retentionChangePre>0" class="redarrow">↑</span>
               <span v-else class="greenarrow">↓</span>
             </p>
           </div>
           <div class="smallbox">
             <p class="mytitle">使用时长（7日平均）</p>
-            <h3>{{ datavalue.durationAverage7!=null?datavalue.durationAverage7.toFixed(2):'--'|computedTime }}</h3>
+            <h3>{{ datavalue.durationAverage7|computedTime }}</h3>
             <p>
               同比
-              <span>{{ datavalue.durationChangePre!=null?(datavalue.durationChangePre*100).toFixed(2):'--' }}%</span>
+              <span>{{ datavalue.durationChangePre|retainTwoPercentDigits }}%</span>
               <span v-if="datavalue.durationChangePre>0" class="redarrow">↑</span>
               <span v-else class="greenarrow">↓</span>
             </p>
@@ -51,20 +54,20 @@
         <div class="floor">
           <div class="smallbox">
             <p class="mytitle">上周总活跃用户数</p>
-            <h3>{{ datavalue.activeUserWeekLast!=null?datavalue.activeUserWeekLast:'--' }}</h3>
+            <h3>{{ datavalue.activeUserWeekLast|retainZeroDigits }}</h3>
             <p>
               同比
-              <span>{{ datavalue.activeUserWeekChangePre!=null?(datavalue.activeUserWeekChangePre*100).toFixed(2):'--' }}%</span>
+              <span>{{ datavalue.activeUserWeekChangePre|retainTwoPercentDigits }}%</span>
               <span v-if="datavalue.activeUserWeekChangePre>0" class="redarrow">↑</span>
               <span v-else class="greenarrow">↓</span>
             </p>
           </div>
           <div class="smallbox">
             <p class="mytitle">上月总活跃用户数</p>
-            <h3>{{ datavalue.activeUserMonthLast!=null?datavalue.activeUserMonthLast:'--' }}</h3>
+            <h3>{{ datavalue.activeUserMonthLast|retainZeroDigits }}</h3>
             <p>
               同比
-              <span>{{ datavalue.activeUserMonthChangePre!=null?(datavalue.activeUserMonthChangePre*100).toFixed(2):"--" }}%</span>
+              <span>{{ datavalue.activeUserMonthChangePre|retainTwoPercentDigits }}%</span>
               <span v-if="datavalue.activeUserMonthChangePre>0" class="redarrow">↑</span>
               <span v-else class="greenarrow">↓</span>
             </p>
@@ -73,10 +76,10 @@
         <div class="floor">
           <div class="smallbox">
             <p class="mytitle">启动次数(7日平均)</p>
-            <h3>{{ datavalue.launchAverage7!=null?datavalue.launchAverage7.toFixed(0):'--' }}</h3>
+            <h3>{{ datavalue.launchAverage7|retainZeroDigits }}</h3>
             <p>
               同比
-              <span>{{ datavalue.launchChangePre!=null?(datavalue.launchChangePre*100).toFixed(2):'--' }}%</span>
+              <span>{{ datavalue.launchChangePre|retainTwoPercentDigits }}%</span>
               <span v-if="datavalue.launchChangePre>0" class="redarrow">↑</span>
               <span v-else class="greenarrow">↓</span>
             </p>
@@ -84,7 +87,7 @@
           </div>
           <div class="smallbox">
             <p class="mytitle">累计用户数</p>
-            <h3>{{ datavalue.totalUsers!=null?datavalue.totalUsers:'--' }}</h3>
+            <h3>{{ datavalue.totalUsers|retainZeroDigits }}</h3>
           </div>
         </div>
       </div>
@@ -94,6 +97,27 @@
 <script>
 export default {
    filters:{
+     retainTwoDigits(val){
+       let data='--';
+       if(val!=null){
+          data=val.toFixed(2)
+       }
+       return data
+     },
+     retainZeroDigits(val){
+       let data='--';
+       if(val!=null){
+          data=val.toFixed(0)
+       }
+       return data
+     },
+     retainTwoPercentDigits(val){
+       let data='--';
+       if(val!=null){
+          data=(val*100).toFixed(2)
+       }
+       return data
+     },
     computedTime(val){
       let data='--'
       if(val!='--'){

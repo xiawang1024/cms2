@@ -33,6 +33,10 @@ export default {
         [];
       }
     },
+    title: {
+      type: String,
+      default: "基本指标"
+    },
     chartsvalue: {
       type: Object,
       default: function() {
@@ -91,7 +95,7 @@ export default {
 
       this.chart.setOption({
         title: {
-          text: "基本指标"
+          text: this.title
         },
         tooltip: {
           trigger: "axis"
@@ -116,7 +120,7 @@ export default {
           data: this.xdate,
           axisLabel:{
             insterval:0,
-            rotate:-50,
+            rotate:-80,
           }
         },
         yAxis: {

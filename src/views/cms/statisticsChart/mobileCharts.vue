@@ -23,6 +23,7 @@
             width="100%"
             :timevalue="timevalue"
             :chartsvalue="IosChartsValue"
+            :title="&quot;苹果统计&quot;"
           />
         </div>
       </el-col>
@@ -34,6 +35,7 @@
             width="100%"
             :timevalue="timevalue"
             :chartsvalue="androidChartsValue"
+            :title="&quot;安卓统计&quot;"
           />
         </div>
       </el-col>
@@ -82,7 +84,8 @@ export default {
       page: "1",
       timevalue: [],
       activeName: "first",
-      tenantId: ""
+      tenantId: "",
+      today:'',
     };
   },
   created() {
@@ -103,14 +106,14 @@ export default {
         "-" +
         (mon < 10 ? "0" + mon : mon) +
         "-" +
-        (day - 1 < 10 ? "0" + (day - 1) : day - 1);
+        (day  < 10 ? "0" + (day ) : day);
       this.endDate =
         year +
         "-" +
         (mon + 1 < 10 ? "0" + (mon + 1) : mon + 1) +
         "-" +
         (day < 10 ? "0" + day : day);
-      
+      this.today=this.endDate;
       this.timevalue = [this.startDate, this.endDate];
     },
     InitInfo() {
@@ -138,10 +141,10 @@ export default {
       //   this.IosAppKey= "5b15ff3bf43e4808920000a6";
 
       // }
-      if (this.tenantId == "nanyangradio") {
+      // if (this.tenantId == "nanyangradio") {
         this.IosAppKey = "5cbd29613fc19548f9000c25";
         this.androidAppKey = "	5cc5930e4ca357f82b00083c";
-      }
+      // }
     },
     //请求数据umeng
     fetchActiveUser(appkey,type) {
@@ -159,14 +162,14 @@ export default {
               let result = JSON.parse(response.data.result);
               if(type=='android'){
                  _this.$set(
-                this.androidChartsValue,
+                _this.androidChartsValue,
                 "activeUserInfo",
                 _this.formateDate(result.activeUserInfo)
               );
 
               }else if(type=='Ios'){
                  _this.$set(
-                this.IosChartsValue,
+                _this.IosChartsValue,
                 "activeUserInfo",
                 _this.formateDate(result.activeUserInfo)
               );
@@ -227,14 +230,14 @@ export default {
               
               if(type=='android'){
                  _this.$set(
-                this.androidChartsValue,
+                _this.androidChartsValue,
                 "launchInfo",
                 _this.formateDate(result.launchInfo)
               );
 
               }else if(type=='Ios'){
                  _this.$set(
-                this.IosChartsValue,
+                _this.IosChartsValue,
                "launchInfo",
                 _this.formateDate(result.launchInfo)
               );
@@ -257,14 +260,14 @@ export default {
               let result = JSON.parse(response.data.result);
               if(type=='android'){
                  _this.$set(
-                this.androidChartsValue,
+                _this.androidChartsValue,
                 "newUser",
                 _this.formateDate(result.newUserInfo)
               );
 
               }else if(type=='Ios'){
                  _this.$set(
-                this.IosChartsValue,
+                _this.IosChartsValue,
                "newUser",
                 _this.formateDate(result.newUserInfo)
               );
@@ -307,13 +310,13 @@ export default {
               // _this.IosChartsValue.totalUser=allUser;
               if(type=='android'){
                  _this.$set(
-                this.androidChartsValue,
+                _this.androidChartsValue,
                 "totalUser", allUser
               );
 
               }else if(type=='Ios'){
                  _this.$set(
-                this.IosChartsValue,
+                _this.IosChartsValue,
                "totalUser", allUser
               );
 
@@ -346,9 +349,18 @@ export default {
 
     getNewData() {
       //获取时间区间数据
-
+      
+      this.startDate=this.timevalue[0];
+      this.endDate=this.timevalue[1]
       //获取新增用户数
-      this.fetchNewUsers();
+      this.fetchActiveUser(this.IosAppKey ,'Ios');
+      this.fetchActiveUser(this.androidAppKey ,'android');
+      this.fetchLaunches(this.IosAppKey ,'Ios');
+      this.fetchLaunches(this.androidAppKey ,'android');
+      this.fetchNewUsers(this.IosAppKey ,'Ios');
+      this.fetchNewUsers(this.androidAppKey ,'android');
+      this.fetchTotalUsers(this.IosAppKey ,'Ios');
+      this.fetchTotalUsers(this.androidAppKey ,'android');
     },
     handleClick(tab, event) {
       //获取切换区间数据
@@ -357,7 +369,15 @@ export default {
     formateDate(value) {
       let result = [];
       value.forEach(item => {
-        result.push(item.value);
+
+        if(item.value){
+          
+         
+             result.push(item.value);
+         }else{
+          result.push('--');
+        }
+        
       });
       return result;
     }
