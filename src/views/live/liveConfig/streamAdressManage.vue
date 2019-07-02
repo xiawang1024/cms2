@@ -1,5 +1,12 @@
 <template>
   <div class="helpdoc-container">
+    <template>
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="鉴权直播" name="0"/>
+        <el-tab-pane label="拉转直播" name="1"/>
+        <el-tab-pane label="+直播快照" name="2"/>
+      </el-tabs>
+    </template>
     <el-table :data="tableValue">
       <el-table-column type="index" width="50" />
       <el-table-column prop="userName" width="120" label="用户名"/>
@@ -38,7 +45,8 @@ export default {
       pageSize: 10,
       totalCount: 0,
       sortBy: "",
-      order: ""
+      order: "",
+      activeName:'0',
     };
   },
   created() {
@@ -95,7 +103,20 @@ export default {
     handleCurrentChange(val) {
       this.pageNo = val;
       this.requestTableValue();
-    }
+    },
+    //tab切换
+    handleClick(tab, event) {
+      if(this.activeName=='0'){
+          this.requestTableValue();
+      }
+      if(this.activeName=='1'){
+        this.tableValue=[]
+      }
+      if(this.activeName=='2'){
+        this.tableValue=[]
+      }
+
+      },
   }
 };
 </script>

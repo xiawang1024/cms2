@@ -1,5 +1,11 @@
 <template>
   <div class="helpdoc-container">
+    <template>
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="视频剪辑" name="0"/>
+        <el-tab-pane label="视频转码" name="1"/>
+      </el-tabs>
+    </template>
     <el-table :data="tableValue">
       <el-table-column type="index" width="50" />
       <el-table-column prop="appName" width="80" label="APP名称" />
@@ -63,7 +69,9 @@ export default {
       rowUrl: "", //播放地址
       rowId: "", //当前文件id
       url: "", //文件路径
-      loading: false
+      loading: false,
+      activeName:'0',
+
     };
   },
   created() {
@@ -141,7 +149,8 @@ export default {
       var _this = this;
       this.loading = true;
       //添加上 url , order, id 等字段
-      // console.log(value, "emit");
+      console.log(value, "emit");
+      
       let data=[];
       data=JSON.parse(JSON.stringify(value))
       data.map((item, index) => {
@@ -153,7 +162,7 @@ export default {
           (item.endTimeArr[1] - item.startTimeArr[1]) +
           ":" +
           (item.endTimeArr[2] -
-            item.startTimeArr[2] +
+            item.startTimeArr[2] -1+
             (item.duration - parseInt(item.duration)));
         item.startTime =
           item.startTimeArr[0] +
@@ -166,7 +175,7 @@ export default {
         item.url = this.url;
         item.id = this.rowId;
       });
-
+      console.log(data, "data");
       //执行保存请求
       return new Promise((resolve, reject) => {
         editeStreamfile(data)
@@ -190,7 +199,17 @@ export default {
             _this.loading = false;
           });
       });
-    }
+    },
+    //tab切换
+    handleClick(tab, event) {
+      if(this.activeName=='0'){
+          this.requestTableValue();
+      }
+      if(this.activeName=='1'){
+        this.tableValue=[]
+      }
+
+      },
   }
 };
 </script>
