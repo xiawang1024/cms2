@@ -2,17 +2,22 @@
   <div class="helpdoc-container">
     <el-table :data="tableValue">
       <el-table-column type="index" width="50" />
-      <el-table-column prop="appName" width="80" label="APP名称"/>
-      <el-table-column prop="userName" width="120" label="用户名"/>
-      <el-table-column prop="recordBeginTime" width="180" :formatter="formatStart" label="录制开始时间"/>
-      <el-table-column prop="recordEngTime" width="180" :formatter="formatEnd" label="录制结束时间"/>
-      <el-table-column prop="recordFormat" width="80" label="录制格式"/>
-      <el-table-column prop="recordLength" width="80" label="录制时长"/>
+      <el-table-column prop="appName" width="80" label="APP名称" />
+      <el-table-column prop="userName" width="120" label="用户名" />
+      <el-table-column prop="recordBeginTime" width="180" :formatter="formatStart" label="录制开始时间" />
+      <el-table-column prop="recordEngTime" width="180" :formatter="formatEnd" label="录制结束时间" />
+      <el-table-column prop="recordFormat" width="80" label="录制格式" />
+      <el-table-column prop="recordLength" width="80" label="录制时长" />
       <el-table-column prop="filePath" label="文件路径" show-overflow-tooltip />
       <el-table-column label="操作" width="180">
         <template slot-scope="scope">
-          <el-button size="mini" type="prime" @click="handleEdit(scope.$index, scope.row)" :disabled="true">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)" :disabled="true" >删除</el-button>
+          <el-button size="mini" type="prime" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button
+            size="mini"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)"
+            :disabled="true"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -28,11 +33,24 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
+    <el-dialog title="视频剪辑" :visible.sync="dialogVisible" width="860px">
+      <videoEdite
+        @cutResult="cutResult"
+        :video-url="rowUrl"
+        v-loading="loading"
+        element-loading-text="上传中..."
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(255, 255, 255, 0.8)"
+      />
+      
+    </el-dialog>
   </div>
 </template>
 <script>
-import { streamfile } from "@/api/live/flowManagement.js";
+import { streamfile, editeStreamfile } from "@/api/live/streamFileManage.js";
+import videoEdite from "@/components/videoCut/videoEdite.vue";
 export default {
+  components: { videoEdite },
   data() {
     return {
       tableValue: [],
@@ -40,7 +58,12 @@ export default {
       pageSize: 10,
       totalCount: 0,
       sortBy: "",
-      order: ""
+      order: "",
+      dialogVisible: false,
+      rowUrl: "", //播放地址
+      rowId: "", //当前文件id
+      url: "", //文件路径
+      loading: false
     };
   },
   created() {
@@ -61,7 +84,7 @@ export default {
           .then(response => {
             if (response.data.code == 0) {
               _this.tableValue = response.data.result.content;
-              _this.totalCount=response.data.result.total
+              _this.totalCount = response.data.result.total;
             } else {
               this.$message({
                 type: "error",
@@ -75,7 +98,16 @@ export default {
           });
       });
     },
-    handleEdit() {},
+    handleEdit(index, row) {
+      this.dialogVisible = true;
+      console.log(row.filePath);
+      //需要处理一下路径
+      let url = row.filePath.split("vod")[1];
+      url = "http://172.20.5.4:8080/dl" + url;
+      this.rowUrl = url;
+      this.rowId = row.id;
+      this.url = row.filePath;
+    },
     handleDelete() {},
 
     //时间格式化
@@ -84,8 +116,7 @@ export default {
       if (row.recordBeginTime) {
         date = row.recordBeginTime.replace("T", " ");
         date = date.replace(".000+0000", "");
-      
-      } 
+      }
       return date;
     },
     formatEnd(row) {
@@ -93,8 +124,7 @@ export default {
       if (row.recordEngTime) {
         date = row.recordEngTime.replace("T", " ");
         date = date.replace(".000+0000", "");
-      
-      } 
+      }
       return date;
     },
 
@@ -106,6 +136,60 @@ export default {
     handleCurrentChange(val) {
       this.pageNo = val;
       this.requestTableValue();
+    },
+    cutResult(value) {
+      var _this = this;
+      this.loading = true;
+      //添加上 url , order, id 等字段
+      // console.log(value, "emit");
+      let data=[];
+      data=JSON.parse(JSON.stringify(value))
+      data.map((item, index) => {
+        //时间格式化00:00:00.0
+        item.duration =
+          item.endTimeArr[0] -
+          item.startTimeArr[0] +
+          ":" +
+          (item.endTimeArr[1] - item.startTimeArr[1]) +
+          ":" +
+          (item.endTimeArr[2] -
+            item.startTimeArr[2] +
+            (item.duration - parseInt(item.duration)));
+        item.startTime =
+          item.startTimeArr[0] +
+          ":" +
+          item.startTimeArr[1] +
+          ":" +
+          (parseInt(item.startTimeArr[2]) +
+            (item.startTime - parseInt(item.startTime)));
+        item.order = index;
+        item.url = this.url;
+        item.id = this.rowId;
+      });
+
+      //执行保存请求
+      return new Promise((resolve, reject) => {
+        editeStreamfile(data)
+          .then(response => {
+            if (response.data.code == 0) {
+              this.$message({
+                type: "success",
+                message: response.data.msg
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data.msg
+              });
+            }
+            _this.loading = false;
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+            _this.loading = false;
+          });
+      });
     }
   }
 };
@@ -114,7 +198,7 @@ export default {
 .helpdoc-container {
   margin: 30px;
 }
-.pagenation{
+.pagenation {
   margin: 30px 0;
 }
 </style>
