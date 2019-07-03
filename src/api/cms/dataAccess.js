@@ -4,7 +4,10 @@ export function setDataAccess(data) {
   return request({
     url: '/cms/channelUserRel',
     method: 'put',
-    data
+    data,
+    loadingConfig: {
+      target: '.el-dialog__body'
+    }
   })
 }
 // 用户权限获取
@@ -19,7 +22,10 @@ export function setSourceAccess(data) {
   return request({
     url: '/cms/articleoriginuserrel',
     method: 'post',
-    data
+    data,
+    loadingConfig: {
+      target: '.el-dialog__body'
+    }
   })
 }
 // 来源权限读取

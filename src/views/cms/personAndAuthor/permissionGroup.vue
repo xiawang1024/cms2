@@ -1,7 +1,20 @@
 <template>
   <div class="permissionGroup-container">
-    <v-search :search-settings="searchSettings" @search="search"/>
-    <el-table :data="tableData" style="width: 100%" highlight-current-row>
+    <div class="v-search-header">
+      <v-search :search-settings="searchSettings" @search="search"/>
+    </div>
+    <div class="top-bar">
+      <el-button type="primary" size="mini" :disabled="!multipleSelection.length" @click="togetherHandel('column')">批量栏目权限</el-button>
+      <el-button type="success" size="mini" :disabled="!multipleSelection.length" @click="togetherHandel('source')">批量来源权限</el-button>
+    </div>
+    <el-table :data="tableData" 
+              style="width: 100%" 
+              highlight-current-row 
+              ref="multipleTable"
+              @selection-change="handleSelectionChange">
+      <el-table-column
+        type="selection"
+        width="55"/>
       <el-table-column prop="userCode" label="用户编码"/>
       <el-table-column prop="userName" label="用户名"/>
       <el-table-column prop="enableFlag" label="用户状态">
@@ -12,14 +25,14 @@
       </el-table-column>
       <el-table-column label="操作" width="220">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleAlter(scope.$index, scope.row)">栏目权限</el-button>
-          <el-button size="mini" type="success" @click="handleSource(scope.$index, scope.row)">来源权限</el-button>
+          <el-button size="mini" type="primary" @click="handleAlter(scope.row)">栏目权限</el-button>
+          <el-button size="mini" type="success" @click="handleSource(scope.row)">来源权限</el-button>
         </template>
       </el-table-column>
     </el-table>
     <pagination :total="total" @sizeChange="sizeChange" @pageChange="pageChange"/>
-    <access-dialog :dialog-visible.sync="showAccess" :tree-data="treeData" :user-infor="userInfor" @handelSuccess="handelSuccess"/>
-    <source-dialog :dialog-visible.sync="showSource" :tree-data="sourceData" :user-infor="userInfor" @handelSuccess="handelSuccess"/>
+    <access-dialog :dialog-visible.sync="showAccess" :tree-data="treeData" :user-infor="userInfor" :multiple-selection="multipleSelection" @handelSuccess="handelSuccess"/>
+    <source-dialog :dialog-visible.sync="showSource" :tree-data="sourceData" :user-infor="userInfor" :multiple-selection="multipleSelection" @handelSuccess="handelSuccess"/>
   </div>
 </template>
 <script>
@@ -62,7 +75,9 @@ export default
       total: 0,
       treeData: [],
       userInfor: {},
-      sourceData:[]
+      sourceData:[],
+      //多选
+      multipleSelection: []
     }
   },
   mounted() {
@@ -71,6 +86,17 @@ export default
     this.fetchDict()
   },
   methods: {
+    // 批量处理
+    togetherHandel(type) {
+      if(type == 'column') {
+        this.handleAlter({})
+      } else {
+        this.handleSource({})
+      }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
     sizeChange(val) {
       this.pageSize = val
       this.getUserList()
@@ -98,20 +124,13 @@ export default
     change(row) {
       console.log(row.id)
     },
-    handleSource(index, row) {
+    handleSource(row) {
       this.showSource = true
       this.userInfor = row
     },
-    handleAlter(index, row) {
+    handleAlter(row) {
       this.showAccess = true
       this.userInfor = row
-      // this.$router.push({
-      //   path: '/personAndAuthor/permissionGroupEdit',
-      //   query: {
-      //     isAdd: false,
-      //     permissionGroupId: row.id
-      //   }
-      // })
     },
     handleDelete(index, row) {},
     // 获取文稿来源
@@ -177,12 +196,11 @@ export default
 }
 </script>
 
-<style scoped>
+<style lang="scss">
 .permissionGroup-container {
- 
+   .top-bar{
+     margin-top:10px;
+   }
 }
 
-.tool-bar {
-  text-align: right;
-}
 </style>

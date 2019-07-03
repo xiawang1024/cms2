@@ -39,6 +39,12 @@ export default {
         return {}
       },
       type: Object
+    },
+    multipleSelection: {
+      default: ()=> {
+        return []
+      },
+      type: Array
     }
   },
   data() {
@@ -57,7 +63,9 @@ export default {
         if(this.$refs.tree) {
           this.$refs.tree.setCheckedKeys([])
         }
-        this.getUserAccess(this.userInfor.userId)
+        if(this.userInfor.userId) {
+          this.getUserAccess(this.userInfor.userId)
+        }
       }
     }
   },
@@ -67,10 +75,6 @@ export default {
         getDataAccess(userId)
           .then((response) => {
             this.defaultCheck = response.data.result.channelIdList ? response.data.result.channelIdList : []
-            // this.$refs.tree.setCheckedKeys(['1108265560111714304'])
-            // this.$message.success('操作成功')
-            // this.$emit('update:dialogVisible', false)
-            // this.$emit('handelSuccess')
             resolve()
           })
           .catch((error) => {
@@ -82,6 +86,15 @@ export default {
       this.$emit('update:dialogVisible', false)
     },
     confirmSave() {
+      if(this.userInfor.userId) {
+        // 单独操作
+        this.singleHandel()
+      } else {
+        // 批量操作
+        console.log(this.multipleSelection, 'multipleSelection')
+      }
+    },
+    singleHandel() {
       let params = {
         userId: this.userInfor.userId,
         channelIdList: this.$refs.tree.getCheckedNodes().map((ele) => {

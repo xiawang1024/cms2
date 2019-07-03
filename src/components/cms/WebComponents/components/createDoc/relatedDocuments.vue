@@ -3,7 +3,7 @@
     <div class="save-btn">
       <el-button type="primary" size="mini" @click="saveHandelRelation">保存</el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%" highlight-current-row>
+    <el-table :data="tableData" style="width: 100%" highlight-current-row ref="multipleTable">
       <el-table-column prop="articleTitle" label="标题" min-width="200" show-overflow-tooltip/>
       <el-table-column prop="articleType" label="类型">
         <template slot-scope="scope">
@@ -35,7 +35,7 @@
       <el-table-column prop="modifyTime" label="修改时间" width="200"/>
       <el-table-column align="right">
         <template slot="header" slot-scope="scope">
-          <el-button type="text" @click="handleAdd" size="mini">添加</el-button>
+          <el-button type="primary" @click="handleAdd" size="mini">添加</el-button>
           <!-- <el-button type="text" style="color:#f95757" @click="handleAutoGet">自动获取</el-button> -->
         </template>
         <template slot-scope="scope">
@@ -51,6 +51,7 @@ import { TreeData } from './mockData.js'
 import { mapGetters } from 'vuex'
 import { getRelationDoc, saveRelationDoc } from '@/api/cms/article'
 import documentDialog from './relationComponents/documentDialog.vue'
+import Sortable from 'sortablejs'
 export default {
   name: 'RelatedDocuments',
   components: {
@@ -83,7 +84,49 @@ export default {
     }
     
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.setSort()
+    })
+  },
   methods: {
+    // 拖拽排序
+    setSort() {
+      var that = this
+      const el = this.$refs.multipleTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
+      this.sortable = Sortable.create(el, {
+        // ghostClass: 'sortable-ghost',
+        setData: function(dataTransfer) {
+        },
+        onEnd: evt => {
+        },
+        onUpdate:function(event){
+           var newIndex = event.newIndex,
+               oldIndex = event.oldIndex,
+               $li = el.children[newIndex],
+               $oldLi = el.children[oldIndex]
+            // 先删除移动的节点
+            el.removeChild($li)    
+            // 再插入移动的节点到原有节点，还原了移动的操作
+            if(newIndex > oldIndex) {
+                el.insertBefore($li,$oldLi)
+            } else {
+                el.insertBefore($li,$oldLi.nextSibling)
+            }
+            // 更新items数组
+            var item = that.tableData.splice(oldIndex,1)
+            that.tableData.splice(newIndex,0,item[0])
+            // 下一个tick就会走patch更新
+            // let ids = that.newList.map((ele) => {
+            //   return ele.articleId
+            // })
+            // let params = {
+            //   articleIdList: ids
+            // }
+            // that.articalSort(params)
+        }
+      })
+    },
     // 保存选择文章
     saveHandelRelation() {
       console.log(this.tableData, 'tableData')
@@ -108,7 +151,12 @@ export default {
     },
     // 获取选中的文章
     getChoosed(list) {
-      this.tableData = this.tableData.concat(list)
+      let arr = this.tableData.concat(list)
+      let obj = {};
+      this.tableData = arr.reduce((cur,next) => {
+        obj[next.articleId] ? "" : obj[next.articleId] = true && cur.push(next);
+        return cur;
+      },[]) //设置cur默认类型为数组，并且初始值为空的数组
     },
     tagsChange(tags) {
       let tagName = ''
@@ -160,7 +208,7 @@ export default {
 <style lang="scss">
 .relatedDocuments-wrap {
   .save-btn{
-    text-align: right;
+    // text-align: right;
   }
 }
 </style>
