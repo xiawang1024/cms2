@@ -4,6 +4,7 @@
     :before-close="handleClose"
     :title="params.type === 'add' ? '添加字段' : '编辑字段'"
     append-to-body
+    class="extends-handel-dialog"
     width="500px">
     <!-- <el-form :model="extendFieldForm" label-position="top">
       <el-form-item label="名称">
@@ -111,6 +112,8 @@ export default {
     typeChange(val) {
       if(val == '1') {
         this.formSettings[0].items[2].hidden = false
+      }else {
+        this.formSettings[0].items[2].hidden = true
       }
     },
     submitSave(data) {
@@ -150,3 +153,12 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  .extends-handel-dialog{
+    .v-form{
+      .save-btn{
+        margin-bottom:0;
+      }
+    }
+  }
+</style>
