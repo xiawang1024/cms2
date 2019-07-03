@@ -179,7 +179,7 @@ export default {
 
 <style lang='scss'>
 .article-check{
-  margin:30px;
+  // margin:30px;
   .preview{
     cursor: pointer;
   }

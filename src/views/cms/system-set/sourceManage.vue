@@ -92,7 +92,7 @@ export default {
 }
 
 .source-manage-container {
-  margin: 30px;
+ 
 }
 
 .pull-right {

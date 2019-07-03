@@ -1,9 +1,10 @@
 <template>
   <div class="components-container">
-    <pap-search ref="papSearchForm" :content="searchForm">
-      <!-- 按钮等租户建议放在外层，这里建议存放的是特殊情况的搜索框(不能通过JSON传参生成的搜索条件) -->
-      <!--<el-button type="primary" icon="el-icon-search">搜索</el-button>-->
-    </pap-search>
+    <!-- <pap-search ref="papSearchForm" :content="searchForm">
+    </pap-search> -->
+    <div class="v-search-header">
+      <v-search :search-settings="searchSettings" @search="search"/>
+    </div>
     <!-- 根据 buttonArray 中的 click 参数，对外暴露监听其中的方法，并在当前页面中监听并实现对应的业务 -->
     <button-group :button-array="buttonArray" @list-click="listClick()" @create-click="createClick" @edit-click="editClick" @enable-click="enableClick" @disable-click="disableClick"/>
     <!-- 表格的数据展示，参数放置到 tableConfig 中进行传入。 -->
@@ -75,7 +76,35 @@ export default {
           $el: { placeholder: '请输入', style: 'width: 200px' }
         }
       ],
-
+      searchSettings: [
+        {
+          label: '租户编码',
+          name: 'organizationCode',
+          placeholder: '请输入租户编码',
+          visible: true,
+          type: 'text'
+        },
+        {
+          label: '租户名称',
+          name: 'organizationName',
+          placeholder: '请输入租户名称',
+          visible: true,
+          type: 'text'
+        },
+        // {
+        //   label: '系统类型',
+        //   name: 'organizationType',
+        //   placeholder: '请输入系统类型',
+        //   visible: false,
+        //   type: 'text'
+        // }
+      ],
+      // 搜索条件
+      searchData: {
+        organizationCode: '',
+        organizationName: '',
+        organizationType: 'CUSTOMER'
+      },
       // 弹出框表单
       dialogForm: [
         {$id: 'organizationId', $type: 'input', $label: '租户编号', $default: '', $enableWhen: { null: 'null' },
@@ -116,12 +145,19 @@ export default {
     this.getList()
   },
   methods: {
+    // 点击搜索
+    search(data) {
+      this.searchData = data
+      this.tableConfig.paginationPageNo = 1
+      this.searchData.organizationType = 'CUSTOMER'
+      this.getList()
+    },
     getList () {
       var _this = this
-      var searchFormObj = this.$refs.papSearchForm.$refs.formRender.getFormValue()
+      // var searchFormObj = this.$refs.papSearchForm.$refs.formRender.getFormValue()
       return new Promise((resolve, reject) => {
         // 开始请求
-        OrganizationList(searchFormObj, this.tableConfig.paginationPageNo, this.tableConfig.paginationSize).then(async res => {
+        OrganizationList(_this.searchData, this.tableConfig.paginationPageNo, this.tableConfig.paginationSize).then(async res => {
           _this.tableConfig.total = res.data.result.total
           _this.tableConfig.tableData = res.data.result.content
           // 结束

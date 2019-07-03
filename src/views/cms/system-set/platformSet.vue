@@ -1,6 +1,6 @@
 <template>
   <div class="platform-container">
-    <div class="tool-bar">
+    <div class="handel-title">
       <el-button size="mini" type="primary" @click="handleAddDialog()">新增</el-button>
     </div>
     <el-table :data="dictObj.details" style="width: 100%">
@@ -197,7 +197,7 @@ export default {
 }
 
 .platform-container {
-  margin: 30px;
+ 
 }
 
 .tool-bar {

@@ -36,6 +36,7 @@ export default {
 .app-main > div:first-child{
   height: 100%;
   overflow-y: auto;
+  padding:15px;
 }
 </style>
 

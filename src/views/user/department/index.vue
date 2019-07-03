@@ -3,7 +3,7 @@
     <!-- <pap-search ref="papSearchForm" :content="searchForm"/> -->
     <!-- 根据 buttonArray 中的 click 参数，对外暴露监听其中的方法，并在当前页面中监听并实现对应的业务 -->
     <button-group :button-array="buttonArray" @list-click="listClick()" @create-click="createClick"/>
-    <div style="margin-top: 50px;">
+    <div style="margin-top:10px">
       <el-tree ref="tree" :data="treeData" :props="defaultProps" :expand-on-click-node="false" show-checkbox default-expand-all node-key="departmentId" highlight-current>
         <span slot-scope="{ node, data }" class="custom-tree-node">
           <span>{{ node.label }}</span>
@@ -23,18 +23,18 @@
         </el-form-item>
       </el-form-renderer>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormSubmit">确 定</el-button>
+        <el-button @click="dialogFormVisible = false" size="mini">取 消</el-button>
+        <el-button type="primary" @click="dialogFormSubmit" size="mini">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 用户分配管理 弹窗组件 -->
     <el-dialog :visible.sync="dialogUserManagerVisible" :before-close="handleClose" title="用户分配管理">
-      <div style="height: 700px;">
-        <user ref="dialogUserRef" :button-array-props="dialogUserManagerButtonArrayProps" :import-button-flag="dialogUserManagerImportButtonFlag">
-          <h1 slot="fotter-slot" style="float: right;">
-            <el-button @click="dialogUserManagerVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogUserManagerSubmit">确 定</el-button>
-          </h1>
+      <div >
+        <user ref="dialogUserRef" :use-props-btn="usePropsBtn" :button-array-props="dialogUserManagerButtonArrayProps" :import-button-flag="dialogUserManagerImportButtonFlag">
+          <div slot="header-slot" style="margin-top:10px">
+            <!-- <el-button @click="dialogUserManagerVisible = false" size="mini">取 消</el-button> -->
+            <el-button type="primary" icon="el-icon-check" @click="dialogUserManagerSubmit" size="mini">保存</el-button>
+          </div>
         </user>
       </div>
     </el-dialog>
@@ -100,8 +100,9 @@ export default {
       dialogUserManagerDepartmentId: '',
       // 用户弹出框按钮组
       dialogUserManagerButtonArrayProps: [
-        {name: '搜索', auth: 'USER:LIST', click: 'list-click', icon: 'el-icon-search'}
+        // {name: '搜索', auth: 'USER:LIST', click: 'list-click', icon: 'el-icon-search'}
       ],
+      usePropsBtn: true,
       dialogUserManagerImportButtonFlag: false,
       filename: ''
       /* eslint-disable */
@@ -288,10 +289,11 @@ export default {
       })
     },
     handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done();
-        }).catch(_ => {});
+      done()
+      // this.$confirm('确认关闭？')
+      //   .then(_ => {
+      //     done();
+      //   }).catch(_ => {});
     }
   }
 }

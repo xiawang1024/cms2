@@ -18,6 +18,8 @@
 
   // 侧边栏
   .sidebar-container {
+    background-color: rgb(48, 65, 86);
+    overflow: scroll;
     transition: all 0.2s;
     width: 180px !important;
     height: 100%;

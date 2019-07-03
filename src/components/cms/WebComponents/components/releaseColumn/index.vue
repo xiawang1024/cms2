@@ -74,7 +74,7 @@ export default {
   margin: 0 5px;
 }
 .tool-bar {
-  margin-top: 20px;
+  margin-top: 10px;
 }
 </style>
 

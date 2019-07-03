@@ -121,7 +121,7 @@ export default {
   .extends-word {
     .extends-word-add {
       // text-align: right;
-      margin-bottom:22px;
+      // margin-bottom:22px;
     }
   }
 </style>

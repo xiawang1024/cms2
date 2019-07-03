@@ -1,6 +1,6 @@
 <template>
   <div class="program-manage">
-    <div class="el-card__header">
+    <div class="v-search-header">
       <v-search :search-settings="searchSettings" @search="searchItem"/>
     </div>
     <div class="tool-bar">
@@ -161,7 +161,7 @@ export default {
 
 <style lang='scss'>
 .program-manage {
-  margin:30px;
+  // margin:30px;
   .tool-bar {
     margin-top:22px;
   }

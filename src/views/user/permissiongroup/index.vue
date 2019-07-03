@@ -1,10 +1,10 @@
 <template>
   <div class="components-container">
-    <pap-search ref="papSearchForm" :content="searchForm"/>
+    <!-- <pap-search ref="papSearchForm" :content="searchForm"/> -->
     <!-- 根据 buttonArray 中的 click 参数，对外暴露监听其中的方法，并在当前页面中监听并实现对应的业务 -->
     <button-group :button-array="buttonArray" @list-click="listClick()" @create-click="createClick"/>
 
-    <div style="margin-top: 50px;">
+    <div style="margin-top: 10px;">
       <!-- 注意这里的 node-key 字段维护，维护过之后，选择框数据才能正常 -->
       <el-tree ref="tree" :data="treeData" :props="defaultProps" :expand-on-click-node="false" show-checkbox default-expand-all node-key="permissionGroupId" highlight-current>
         <span slot-scope="{ node, data }" class="custom-tree-node">
@@ -25,18 +25,17 @@
         </el-form-item>
       </el-form-renderer>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormSubmit">确 定</el-button>
+        <el-button @click="dialogFormVisible = false" size="mini">取 消</el-button>
+        <el-button type="primary" @click="dialogFormSubmit" size="mini">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 权限分配管理 弹窗组件 -->
-    <el-dialog :visible.sync="dialogPermissionManagerVisible" :before-close="handleClose" title="权限分配管理">
-      <div style="height: 700px;">
-        <permission ref="dialogPermissionRef" :button-array-props="dialogPermissionManagerButtonArrayProps" :import-button-flag="dialogPermissionManagerImportButtonFlag">
-          <h1 slot="fotter-slot" style="float: right;">
-            <el-button @click="dialogPermissionManagerVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogPermissionManagerSubmit">确 定</el-button>
-          </h1>
+    <el-dialog :visible.sync="dialogPermissionManagerVisible" top="8vh" width="70%" :before-close="handleClose" title="权限分配管理">
+      <div>
+        <permission ref="dialogPermissionRef" :use-props-btn="hideBtn" :button-array-props="dialogPermissionManagerButtonArrayProps" :import-button-flag="dialogPermissionManagerImportButtonFlag">
+          <div slot="header-slot" style="margin-top:10px; margin-bottom:10px">
+            <el-button type="primary" @click="dialogPermissionManagerSubmit" size="mini">保存</el-button>
+          </div>
         </permission>
       </div>
     </el-dialog>
@@ -70,6 +69,10 @@ export default {
     treeButtonFlag: {
       type: Boolean,
       default: true
+    },
+    usePropsBtn: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -77,7 +80,7 @@ export default {
       /* eslint-disable */
       // 按钮组
       buttonArray: [
-        {name: '搜索', auth: true, click: 'list-click', icon: 'el-icon-search'},
+        // {name: '搜索', auth: true, click: 'list-click', icon: 'el-icon-search'},
         {name: '新建', auth: true, click: 'create-click', icon: 'el-icon-plus'}
       ],
       // 搜索框
@@ -116,17 +119,18 @@ export default {
       dialogPermissionManagerPermissionGroupId: '',
       // 权限弹出框按钮组
       dialogPermissionManagerButtonArrayProps: [
-        {name: '搜索', auth: 'USER:LIST', click: 'list-click', icon: 'el-icon-search'}
+        // {name: '搜索', auth: 'USER:LIST', click: 'list-click', icon: 'el-icon-search'}
       ],
       dialogPermissionManagerImportButtonFlag: false,
-      filename: ''
+      filename: '',
+      hideBtn: true
       /* eslint-disable */
     }
   },
   watch: {
     buttonArrayProps: {
       handler (val) {
-        if (val !== undefined && val.length > 0) {
+        if (val && this.usePropsBtn) {
           this.buttonArray = val
         }
       },
@@ -309,10 +313,11 @@ export default {
       })
     },
     handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done();
-        }).catch(_ => {});
+      done();
+      // this.$confirm('确认关闭？')
+      //   .then(_ => {
+      //     done();
+      //   }).catch(_ => {});
     }
   }
 }

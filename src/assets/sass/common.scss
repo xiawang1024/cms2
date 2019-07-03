@@ -173,3 +173,28 @@
     margin-bottom: 0;
   }
 }
+.v-search-header{
+  border-bottom: 1px solid #ebeef5;
+}
+.el-dialog__body{
+  padding-top:10px;
+  padding-bottom:10px;
+}
+.el-form{
+  label{
+    font-weight: normal;
+  }
+  .el-input__inner {
+    height: 32px;
+    line-height: 32px;
+  }
+  .el-form-item__label {
+    line-height: 32px
+  }
+  .el-form-item__content{
+    line-height: 32px;
+  }
+  .el-form-item{
+    margin-bottom:18px;
+  }
+}

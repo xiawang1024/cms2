@@ -43,14 +43,14 @@
         width="80"
         label="点击"/>
       <el-table-column
-        prop=""
+        prop="clickNum"
         label="操作"
         width="80">
         <template slot="header" slot-scope="scope">
-          <el-button type="primary" size="small" @click="chooseDoc">添加</el-button>
+          <el-button type="primary" size="mini" @click="chooseDoc">添加</el-button>
         </template>
         <template slot-scope="scope">
-          <el-button type="danger" size="small" @click.native.prevent="deleteRow(scope.$index, tableData)">删除</el-button>
+          <el-button type="danger" size="mini" @click.native.prevent="deleteRow(scope.$index, tableData)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

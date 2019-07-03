@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="pop-dialog">
 		<!-- 当前选中数据的表格弹窗查看，当前表格兼容分页保存选中数据，故需要一个地方存储所有选中的数据对象 -->
 		<!-- 为防止出现 嵌套Dialog ,内层的dialog 默认将 append-to-body 设置为 true -->
 		<el-dialog append-to-body title="表单操作" :visible.sync="baseDialogVisible" :before-close="handleClose">
@@ -8,8 +8,8 @@
 				<slot name="customerFormItem"></slot>
 			</el-form-renderer>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="baseDialogVisible = false">取 消</el-button>
-				<el-button type="primary" @click="dialogSubmit">确 定</el-button>
+				<el-button size="mini" @click="baseDialogVisible = false">取 消</el-button>
+				<el-button size="mini" type="primary" @click="dialogSubmit">确 定</el-button>
 			</div>
 		</el-dialog>
 	</div>
@@ -66,11 +66,17 @@ export default {
       })
     },
 	  handleClose (done) {
-	    this.$confirm('确认关闭？')
-	      .then(_ => {
-	        done()
-	      }).catch(_ => {})
+       done()
+	    // this.$confirm('确认关闭？')
+	    //   .then(_ => {
+	    //     done()
+	    //   }).catch(_ => {})
 	  }
   }
 }
 </script>
+<style lang="scss">
+  .pop-dialog {
+    
+  }
+</style>

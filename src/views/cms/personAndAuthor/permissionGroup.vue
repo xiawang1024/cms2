@@ -179,7 +179,7 @@ export default
 
 <style scoped>
 .permissionGroup-container {
-  margin: 30px;
+ 
 }
 
 .tool-bar {

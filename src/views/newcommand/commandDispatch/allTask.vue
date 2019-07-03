@@ -538,7 +538,7 @@ return 'height:70px'
 }
 
 
-  margin: 30px;
+  // margin: 30px;
 
   .pagination {
     margin-top: 20px;

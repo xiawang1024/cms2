@@ -1,8 +1,8 @@
 <template>
   <div class="imageGroup-wrap">
-    <div class="tool-bar">
+    <div >
       <el-button
-        size="small"
+        size="mini"
         type="primary"
         @click="handleGroup('add')"
       >新增</el-button>
@@ -360,9 +360,9 @@ export default {
 </script>
 <style lang="scss">
 .imageGroup-wrap{
-  .tool-bar{
-    margin-bottom:20px;
-  }
+  // .tool-bar{
+  //   margin-bottom:20px;
+  // }
   .image-setting{
     .form-section{
       border-bottom:none;

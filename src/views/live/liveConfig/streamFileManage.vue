@@ -112,7 +112,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .helpdoc-container {
-  margin: 30px;
+ 
 }
 .pagenation{
   margin: 30px 0;

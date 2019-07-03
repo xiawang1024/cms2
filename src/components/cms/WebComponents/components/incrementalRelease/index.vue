@@ -1,6 +1,6 @@
 <template>
   <div class="plus-publish">
-    <div class="el-card__header">
+    <div class="v-search-header">
       <v-search :search-settings="searchSettings" @search="searchItem" label-width="120px"/>
     </div>
     <el-table :data="tableData" style="width: 100%">
@@ -243,9 +243,9 @@ export default {
 
 <style lang='scss' scoped>
 .plus-publish {
-  margin:30px;
+  // margin:30px;
   .tool-bar {
-    margin-top:22px;
+    margin-top:10px;
   }
   .pagination {
     margin-top:20px;

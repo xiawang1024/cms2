@@ -1,6 +1,6 @@
 <template>
   <div class="docSource-container">
-    <div class="tool-bar">
+    <div class="handel-title">
       <el-button size="mini" type="primary" @click="handleDialog('add')">新增</el-button>
     </div>
     <el-table :data="dictObj.details" style="width: 100%" highlight-current-row >
@@ -203,7 +203,7 @@ export default {
 }
 
 .docSource-container {
-  margin: 30px;
+
 }
 
 .tool-bar {

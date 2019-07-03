@@ -3,8 +3,8 @@
     <el-form :inline="true" size="mini" style="margin-top: 10px;">
       <el-form-item :label="`已选数据 [ ${multipleSelection.length} ]`">
         <el-button-group>
-	        <el-button type="primary" size="mini" :disabled="multipleSelection.length === 0" @click="handleShowSelectedTableData(multipleSelection)">
-		        Show
+	        <el-button type="text" size="mini" :disabled="multipleSelection.length === 0" @click="handleShowSelectedTableData(multipleSelection)">
+		        查看
 	        </el-button>
         </el-button-group>
       </el-form-item>
@@ -154,6 +154,7 @@ export default {
     .el-pagination{
       margin-top:30px;
       padding: 0 30px;
+      margin-bottom:20px;
       text-align: right;
     }
   }
