@@ -12,15 +12,14 @@
               :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
               row-key="id"
     >
-      <el-table-column type="index" width="30" />
-      <el-table-column label=" "/>
-       
+      <el-table-column type="index" width="50" />
+      <el-table-column prop="userName" width="150" label="用户名" />
       <el-table-column prop="picPath" width="200" label="直播快照">
         <template slot-scope="scope">
-          <img :src="scope.row.picPath" alt class="imgStyle" >
+          <img :src="scope.row.picPath==null?defaultPath:scope.row.picPath" alt class="imgStyle" >
         </template>
       </el-table-column>
-      <el-table-column prop="userName" width="120" label="用户名" />
+      
       <el-table-column prop="recordBeginTime" width="180" :formatter="formatStart" label="录制开始时间" />
       <el-table-column prop="pullStream" label="直播流地址" />
       <el-table-column prop="pushiStream" label="推流地址" />
@@ -127,7 +126,8 @@ export default {
       activeName: "0",
       sharHTMLContent: "",
       sharIframeContent: "",
-      isCopy: ""
+      isCopy: "",
+      defaultPath:require('@/assets/bgPicture/liveBg.png')
     };
   },
   created() {
