@@ -6,9 +6,13 @@
         <el-tab-pane label="视频转码" name="1"/>
       </el-tabs>
     </template>
-    <el-table :data="tableValue">
+    <el-table :data="tableValue" 
+              :load="load"
+              lazy
+              :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+              row-key="id">
       <el-table-column type="index" width="50" />
-      <el-table-column prop="appName" width="80" label="APP名称" />
+      <el-table-column prop="appName" label="APP名称" />
       <el-table-column prop="userName" width="120" label="用户名" />
       <el-table-column prop="recordBeginTime" width="180" :formatter="formatStart" label="录制开始时间" />
       <el-table-column prop="recordEngTime" width="180" :formatter="formatEnd" label="录制结束时间" />
@@ -53,8 +57,9 @@
   </div>
 </template>
 <script>
-import { streamfile, editeStreamfile } from "@/api/live/streamFileManage.js";
+import { streamfile, editeStreamfile,childrenStreamfile } from "@/api/live/streamFileManage.js";
 import videoEdite from "@/components/videoCut/videoEdite.vue";
+import { Promise } from 'q';
 export default {
   components: { videoEdite },
   data() {
@@ -71,7 +76,7 @@ export default {
       url: "", //文件路径
       loading: false,
       activeName:'0',
-
+      childrenNode:[],
     };
   },
   created() {
@@ -92,6 +97,7 @@ export default {
           .then(response => {
             if (response.data.code == 0) {
               _this.tableValue = response.data.result.content;
+              
               _this.totalCount = response.data.result.total;
             } else {
               this.$message({
@@ -210,6 +216,32 @@ export default {
       }
 
       },
+      
+    load(tree, treeNode, resolve) {
+      //传入当前节点id,查询子节点列表
+      //发送请求，将请求结果resolve出去，
+      var _resolve=resolve;
+       var _this=this;
+        return new Promise((resolve,reject)=>{
+        childrenStreamfile(tree.id)
+        .then(response=>{
+          console.log(response);
+            if(response.data.code==0){
+              _this.childrenNode=response.data.result
+               _resolve( _this.childrenNode)
+            }else{
+              //没有子节点返回空值
+               _resolve([])
+            }
+          resolve();
+        })
+        .catch(error=>{
+          reject(error);
+        })
+      })
+       
+      },
+      
   }
 };
 </script>

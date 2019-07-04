@@ -811,16 +811,20 @@
                 cropItemList.forEach(item => {
 
                     // currentItem片段包含item
-                    if (item.endTime <= endTime && item.startTime >= startTime) {
+                    if (item.endTime == endTime && item.startTime == startTime) {
+                        return
+                    }
+                    //两次点击同一位置
+                    if (item.endTime == item.startTime) {
                         return
                     }
                     // currentItem片段与item有重叠
-                    if (item.startTime <= endTime && item.endTime >= endTime) {
-                        endTime = item.endTime
-                        return
-                    }
+                    // if (item.startTime <= endTime && item.endTime >= endTime) {
+                    //     endTime = item.endTime
+                    //     return
+                    // }
                     // currentItem片段与item无重叠,向列表添加一项，更新记录参数
-                    if (item.startTime > endTime) {
+                    // if (item.startTime > endTime) {
                         tempCropItemList.push({
                             startTime: startTime,
                             endTime: endTime,
@@ -830,7 +834,7 @@
 
                         startTime = item.startTime
                         endTime = item.endTime
-                    }
+                    // }
                 })
 
                 // 遍历完成，将最后的时间片段写入列表
@@ -889,7 +893,7 @@
 
                 })
 
-                // console.log(tempCropItemList,'!!')
+                console.log(tempCropItemList,'!!')
                 this.$emit('cutResult',tempCropItemList)
                 this.reset();
                 return tempCropItemList

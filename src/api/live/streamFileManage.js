@@ -31,4 +31,15 @@ export function editeStreamfile(data) {
       }
     });
   }
-  
+  //根据父id查询子节点信息
+  export function childrenStreamfile(id) {
+    return request({
+      url:
+        Cpath +
+        `/streamfile/selectbypereid?id=${id}`,
+      method: "post",
+      loadingConfig: {
+        noLoading: true
+      }
+    });
+  }

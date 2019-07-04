@@ -32,7 +32,6 @@
         },
         data () {
             return {
-                // videoUrl: 'http://172.20.5.4:8080/dl/2019/6/28/1500371069020190628104431.mp4',
                 duration: 0,
                 playing: false,
                 currentTime: 0
