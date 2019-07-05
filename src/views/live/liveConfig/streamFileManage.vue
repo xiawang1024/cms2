@@ -12,7 +12,7 @@
               :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
               row-key="id">
       <el-table-column type="index" width="50" />
-      <el-table-column prop="appName" label="APP名称" />
+      <el-table-column prop="appName" width="150" label="APP名称" />
       <el-table-column prop="userName" width="120" label="用户名" />
       <el-table-column prop="recordBeginTime" width="180" :formatter="formatStart" label="录制开始时间" />
       <el-table-column prop="recordEngTime" width="180" :formatter="formatEnd" label="录制结束时间" />
