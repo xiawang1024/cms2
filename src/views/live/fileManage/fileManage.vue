@@ -55,10 +55,10 @@
         <template slot="paneR">
           <div class="right-container">
             <el-row>
-              <el-col :span="4">
+              <el-col :span="24">
                 <div class="fileTree">
                   左侧
-                  <el-button type="text" icon="el-icon-folder" size="mini " class="folderSize" @click.left="handleLeft" @click.stop="handleRight" 
+                  <el-button type="text" icon="el-icon-folder" size="mini " class="folderSize" @click.left="handleLeft" @click.right="handleRight" 
                              v-aleretAbility
                   >
                     <span class="folderName">文件夹</span>
@@ -81,9 +81,6 @@
                   </el-button>
 
                 </div>
-              </el-col>
-              <el-col :span="20">
-                <div class="fileView">右侧</div>
               </el-col>
             </el-row>
 
@@ -126,9 +123,13 @@ export default {
   directives:{
     aleretAbility:{
       inserted(el){
-        window.onload = function(el){ 
-          el.oncontextmenu=false; 
-          } 
+        // alert('自定义指令！')
+          el.oncontextmenu=function(){
+           console.log('点击右键')
+            
+          }
+          //阻止右键点击默认事件
+         window.oncontextmenu = function(){return false;}
       } 
     }
   },
