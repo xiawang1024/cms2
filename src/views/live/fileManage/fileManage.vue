@@ -9,23 +9,6 @@
         </el-col>
       </el-row>
     </header>
-    <!-- <div class="mainbox">
-       
-      <el-row>
-        <el-col :span="4">
-          <div class="fileTree">
-              左侧
-         </div>
-        </el-col>
-        <el-col :span="20">
-          <div class="fileView">
-              右侧
-          </div>
-        </el-col>
-      </el-row>
-        
-    </div>-->
-
     <div class="components-container">
       <split-pane
         :min-percent="10"
@@ -48,7 +31,7 @@
                 :props="defaultProps"
                 @check="addColumn"
                 check-strictly
-              /> -->
+              />-->
             </el-scrollbar>
           </div>
         </template>
@@ -57,29 +40,39 @@
             <el-row>
               <el-col :span="24">
                 <div class="fileTree">
-                  左侧
-                  <el-button type="text" icon="el-icon-folder" size="mini " class="folderSize" @click.left="handleLeft" @click.right="handleRight" 
-                             v-aleretAbility
+                  <!--  -->
+                  <!-- <el-popover
+                    placement="right-end"
+                    title="标题"
+                    width="200"
+                    trigger="manual"
+                    v-model="visible"
                   >
-                    <span class="folderName">文件夹</span>
-                  </el-button>
-                  <el-button type="text" icon="el-icon-folder-opened" size="mini " class="folderSize">
-                    <span class="folderName">打开文件夹</span>
-                  </el-button>
-                  <el-button type="text" icon="el-icon-folder-add" size="mini " class="folderSize">
-                    <span class="folderName">新建文件夹</span>
-                  </el-button>
-                  <el-button type="text" icon="el-icon-folder-remove" size="mini " class="folderSize">
-                    <span class="folderName">移动文件夹</span>
-                  </el-button>
-                  <el-button type="text" icon="el-icon-folder-delete" size="mini " class="folderSize">
-                    <span class="folderName">删除文件夹</span>
-                  </el-button>
+                    <div class="abilityBox">
+                      <li>复制</li>
+                      <li>粘贴</li>
+                      <li>剪切</li>
+                      <li>删除</li>
+                      <li>属性</li>
+                    </div>
+                    <el-button
+                      type="text"
+                      icon="el-icon-folder"
+                      size="mini "
+                      class="folderSize"
+                      @click.left="handleLeft"
+                      @dblclick.native="handleDouble"
+                      @click.right.native="handleRight"
+                      v-aleretAbility
+                      slot="reference"
+                    >
+                      <span class="folderName">文件夹name</span>
+                    </el-button>
+                  </el-popover> -->
+                  <!--  -->
+                  <physicalView/>
+                 
                   
-                  <el-button type="text" icon="el-icon-tickets" size="mini " class="folderSize">
-                    <span class="folderName">文件</span>
-                  </el-button>
-
                 </div>
               </el-col>
             </el-row>
@@ -108,7 +101,7 @@
                 style="float: right"
                 @size-change="sizeChange"
                 @current-change="pageChange"
-              /> -->
+              />-->
             </el-scrollbar>
           </div>
         </template>
@@ -118,40 +111,29 @@
 </template>
 <script>
 import splitPane from "vue-splitpane";
+import physicalView from "./physicalView"
 export default {
-  components: { splitPane },
-  directives:{
-    aleretAbility:{
-      inserted(el){
-        // alert('自定义指令！')
-          el.oncontextmenu=function(){
-           console.log('点击右键')
-            
-          }
-          //阻止右键点击默认事件
-         window.oncontextmenu = function(){return false;}
-      } 
+  components: { splitPane,physicalView},
+  directives: {
+    aleretAbility: {
+      inserted(el) {
+        //阻止右键点击默认事件
+        window.oncontextmenu = function() {
+          return false;
+        };
+      }
     }
   },
   data() {
     return {
-      treeData:[],
       fileList:[],
-
+     
     };
   },
-  mounted(){
-
-  },
+  mounted() {},
   methods: {
-    handleLeft(){
-      console.log('点击了左键')
-    },
-    handleRight(e){
-      console.log('点击了右键')
-
-    },
-    resize(){
+   
+    resize() {
       //调整大小
     }
   }
@@ -186,14 +168,5 @@ export default {
   height: 100%;
   padding-left: 30px;
 }
-.folderSize {
-  /deep/i {
-    font-size: 70px;
-  }
 
-  .folderName {
-    display: block;
-    font-size: 16px;
-  }
-}
 </style>

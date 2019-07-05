@@ -12,7 +12,7 @@ const fileManage = {
     icon: "liveClue",
     role: "live"
   },
-  hidden:true,
+  // hidden:true,
   name: "fileManage",
   children: [
     
@@ -31,6 +31,8 @@ const fileManage = {
         },
        
       }
+      
+      
       
     
   ]
