@@ -21,7 +21,7 @@ const sysType = [
   },
   {
     type: 'live',
-    value: '直播'
+    value: '流媒体'
   }
 ]
 // {

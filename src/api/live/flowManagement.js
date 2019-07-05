@@ -1,24 +1,6 @@
 import request from "@/utils/request";
 let Cpath = "/live-stream";
 
-//app配置
-
-//录制文件分页检索
-
-export function streamfile(data) {
-  return request({
-    url:
-      Cpath +
-      `/streamfile/page?pageNo=${data.pageNo}&pageSize=${
-        data.pageSize
-      }&sortBy=${data.sortBy}&order=${data.order}`,
-    method: "post"
-    // loadingConfig: {
-    //   noLoading: true
-    // }
-  });
-}
-
 //直播流
 //删除
 export function deleteStream(id) {
@@ -95,19 +77,3 @@ export function getStreamInfo(data) {
   });
 }
 
-
-//直播流地址管理
-
-export function managaStreamAddress(data) {
-    return request({
-      url:
-        Cpath +
-        `/streamaddress/page?pageNo=${data.pageNo}&pageSize=${data.pageSize}&sortBy=${
-          data.sortBy
-        }&order=${data.order}`,
-      method: "post"
-      // loadingConfig: {
-      //   noLoading: true
-      // }
-    });
-}

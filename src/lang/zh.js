@@ -168,7 +168,7 @@ export default {
     //-------直播------------------------------
     streamFileManage:'录制文件管理',
     directStream:'直播流管理',
-    liveConfig:'直播配置',
+    liveConfig:'流媒体配置',
     streamAdressManage:'视频流地址管理',
 
 
