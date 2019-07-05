@@ -13,6 +13,8 @@ import editorImage from './components/editorImage'
 import plugins from './plugins'
 import toolbar from './toolbar'
 import baseUrl from '@/config/base-url'
+// import 'tinymce-imageupload'
+import '@/common/editor-upload'
 export default {
   name: 'Tinymce',
   components: { editorImage },
@@ -114,8 +116,10 @@ export default {
         body_class: 'panel-body ',
         object_resizing: false,
         toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
+        // toolbar: 'imageupload',
         menubar: this.menubar,
         plugins: plugins,
+        // plugins: 'imageupload',
         end_container_on_empty_block: true,
         powerpaste_word_import: 'clean',
         code_dialog_height: 450,
@@ -130,6 +134,13 @@ export default {
         font_formats: '微软雅黑=Microsoft YaHei,Helvetica Neue,PingFang SC,sans-serif;苹果苹方=PingFang SC,Microsoft YaHei,sans-serif;宋体=simsun,serif;仿宋体=FangSong,serif;黑体=SimHei,sans-serif;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats;知乎配置=BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;小米配置=Helvetica Neue,Helvetica,Arial,Microsoft Yahei,Hiragino Sans GB,Heiti SC,WenQuanYi Micro Hei,sans-serif',
         nonbreaking_force_tab: true, // inserting nonbreaking space &nbsp; need Nonbreaking Space Plugin
         imagetools_toolbar: 'rotateleft rotateright | flipv fliph | editimage imageoptions',
+        // 新加
+        imageupload_url: this.upURL,
+        imageupload_converCb: (res) => { // 根据后端返回的数据，转换成符合插件要求的数据结构
+          window.tinymce
+          .get(_this.tinymceId)
+          .insertContent(`<img class="wscnph" src="${_this.downURL}${res.data.result.filePath}" >`)
+        },
         init_instance_callback: editor => {
           if (_this.value) {
             editor.setContent(_this.value)
