@@ -117,7 +117,7 @@ export default {
       console.log(row.filePath);
       //需要处理一下路径
       let url = row.filePath.split("vod")[1];
-      url = "http://172.20.5.4:8080/dl" + url;
+      url = "/dl" + url;
       this.rowUrl = url;
       this.rowId = row.id;
       this.url = row.filePath;
