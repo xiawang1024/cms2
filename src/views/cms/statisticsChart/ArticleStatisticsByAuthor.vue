@@ -1,7 +1,7 @@
 <template>
   <div class="mycharts">
     <div class="tool-bar">
-      <el-dropdown size="mini" @command="handleCommand" >
+      <el-dropdown size="mini" @command="handleCommand" v-if="checkAuth('cms:charts:author')">
         <el-button size="mini" type="primary" :disabled="authorList.length==0" >
           {{ nowAuthor }}
           <i class="el-icon-arrow-down el-icon--right"/>
