@@ -117,7 +117,10 @@ export default {
       console.log(row.filePath);
       //需要处理一下路径
       let url = row.filePath.split("vod")[1];
-      url = "http://172.20.5.4:8080/dl" + url;
+      //测试使用直播地址
+      // url = "http://172.20.5.4:8080/dl" + url;
+      //生产使用直播地址
+      url = "http://vod.stream2.hndt.com/dl/live_video_record" + url;
       this.rowUrl = url;
       this.rowId = row.id;
       this.url = row.filePath;
