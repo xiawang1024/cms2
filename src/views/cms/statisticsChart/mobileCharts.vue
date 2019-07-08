@@ -22,7 +22,7 @@
             height="450px"
             width="100%"
             :timevalue="timevalue"
-            :title="&quot;苹果统计&quot;"
+            :title="&quot;IOS&quot;"
             :new-user="ios_newUser"
             :active-user-info="ios_activeUserInfo"
             :launch-info="ios_launchInfo"
@@ -37,7 +37,7 @@
             height="450px"
             width="100%"
             :timevalue="timevalue"
-            :title="&quot;安卓统计&quot;"
+            :title="&quot;Android&quot;"
             :new-user="android_newUser"
             :active-user-info="android_activeUserInfo"
             :launch-info="android_launchInfo"
@@ -51,14 +51,11 @@
 <script>
 import umeng from "@/components/Charts/umeng.vue";
 import umengTitle from "@/components/Charts/umengTitleBoard.vue";
-// import {fun_date} from "@/components/Charts/handleTimer.js"
 import {
   getActiveUser,
   getAppList,
-  // getDurations,
   getLaunches,
   getNewUsers,
-  // getRetentions,
   getTotalUsers,
   getTrend
 } from "@/api/cms/liveCharts";
@@ -231,20 +228,6 @@ export default {
           });
       });
     },
-    // fetchRetentions() {
-    //   return new Promise((resolve, reject) => {
-    //     getRetentions(
-    //       this.IosAppKey,
-    //       this.startDate,
-    //       this.endDate,
-    //       this.periodType
-    //     )
-    //       .then(response => {})
-    //       .catch(reject => {
-    //         console.log(reject);
-    //       });
-    //   });
-    // },
     fetchTotalUsers(appkey, type) {
       var _this = this;
       return new Promise((resolve, reject) => {

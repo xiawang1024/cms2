@@ -220,9 +220,9 @@ export default {
         allDate.push(
           date1.getFullYear() +
             "-" +
-            (date1.getMonth() + 1) +
+            ((date1.getMonth() + 1)<10?'0'+(date1.getMonth() + 1):(date1.getMonth() + 1)) +
             "-" +
-            date1.getDate()
+            ((date1.getDate()+1)<10?'0'+(date1.getDate() + 1):(date1.getDate() + 1))
         );
 
         date1.setDate(date1.getDate() + 1);

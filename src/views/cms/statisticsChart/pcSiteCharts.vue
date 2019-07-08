@@ -97,7 +97,6 @@ export default {
       this.sevendayAgo = sevendayAgo.replace(/-/gi, "");
       let monthAgo = fun_date(-30);
       this.monthAgo = monthAgo.replace(/-/gi, "");
-      console.log(this.sevendayAgo, "7tian");
     },
     InitInfo() {
       this.tenantId = JSON.parse(
@@ -192,11 +191,10 @@ export default {
             if (response.data.code === 0) {
               let result = JSON.parse(response.data.result);
               _this.dashdate = result.body.data[0].result.items[1];
-              console.log(_this.dashdate, "resss");
             }
           })
-          .catch(reject => {
-            console.log(reject);
+          .catch(error => {
+            console.log(error);
           });
       });
     },
@@ -205,17 +203,6 @@ export default {
     getCurrentVisitor() {
       var _this = this;
       return new Promise((resolve, reject) => {
-        // let data = {
-        //   area: "china",
-        //   domain: "nydt.cn",
-        //   maxResults: "0",
-        //   metrics: "area,source,visit_time,visit_pages,access_page,ip",
-        //   method: "trend/latest/a",
-        //   order: "visit_pages, desc",
-        //   siteId: "13495008",
-        //   source: "through"
-        // };
-
         siteProfile(this.visitorData)
           .then(response => {
             if (response.data.code == 0) {
@@ -225,7 +212,6 @@ export default {
                 _this.tableData = _this.handleData(res);
               });
 
-              console.log(_this.tableData, "resss");
             } else {
               this.$message({
                 type: "error",
@@ -233,8 +219,8 @@ export default {
               });
             }
           })
-          .catch(reject => {
-            console.log(reject);
+          .catch(error => {
+              console.log(error);
           });
       });
     },
@@ -282,7 +268,6 @@ export default {
             } else if (type == "fo") {
               _this.chartsvaluefo = _this.handleChartData(data);
             }
-            // console.log(_this.tableData, "resss");
           } else {
             this.$message({
               type: "error",
@@ -290,8 +275,8 @@ export default {
             });
           }
         })
-        .catch(reject => {
-          console.log(reject);
+        .catch(error => {
+          console.log(error);
         });
     },
     //table 数据处理

@@ -48,7 +48,6 @@ export default {
   components: { articleCount, articleTitle },
   data() {
     return {
-      //uemng
       datavalue: {},
       chartsvalue: {},
       options:[],
