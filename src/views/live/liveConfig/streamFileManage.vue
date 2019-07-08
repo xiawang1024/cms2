@@ -151,8 +151,6 @@ export default {
       var _this = this;
       this.loading = true;
       //添加上 url , order, id 等字段
-      console.log(value, "emit");
-      
       let data=[];
       data=JSON.parse(JSON.stringify(value))
       data.map((item, index) => {
@@ -177,7 +175,6 @@ export default {
         item.url = this.url;
         item.id = this.rowId;
       });
-      console.log(data, "data");
       //执行保存请求
       return new Promise((resolve, reject) => {
         editeStreamfile(data)
@@ -221,7 +218,6 @@ export default {
         return new Promise((resolve,reject)=>{
         childrenStreamfile(tree.id)
         .then(response=>{
-          console.log(response);
             if(response.data.code==0){
               _this.childrenNode=response.data.result
                _resolve( _this.childrenNode)
