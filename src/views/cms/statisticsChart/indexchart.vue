@@ -47,7 +47,13 @@
       </div>
       <div class="rightSection">
         <div class="titleright">
-          <h4>移动端统计</h4>
+         
+          <h4>移动端统计 
+          &#x3000;
+            <span class="androidColor">Android</span>
+            /
+            <span class="iosColor">IOS</span>
+          </h4>
           <p>
             <span @click="showMobile" v-if="checkAuth('cms:live:detail')" >查看详情>></span>
           </p>
@@ -57,21 +63,35 @@
           <div class="floor">
             <div class="smallbox">
               <p class="mytitle">新增用户（7日平均）</p>
-              <h3>{{ datavalue.totalNewUserAverage7!=null?datavalue.totalNewUserAverage7.toFixed(0):'--' }}</h3>
+              <h3>
+                <span class="androidColor">{{ android_datavalue.totalNewUserAverage7!=null?android_datavalue.totalNewUserAverage7.toFixed(0):'--' }}</span>
+                /
+                <span class="iosColor">{{ ios_datavalue.totalNewUserAverage7!=null?ios_datavalue.totalNewUserAverage7.toFixed(0):'--' }}</span>
+              </h3>
               <p>
                 同比
-                <span>{{ datavalue.totalNewUserChangePre!=null?(datavalue.totalNewUserChangePre*100).toFixed(2):'--' }}%</span>
-                <span v-if="datavalue.totalNewUserChangePre>0" class="redarrow">↑</span>
+                <span class="androidColor">{{ android_datavalue.totalNewUserChangePre!=null?(android_datavalue.totalNewUserChangePre*100).toFixed(2):'--' }}%</span>
+                <span v-if="android_datavalue.totalNewUserChangePre>0" class="redarrow">↑</span>
+                <span v-else class="greenarrow">↓</span>
+                <span class="iosColor">{{ ios_datavalue.totalNewUserChangePre!=null?(ios_datavalue.totalNewUserChangePre*100).toFixed(2):'--' }}%</span>
+                <span v-if="ios_datavalue.totalNewUserChangePre>0" class="redarrow">↑</span>
                 <span v-else class="greenarrow">↓</span>
               </p>
             </div>
             <div class="smallbox">
               <p class="mytitle">活跃用户（7日平均）</p>
-              <h3>{{ datavalue.activeUserAverage7!=null?datavalue.activeUserAverage7.toFixed(0):'--' }}</h3>
+              <h3>
+                <span class="androidColor">{{ android_datavalue.activeUserAverage7!=null?android_datavalue.activeUserAverage7.toFixed(0):'--' }}</span>
+                /
+                <span class="iosColor">{{ ios_datavalue.activeUserAverage7!=null?ios_datavalue.activeUserAverage7.toFixed(0):'--' }}</span>
+              </h3>
               <p>
                 同比
-                <span>{{ datavalue.activeUserChangePre!=null?(datavalue.activeUserChangePre*100).toFixed(2):'--' }}%</span>
-                <span v-if="datavalue.activeUserChangePre>0" class="redarrow">↑</span>
+                <span class="androidColor">{{ android_datavalue.activeUserChangePre!=null?(android_datavalue.activeUserChangePre*100).toFixed(2):'--' }}%</span>
+                <span v-if="android_datavalue.activeUserChangePre>0" class="redarrow">↑</span>
+                <span v-else class="greenarrow">↓</span>
+                <span class="iosColor">{{ ios_datavalue.activeUserChangePre!=null?(ios_datavalue.activeUserChangePre*100).toFixed(2):'--' }}%</span>
+                <span v-if="ios_datavalue.activeUserChangePre>0" class="redarrow">↑</span>
                 <span v-else class="greenarrow">↓</span>
               </p>
             </div>
@@ -79,21 +99,35 @@
           <div class="floor">
             <div class="smallbox">
               <p class="mytitle">新用户次日留存率（7日平均）</p>
-              <h3>{{ datavalue.retentionAverage7!=null?(datavalue.retentionAverage7*100).toFixed(2):'--' }}%</h3>
+              <h3>
+                <span class="androidColor">{{ android_datavalue.retentionAverage7!=null?(android_datavalue.retentionAverage7*100).toFixed(2):'--' }}%</span>
+                /
+                <span class="iosColor">{{ ios_datavalue.retentionAverage7!=null?(ios_datavalue.retentionAverage7*100).toFixed(2):'--' }}%</span>
+              </h3>
               <p>
                 同比
-                <span>{{ datavalue.retentionChangePre!=null?(datavalue.retentionChangePre*100).toFixed(2):'--' }}%</span>
-                <span v-if="datavalue.retentionChangePre>0" class="redarrow">↑</span>
+                <span class="androidColor">{{ android_datavalue.retentionChangePre!=null?(android_datavalue.retentionChangePre*100).toFixed(2):'--' }}%</span>
+                <span v-if="android_datavalue.retentionChangePre>0" class="redarrow">↑</span>
+                <span v-else class="greenarrow">↓</span>
+                <span class="iosColor">{{ ios_datavalue.retentionChangePre!=null?(ios_datavalue.retentionChangePre*100).toFixed(2):'--' }}%</span>
+                <span v-if="ios_datavalue.retentionChangePre>0" class="redarrow">↑</span>
                 <span v-else class="greenarrow">↓</span>
               </p>
             </div>
             <div class="smallbox">
               <p class="mytitle">使用时长（7日平均）</p>
-              <h3>{{ datavalue.durationAverage7!=null?(datavalue.durationAverage7.toFixed(2) ):'--'|computedTime }}</h3>
+              <h3>
+                <span class="androidColor">{{ android_datavalue.durationAverage7!=null?(android_datavalue.durationAverage7.toFixed(2) ):'--'|computedTime }}</span>
+                /
+                <span class="iosColor">{{ ios_datavalue.durationAverage7!=null?(ios_datavalue.durationAverage7.toFixed(2) ):'--'|computedTime }}</span>
+              </h3>
               <p>
                 同比
-                <span>{{ datavalue.durationChangePre!=null?(datavalue.durationChangePre*100).toFixed(2):'--' }}%</span>
-                <span v-if="datavalue.durationChangePre>0" class="redarrow">↑</span>
+                <span class="androidColor">{{ android_datavalue.durationChangePre!=null?(android_datavalue.durationChangePre*100).toFixed(2):'--' }}%</span>
+                <span v-if="android_datavalue.durationChangePre>0" class="redarrow">↑</span>
+                <span v-else class="greenarrow">↓</span>
+                <span class="iosColor">{{ ios_datavalue.durationChangePre!=null?(ios_datavalue.durationChangePre*100).toFixed(2):'--' }}%</span>
+                <span v-if="ios_datavalue.durationChangePre>0" class="redarrow">↑</span>
                 <span v-else class="greenarrow">↓</span>
               </p>
             </div>
@@ -243,7 +277,8 @@ export default {
   },
   data() {
     return {
-      datavalue: {},
+      ios_datavalue: {},
+      android_datavalue:{},
       chartValue: {
         activeUserAverage7: null,
         activeUserChangePre: null,
@@ -262,7 +297,8 @@ export default {
         totalUsers: null
       },
       dashdate: [],
-      appkey: "",
+      androidAppKey: "",
+      IosAppKey:'',
       sevendayAgo: "",
       today: "",
       requestParams: {
@@ -287,7 +323,8 @@ export default {
     this.timeInit();
     this.InitInfo();
     this.initParams();
-    this.fetchTrend();
+    this.fetchTrend(this.androidAppKey,'android');
+    this.fetchTrend(this.IosAppKey,'ios');
     this.profile();
     this.authorTrend();
   },
@@ -311,14 +348,19 @@ export default {
         path: "/cms/statisticsChart/mobileCharts"
       });
     },
-    fetchTrend() {
+    fetchTrend(key,type) {
       var _this = this;
       return new Promise((resolve, reject) => {
-        getTrend(this.appkey)
+        getTrend(key)
           .then(response => {
             if (response.data.code == 0) {
               let result = response.data.result;
-              _this.datavalue = result;
+              if(type=='android') {
+                _this.android_datavalue=result;
+              }else if(type=='ios'){
+                _this.ios_datavalue=result;
+              }
+          
             }
           })
           .catch(reject => {
@@ -365,8 +407,8 @@ export default {
         source: "string",
         startDate: "20190601"
         }
-        this.appkey= "5cbd29613fc19548f9000c25";
-
+        this.androidAppKey= "5cc5930e4ca357f82b00083c";
+        this.IosAppKey='5cbd29613fc19548f9000c25'
       }
       
     },
@@ -468,6 +510,13 @@ export default {
     box-sizing: border-box;
     box-shadow: 1px 5px 5px #dedede;
     width: 49%;
+    .androidColor {
+    text-indent: 1em;
+    color: #67c23a;
+  }
+  .iosColor {
+    color: #409eff;
+  }
     .floor {
       background-color: #fff;
       display: flex;

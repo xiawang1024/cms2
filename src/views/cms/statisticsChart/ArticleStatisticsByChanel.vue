@@ -1,19 +1,15 @@
 <template>
   <div class="mycharts">
     <div class="tool-bar">
-      <el-dropdown size="mini" @command="handleCommand" v-if="checkAuth('cms:charts:channel')" >
-        <el-button size="mini" type="primary" :disabled="chanelList.length==0">
-          {{ nowChanel }}
-          <i class="el-icon-arrow-down el-icon--right"/>
-        </el-button>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item
-            v-for="(item,index) in chanelList"
-            :command="item.value"
-            :key="index"
-          >{{ item.key }}</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+
+      <el-cascader
+        v-if="checkAuth('cms:charts:channel')"
+        change-on-select
+        v-model="chanelSelect"
+        :options="options"
+        @change="handleCommand"
+        size="mini"
+      />
     </div>
     <articleTitle :datavalue="datavalue"/>
     <div class="dateselect">
@@ -55,6 +51,8 @@ export default {
       //uemng
       datavalue: {},
       chartsvalue: {},
+      options:[],
+      chanelSelect:'',
       startDate: "",
       endDate: "",
       periodType: "daily",
@@ -65,9 +63,7 @@ export default {
       timevalue: [],
       activeName: "first",
       channelId: "1108265560111714304", //暂时写死
-      chanelList: [],
       tenantId: "hndzkj",
-      nowChanel: "请选择查看频道"
     };
   },
   created() {
@@ -95,13 +91,14 @@ export default {
       var _this = this;
       return new Promise((resolve, reject) => {
         fullChanelList(this.tenantId)
-        // fullChanelList("hndzkj")
           .then(response => {
             if (response.data.code == 0) {
               let result = response.data.result;
-              _this.chanelList = result;
-              _this.channelId=_this.chanelList[0].value;
-              _this.nowChanel=_this.chanelList[0].key;
+              //生成频道树
+              _this.options = _this.toTree(result);
+              //默认显示第一个频道数据
+              _this.channelId=result[0].value;
+              _this.chanelSelect=_this.channelId;
             }
           })
           .catch(reject => {
@@ -220,14 +217,9 @@ export default {
     },
 
     //频道切换
-    handleCommand(command) {
-      console.log(command);
-      this.channelId = command;
-      this.chanelList.forEach(item => {
-        if (item.value == command) {
-          this.nowChanel = item.key;
-        }
-      });
+    handleCommand(val) {
+      console.log(val,'val')
+      this.channelId=this.chanelSelect.reverse()[0]
       this.Init();
     },
     //日期选择
@@ -262,6 +254,35 @@ export default {
         return true
       }
     },
+    //生成树方法
+    toTree(data){
+       // 删除 所有 children,以防止多次调用
+      data.forEach(function(item) {
+        delete item.children;
+      });
+      // 将数据存储为 以 id 为 KEY 的 map 索引数据列
+      var map = {};
+      data.forEach(function(item) {
+        map[item.value] = item;
+      });
+      var val = [];
+      data.forEach(function(item) {
+        item.label = item.key;
+        item.id = item.id;
+        item.value = item.value;
+        // 以当前遍历项，的pid,去map对象中找到索引的id
+        var parent = map[item.parentId];
+        // 好绕啊，如果找到索引，那么说明此项不在顶级当中,那么需要把此项添加到，他对应的父级中
+        if (parent) {
+          // item.label = item[channelName]
+          (parent.children || (parent.children = [])).push(item);
+        } else {
+          // item.label = item[channelName]
+          val.push(item);
+        }
+      });
+      return val;
+    }
   }
 };
 </script>

@@ -47,7 +47,32 @@ export default {
           totalUser: []
         };
       }
-    }
+    },
+    newUser: {
+      type: Array,
+      default: () => {
+        [];
+      }
+    },
+    activeUserInfo: {
+      type: Array,
+      default: () => {
+        [];
+      }
+    },
+    launchInfo: {
+      type: Array,
+      default: () => {
+        [];
+      }
+    },
+    totalUser: {
+      type: Array,
+      default: () => {
+        [];
+      }
+    },
+
   },
 
   data() {
@@ -60,18 +85,31 @@ export default {
     timevalue() {
       this.initChart();
     },
-    chartsvalue:function(oldValue,newValue) {
+    newUser:function(val) {
       this.initChart();
       
     },
-    immediate: true,
+
+    activeUserInfo:function(val) {
+      this.initChart();
+      
+    },
+    launchInfo:function(val) {
+      this.initChart();
+      
+    },
+    totalUser:function(val) {
+      this.initChart();
+      
+    },
+    // immediate: true,
     deep: true
   },
   created() {},
   mounted() {
-    // this.$nextTick(() => {
+    this.$nextTick(() => {
       this.initChart();
-    // });
+    });
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -82,12 +120,12 @@ export default {
   },
   methods: {
     initChart() {
-      var _this = this;
+      // var _this = this;
       if (this.timevalue) {
         this.show(this.timevalue[0], this.timevalue[1]);
       }
 
-      this.chart = echarts.init(document.getElementById(this.id));
+      this.chart = echarts.init(document.getElementById(this.id))
 
       //   const xAxisData = [];
       //   const data = [];
@@ -131,25 +169,25 @@ export default {
             name: "新增用户",
             type: "line",
             // stack: "总量",
-            data: _this.chartsvalue.newUser
+            data: this.newUser
           },
           {
             name: "活跃用户",
             type: "line",
             // stack: "总量",
-            data: _this.chartsvalue.activeUserInfo
+            data: this.activeUserInfo
           },
           {
             name: "启动次数",
             type: "line",
             // stack: "总量",
-            data: _this.chartsvalue.launchInfo
+            data: this.launchInfo
           },
           {
             name: "累计用户",
             type: "line",
             // stack: "总量",
-            data: _this.chartsvalue.totalUser
+            data: this.totalUser
           }
         ]
       });
