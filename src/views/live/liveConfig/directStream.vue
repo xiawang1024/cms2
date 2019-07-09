@@ -89,7 +89,7 @@ export default {
 
     //     }
     //  return new Promise((resolve, reject) => {
-    //     startPushStream(data)
+    //     (data)
     //       .then(response => {
     //         if (response.data.code == 0) {
     //           this.$message({

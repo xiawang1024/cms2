@@ -46,7 +46,8 @@
     <el-dialog title="视频剪辑" :visible.sync="dialogVisible" width="860px">
       <videoEdite
         @cutResult="cutResult"
-        :video-url="rowUrl"
+        :video_url="video_url"
+        :audio_url="audio_url"
         v-loading="loading"
         element-loading-text="上传中..."
         element-loading-spinner="el-icon-loading"
@@ -71,7 +72,8 @@ export default {
       sortBy: "",
       order: "",
       dialogVisible: false,
-      rowUrl: "", //播放地址
+      audio_url: "", //音频播放地址
+      video_url:'',//视频播放地址
       rowId: "", //当前文件id
       url: "", //文件路径
       loading: false,
@@ -114,7 +116,8 @@ export default {
     },
     handleEdit(index, row) {
       this.dialogVisible = true;
-      this.rowUrl = row.editUrl;
+      this.video_url = row.videoUrl;
+      this.audio_url = row.audioUrl;
       this.rowId = row.id;
       this.url = row.filePath;
     },

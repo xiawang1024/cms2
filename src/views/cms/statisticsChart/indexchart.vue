@@ -187,7 +187,6 @@ export default {
             if (response.data.code == 0) {
               let result = JSON.parse(response.data.result);
               _this.dashdate = result.body.data[0].result.items[1];
-              console.log(_this.dashdate, "resss");
             } else {
               this.$message({
                 type: "error",

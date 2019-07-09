@@ -2,9 +2,9 @@
   <div id="videoEdite">
     <div class="input-container">
       <!-- <span>视频链接：</span> -->
-      <!-- <input type="text" v-model="videoUrl"/> -->
+      <!-- <input type="text" v-model="video_url"/> -->
     </div>
-    <video ref="video" :src="videoUrl" controls width="600px"/>
+    <video ref="video" :src="video_url" controls width="600px" />
     <CropTool :duration="duration"
               :playing="playing"
               :current-playing-time="currentTime"
@@ -12,6 +12,8 @@
               @pause="pauseVideo"
               @stop="stopVideo"
               @cutResult="cutResult"/>
+              
+
   </div>
 </template>
 
@@ -25,7 +27,11 @@
             CropTool,
         },
         props:{
-            videoUrl:{
+            audio_url:{
+                type:String,
+                default:'',
+            },
+            video_url:{
                 type:String,
                 default:'',
             }
@@ -70,7 +76,7 @@
             cutResult(val){
                 //组件数据传递出去
                 this.$emit('cutResult',val)
-            }
+            },
         },
     }
 </script>
@@ -91,6 +97,12 @@
     }
     video {
         margin-bottom: 10px;
+    }
+    .logo{
+        display: block;
+        position: absolute;
+        left: 0;
+        top:0;
     }
 }
 

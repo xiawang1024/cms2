@@ -6,6 +6,9 @@
         <el-tab-pane label="拉转直播" name="1" />
       </el-tabs>
     </template>
+    <div class="tool-bar">
+      <el-button size="mini" type="primary" @click="handleAddDialog()">新增</el-button>
+    </div>
     <el-table :data="tableValue"
               :load="load"
               lazy
@@ -110,6 +113,21 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
+
+    <el-dialog title="添加" :visible.sync="dialogFormVisible">
+      <v-form
+        ref="vform"
+        :form-settings="formSettings"
+        :form-data="formData"
+        @save="submitSave"
+        label-width="80px"
+        :btn-loading="isLoading"
+      />
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -127,7 +145,35 @@ export default {
       sharHTMLContent: "",
       sharIframeContent: "",
       isCopy: "",
-      defaultPath:require('@/assets/bgPicture/liveBg.png')
+      defaultPath:require('@/assets/bgPicture/liveBg.png'),
+      dialogFormVisible:false,
+      formData: {},
+      formSettings: [
+        {
+          items: [
+            {
+              label: "拉转地址",
+              name: "description",
+              type: "text",
+              required: true,
+              placeholder: "请输入描述"
+            }, {
+              label: "描述",
+              name: "description",
+              type: "text",
+              required: true,
+              placeholder: "请输入描述"
+            }, {
+              label: "描述",
+              name: "description",
+              type: "text",
+              required: true,
+              placeholder: "请输入描述"
+            },
+          ]}
+      ],
+      isLoading:false,
+
     };
   },
   created() {
@@ -253,6 +299,16 @@ export default {
       })
        
       },
+      //新增对话框
+      handleAddDialog(){
+        this.dialogFormVisible=true;
+        
+      },
+      //保存添加
+      submitSave(val){
+        console.log(val);
+        
+      }
   }
 };
 </script>
