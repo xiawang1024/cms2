@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div :class="className" :id="id" :style="{height:height,width:width}"/>
+  <div class="chartBox">
+    <div :class="className" :id="id" :style="{height:height,width:width }"/>
   </div>
 </template>
 
@@ -33,6 +33,10 @@ export default {
         [];
       }
     },
+    title: {
+      type: String,
+      default: "基本指标"
+    },
     chartsvalue: {
       type: Object,
       default: function() {
@@ -43,7 +47,32 @@ export default {
           totalUser: []
         };
       }
-    }
+    },
+    newUser: {
+      type: Array,
+      default: () => {
+        [];
+      }
+    },
+    activeUserInfo: {
+      type: Array,
+      default: () => {
+        [];
+      }
+    },
+    launchInfo: {
+      type: Array,
+      default: () => {
+        [];
+      }
+    },
+    totalUser: {
+      type: Array,
+      default: () => {
+        [];
+      }
+    },
+
   },
 
   data() {
@@ -56,18 +85,31 @@ export default {
     timevalue() {
       this.initChart();
     },
-    chartsvalue:function(oldValue,newValue) {
+    newUser:function(val) {
       this.initChart();
       
     },
-    immediate: true,
+
+    activeUserInfo:function(val) {
+      this.initChart();
+      
+    },
+    launchInfo:function(val) {
+      this.initChart();
+      
+    },
+    totalUser:function(val) {
+      this.initChart();
+      
+    },
+    // immediate: true,
     deep: true
   },
   created() {},
   mounted() {
-    // this.$nextTick(() => {
+    this.$nextTick(() => {
       this.initChart();
-    // });
+    });
   },
   beforeDestroy() {
     if (!this.chart) {
@@ -78,12 +120,12 @@ export default {
   },
   methods: {
     initChart() {
-      var _this = this;
+      // var _this = this;
       if (this.timevalue) {
         this.show(this.timevalue[0], this.timevalue[1]);
       }
 
-      this.chart = echarts.init(document.getElementById(this.id));
+      this.chart = echarts.init(document.getElementById(this.id))
 
       //   const xAxisData = [];
       //   const data = [];
@@ -91,7 +133,7 @@ export default {
 
       this.chart.setOption({
         title: {
-          text: "基本指标"
+          text: this.title
         },
         tooltip: {
           trigger: "axis"
@@ -113,7 +155,11 @@ export default {
         xAxis: {
           type: "category",
           boundaryGap: false,
-          data: this.xdate
+          data: this.xdate,
+          axisLabel:{
+            insterval:0,
+            rotate:-80,
+          }
         },
         yAxis: {
           type: "value"
@@ -123,25 +169,25 @@ export default {
             name: "新增用户",
             type: "line",
             // stack: "总量",
-            data: _this.chartsvalue.newUser
+            data: this.newUser
           },
           {
             name: "活跃用户",
             type: "line",
             // stack: "总量",
-            data: _this.chartsvalue.activeUserInfo
+            data: this.activeUserInfo
           },
           {
             name: "启动次数",
             type: "line",
             // stack: "总量",
-            data: _this.chartsvalue.launchInfo
+            data: this.launchInfo
           },
           {
             name: "累计用户",
             type: "line",
             // stack: "总量",
-            data: _this.chartsvalue.totalUser
+            data: this.totalUser
           }
         ]
       });
@@ -174,9 +220,9 @@ export default {
         allDate.push(
           date1.getFullYear() +
             "-" +
-            (date1.getMonth() + 1) +
+            ((date1.getMonth() + 1)<10?'0'+(date1.getMonth() + 1):(date1.getMonth() + 1)) +
             "-" +
-            date1.getDate()
+            ((date1.getDate()+1)<10?'0'+(date1.getDate() + 1):(date1.getDate() + 1))
         );
 
         date1.setDate(date1.getDate() + 1);
@@ -188,5 +234,6 @@ export default {
 };
 </script>
 <style scoped lang='scss'>
+
 </style>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="mycharts">
-    <umengTitle :datavalue="datavalue" />
+    <umengTitle :ios_datavalue="ios_datavalue" :android_datavalue="android_datavalue" />
     <div class="dateselect">
       <div class="block">
         <el-date-picker
@@ -14,22 +14,48 @@
         />
       </div>
     </div>
-   
-    <umeng id="mycharts1" height="450px" width="100%" :timevalue="timevalue" :chartsvalue="chartsvalue" />
-
+    <el-row>
+      <el-col :span="11">
+        <div class="grid-content bg-purple">
+          <umeng
+            id="mycharts1"
+            height="450px"
+            width="100%"
+            :timevalue="timevalue"
+            :title="&quot;IOS&quot;"
+            :new-user="ios_newUser"
+            :active-user-info="ios_activeUserInfo"
+            :launch-info="ios_launchInfo"
+            :total-user="ios_totalUser"
+          />
+        </div>
+      </el-col>
+      <el-col :span="11">
+        <div class="grid-content bg-purple-light">
+          <umeng
+            id="mycharts2"
+            height="450px"
+            width="100%"
+            :timevalue="timevalue"
+            :title="&quot;Android&quot;"
+            :new-user="android_newUser"
+            :active-user-info="android_activeUserInfo"
+            :launch-info="android_launchInfo"
+            :total-user="android_totalUser"
+          />
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
 import umeng from "@/components/Charts/umeng.vue";
 import umengTitle from "@/components/Charts/umengTitleBoard.vue";
-// import {fun_date} from "@/components/Charts/handleTimer.js"
 import {
   getActiveUser,
   getAppList,
-  getDurations,
   getLaunches,
   getNewUsers,
-  getRetentions,
   getTotalUsers,
   getTrend
 } from "@/api/cms/liveCharts";
@@ -39,221 +65,215 @@ export default {
   data() {
     return {
       //uemng
-      datavalue: {},
-      chartsvalue:{
-        // newUser:[],
-        // activeUserInfo:[],
-        // launchInfo:[],
-        // totalUser:[],
-
-      },
+      ios_datavalue: {},
+      android_datavalue: {},
       startDate: "",
       endDate: "",
       periodType: "daily",
       date: "2019-05-01",
-      appkey: "",
+      IosAppKey: "",
+      androidAppKey:'',
       perPage: "15",
       page: "1",
       timevalue: [],
       activeName: "first",
-      tenantId:'',
+      tenantId: "",
+      today: "",
+      ios_newUser: [],
+      ios_activeUserInfo: [],
+      ios_launchInfo: [],
+      ios_totalUser: [],
+      android_newUser: [],
+      android_activeUserInfo: [],
+      android_launchInfo: [],
+      android_totalUser: []
     };
   },
   created() {
     this.getTime();
     this.InitInfo();
     this.initParams();
-     this.Init();
-   
+    this.Init();
   },
-  mounted(){
-   
-    
-  },
+  mounted() {},
   methods: {
-
-    getTime(){
-      let date=new Date();
-      let year=date.getFullYear('yyyy')
-      let mon=date.getMonth('MM');
-      let day=date.getDate('dd');
-      this.startDate=year+'-'+(mon<10?('0'+mon):mon)+'-'+((day-1<10)?('0'+(day-1)):(day-1));
-      this.endDate=year+'-'+((mon+1<10)?('0'+(mon+1)):(mon+1))+'-'+(day<10?('0'+day):day);
-      this.timevalue=[this.startDate,this.endDate];
+    getTime() {
+      let date = new Date();
+      let year = date.getFullYear("yyyy");
+      let mon = date.getMonth("MM");
+      let day = date.getDate("dd");
+      this.startDate =
+        year +
+        "-" +
+        (mon < 10 ? "0" + mon : mon) +
+        "-" +
+        (day < 10 ? "0" + day : day);
+      this.endDate =
+        year +
+        "-" +
+        (mon + 1 < 10 ? "0" + (mon + 1) : mon + 1) +
+        "-" +
+        (day < 10 ? "0" + day : day);
+      this.today = this.endDate;
+      this.timevalue = [this.startDate, this.endDate];
     },
-     InitInfo() {
+    InitInfo() {
       this.tenantId = JSON.parse(
         localStorage.getItem("BaseInfor")
       ).clientLicenseId;
     },
     Init() {
-      
-      this.fetchActiveUser();
+      this.fetchActiveUser(this.IosAppKey, "Ios");
+      this.fetchActiveUser(this.androidAppKey, "android");
       this.fetchAppList();
-      this.fetchTrend();
-      this.fetchDurations();
-      this.fetchLaunches();
-      this.fetchNewUsers();
-      this.fetchRetentions();
-      this.fetchTotalUsers();
+      this.fetchTrend(this.IosAppKey,'Ios');
+
+      this.fetchTrend(this.androidAppKey,'android');
+      // this.fetchDurations();
+      this.fetchLaunches(this.IosAppKey, "Ios");
+      this.fetchLaunches(this.androidAppKey, "android");
+      this.fetchNewUsers(this.IosAppKey, "Ios");
+      this.fetchNewUsers(this.androidAppKey, "android");
+      // this.fetchRetentions();
+      this.fetchTotalUsers(this.IosAppKey, "Ios");
+      this.fetchTotalUsers(this.androidAppKey, "android");
     },
-     initParams(){
+    initParams() {
       // if(this.tenantId=='dxtv'){
-        
-      //   this.appkey= "5b15ff3bf43e4808920000a6";
+
+      //   this.IosAppKey= "5b15ff3bf43e4808920000a6";
 
       // }
-      if(this.tenantId=='nanyangradio'){
-        
-        this.appkey= "5cbd29613fc19548f9000c25";
-
+      if (this.tenantId == "nanyangradio") {
+      this.IosAppKey = "5cbd29613fc19548f9000c25";
+      this.androidAppKey = "5cc5930e4ca357f82b00083c";
       }
-      
     },
     //请求数据umeng
-    fetchActiveUser() {
+    fetchActiveUser(appkey, type) {
       return new Promise((resolve, reject) => {
-        var _this=this;
+        var _this = this;
         let data = {
-          appkey: this.appkey,
+          appkey: appkey,
           startDate: this.startDate,
           endDate: this.endDate,
           periodType: this.periodType
         };
         getActiveUser(data)
           .then(response => {
-             if(response.data.code==0){
-              let result=JSON.parse(response.data.result)
-
-                _this.$set(this.chartsvalue,'activeUserInfo',_this.formateDate(result.activeUserInfo))
-                
-              // _this.chartsvalue.activeUserInfo=_this.formateDate(result.activeUserInfo)
+            if (response.data.code == 0) {
+              let result = JSON.parse(response.data.result);
+              if (type == "android") {
+                _this.android_activeUserInfo = _this.formateDate(
+                  result.activeUserInfo
+                );
+              } else if (type == "Ios") {
+                _this.ios_activeUserInfo = _this.formateDate(result.activeUserInfo);
+              }
             }
-            
-            
+            resolve();
           })
-          .catch(reject => {
-            console.log(reject);
+          .catch(error => {
+            reject(error);
           });
       });
     },
     fetchAppList() {
       return new Promise((resolve, reject) => {
         getAppList(this.page, this.perPage)
-          .then(response => {
-          })
+          .then(response => {})
           .catch(reject => {
             console.log(reject);
           });
       });
     },
-    //调用友盟接口
-    // fetchDailyData() {
-    //   let sevenAgo=fun_date(-7);
-    //   console.log(sevenAgo,'sevenAgo')
-      
-    //   var _this = this;
-    //   return new Promise((resolve, reject) => {
-    //     getDailyData(this.appkey, this.date)
-    //       .then(response => {
-    //         this.datavalue = JSON.parse(response.data.result).dailyData;
+    fetchLaunches(appkey, type) {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        getLaunches(appkey, this.startDate, this.endDate, this.periodType)
+          .then(response => {
+            if (response.data.code == 0) {
+              let result = JSON.parse(response.data.result);
 
-    //         console.log(_this.datavalue, "getDailyData");
-    //       })
-    //       .catch(reject => {
-    //         console.log(reject);
-    //       });
-    //   });
-    // },
-    fetchDurations() {
+              if (type == "android") {
+                _this.android_launchInfo = _this.formateDate(result.launchInfo);
+              } else if (type == "Ios") {
+                _this.ios_launchInfo = _this.formateDate(result.launchInfo);
+              }
+            }
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+    fetchNewUsers(appkey, type) {
+      var _this = this;
       return new Promise((resolve, reject) => {
-        getDurations(this.appkey, this.date, this.periodType)
+        getNewUsers(appkey, this.startDate, this.endDate, this.periodType)
           .then(response => {
+            if (response.data.code == 0) {
+              let result = JSON.parse(response.data.result);
+              if (type == "android") {
+                _this.android_newUser = _this.formateDate(result.newUserInfo);
+              } else if (type == "Ios") {
+                _this.ios_newUser = _this.formateDate(result.newUserInfo);
+              }
+            }
+            resolve();
           })
           .catch(reject => {
             console.log(reject);
           });
       });
     },
-    fetchLaunches() {
-      var _this=this;
+    fetchTotalUsers(appkey, type) {
+      var _this = this;
       return new Promise((resolve, reject) => {
-        getLaunches(this.appkey, this.startDate, this.endDate, this.periodType)
+        getTotalUsers(appkey, this.startDate, this.endDate)
           .then(response => {
-             if(response.data.code==0){
-              let result=JSON.parse(response.data.result)
-               _this.$set(this.chartsvalue,'launchInfo',_this.formateDate(result.launchInfo))
-              // _this.chartsvalue.launchInfo=_this.formateDate(result.launchInfo)
+            if (response.data.code == 0) {
+              let result = response.data.result;
+              let allUser = [];
+              console.log(result, "result");
+
+              Object.values(result).forEach(item => {
+                if (item.key <= _this.today) {
+                  allUser.push(parseInt(item.value));
+                } else {
+                  allUser.push("--");
+                }
+              });
+             
+              if (type == "android") {
+                _this.android_totalUser = allUser;
+              } else if (type == "Ios") {
+                _this.ios_totalUser = allUser;
+              }
             }
+            resolve();
           })
           .catch(reject => {
             console.log(reject);
           });
       });
     },
-    fetchNewUsers() {
-      var _this=this;
+    fetchTrend(key,type) {
+      var _this = this;
       return new Promise((resolve, reject) => {
-        getNewUsers(this.appkey, this.startDate, this.endDate, this.periodType)
+        getTrend(key)
           .then(response => {
-            if(response.data.code==0){
-              let result=JSON.parse(response.data.result)
-              _this.$set(this.chartsvalue,'newUser',_this.formateDate(result.newUserInfo))
-              // _this.chartsvalue.newUser=_this.formateDate(result.newUserInfo)
+            if (response.data.code == 0) {
+              let result = response.data.result;
+              if(type=='Ios'){
+                _this.ios_datavalue = result;
+              }else if(type=='android'){
+                _this.android_datavalue = result;
+              }
+              
             }
-            
-          })
-          .catch(reject => {
-            console.log(reject);  
-          });
-      });
-    },
-    fetchRetentions() {
-      return new Promise((resolve, reject) => {
-        getRetentions(
-          this.appkey,
-          this.startDate,
-          this.endDate,
-          this.periodType
-        )
-          .then(response => {
-          })
-          .catch(reject => {
-            console.log(reject);
-          });
-      });
-    },
-    fetchTotalUsers() {
-      var _this=this;
-      return new Promise((resolve, reject) => {
-        getTotalUsers(this.appkey, this.startDate, this.endDate)
-          .then(response => {
-            if(response.data.code==0){
-              let result=response.data.result;
-              let allUser=[];
-              Object.values(result).forEach((item)=>{
-                allUser.push(parseInt(item.value))
-               
-              })
-              _this.$set(this.chartsvalue,'totalUser',allUser)
-              // _this.chartsvalue.totalUser=allUser;
-            }
-          })
-          .catch(reject => {
-            console.log(reject);
-          });
-      });
-    },
-      fetchTrend() {
-      var _this=this;
-      return new Promise((resolve, reject) => {
-        getTrend(this.appkey)
-          .then(response => {
-            if(response.data.code==0){
-              let result=response.data.result;
-              _this.datavalue=result;
-              //-------------------------------
-            }
+            resolve();
           })
           .catch(reject => {
             console.log(reject);
@@ -261,26 +281,43 @@ export default {
       });
     },
 
-    
     //
 
     getNewData() {
       //获取时间区间数据
 
+      this.startDate = this.timevalue[0];
+      this.endDate = this.timevalue[1];
       //获取新增用户数
-      this.fetchNewUsers()
-
+      this.fetchActiveUser(this.IosAppKey, "Ios");
+      this.fetchActiveUser(this.androidAppKey, "android");
+      this.fetchLaunches(this.IosAppKey, "Ios");
+      this.fetchLaunches(this.androidAppKey, "android");
+      this.fetchNewUsers(this.IosAppKey, "Ios");
+      this.fetchNewUsers(this.androidAppKey, "android");
+      this.fetchTotalUsers(this.IosAppKey, "Ios");
+      this.fetchTotalUsers(this.androidAppKey, "android");
     },
     handleClick(tab, event) {
       //获取切换区间数据
-
     },
     // 数据处理
-    formateDate(value){
-      let result=[];
-      value.forEach((item)=>{
-        result.push(item.value)
-      })
+    formateDate(value) {
+      let result = [];
+      value.forEach(item => {
+          //有值得放值
+        if (item.value) {
+          result.push(item.value);
+        } else {
+          //没有值得返回0，处理措施：1，当前日期之前的按0 显示，当前日期之后的替换为 '--',echarts 不进行折线的绘制
+          if(item.date<=this.today){
+          result.push(0);
+          }else{
+          result.push("--");
+
+          }
+        }
+      });
       return result;
     }
   }
@@ -295,12 +332,12 @@ export default {
   box-sizing: border-box;
 }
 .dateselect {
- padding: 15px 0 15px 40px;
+  padding: 15px 0 15px 40px;
 }
 /deep/.el-date-editor .el-range-separator {
-    padding: 0 0px;
-    line-height: 32px;
-    width: 5%;
-    color: #303133;
+  padding: 0 0px;
+  line-height: 32px;
+  width: 5%;
+  color: #303133;
 }
 </style>

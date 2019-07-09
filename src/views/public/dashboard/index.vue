@@ -39,11 +39,10 @@ export default {
   methods:{
     checkUser(){
       let user=JSON.parse(localStorage.getItem('BaseInfor'))
-        console.log(user.clientLicenseId,'user')
-
-        // if (user.clientLicenseId==='hnr1') {
+        //对其它租户过滤
+        if (user.clientLicenseId==='nanyangradio') {
         this.showChart = true
-    // }
+    }
     }
   }
 }

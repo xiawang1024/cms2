@@ -5,27 +5,26 @@
 </template>
 <script>
 import articleTitle from "@/components/Charts/articleTitle.vue";
-import {articleTrendBytenantId}from "@/api/cms/liveCharts";
+import { articleTrendBytenantId } from "@/api/cms/liveCharts";
 export default {
-    components:{articleTitle},
-    data(){
-        return{
-            datavalue:{},
-            tenantId:'',
-
-
-
-        }
+  components: { articleTitle },
+  data() {
+    return {
+      datavalue: {},
+      tenantId: ""
+    };
+  },
+  created() {
+    this.InitInfo();
+    this.fetchTrend();
+  },
+  methods: {
+    InitInfo() {
+      this.tenantId = JSON.parse(
+        localStorage.getItem("BaseInfor")
+      ).clientLicenseId;
     },
-    created(){
-        this.InitInfo();
-        this.fetchTrend();
-    },
-    methods:{
-        InitInfo(){
-      this.tenantId=JSON.parse(localStorage.getItem("BaseInfor")).clientLicenseId;
-    },
-         //获取文章点击量和发稿量整体趋势(总站)
+    //获取文章点击量和发稿量整体趋势(总站)
     fetchTrend() {
       var _this = this;
       return new Promise((resolve, reject) => {
@@ -40,13 +39,12 @@ export default {
             console.log(reject);
           });
       });
-    },
     }
-
-}
+  }
+};
 </script>
 <style lang="scss" scoped>
-.contaner{
-    padding: 10px 0;
+.contaner {
+  padding: 10px 0;
 }
 </style>
