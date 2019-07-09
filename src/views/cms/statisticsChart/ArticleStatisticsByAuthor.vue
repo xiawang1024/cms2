@@ -1,21 +1,10 @@
 <template>
   <div class="mycharts">
-    <div class="tool-bar">
-      <el-dropdown size="mini" @command="handleCommand" v-if="checkAuth('cms:charts:author')">
-        <el-button size="mini" type="primary" :disabled="authorList.length==0" >
-          {{ nowAuthor }}
-          <i class="el-icon-arrow-down el-icon--right"/>
-        </el-button>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item
-            v-for="(item,index) in authorList"
-            :command="item.value"
-            :key="index"
-          >{{ item.key }}</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+    <div class="el-card__header" v-if="checkAuth('cms:charts:author')">
+      <v-search :search-settings="searchSettings" @search="searchItem" :hide-reset="true" />
     </div>
-    <articleTitle :datavalue="datavalue"/>
+    <div class="tool-bar"/>
+    <articleTitle :datavalue="datavalue" />
     <div class="dateselect">
       <div class="block">
         <el-date-picker
@@ -64,16 +53,27 @@ export default {
       page: "1",
       timevalue: [],
       activeName: "first",
+      defaultAuthor:'',
       channelId: "1108260929071616000",
       authorList: [],
-      nowAuthor: "请选择查看的作者",
       author: "hndzkj",
-      tenantId: "hndzkj"
+      tenantId: "hndzkj",
+      searchSettings: [
+        {
+          label: "作者",
+          name: "hiddenFlag",
+          placeholder: "请选择",
+          visible: true,
+          type: "select",
+          optionValue: this.defaultAuthor,
+          options: []
+        }
+      ]
     };
   },
   created() {
     this.getTime();
-     this.InitInfo();  //获取租户 ，作者  暂时写死
+    this.InitInfo(); //获取租户 ，作者  暂时写死
     this.Init();
   },
   mounted() {},
@@ -82,8 +82,9 @@ export default {
       this.tenantId = JSON.parse(
         localStorage.getItem("BaseInfor")
       ).clientLicenseId;
+      //初始化的默认作者
       this.author = JSON.parse(localStorage.getItem("BaseInfor")).userName;
-      this.nowAuthor=this.author;
+      this.defaultAuthor = this.author;
       this.getAuthorList();
     },
     Init() {
@@ -99,6 +100,16 @@ export default {
             if (response.data.code == 0) {
               let result = response.data.result;
               _this.authorList = result;
+              _this.searchSettings = [
+                {
+                  label: "作者",
+                  name: "hiddenFlag",
+                  placeholder: "请选择",
+                  visible: true,
+                  type: "select",
+                  options: result
+                }
+              ];
             }
           })
           .catch(reject => {
@@ -216,14 +227,9 @@ export default {
         return result.reverse();
       }
     },
-    //频道切换
-    handleCommand(command) {
-      this.author = command;
-      this.authorList.forEach(item => {
-        if (item.value == command) {
-          this.nowAuthor = item.key;
-        }
-      });
+    //作者切换
+    searchItem(searchData) {
+      this.author = searchData.hiddenFlag;
       this.Init();
     },
     //日期选择
@@ -251,20 +257,20 @@ export default {
         (day < 10 ? "0" + day : day);
       this.timevalue = [this.startDate, this.endDate];
     },
-    checkAuth (authKey) {
+    checkAuth(authKey) {
       if (this.$store.getters.authorities.indexOf(authKey) === -1) {
-        return false
+        return false;
       } else {
-        return true
+        return true;
       }
-    },
+    }
   }
 };
 </script>
 <style scoped>
 .tool-bar {
   text-align: right;
-  padding: 0 42px;
+  padding: 0 42px 30px 42px;
 }
 .mycharts {
   width: 100%;
