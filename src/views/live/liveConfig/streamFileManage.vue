@@ -114,14 +114,7 @@ export default {
     },
     handleEdit(index, row) {
       this.dialogVisible = true;
-      console.log(row.filePath);
-      //需要处理一下路径
-      let url = row.filePath.split("vod")[1];
-      //测试使用直播地址
-      // url = "http://172.20.5.4:8080/dl" + url;
-      //生产使用直播地址
-      url = "http://vod.stream2.hndt.com/dl/live_video_record" + url;
-      this.rowUrl = url;
+      this.rowUrl = row.editUrl;
       this.rowId = row.id;
       this.url = row.filePath;
     },
@@ -158,8 +151,6 @@ export default {
       var _this = this;
       this.loading = true;
       //添加上 url , order, id 等字段
-      console.log(value, "emit");
-      
       let data=[];
       data=JSON.parse(JSON.stringify(value))
       data.map((item, index) => {
@@ -184,7 +175,6 @@ export default {
         item.url = this.url;
         item.id = this.rowId;
       });
-      console.log(data, "data");
       //执行保存请求
       return new Promise((resolve, reject) => {
         editeStreamfile(data)
@@ -228,7 +218,6 @@ export default {
         return new Promise((resolve,reject)=>{
         childrenStreamfile(tree.id)
         .then(response=>{
-          console.log(response);
             if(response.data.code==0){
               _this.childrenNode=response.data.result
                _resolve( _this.childrenNode)
