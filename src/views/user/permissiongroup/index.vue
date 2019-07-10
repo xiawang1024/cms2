@@ -217,14 +217,15 @@ export default {
         PermissionGroupPermissionRelPermissionInfoByGroupId(_this.dialogPermissionManagerPermissionGroupId).then(async res => {
           console.log(res)
           _this.$refs.dialogPermissionRef.$refs["permission-table"].$refs["pap-base-table"].clearSelection()
+          // 父组件调用子组件方法，在上述方法将权限组下权限带出来之后，重新渲染表格数据，这样可以保证表格的数据选中效果
+          _this.$refs.dialogPermissionRef.getList()
           var userArray = res.data.result
           if (userArray !== null && userArray.length > 0) {
             userArray.forEach(row => {
               _this.$refs.dialogPermissionRef.$refs["permission-table"].$refs["pap-base-table"].toggleRowSelection(row);
             })
           }
-          // 父组件调用子组件方法，在上述方法将权限组下权限带出来之后，重新渲染表格数据，这样可以保证表格的数据选中效果
-          _this.$refs.dialogPermissionRef.getList()
+
         }).catch(err => {
           console.log('err: ', err)
           reject(err)
