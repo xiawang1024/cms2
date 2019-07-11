@@ -112,6 +112,7 @@ export default {
       console.log(e);
     },
     printPosion(e) {
+        
     //   let x = 0;
     //   x = e.offsetX;
     //   let time=((x/802)*this.audioDuration).toString();
