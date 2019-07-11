@@ -56,15 +56,15 @@ export default {
     //加载完获取音频长度
     this.wavesurfer.on("ready", () => {
       this.audioDuration = this.wavesurfer.getDuration();
-      this.wavesurfer.addRegion({
-            id: '1',
-            start: '0.5',
-            end: '15',
-            loop: false,
-            drag: false,
-            resize: true,
-            color: "rgba(50, 50, 50, 0.8)"
-        });
+    //   this.wavesurfer.addRegion({
+    //         id: '1',
+    //         start: '0.5',
+    //         end: '15',
+    //         loop: false,
+    //         drag: false,
+    //         resize: true,
+    //         color: "rgba(50, 50, 50, 0.8)"
+    //     });
         
 
     });
@@ -75,12 +75,10 @@ export default {
     this.wavesurfer.on("seek", (val) => {
         this.wavesurfer.enableDragSelection({
               id: Math.random(),
-            start: '0.5',
-            end: '15',
             loop: false,
             drag: false,
             resize: true,
-            color: "rgba(50, 50, 50, 0.8)"
+            color: "rgba(50, 50, 200, 0.8)"
         })
         if(this.flag){
             this.clickClip.push({start:(this.audioDuration*val).toFixed(2),end:''})
@@ -112,7 +110,6 @@ export default {
       console.log(e);
     },
     printPosion(e) {
-        
     //   let x = 0;
     //   x = e.offsetX;
     //   let time=((x/802)*this.audioDuration).toString();
@@ -135,6 +132,7 @@ export default {
       }
     },
     myclear(){
+        this.wavesurfer.clearRegions() 
         this.clickClip=[];
         this.flag=true;
         this.currentIndex=0;
@@ -146,16 +144,20 @@ export default {
     },
     handlePlay(index){
         // let timeZone=(this.clickClip[index].start.toString()+','+this.clickClip[index].end.toString()).toString();
-        this.wavesurfer.play(['0.5','2.5'])
+        this.wavesurfer.play('5')
     },
     mysave(){
-       if(this.clickClip.reverse()[0].end) {
-           this.$message({
-               type:'error',
-               message:'最后一个音频片段结束时间不能为空！'
-           });
-           return false
-       }
+    //    if(this.clickClip.reverse()[0].end) {
+    //        this.$message({
+    //            type:'error',
+    //            message:'最后一个音频片段结束时间不能为空！'
+    //        });
+    //        return false
+    //    }
+       //获取裁剪区域
+       let list=this.wavesurfer.regions.list
+       console.log((list),'result');
+       
 
     }
   },
@@ -171,6 +173,7 @@ export default {
       background-color: #333;
       color: white;
       z-index: 3;
+      cursor: pointer;
   }
   .box {
     // border: 1px solid #000;
