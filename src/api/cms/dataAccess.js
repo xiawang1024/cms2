@@ -10,6 +10,17 @@ export function setDataAccess(data) {
     }
   })
 }
+//批量用户权限设置
+export function setDataAccessMutip(data) {
+  return request({
+    url: 'cms/channelUserRel/mutiuser',
+    method: 'post',
+    data,
+    loadingConfig: {
+      target: '.el-dialog__body'
+    }
+  })
+}
 // 用户权限获取
 export function getDataAccess(id) {
   return request({
@@ -21,6 +32,18 @@ export function getDataAccess(id) {
 export function setSourceAccess(data) {
   return request({
     url: '/cms/articleoriginuserrel',
+    method: 'post',
+    data,
+    loadingConfig: {
+      target: '.el-dialog__body'
+    }
+  })
+}
+//批量来源权限设置
+
+export function setSourceAccessMutip(data) {
+  return request({
+    url: '/cms/articleoriginuserrel/mutiuser',
     method: 'post',
     data,
     loadingConfig: {

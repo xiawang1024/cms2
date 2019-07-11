@@ -21,7 +21,7 @@
   </div>
 </template>
 <script>
-import { setDataAccess, getDataAccess } from '@/api/cms/dataAccess'
+import { setDataAccess, getDataAccess,setDataAccessMutip } from '@/api/cms/dataAccess'
 export default {
   props: {
     dialogVisible: {
@@ -92,6 +92,11 @@ export default {
       } else {
         // 批量操作
         console.log(this.multipleSelection, 'multipleSelection')
+        let userIdGroup=[];
+        this.multipleSelection.map(item=>{
+          userIdGroup.push(item.userId)
+        })
+        this.mutipHandle(userIdGroup)
       }
     },
     singleHandel() {
@@ -103,6 +108,27 @@ export default {
       }
       return new Promise((resolve, reject) => {
         setDataAccess(params)
+          .then((response) => {
+            this.$message.success('操作成功')
+            this.$emit('update:dialogVisible', false)
+            this.$emit('handelSuccess')
+            this.$store.dispatch('GetColumnAll')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    mutipHandle(userIdList){
+       let params = {
+        userIdList,
+        channelIdList: this.$refs.tree.getCheckedNodes().map((ele) => {
+          return ele.channelId
+        })
+      }
+      return new Promise((resolve, reject) => {
+        setDataAccessMutip(params)
           .then((response) => {
             this.$message.success('操作成功')
             this.$emit('update:dialogVisible', false)

@@ -25,7 +25,7 @@
   </div>
 </template>
 <script>
-import { setSourceAccess, getSourceAccess } from '@/api/cms/dataAccess'
+import { setSourceAccess, getSourceAccess,setSourceAccessMutip } from '@/api/cms/dataAccess'
 export default {
   props: {
     dialogVisible: {
@@ -146,6 +146,29 @@ export default {
     },
     // 批量操作
     multipleHandel() {
+       let userIdGroup=[];
+        this.multipleSelection.map(item=>{
+          userIdGroup.push(item.userId)
+        })
+        let params = {
+        userIdList:userIdGroup,
+        articleOriginIdList: this.$refs.tree.getCheckedNodes().map((ele) => {
+          return ele.id
+        })
+      }
+      return new Promise((resolve, reject) => {
+        setSourceAccessMutip(params)
+          .then((response) => {
+            this.$message.success('操作成功')
+            this.$emit('update:dialogVisible', false)
+            this.$emit('handelSuccess')
+            this.$store.dispatch('GetColumnAll')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     },
     // 单独操作
     singleHandel() {
