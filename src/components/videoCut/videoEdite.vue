@@ -14,7 +14,7 @@
       @stop="stopVideo"
       @cutResult="cutResult"
     />
-    <audioWave/>
+    <audioWave :audio_url="audio_url"/>
     
   </div>
 </template>

@@ -15,6 +15,7 @@
     <el-button @click="mystop">停止</el-button>
     <el-button @click="myclear">清空</el-button>
     <el-button @click="mysave">裁剪</el-button>
+    <p>{{ audio_url }}</p>
   </div>
 </template>
 <script>
@@ -23,16 +24,27 @@ import RegionsPlugin from "wavesurfer.js/dist/plugin/wavesurfer.regions.min.js";
 import cursor from "wavesurfer.js/dist/plugin/wavesurfer.cursor.min.js";
 
 export default {
-  props: {},
+  props: {
+    audio_url: {
+      type: String,
+      default: ""
+    },
+  },
   data() {
     return {
-      audio_url: "https://wavesurfer-js.org/example/split-channels/stereo.mp3",
+      // audio_url: "https://wavesurfer-js.org/example/split-channels/stereo.mp3",
+      // audio_url:'http://vod.stream2.hndt.com/dl/live_video_record/2019/7/11/1513691017320190711170833_audio.wav',
       Duration: 0,
       wavesurfer: null,
       clickClip:[],
       flag:true,
       currentIndex:0,
     };
+  },
+  watch:{
+    audio_url(){
+        this.wavesurfer.load(this.audio_url);
+    }
   },
   created() {},
   mounted() {

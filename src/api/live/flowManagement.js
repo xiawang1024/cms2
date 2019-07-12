@@ -77,3 +77,29 @@ export function getStreamInfo(data) {
   });
 }
 
+//禁止转码
+
+export function stopTranscoding(id) {
+  return request({
+    url:
+      Cpath +
+      `/stream/stoptranscoding?id=${id}`,
+    method: "post",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+//启用转码
+
+export function startTranscoding(id) {
+  return request({
+    url:
+      Cpath +
+      `/stream/allowtranscoding?id=${id}`,
+    method: "post",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}

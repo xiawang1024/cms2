@@ -14,8 +14,30 @@
       <el-table-column prop="endTime" :formatter="formatEndTime" label="结束时间"/>
       <el-table-column prop="pushTime" :formatter="formatPushTime" label="推送时间"/>
       <el-table-column prop="streamType" label="视频流类型" :formatter="formatStreamType"/>
+      
+      <el-table-column prop="isTranscoding" label="点播流" v-if="activeName=='0'">
+        <template slot-scope="scope">
+          <div >
+            <span v-if="scope.row.isTranscoding=='false'">已禁用</span>
+            <span v-else>已启用</span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
+          <el-button
+            v-show="scope.row.streamType=='0'&&scope.row.isTranscoding!='false'"
+            size="mini"
+            type="success"
+            @click="handleStreamForbid(scope.$index, scope.row)"
+          >禁用</el-button>
+          <el-button
+            v-show="scope.row.streamType=='0'&&scope.row.isTranscoding=='false'"
+            size="mini"
+            type="success"
+            @click="handleStreamStart(scope.$index, scope.row)"
+          >启用</el-button>
+
           <el-button
             v-show="scope.row.streamType=='1'"
             size="mini"
@@ -54,6 +76,8 @@ import {
   disableStream,
     deleteStream,
     undisableStream,
+    stopTranscoding,
+    startTranscoding
   //   startPushStream,
   //   endPushStream
 } from "@/api/live/flowManagement.js";
@@ -203,6 +227,7 @@ export default {
                 type: "success",
                 message: response.data.msg
               });
+              
             } else {
               this.$message({
                 type: "error",
@@ -308,7 +333,62 @@ export default {
       //   } else {
       //     this.SearchAttribute();
       //   }
-    }
+    },
+    //禁止转码
+    handleStreamForbid(index,row){
+    var _this=this;
+
+      return new Promise((resolve,reject)=>{
+        stopTranscoding(row.id)
+        .then(response=>{
+         if(response.data.code==0){
+            this.$message({
+          type:'success',
+          message:response.data.msg
+        })
+        _this.requestTableValue();
+          }else{
+            this.$message({
+          type:'error',
+          message:response.data.msg
+        })
+          }
+        resolve();
+        })
+        .catch(error=>{
+
+          reject(error);
+        })
+      })
+    },
+    //启用解码
+  handleStreamStart(index,row){
+    var _this=this;
+      return new Promise((resolve,reject)=>{
+        startTranscoding(row.id)
+        .then(response=>{
+          if(response.data.code==0){
+            this.$message({
+          type:'success',
+          message:response.data.msg
+        })
+        _this.requestTableValue();
+
+          }else{
+            this.$message({
+          type:'error',
+          message:response.data.msg
+        })
+          }
+        
+        resolve();
+        })
+        .catch(error=>{
+
+          reject(error);
+        })
+      })
+  }
   }
 };
 </script>
