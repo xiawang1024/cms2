@@ -13,6 +13,8 @@ import editorImage from './components/editorImage'
 import plugins from './plugins'
 import toolbar from './toolbar'
 import baseUrl from '@/config/base-url'
+// import 'tinymce-imageupload'
+import '@/common/editor-upload'
 export default {
   name: 'Tinymce',
   components: { editorImage },
@@ -112,10 +114,13 @@ export default {
         selector: `#${this.tinymceId}`,
         height: this.height,
         body_class: 'panel-body ',
-        object_resizing: false,
+        // 是否可以缩放图片
+        // object_resizing: false,
         toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
+        // toolbar: 'imageupload',
         menubar: this.menubar,
         plugins: plugins,
+        // plugins: 'imageupload',
         end_container_on_empty_block: true,
         powerpaste_word_import: 'clean',
         code_dialog_height: 450,
@@ -130,6 +135,13 @@ export default {
         font_formats: '微软雅黑=Microsoft YaHei,Helvetica Neue,PingFang SC,sans-serif;苹果苹方=PingFang SC,Microsoft YaHei,sans-serif;宋体=simsun,serif;仿宋体=FangSong,serif;黑体=SimHei,sans-serif;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats;知乎配置=BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;小米配置=Helvetica Neue,Helvetica,Arial,Microsoft Yahei,Hiragino Sans GB,Heiti SC,WenQuanYi Micro Hei,sans-serif',
         nonbreaking_force_tab: true, // inserting nonbreaking space &nbsp; need Nonbreaking Space Plugin
         imagetools_toolbar: 'rotateleft rotateright | flipv fliph | editimage imageoptions',
+        // 新加
+        imageupload_url: this.upURL,
+        imageupload_converCb: (res) => { // 根据后端返回的数据，转换成符合插件要求的数据结构
+          window.tinymce
+          .get(_this.tinymceId)
+          .insertContent(`<img class="wscnph" src="${_this.downURL}${res.data.result.filePath}" >`)
+        },
         init_instance_callback: editor => {
           if (_this.value) {
             editor.setContent(_this.value)
@@ -145,67 +157,8 @@ export default {
             _this.fullscreen = e.state
           })
         },
-        // link_list: [
-        //       { title: '预置链接1', value: 'http://www.tinymce.com' },
-        //       { title: '预置链接2', value: 'http://tinymce.ax-z.cn' }
-        //   ],
-        //   image_list: [
-        //       { title: '预置图片1', value: 'https://www.tiny.cloud/images/glyph-tinymce@2x.png' },
-        //       { title: '预置图片2', value: 'https://www.baidu.com/img/bd_logo1.png' }
-        //   ],
-        //   image_class_list: [
-        //   { title: 'None', value: '' },
-        //   { title: 'Some class', value: 'class-name' }
-        //   ],
-        // importcss_append: true,
         file_picker_types: 'file image media',
-        // images_upload_handler: function (blobInfo, success, failure) {
-        //     function uploadPic () {
-        //       const xhr = new XMLHttpRequest()
-        //       const formData = new FormData()
-  
-        //       xhr.withCredentials = false
-        //       xhr.open('POST', 'http://fupload.test.dianzhenkeji.com:55030/basefile/upload?fileRefId=')
-        //       xhr.onload = function () {
-        //         var json
-  
-        //         if (xhr.status !== 200) {
-        //           failure('上传失败: ' + xhr.status)
-        //           return
-        //         }
-        //         json = JSON.parse(xhr.responseText)
-        //         if (!json || json.status === 'error') {
-        //           failure('上传失败: ' + xhr.responseText.msg)
-        //           return
-        //         }
-        //         console.log(json, 'location')
-        //         success(json.location)
-        //       }
-        //       formData.append('file', blobInfo.blob())
-        //       console.log(formData, 'formData')
-        //       xhr.send(formData)
-        //     }
-  
-        //     if (blobInfo.blob().size > 1024 * 1024 * 5) {
-        //       failure('文件体积过大, 请选择5MB以下图片文件')
-        //     }
-        //     if (blobInfo.blob().type === 'image/jpeg' || blobInfo.blob().type === 'image/png') {
-        //       uploadPic()
-        //     } else {
-        //       failure('请选择jpeg或png格式图片')
-        //     }
-        //   },
-        // file_picker_callback: function (callback, value, meta) {
-        //     if (meta.filetype === 'file') {
-        //       callback('https://www.baidu.com/img/bd_logo1.png', { text: 'My text' });
-        //     }
-        //     if (meta.filetype === 'image') {
-        //       callback('https://www.baidu.com/img/bd_logo1.png', { alt: 'My alt text' });
-        //     }
-        //     if (meta.filetype === 'media') {
-        //       callback('http://cmsres.test.dianzhenkeji.com/anonymous/2019/4/30/1123120181959331840.mp4', { source2: 'alt.ogg', poster: 'https://www.baidu.com/img/bd_logo1.png' });
-        //     }
-        // },
+
         image_caption: true,
         // //上传文件
         file_picker_callback: function(callback, value, meta) {
@@ -254,41 +207,6 @@ export default {
           }
           input.click()
         }
-        // 整合七牛上传
-        // images_dataimg_filter(img) {
-        //   setTimeout(() => {
-        //     const $image = $(img);
-        //     $image.removeAttr('width');
-        //     $image.removeAttr('height');
-        //     if ($image[0].height && $image[0].width) {
-        //       $image.attr('data-wscntype', 'image');
-        //       $image.attr('data-wscnh', $image[0].height);
-        //       $image.attr('data-wscnw', $image[0].width);
-        //       $image.addClass('wscnph');
-        //     }
-        //   }, 0);
-        //   return img
-        // },
-        // images_upload_handler(blobInfo, success, failure, progress) {
-        //   progress(0);
-        //   const token = _this.$store.getters.token;
-        //   getToken(token)
-        //     .then(response => {
-        //       const url = response.data.qiniu_url;
-        //       const formData = new FormData();
-        //       formData.append("token", response.data.qiniu_token);
-        //       formData.append("key", response.data.qiniu_key);
-        //       formData.append("file", blobInfo.blob(), url);
-        //       upload(formData).then(() => {
-        //         success(url);
-        //         progress(100);
-        //       });
-        //     })
-        //     .catch(err => {
-        //       failure("出现未知问题，刷新页面，或者联系程序员");
-        //       console.log(err);
-        //     });
-        // }
       })
     },
     destroyTinymce() {
@@ -308,8 +226,6 @@ export default {
       window.tinymce.get(this.tinymceId).getContent()
     },
     imageSuccessCBK(arr) {
-      console.log(arr, 'arr')
-      // .insertContent(`<video class="" src="${v.url}" controls="controls"> </video>`)
       const _this = this
       arr.forEach(v => {
         if(v.type.split('/')[0] == 'video') {
@@ -339,31 +255,3 @@ export default {
 }
 </script>
 
-<style scoped>
-.tinymce-container {
-  position: relative;
-  line-height: normal;
-  padding-right: 5px;
-}
-.tinymce-container >>> .mce-fullscreen {
-  z-index: 10000;
-}
-.tinymce-textarea {
-  visibility: hidden;
-  z-index: -1;
-}
-.editor-custom-btn-container {
-  position: absolute;
-  right: 4px;
-  top: 4px;
-  /*z-index: 2005;*/
-}
-.fullscreen .editor-custom-btn-container {
-  z-index: 10000;
-  position: fixed;
-}
-.editor-upload-btn {
-  display: inline-block;
-  margin-right: 10px;
-}
-</style>

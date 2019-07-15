@@ -30,7 +30,8 @@ module.exports = {
     }],
     'no-control-regex': 0,
     'no-empty-pattern': 2,
-    'no-useless-escape': 0
+    'no-useless-escape': 0,
+    "no-undef": 0
     // "vue/max-attributes-per-line": [2, {
     //   "singleline": 10,
     //   "multiline": {
