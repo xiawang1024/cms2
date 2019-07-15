@@ -110,17 +110,17 @@
       @current-change="handleCurrentChange"
     />
 
-    <el-dialog title="添加" :visible.sync="dialogFormVisible">
-      <v-form
+    <!-- <el-dialog title="添加" :visible.sync="dialogFormVisible"> -->
+    <!-- <v-form
         ref="vform"
         :form-settings="formSettings"
         :form-data="formData"
         @save="submitSave"
         label-width="80px"
         :btn-loading="isLoading"
-      />
-    </el-dialog>
-    <Rebroadcast :dialog-visible="dialogVisible" :close-dio="closeDio"/>
+      />-->
+    <!-- </el-dialog> -->
+    <Rebroadcast :dialog-visible="dialogVisible" :close-dio="closeDio" />
   </div>
 </template>
 <script>
@@ -130,10 +130,10 @@ import {
   addrebroadcast,
   rebroadcastList
 } from "@/api/live/steamAdressManage.js";
-import Rebroadcast from "@/views/live/liveConfig/addRebroadcast.vue"
+import Rebroadcast from "@/views/live/liveConfig/addRebroadcast.vue";
 export default {
-    components:{Rebroadcast},
-  
+  components: { Rebroadcast },
+
   data() {
     //  var pictureControl = (rule, value, callback) => {
     //    var _this=this;
@@ -166,7 +166,7 @@ export default {
       isCopy: "",
       defaultPath: require("@/assets/bgPicture/liveBg.png"),
       dialogFormVisible: false,
-      dialogVisible:false,
+      dialogVisible: false,
       // formData: {},
       // formSettings: [
       //   {
@@ -210,7 +210,7 @@ export default {
       //         name: "logoDistance",
       //         type: "radio",
       //         required: true,
-              
+
       //         vlaue:'10:10',
       //         options:[{
       //           label:'左上',
@@ -232,7 +232,7 @@ export default {
       //           value:'main_w-overlay_w-10:main_h-overlay_h-10'
 
       //         }]
-              
+
       //       },
       //       {
       //         label: "标志",
@@ -283,7 +283,7 @@ export default {
           });
       });
     },
-    requestRebroadCast(){
+    requestRebroadCast() {
       var _this = this;
       let data = {
         pageNo: this.pageNo,
@@ -370,13 +370,13 @@ export default {
       }
     },
     //页面数据初始化
-    InitPage(){
-      this.pageNo=1;
-        this.pageSize=10;
-        this.totalCount=0;
-        this.order='';
-        this.sortBy='';
-        this.tableValue=[];
+    InitPage() {
+      this.pageNo = 1;
+      this.pageSize = 10;
+      this.totalCount = 0;
+      this.order = "";
+      this.sortBy = "";
+      this.tableValue = [];
     },
 
     //分页处理
@@ -414,57 +414,52 @@ export default {
     //新增对话框
     handleAddDialog() {
       // this.dialogFormVisible = true;
-      this.dialogVisible=true;
-
+      this.dialogVisible = true;
     },
-    closeDio(){
-      this.dialogVisible=false;
-
+    closeDio() {
+      this.dialogVisible = false;
     },
     //保存添加
     submitSave(val) {
-      var _this=this;
+      var _this = this;
       let data = {
         beginTime: "",
-        id: '',
+        id: "",
         imgPath: "",
-        logoDistance:val.logoDistance,
+        logoDistance: val.logoDistance,
         logoPath: val.logoPath[0].url,
-        relayDetails:val.relayDetails ,
+        relayDetails: val.relayDetails,
         relayStreamUrl: val.relayStreamUrl,
         relayTitle: val.relayTitle,
-        streamAddress:'',
+        streamAddress: "",
         streamPwd: val.streamPwd,
         userName: val.userName
       };
-      
-      return new Promise((resolve,reject)=>{
+
+      return new Promise((resolve, reject) => {
         addrebroadcast(data)
-        .then(response=>{
-          if(response.data.code==0){
+          .then(response => {
+            if (response.data.code == 0) {
               this.$message({
-              type:'success',
-              message:response.data.msg
-            })
-          _this.dialogFormVisible=false;
-          }else{
-            this.$message({
-              type:'error',
-              message:response.data.msg
-            })
-          }
-          
+                type: "success",
+                message: response.data.msg
+              });
+              _this.dialogFormVisible = false;
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data.msg
+              });
+            }
 
-
-          resolve();
-        })
-        .catch(error=>{
-          console.log(error);
-          reject(error)
-        })
-      })
-    },
-    
+            resolve();
+          })
+          .catch(error => {
+            console.log(error);
+            reject(error);
+          });
+      });
+    }
   }
 };
 </script>

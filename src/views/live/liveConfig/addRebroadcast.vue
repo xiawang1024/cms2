@@ -32,7 +32,7 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <div/>
+      <div />
       <el-upload
         class="upload-demo"
         ref="upload"
@@ -41,7 +41,6 @@
         :on-remove="handleRemove"
         :on-success="handleSuccess"
         :on-error="handleError"
-        :file-list="fileList"
         :auto-upload="false"
       >
         <div slot="tip" class="el-upload__tip">只能上传12*70 像素的png文件</div>
@@ -68,14 +67,23 @@ export default {
   },
   data() {
     return {
+    //   ruleForm: {
+    //     userName: "15915315022",
+    //     streamPwd: "1234567",
+    //     relayStreamUrl:
+    //       "http://172.20.5.4:8080/vod/2019/7/11/1513691017320190711170518.mp4/index.m3u8",
+    //     logoDistanceL: "10:10",
+    //     relayTitle: "新加的",
+    //     relayDetails: "新加的"
+    //   },
       ruleForm: {
-        userName: "15915315022",
-        streamPwd: "1234567",
+        userName: "",
+        streamPwd: "",
         relayStreamUrl:
-          "http://172.20.5.4:8080/vod/2019/7/11/1513691017320190711170518.mp4/index.m3u8",
-        logoDistanceL: "10:10",
-        relayTitle: "新加的",
-        relayDetails: "新加的"
+          "",
+        logoDistanceL: "",
+        relayTitle: "",
+        relayDetails: ""
       },
 
       action: ""
@@ -112,7 +120,7 @@ export default {
         type: "success",
         message: "上传成功"
       });
-      this.$emit('closeDio')
+      this.dialogVisible=false;
     },
     handleError() {
       this.$message({
