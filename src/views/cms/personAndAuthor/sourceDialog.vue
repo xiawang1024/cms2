@@ -25,7 +25,7 @@
   </div>
 </template>
 <script>
-import { setSourceAccess, getSourceAccess } from '@/api/cms/dataAccess'
+import { setSourceAccess, getSourceAccess,setSourceAccessMutip } from '@/api/cms/dataAccess'
 export default {
   props: {
     dialogVisible: {
@@ -43,6 +43,12 @@ export default {
         return {}
       },
       type: Object
+    },
+    multipleSelection: {
+      default: ()=> {
+        return []
+      },
+      type: Array
     }
   },
   data() {
@@ -64,7 +70,12 @@ export default {
         if(this.$refs.tree) {
           this.$refs.tree.setCheckedKeys([])
         }
-        this.getSourceAccess(this.userInfor.userId)
+        if(this.userInfor.userId) {
+          this.getSourceAccess(this.userInfor.userId)
+        }
+        // 初始化全选状态
+        this.allChecked = false
+        this.isIndeterminate = false
       }
     }
   },
@@ -114,10 +125,6 @@ export default {
               this.allChecked = false
               this.isIndeterminate = false
             }
-            // this.$refs.tree.setCheckedKeys(['1108265560111714304'])
-            // this.$message.success('操作成功')
-            // this.$emit('update:dialogVisible', false)
-            // this.$emit('handelSuccess')
             resolve()
           })
           .catch((error) => {
@@ -131,6 +138,40 @@ export default {
     confirmSave() {
       console.log(this.$refs.tree.getCheckedNodes())
       console.log(this.userInfor)
+      if(this.userInfor.userId) {
+        this.singleHandel()
+      } else {
+        this.multipleHandel()
+      }
+    },
+    // 批量操作
+    multipleHandel() {
+       let userIdGroup=[];
+        this.multipleSelection.map(item=>{
+          userIdGroup.push(item.userId)
+        })
+        let params = {
+        userIdList:userIdGroup,
+        articleOriginIdList: this.$refs.tree.getCheckedNodes().map((ele) => {
+          return ele.id
+        })
+      }
+      return new Promise((resolve, reject) => {
+        setSourceAccessMutip(params)
+          .then((response) => {
+            this.$message.success('操作成功')
+            this.$emit('update:dialogVisible', false)
+            this.$emit('handelSuccess')
+            this.$store.dispatch('GetColumnAll')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    // 单独操作
+    singleHandel() {
       let params = {
         userId: this.userInfor.userId,
         articleOriginIdList: this.$refs.tree.getCheckedNodes().map((ele) => {

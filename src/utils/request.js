@@ -171,7 +171,7 @@ request.interceptors.request.use(
       /**
        * 未登录直接返回配置信息
        */
-      console.log('nologin')
+   
       return config
     }
   },

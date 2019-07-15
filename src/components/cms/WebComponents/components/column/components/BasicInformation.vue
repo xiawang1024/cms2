@@ -307,8 +307,6 @@ export default {
               _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
               _this.isLoading = false
               this.$store.dispatch('GetColumnAll')
-              console.log(response)
-              console.log(this.treeTags, '11')
               let webSiteTags = this.treeTags.slice()
               webSiteTags[webSiteTags.length - 1].label = response.data.result.channelName
               webSiteTags[webSiteTags.length - 1].pubArticleFlag = response.data.result.pubArticleFlag

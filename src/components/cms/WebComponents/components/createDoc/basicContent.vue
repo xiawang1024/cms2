@@ -157,7 +157,9 @@ export default {
                   name: ele.label,
                   type: _this.datachange(ele.type),
                   required: ele.required,
-                  placeholder: '请输入'
+                  placeholder: '请输入',
+                  value: ele.defaultValue,
+                  // disabled: ele.defaultValue ? true : false
                 }
               })
             }

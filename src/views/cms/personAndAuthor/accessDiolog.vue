@@ -21,7 +21,7 @@
   </div>
 </template>
 <script>
-import { setDataAccess, getDataAccess } from '@/api/cms/dataAccess'
+import { setDataAccess, getDataAccess,setDataAccessMutip } from '@/api/cms/dataAccess'
 export default {
   props: {
     dialogVisible: {
@@ -39,6 +39,12 @@ export default {
         return {}
       },
       type: Object
+    },
+    multipleSelection: {
+      default: ()=> {
+        return []
+      },
+      type: Array
     }
   },
   data() {
@@ -57,7 +63,9 @@ export default {
         if(this.$refs.tree) {
           this.$refs.tree.setCheckedKeys([])
         }
-        this.getUserAccess(this.userInfor.userId)
+        if(this.userInfor.userId) {
+          this.getUserAccess(this.userInfor.userId)
+        }
       }
     }
   },
@@ -67,10 +75,6 @@ export default {
         getDataAccess(userId)
           .then((response) => {
             this.defaultCheck = response.data.result.channelIdList ? response.data.result.channelIdList : []
-            // this.$refs.tree.setCheckedKeys(['1108265560111714304'])
-            // this.$message.success('操作成功')
-            // this.$emit('update:dialogVisible', false)
-            // this.$emit('handelSuccess')
             resolve()
           })
           .catch((error) => {
@@ -82,6 +86,20 @@ export default {
       this.$emit('update:dialogVisible', false)
     },
     confirmSave() {
+      if(this.userInfor.userId) {
+        // 单独操作
+        this.singleHandel()
+      } else {
+        // 批量操作
+        console.log(this.multipleSelection, 'multipleSelection')
+        let userIdGroup=[];
+        this.multipleSelection.map(item=>{
+          userIdGroup.push(item.userId)
+        })
+        this.mutipHandle(userIdGroup)
+      }
+    },
+    singleHandel() {
       let params = {
         userId: this.userInfor.userId,
         channelIdList: this.$refs.tree.getCheckedNodes().map((ele) => {
@@ -90,6 +108,27 @@ export default {
       }
       return new Promise((resolve, reject) => {
         setDataAccess(params)
+          .then((response) => {
+            this.$message.success('操作成功')
+            this.$emit('update:dialogVisible', false)
+            this.$emit('handelSuccess')
+            this.$store.dispatch('GetColumnAll')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    },
+    mutipHandle(userIdList){
+       let params = {
+        userIdList,
+        channelIdList: this.$refs.tree.getCheckedNodes().map((ele) => {
+          return ele.channelId
+        })
+      }
+      return new Promise((resolve, reject) => {
+        setDataAccessMutip(params)
           .then((response) => {
             this.$message.success('操作成功')
             this.$emit('update:dialogVisible', false)

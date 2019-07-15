@@ -225,7 +225,6 @@ export default {
               _this.$refs.dialogPermissionRef.$refs["permission-table"].$refs["pap-base-table"].toggleRowSelection(row);
             })
           }
-
         }).catch(err => {
           console.log('err: ', err)
           reject(err)

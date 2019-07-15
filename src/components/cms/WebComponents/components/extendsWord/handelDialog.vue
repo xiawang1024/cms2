@@ -4,6 +4,7 @@
     :before-close="handleClose"
     :title="params.type === 'add' ? '添加字段' : '编辑字段'"
     append-to-body
+    class="extends-handel-dialog"
     width="500px">
     <!-- <el-form :model="extendFieldForm" label-position="top">
       <el-form-item label="名称">
@@ -18,11 +19,7 @@
         <el-switch v-model="extendFieldForm.required" active-color="#13ce66"/>
       </el-form-item>
     </el-form> -->
-    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" :label-width="labelWidth" @save="submitSave"/>
-    <span slot="footer" class="dialog-footer">
-      <!-- <el-button @click="$emit('update:dialogVisible', false)">取 消</el-button>
-      <el-button type="primary" @click="$emit('update:dialogVisible', false)">确 定</el-button> -->
-    </span>
+    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" :label-width="labelWidth" @typeChange="typeChange" @save="submitSave"/>
   </el-dialog>
 </template>
 <script>
@@ -70,6 +67,17 @@ export default {
                 }
               ],
               required: true,
+              events: {
+                change: 'typeChange'
+              }
+            },
+            {
+              label: '',
+              name: 'defaultValue',
+              type: 'text',
+              required: false,
+              hidden: true,
+              placeholder: '请输入'
             },
             {
               label: '必填',
@@ -88,13 +96,26 @@ export default {
       if(val) {
         if(this.params.extFieldInfor) {
           this.formData = this.params.extFieldInfor
+          if(this.params.extFieldInfor.type == '1') {
+            this.formSettings[0].items[2].hidden = false
+          } else {
+            this.formSettings[0].items[2].hidden = true
+          }
         } else {
           this.formData = {}
+          this.formSettings[0].items[2].hidden = true
         }
       }
     }
   },
   methods: {
+    typeChange(val) {
+      if(val == '1') {
+        this.formSettings[0].items[2].hidden = false
+      }else {
+        this.formSettings[0].items[2].hidden = true
+      }
+    },
     submitSave(data) {
       var _this = this
       if(this.params.type === 'edit') {
@@ -132,3 +153,12 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  .extends-handel-dialog{
+    .v-form{
+      .save-btn{
+        margin-bottom:0;
+      }
+    }
+  }
+</style>
