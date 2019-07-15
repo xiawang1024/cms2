@@ -17,7 +17,7 @@ export function setDataAccessMutip(data) {
     method: 'post',
     data,
     loadingConfig: {
-      target: '.el-dialog__body'
+      noLoading: true
     }
   })
 }
@@ -47,7 +47,7 @@ export function setSourceAccessMutip(data) {
     method: 'post',
     data,
     loadingConfig: {
-      target: '.el-dialog__body'
+      noLoading: true
     }
   })
 }
