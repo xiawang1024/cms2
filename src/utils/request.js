@@ -23,8 +23,6 @@ const requestLoading = (() => {
       return
     }
     if(loadingConfig.noLoading) {
-      console.log(loadingConfig.noLoading,'loadibg');
-      
       return
     }
     loadingStack.set(url, Loading.service({
