@@ -32,7 +32,6 @@ export function childrenStreamAdressfile(id) {
 
 
 //转播流地址管理
-
 //添加转播流信息
 export function addrebroadcast(data) {
   return request({

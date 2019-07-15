@@ -22,7 +22,7 @@
       </el-table-column>
       <el-table-column prop="logoPath" width="200" label="水印">
         <template slot-scope="scope">
-          <img :src="scope.row.logoPath==null?defaultPath:scope.row.logoPath" alt class="imgStyle" >
+          <img :src="scope.row.logoPath==null?defaultPath:scope.row.logoPath" alt class="logoStyle" >
         </template>
       </el-table-column>
 
@@ -203,6 +203,12 @@ export default {
 .imgStyle {
   display: block;
   width: 160px;
+  margin: 5px 0;
+  border-radius: 5px;
+}
+.logoStyle{
+ display: block;
+  width: 60px;
   margin: 5px 0;
   border-radius: 5px;
 }

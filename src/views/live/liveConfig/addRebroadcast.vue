@@ -1,12 +1,18 @@
 <template>
-  <div >
+  <div>
     <el-dialog
       title="添加直播流"
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleVisible"
     >
-      <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm" :rules="rules">
+      <el-form
+        :model="ruleForm"
+        ref="ruleForm"
+        label-width="100px"
+        class="demo-ruleForm"
+        :rules="rules"
+      >
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="ruleForm.userName" />
         </el-form-item>
@@ -35,17 +41,15 @@
           </template>
         </el-form-item>
       </el-form>
-      
-      
+
       <el-upload
         class="upload-demo"
         ref="upload"
-        :action="action"
+        action="http://gw.test.dianzhenkeji.com/live-stream/relaystream/addfile"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :on-success="handleSuccess"
         :on-error="handleError"
-        :auto-upload="false"
         :limit="1"
         :before-upload="beforeAvatarUpload"
       >
@@ -56,13 +60,13 @@
         style="margin: 20px 0 0 40px ; "
         size="small"
         type="success"
-        @click="submitUpload"
+        @click="submiteSave"
       >保存</el-button>
     </el-dialog>
   </div>
 </template>
 <script>
-import { setTimeout } from "timers";
+import { addrebroadcast } from "@/api/live/steamAdressManage.js";
 export default {
   props: {
     dialogVisible: {
@@ -75,11 +79,13 @@ export default {
       // ruleForm: {
       //   userName: "15915315022",
       //   streamPwd: "1234567",
-      //   relayStreamUrl: "http://172.20.5.4:8080/live/15136910173.m3u8",
+      //   relayStreamUrl: "http://stream2.hndt.com/live/jtlk14.m3u8",
       //   logoDistance: "10:10",
       //   relayTitle: "测试数据",
-      //   relayDetails: "测试数据"
+      //   relayDetails: "测试数据",
+      //   logoPath: ""
       // },
+
       ruleForm: {
         userName: "",
         streamPwd: "",
@@ -88,62 +94,59 @@ export default {
         relayTitle: "",
         relayDetails: ""
       },
-      rules:{
-        
-          userName: [
-            { required: true, message: '请输入用户名', trigger: 'blur' }
-          ],
-          streamPwd: [
-            { required: true, message: '请输入密码', trigger: 'blur' }
-          ],
-          relayStreamUrl: [
-            { required: true, message: '请输入直播流地址', trigger: 'blur' }
-          ],
-          relayTitle: [
-            { required: true, message: '请输入转播标题', trigger: 'blur' }
-          ],
-          relayDetails: [
-            { required: true, message: '请输入转播描述', trigger: 'blur' }
-          ]
-      }
-      ,
-
-      action: ""
+      action: "http://gw.test.dianzhenkeji.com/live-stream/relaystream/addfile",
+      rules: {
+        userName: [
+          { required: true, message: "请输入用户名", trigger: "blur" }
+        ],
+        streamPwd: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        relayStreamUrl: [
+          { required: true, message: "请输入直播流地址", trigger: "blur" }
+        ],
+        relayTitle: [
+          { required: true, message: "请输入转播标题", trigger: "blur" }
+        ],
+        relayDetails: [
+          { required: true, message: "请输入转播描述", trigger: "blur" }
+        ]
+      },
     };
   },
   watch: {
     dialogVisible(val) {
-      if (val) {
-        this.ruleForm = {
-          userName: "",
-          streamPwd: "",
-          relayStreamUrl: "",
-          logoDistance: "10:10",
-          relayTitle: "",
-          relayDetails: ""
-        };
-      }
+      // if (val) {
+      //   this.ruleForm = {
+      //     userName: "",
+      //     streamPwd: "",
+      //     relayStreamUrl: "",
+      //     logoDistance: "10:10",
+      //     relayTitle: "",
+      //     relayDetails: "",
+      //     logoPath:''
+      //   };
+      // }
     }
   },
   methods: {
-    submitUpload() {
-      this.action =
-        "http://gw.test.dianzhenkeji.com/live-stream/relaystream/addRelayStream?userName=" +
-        this.ruleForm.userName +
-        "&streamPwd=" +
-        this.ruleForm.streamPwd +
-        "&relayStreamUrl=" +
-        this.ruleForm.relayStreamUrl +
-        "&logoDistance=" +
-        this.ruleForm.logoDistance +
-        "&relayTitle=" +
-        this.ruleForm.relayTitle +
-        "&relayDetails=" +
-        this.ruleForm.relayDetails;
-      setTimeout(() => {
-        this.$refs.upload.submit();
-      }, 1000);
-    },
+    // submitUpload() {
+    //   //172.20.5.4:18081/live-stream/relaystream/addRelayStream?userName=123&streamPwd=123&relayStreamUrl=1231&logopath=23&logoDistance=123&relayTitle=123&relayDetails=123
+    //   http: this.action =
+    //     "http://gw.test.dianzhenkeji.com/live-stream/relaystream/addRelayStream?userName=" +
+    //     this.ruleForm.userName +
+    //     "&streamPwd=" +
+    //     this.ruleForm.streamPwd +
+    //     "&relayStreamUrl=" +
+    //     this.ruleForm.relayStreamUrl +
+    //     "&logoDistance=" +
+    //     this.ruleForm.logoDistance +
+    //     "&relayTitle=" +
+    //     this.ruleForm.relayTitle +
+    //     "&relayDetails=" +
+    //     this.ruleForm.relayDetails;
+    //   setTimeout(() => {
+    //     this.$refs.upload.submit();
+    //   }, 1000);
+    // },
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
@@ -151,23 +154,7 @@ export default {
       console.log(file);
     },
     handleSuccess(res) {
-     console.log(res,'res')
-
-      if(res.code==0){
-        this.$message({
-        type: "success",
-        message: res.msg
-      });
-      this.$refs.upload.clearFiles();
-      this.$emit("closeDialog");
-      this.$emit("refrashPage")
-      }else{
-        this.$message({
-        type: "error",
-        message: res.msg
-      });
-      }
-      
+      this.ruleForm.logoPath = res;
     },
     handleError() {
       this.$message({
@@ -194,11 +181,40 @@ export default {
       }
       return isPNG && isLt2M;
     },
+    submiteSave() {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        addrebroadcast(this.ruleForm)
+          .then(response => {
+            if (response.data.code == 0) {
+              this.$message({
+                type: "success",
+                message: response.data.msg
+              });
+
+              _this.$refs.upload.clearFiles();
+              _this.$emit("closeDialog");
+              _this.$emit("refrashPage");
+            } else {
+              this.$message({
+                type: "error",
+                message: response.data.msg
+              });
+            }
+
+            resolve();
+          })
+          .catch(error => {
+            console.log(error);
+            reject(error);
+          });
+      });
+    }
   }
 };
 </script>
 <style lang="scss" scoped>
-.upload-demo{
+.upload-demo {
   padding-left: 40px;
 }
 </style>

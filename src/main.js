@@ -22,6 +22,8 @@ import * as filters from './filters' // global filters
 import initVue from '@/utils/init/'
 import Moment from 'moment'
 import VueClipboard from 'vue-clipboard2'
+import uploader from 'vue-simple-uploader'
+Vue.use(uploader)
 Vue.prototype.moment=Moment
 initVue(Vue)
 Vue.use(Element, {

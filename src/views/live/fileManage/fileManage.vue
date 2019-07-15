@@ -112,8 +112,9 @@
 <script>
 import splitPane from "vue-splitpane";
 import physicalView from "./physicalView"
+import bigUploader from "./bigUploader"
 export default {
-  components: { splitPane,physicalView},
+  components: { splitPane,physicalView,bigUploader},
   directives: {
     aleretAbility: {
       inserted(el) {
