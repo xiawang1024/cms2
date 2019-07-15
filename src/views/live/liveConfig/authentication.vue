@@ -1,14 +1,5 @@
 <template>
   <div class="helpdoc-container">
-    <template>
-      <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="鉴权直播" name="0" />
-        <el-tab-pane label="拉转直播" name="1" />
-      </el-tabs>
-    </template>
-    <div class="tool-bar">
-      <el-button size="mini" type="primary" v-show="activeName=='1'" @click="handleAddDialog()">新增</el-button>
-    </div>
     <el-table
       :data="tableValue"
       :load="load"
@@ -115,8 +106,6 @@
 import {
   managaStreamAddress,
   childrenStreamAdressfile,
-  addrebroadcast,
-  rebroadcastList
 } from "@/api/live/steamAdressManage.js";
 export default {
   data() {
@@ -127,15 +116,10 @@ export default {
       totalCount: 0,
       sortBy: "",
       order: "",
-      activeName: "0",
       sharHTMLContent: "",
       sharIframeContent: "",
       isCopy: "",
       defaultPath: require("@/assets/bgPicture/liveBg.png"),
-      dialogFormVisible: false,
-      dialogVisible: false,
-      
-      isLoading: false
     };
   },
   created() {
@@ -170,35 +154,7 @@ export default {
           });
       });
     },
-    requestRebroadCast() {
-      var _this = this;
-      let data = {
-        pageNo: this.pageNo,
-        pageSize: this.pageSize,
-        sortBy: this.sortBy,
-        order: this.order
-      };
-      return new Promise((resolve, reject) => {
-        rebroadcastList(data)
-          .then(response => {
-            if (response.data.code == 0) {
-              _this.tableValue = response.data.result.content;
-              _this.totalCount = response.data.result.total;
-              console.log(_this.tableValue,'value');
-              
-            } else {
-              this.$message({
-                type: "error",
-                message: response.data.msg
-              });
-            }
-            resolve();
-          })
-          .catch(error => {
-            reject(error);
-          });
-      });
-    },
+   
     handleShare(index, row) {
       //分享
       this.sharHTMLContent = "";
@@ -247,17 +203,6 @@ export default {
       }
       return date;
     },
-    //tab切换
-    handleClick(tab, event) {
-      if (this.activeName == "0") {
-        this.InitPage();
-        this.requestTableValue();
-      }
-      if (this.activeName == "1") {
-        this.InitPage();
-        this.requestRebroadCast();
-      }
-    },
     //页面数据初始化
     InitPage() {
       this.pageNo = 1;
@@ -271,21 +216,12 @@ export default {
     //分页处理
     handleSizeChange(val) {
       this.pageSize = val;
-      if (this.activeName == "0") {
         this.requestTableValue();
-      }
-      if (this.activeName == "1") {
-        this.requestRebroadCast();
-      }
+      
     },
     handleCurrentChange(val) {
       this.pageNo = val;
-      if (this.activeName == "0") {
         this.requestTableValue();
-      }
-      if (this.activeName == "1") {
-        this.requestRebroadCast();
-      }
     },
     load(tree, treeNode, resolve) {
       //传入当前节点id,查询子节点列表
@@ -310,55 +246,6 @@ export default {
           });
       });
     },
-    //新增对话框
-    handleAddDialog() {
-      // this.dialogFormVisible = true;
-      this.dialogVisible = true;
-    },
-    closeDio() {
-      this.dialogVisible = false;
-    },
-    //保存添加
-    submitSave(val) {
-      var _this = this;
-      let data = {
-        beginTime: "",
-        id: "",
-        imgPath: "",
-        logoDistance: val.logoDistance,
-        logoPath: val.logoPath[0].url,
-        relayDetails: val.relayDetails,
-        relayStreamUrl: val.relayStreamUrl,
-        relayTitle: val.relayTitle,
-        streamAddress: "",
-        streamPwd: val.streamPwd,
-        userName: val.userName
-      };
-
-      return new Promise((resolve, reject) => {
-        addrebroadcast(data)
-          .then(response => {
-            if (response.data.code == 0) {
-              this.$message({
-                type: "success",
-                message: response.data.msg
-              });
-              _this.dialogFormVisible = false;
-            } else {
-              this.$message({
-                type: "error",
-                message: response.data.msg
-              });
-            }
-
-            resolve();
-          })
-          .catch(error => {
-            console.log(error);
-            reject(error);
-          });
-      });
-    }
   }
 };
 </script>
