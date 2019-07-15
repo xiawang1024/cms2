@@ -15,7 +15,7 @@
       <el-table-column prop="pushTime" :formatter="formatPushTime" label="推送时间"/>
       <el-table-column prop="streamType" label="视频流类型" :formatter="formatStreamType"/>
       
-      <el-table-column prop="isTranscoding" label="点播流" v-if="activeName=='0'">
+      <el-table-column prop="isTranscoding" label="点播流" >
         <template slot-scope="scope">
           <div >
             <span v-if="scope.row.isTranscoding=='false'">已禁用</span>

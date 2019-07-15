@@ -109,18 +109,6 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-
-    <!-- <el-dialog title="添加" :visible.sync="dialogFormVisible"> -->
-    <!-- <v-form
-        ref="vform"
-        :form-settings="formSettings"
-        :form-data="formData"
-        @save="submitSave"
-        label-width="80px"
-        :btn-loading="isLoading"
-      />-->
-    <!-- </el-dialog> -->
-    <Rebroadcast :dialog-visible="dialogVisible" :close-dio="closeDio" />
   </div>
 </template>
 <script>
@@ -130,29 +118,8 @@ import {
   addrebroadcast,
   rebroadcastList
 } from "@/api/live/steamAdressManage.js";
-import Rebroadcast from "@/views/live/liveConfig/addRebroadcast.vue";
 export default {
-  components: { Rebroadcast },
-
   data() {
-    //  var pictureControl = (rule, value, callback) => {
-    //    var _this=this;
-    //   let Img=new Image()
-    //   Img.src=value[0].url;
-    //   let isPNG=(value[0].url.split('.').reverse()[0]).toLowerCase()=='png'
-    //   if(isPNG){
-    //     //图片加载完整判断尺寸与格式
-    //     Img.onload=function(){
-    //     if(Img.width!=120&&Img.height!=70){
-    //       callback(_this.$message.error('请上传120*70像素的logo!'));
-    //     }else{
-    //     callback();
-    //     }
-    //   }
-    //   }else{
-    //      callback("请上传PNG格式图片！");
-    //   }
-    // };
     return {
       tableValue: [],
       pageNo: 1,
@@ -167,87 +134,7 @@ export default {
       defaultPath: require("@/assets/bgPicture/liveBg.png"),
       dialogFormVisible: false,
       dialogVisible: false,
-      // formData: {},
-      // formSettings: [
-      //   {
-      //     items: [
-      //       {
-      //         label: "描述",
-      //         name: "relayDetails",
-      //         type: "text",
-      //         placeholder: "请输入描述"
-      //       },
-      //       {
-      //         label: "标题",
-      //         name: "relayTitle",
-      //         type: "text",
-      //         placeholder: "请输入标题"
-      //       },
-
-      //       {
-      //         label: "拉转地址",
-      //         name: "relayStreamUrl",
-      //         type: "text",
-      //         required: true,
-      //         placeholder: "请输入地址"
-      //       },
-      //       {
-      //         label: "用户名",
-      //         name: "userName",
-      //         type: "text",
-      //         required: true,
-      //         placeholder: "请输入地址"
-      //       },
-      //       {
-      //         label: "密码",
-      //         name: "streamPwd",
-      //         type: "text",
-      //         required: true,
-      //         placeholder: "请输入地址"
-      //       },
-      //       {
-      //         label: "标志位置",
-      //         name: "logoDistance",
-      //         type: "radio",
-      //         required: true,
-
-      //         vlaue:'10:10',
-      //         options:[{
-      //           label:'左上',
-      //           value:'10:10'
-
-      //         },
-      //         {
-      //           label:'右上',
-      //           value:'main_w-overlay_w-10:10'
-
-      //         },
-      //         {
-      //           label:'左下',
-      //           value:'10:main_h-overlay_h-10'
-
-      //         },
-      //         {
-      //           label:'右下',
-      //           value:'main_w-overlay_w-10:main_h-overlay_h-10'
-
-      //         }]
-
-      //       },
-      //       {
-      //         label: "标志",
-      //         name: "logoPath",
-      //         type: "file",
-      //         rule:[{
-      //           validator: pictureControl,
-      //            trigger: 'blur',
-      //            required:true
-      //         }],
-      //         limit:1
-      //       }
-      //     ]
-      //   }
-      // ],
+      
       isLoading: false
     };
   },
