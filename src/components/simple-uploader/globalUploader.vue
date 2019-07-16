@@ -351,7 +351,6 @@ export default {
         list-style: none;
         background-color: #fff;
         /deep/.uploader-file-status{
-            width: 60px;
          text-indent: 0;
 
 
