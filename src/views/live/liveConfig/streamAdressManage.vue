@@ -32,16 +32,8 @@ export default {
   mounted() {},
   methods: {
     //tab切换
-    // handleClick(tab, event) {
-      // if (this.activeName == "0") {
-        // this.InitPage();
-        // this.requestTableValue();
-      // }
-      // if (this.activeName == "1") {
-        // this.InitPage();
-        // this.requestRebroadCast();
-      // }
-    // }
+    handleClick(tab, event) {
+    }
    
   }
 };

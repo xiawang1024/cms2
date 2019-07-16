@@ -6,15 +6,18 @@
 </template>
 
 <script>
-    import Bus from '@/components/simple-uploader/js/bus';
+    import Bus from '@/assets/js/bus.js';
 
     export default {
         components: {},
         data() {
             return {}
         },
-        computed: {},
+        computed: {
+        },
         mounted() {
+            console.log(Bus,'bus');
+            
             // 文件选择后的回调
             Bus.$on('fileAdded', () => {
                 console.log('文件已选择')

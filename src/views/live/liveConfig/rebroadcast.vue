@@ -11,8 +11,13 @@
       row-key="id"
     >
       <el-table-column type="index" width="50" />
-
-      <el-table-column prop="relayTitle" width="150" label="标题" show-overflow-tooltip />
+      <el-table-column prop="relayTitle" width="150" label="标题" >
+        <template slot-scope="scope">
+          <el-tooltip class="item" effect="dark" :content="scope.row.relayDetails" placement="top">
+            <span>{{ scope.row.relayTitle }}</span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
 
       <el-table-column prop="userName" width="150" label="用户名" />
       <el-table-column prop="imgPath" width="200" label="直播快照">

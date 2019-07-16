@@ -32,8 +32,8 @@
         <el-form-item label="角标位置" prop="logoDistance">
           <template>
             <el-radio v-model="ruleForm.logoDistance" label="10:10">左上</el-radio>
-            <el-radio v-model="ruleForm.logoDistance" label="main_w-overlay_w-10:10">左下</el-radio>
-            <el-radio v-model="ruleForm.logoDistance" label="10:main_h-overlay_h-10">右上</el-radio>
+            <el-radio v-model="ruleForm.logoDistance" label="main_w-overlay_w-10:10">右上</el-radio>
+            <el-radio v-model="ruleForm.logoDistance" label="10:main_h-overlay_h-10">左下</el-radio>
             <el-radio
               v-model="ruleForm.logoDistance"
               label="main_w-overlay_w-10:main_h-overlay_h-10"

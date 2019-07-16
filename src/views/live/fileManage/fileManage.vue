@@ -3,8 +3,9 @@
     <header>
       <el-row>
         <el-col :span="24">
-          <div>
+          <div class="file-header">
             <p>头部功能按钮</p>
+            <bigUploader/>
           </div>
         </el-col>
       </el-row>
@@ -102,6 +103,7 @@
                 @size-change="sizeChange"
                 @current-change="pageChange"
               />-->
+             
             </el-scrollbar>
           </div>
         </template>
@@ -112,7 +114,7 @@
 <script>
 import splitPane from "vue-splitpane";
 import physicalView from "./physicalView"
-import bigUploader from "./bigUploader"
+import bigUploader from "./bigUploader";
 export default {
   components: { splitPane,physicalView,bigUploader},
   directives: {
@@ -141,6 +143,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.file-header{
+  padding: 10px  30px;
+}
 .pane-wrap {
   margin-top: 12px;
 }
