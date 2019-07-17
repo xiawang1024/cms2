@@ -56,6 +56,7 @@
         <div slot="tip" class="el-upload__tip">只能上传一张120*70 像素的png格式图片</div>
         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
       </el-upload>
+      <!-- <pictureCut @getUrl="getUrl"/> -->
       <el-button
         style="margin: 20px 0 0 40px ; "
         size="small"
@@ -66,6 +67,8 @@
   </div>
 </template>
 <script>
+// import pictureCut from '@/components/live/pictureCut'
+
 import { addrebroadcast } from "@/api/live/steamAdressManage.js";
 export default {
   props: {
@@ -74,6 +77,7 @@ export default {
       default: false
     }
   },
+  // components:{pictureCut},
   data() {
     return {
       // ruleForm: {
@@ -92,7 +96,9 @@ export default {
         relayStreamUrl: "",
         logoDistance: "10:10",
         relayTitle: "",
-        relayDetails: ""
+        relayDetails: "",
+        logoPath: ""
+
       },
       action: "http://gw.test.dianzhenkeji.com/live-stream/relaystream/addfile",
       rules: {
@@ -114,38 +120,22 @@ export default {
   },
   watch: {
     dialogVisible(val) {
-      // if (val) {
-      //   this.ruleForm = {
-      //     userName: "",
-      //     streamPwd: "",
-      //     relayStreamUrl: "",
-      //     logoDistance: "10:10",
-      //     relayTitle: "",
-      //     relayDetails: "",
-      //     logoPath:''
-      //   };
-      // }
+      if (val) {
+        this.ruleForm = {
+          userName: "",
+          streamPwd: "",
+          relayStreamUrl: "",
+          logoDistance: "10:10",
+          relayTitle: "",
+          relayDetails: "",
+          logoPath:''
+        };
+      }
     }
   },
   methods: {
-    // submitUpload() {
-    //   //172.20.5.4:18081/live-stream/relaystream/addRelayStream?userName=123&streamPwd=123&relayStreamUrl=1231&logopath=23&logoDistance=123&relayTitle=123&relayDetails=123
-    //   http: this.action =
-    //     "http://gw.test.dianzhenkeji.com/live-stream/relaystream/addRelayStream?userName=" +
-    //     this.ruleForm.userName +
-    //     "&streamPwd=" +
-    //     this.ruleForm.streamPwd +
-    //     "&relayStreamUrl=" +
-    //     this.ruleForm.relayStreamUrl +
-    //     "&logoDistance=" +
-    //     this.ruleForm.logoDistance +
-    //     "&relayTitle=" +
-    //     this.ruleForm.relayTitle +
-    //     "&relayDetails=" +
-    //     this.ruleForm.relayDetails;
-    //   setTimeout(() => {
-    //     this.$refs.upload.submit();
-    //   }, 1000);
+    // getUrl(val){
+    //   this.ruleForm.logoPath=val;
     // },
     handleRemove(file, fileList) {
       console.log(file, fileList);
