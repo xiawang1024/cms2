@@ -100,6 +100,7 @@
     </el-table>
     <review-dialog :dialog-visible.sync="dialogVisible" :document-infor="documentInfor"/>
     <step-dialog :dialog-visible.sync="stepVisible" :document-infor="documentInfor"/>
+    
   </div>
 </template>
 
@@ -188,10 +189,6 @@ export default {
       const el = this.$refs.multipleTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
       this.sortable = Sortable.create(el, {
         // ghostClass: 'sortable-ghost',
-        setData: function(dataTransfer) {
-        },
-        onEnd: evt => {
-        },
         onUpdate:function(event){
            var newIndex = event.newIndex,
                oldIndex = event.oldIndex,
