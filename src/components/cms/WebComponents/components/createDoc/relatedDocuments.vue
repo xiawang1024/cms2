@@ -96,10 +96,6 @@ export default {
       const el = this.$refs.multipleTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
       this.sortable = Sortable.create(el, {
         // ghostClass: 'sortable-ghost',
-        setData: function(dataTransfer) {
-        },
-        onEnd: evt => {
-        },
         onUpdate:function(event){
            var newIndex = event.newIndex,
                oldIndex = event.oldIndex,
