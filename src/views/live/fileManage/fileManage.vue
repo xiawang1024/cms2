@@ -103,7 +103,7 @@
                 @size-change="sizeChange"
                 @current-change="pageChange"
               />-->
-             
+              <demo/>
             </el-scrollbar>
           </div>
         </template>
@@ -115,8 +115,9 @@
 import splitPane from "vue-splitpane";
 import physicalView from "./physicalView"
 import bigUploader from "./bigUploader";
+import demo from "./demo";
 export default {
-  components: { splitPane,physicalView,bigUploader},
+  components: { splitPane,physicalView,bigUploader,demo},
   directives: {
     aleretAbility: {
       inserted(el) {

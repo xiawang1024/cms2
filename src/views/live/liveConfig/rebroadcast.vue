@@ -30,6 +30,14 @@
           <img :src="scope.row.logoPath==null?defaultPath:scope.row.logoPath" alt class="logoStyle" >
         </template>
       </el-table-column>
+      <el-table-column prop="logoDistance" width="200" label="水印位置">
+        <template slot-scope="scope">
+          <span v-if="scope.row.logoDistance=='10:10'">左上</span>
+          <span v-if="scope.row.logoDistance=='main_w-overlay_w-10:10'">右上</span>
+          <span v-if="scope.row.logoDistance=='10:main_h-overlay_h-10'">左下</span>
+          <span v-if="scope.row.logoDistance=='main_w-overlay_w-10:main_h-overlay_h-10'">右下</span>
+        </template>
+      </el-table-column>
 
       <el-table-column prop="beginTime" width="180" label="开始时间" />
       <el-table-column prop="relayStreamUrl" width="180" label="转播流地址" />
