@@ -10,6 +10,7 @@ export function needMerge(data) {
     url: Cpath + `/chunk/mergeFile`,
     method: "post",
     data:QS.stringify(data),
+
     loadingConfig: {
       noLoading: true
     }

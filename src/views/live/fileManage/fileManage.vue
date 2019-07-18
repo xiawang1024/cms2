@@ -32,7 +32,7 @@
                 :props="defaultProps"
                 @check="addColumn"
                 check-strictly
-              />-->
+              /> -->
             </el-scrollbar>
           </div>
         </template>
@@ -133,7 +133,6 @@ export default {
   data() {
     return {
       fileList:[],
-     
     };
   },
   mounted() {},

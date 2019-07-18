@@ -12,6 +12,9 @@
         label-width="100px"
         class="demo-ruleForm"
         :rules="rules"
+        v-loading="formLoading"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(255, 255, 255, 0.7)"
       >
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="ruleForm.userName" />
@@ -40,29 +43,24 @@
             >右下</el-radio>
           </template>
         </el-form-item>
+        <el-form-item label="logo" prop="logoPath">
+          <el-upload
+            ref="logoupload"
+            class="avatar-uploader"
+            action="http://gw.test.dianzhenkeji.com/live-stream/relaystream/addfile"
+            :show-file-list="false"
+            :on-success="handleSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <img v-if="ruleForm.logoPath" :src="ruleForm.logoPath" class="avatar" >
+            <i v-else class="el-icon-plus avatar-uploader-icon"/>
+          </el-upload>
+        </el-form-item>
       </el-form>
-
-      <el-upload
-        class="upload-demo"
-        ref="upload"
-        action="http://gw.test.dianzhenkeji.com/live-stream/relaystream/addfile"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :on-success="handleSuccess"
-        :on-error="handleError"
-        :limit="1"
-        :before-upload="beforeAvatarUpload"
-      >
-        <div slot="tip" class="el-upload__tip">只能上传一张120*70 像素的png格式图片</div>
-        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-      </el-upload>
       <!-- <pictureCut @getUrl="getUrl"/> -->
-      <el-button
-        style="margin: 20px 0 0 40px ; "
-        size="small"
-        type="success"
-        @click="submiteSave"
-      >保存</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" type="primary" @click="submiteSave">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -79,6 +77,20 @@ export default {
   },
   // components:{pictureCut},
   data() {
+    //图片尺寸验证
+    var sizeCheck = (rule, value, callback) => {
+      console.log(value, "value");
+      let Img = new Image();
+      Img.src = value;
+      Img.onload = function() {
+        if (Img.width != 120 && Img.height != 70) {
+          callback(new Error("请上传120*70像素的logo!"));
+        } else {
+          callback();
+        }
+      };
+    };
+
     return {
       // ruleForm: {
       //   userName: "15915315022",
@@ -90,16 +102,16 @@ export default {
       //   logoPath: ""
       // },
 
-      ruleForm: {
-        userName: "",
-        streamPwd: "",
-        relayStreamUrl: "",
-        logoDistance: "10:10",
-        relayTitle: "",
-        relayDetails: "",
-        logoPath: ""
+        ruleForm: {
+          userName: "",
+          streamPwd: "",
+          relayStreamUrl: "",
+          logoDistance: "10:10",
+          relayTitle: "",
+          relayDetails: "",
+          logoPath: "",
 
-      },
+        },
       action: "http://gw.test.dianzhenkeji.com/live-stream/relaystream/addfile",
       rules: {
         userName: [
@@ -114,23 +126,32 @@ export default {
         ],
         relayDetails: [
           { required: true, message: "请输入转播描述", trigger: "blur" }
+        ],
+        logoPath: [
+          {
+            required: true,
+            message: "请上传一张120*70 像素的png格式图片",
+            trigger: "blur"
+          },
+          { validator: sizeCheck, trigger: "blur" }
         ]
       },
+      formLoading: false
     };
   },
   watch: {
     dialogVisible(val) {
-      if (val) {
-        this.ruleForm = {
-          userName: "",
-          streamPwd: "",
-          relayStreamUrl: "",
-          logoDistance: "10:10",
-          relayTitle: "",
-          relayDetails: "",
-          logoPath:''
-        };
-      }
+        if (val) {
+          this.ruleForm = {
+            userName: "",
+            streamPwd: "",
+            relayStreamUrl: "",
+            logoDistance: "10:10",
+            relayTitle: "",
+            relayDetails: "",
+            logoPath:''
+          };
+        }
     }
   },
   methods: {
@@ -144,7 +165,8 @@ export default {
       console.log(file);
     },
     handleSuccess(res) {
-      this.ruleForm.logoPath = res;
+      var _this = this;
+      _this.ruleForm.logoPath = res;
     },
     handleError() {
       this.$message({
@@ -173,38 +195,69 @@ export default {
     },
     submiteSave() {
       var _this = this;
-      return new Promise((resolve, reject) => {
-        addrebroadcast(this.ruleForm)
-          .then(response => {
-            if (response.data.code == 0) {
-              this.$message({
-                type: "success",
-                message: response.data.msg
-              });
+      this.$refs.ruleForm.validate(valid => {
+        if (valid) {
+          this.formLoading = true;
 
-              _this.$refs.upload.clearFiles();
-              _this.$emit("closeDialog");
-              _this.$emit("refrashPage");
-            } else {
-              this.$message({
-                type: "error",
-                message: response.data.msg
-              });
-            }
+          return new Promise((resolve, reject) => {
+            addrebroadcast(this.ruleForm)
+              .then(response => {
+                if (response.data.code == 0) {
+                  this.$message({
+                    type: "success",
+                    message: response.data.msg
+                  });
 
-            resolve();
-          })
-          .catch(error => {
-            console.log(error);
-            reject(error);
+                  _this.$refs.upload.clearFiles();
+                  _this.$emit("closeDialog");
+                  _this.$emit("refrashPage");
+                } else {
+                  this.$message({
+                    type: "error",
+                    message: response.data.msg
+                  });
+                }
+                _this.formLoading = false;
+                resolve();
+              })
+              .catch(error => {
+                console.log(error);
+                _this.formLoading = false;
+                reject(error);
+              });
           });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
       });
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-.upload-demo {
-  padding-left: 40px;
+.avatar-uploader .el-upload {
+  // border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  border: 1px dashed #d9d9d9;
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 120px;
+  height: 70px;
+  display: block;
 }
 </style>
