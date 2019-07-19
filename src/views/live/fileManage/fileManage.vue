@@ -5,7 +5,6 @@
         <el-col :span="24">
           <div class="file-header">
             <p>头部功能按钮</p>
-            <bigUploader/>
           </div>
         </el-col>
       </el-row>
@@ -115,11 +114,10 @@
 <script>
 import splitPane from "vue-splitpane";
 import physicalView from "./physicalView"
-import bigUploader from "./bigUploader";
 import demo from "./demo";
 import pictureCut from '@/components/live/pictureCut'
 export default {
-  components: { splitPane,physicalView,bigUploader,demo,pictureCut},
+  components: { splitPane,physicalView,demo,pictureCut},
   directives: {
     aleretAbility: {
       inserted(el) {

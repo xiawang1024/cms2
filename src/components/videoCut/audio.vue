@@ -1,15 +1,16 @@
 <template>
-  <div class="mainbox">
-    <div class="clipBoard">
-      <div v-for="(item,index) in clickClip" :key="index" >
-        <span>开始时间：{{ item.start }}</span>~
-        <span>结束时间：{{ item.end }}</span>
-        <span @click.stop="handlePlay(index)">播放</span>
-        <span @click.stop="handleDelete(index)">删除</span>
+  <div>
+    <div class="mainbox">
+      <div class="clipBoard">
+        <div v-for="(item,index) in clickClip" :key="index" >
+          <span>开始时间：{{ item.start }}</span>~
+          <span>结束时间：{{ item.end }}</span>
+          <span @click.stop="handlePlay(index)">播放</span>
+          <span @click.stop="handleDelete(index)">删除</span>
+        </div>
       </div>
-          
+      <div ref="waveform" @click.stop="getPosition" class="box" @mousemove="printPosion" />
     </div>
-    <div ref="waveform" @click.stop="getPosition" class="box" @mousemove="printPosion"/>
     <el-button @click="myplay">播放</el-button>
     <el-button @click="mypause">暂停</el-button>
     <el-button @click="mystop">停止</el-button>
@@ -17,6 +18,7 @@
     <el-button @click="mysave">裁剪</el-button>
     <p>{{ audio_url }}</p>
   </div>
+  
 </template>
 <script>
 import WaveSurfer from "wavesurfer.js";
@@ -55,9 +57,13 @@ export default {
       waveColor: "#6d9e8b",
       progressColor: "#368666",
       cursorColor: "#0ff",
-      color: "rgba(254, 255, 255, 0.4)",
+
+      color: "rgba(254, 255, 0, 0.8)",
       hideScrollbar: true,
+      //绘制图像高度
       height: 60,
+      //振幅
+      barHeight:2,
     //   plugins: [
     //     WaveSurfer.regions.create({})
     // ]
@@ -68,28 +74,19 @@ export default {
     //加载完获取音频长度
     this.wavesurfer.on("ready", () => {
       this.audioDuration = this.wavesurfer.getDuration();
-    //   this.wavesurfer.addRegion({
-    //         id: '1',
-    //         start: '0.5',
-    //         end: '15',
-    //         loop: false,
-    //         drag: false,
-    //         resize: true,
-    //         color: "rgba(50, 50, 50, 0.8)"
-    //     });
-        
-
     });
     //播放完成自动停止
     this.wavesurfer.on("finish", () => {
       this.wavesurfer.pause();
     });
+    //点击鼠标添加选区
     this.wavesurfer.on("seek", (val) => {
         this.wavesurfer.enableDragSelection({
               id: Math.random(),
             loop: false,
             drag: false,
-            resize: true,
+            //可调整大小
+            resize: false,
             color: "rgba(50, 50, 200, 0.8)"
         })
         if(this.flag){
@@ -130,7 +127,8 @@ export default {
     },
     myplay() {
       if (this.wavesurfer) {
-        this.wavesurfer.play();
+        //播放区间（start,end）
+        this.wavesurfer.play(5,20);
       }
     },
     mypause() {
@@ -156,7 +154,7 @@ export default {
     },
     handlePlay(index){
         // let timeZone=(this.clickClip[index].start.toString()+','+this.clickClip[index].end.toString()).toString();
-        this.wavesurfer.play('5')
+        this.wavesurfer.play()
     },
     mysave(){
     //    if(this.clickClip.reverse()[0].end) {
@@ -188,6 +186,9 @@ export default {
       cursor: pointer;
   }
   .box {
+  height: 60px;
+  overflow: hidden;
+  margin-bottom: 10px;
     // border: 1px solid #000;
   }
 }

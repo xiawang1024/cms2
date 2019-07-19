@@ -7,17 +7,9 @@
 </template>
 
 <script>
-    import globalUploader from '@/components/simple-uploader/globalUploader.vue'
 export default{
   name: 'App',
-  components: {
-            globalUploader
-        },
-  data(){
-    return{
-
-    }
-  },
+  
 }
 </script>
 <style lang="scss">
