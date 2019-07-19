@@ -13,8 +13,9 @@
       @pause="pauseVideo"
       @stop="stopVideo"
       @cutResult="cutResult"
+      @cutList="propCutList"
     />
-    <audioWave :audio_url="audio_url"/>
+    <audioWave :audio_url="audio_url" :cut-list="cutList" />
     
   </div>
 </template>
@@ -41,6 +42,7 @@ export default {
       duration: 0,
       playing: false,
       currentTime: 0,
+      cutList:[]
     };
   },
   mounted() {
@@ -77,8 +79,12 @@ export default {
     cutResult(val) {
       //组件数据传递出去
       this.$emit("cutResult", val);
+      this.cutList=val
     },
-    // 
+    // 裁剪值
+    propCutList(val){
+      this.cutList=val
+    }
   }
 };
 </script>

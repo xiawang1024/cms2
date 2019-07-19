@@ -31,6 +31,12 @@ export default {
       type: String,
       default: ""
     },
+    cutList:{
+      type:Array,
+      default:()=>{
+        []
+      }
+    }
   },
   data() {
     return {
@@ -46,6 +52,16 @@ export default {
   watch:{
     audio_url(){
         this.wavesurfer.load(this.audio_url);
+    },
+    cutList(newValue,oldValue){
+      console.log(oldValue,newValue);
+      this.wavesurfer.clearRegions();
+        newValue.forEach((element,index) => {
+
+          this.myChoiceSquare(index,element.startTime,element.endTime)
+        });
+        
+        
     }
   },
   created() {},
@@ -74,33 +90,36 @@ export default {
     //加载完获取音频长度
     this.wavesurfer.on("ready", () => {
       this.audioDuration = this.wavesurfer.getDuration();
+
+
+
     });
     //播放完成自动停止
     this.wavesurfer.on("finish", () => {
       this.wavesurfer.pause();
     });
     //点击鼠标添加选区
-    this.wavesurfer.on("seek", (val) => {
-        this.wavesurfer.enableDragSelection({
-              id: Math.random(),
-            loop: false,
-            drag: false,
-            //可调整大小
-            resize: false,
-            color: "rgba(50, 50, 200, 0.8)"
-        })
-        if(this.flag){
-            this.clickClip.push({start:(this.audioDuration*val).toFixed(2),end:''})
+    // this.wavesurfer.on("seek", (val) => {
+    //     this.wavesurfer.enableDragSelection({
+    //           id: Math.random(),
+    //         loop: false,
+    //         drag: false,
+    //         //可调整大小
+    //         resize: false,
+    //         color: "rgba(50, 50, 200, 0.8)"
+    //     })
+    //     if(this.flag){
+    //         this.clickClip.push({start:(this.audioDuration*val).toFixed(2),end:''})
             
-             this.flag=!this.flag;
-        }else{
-             this.clickClip[ this.currentIndex].end=(this.audioDuration*val).toFixed(2);
-             this.currentIndex++;
-              this.flag=!this.flag;
-        }
+    //          this.flag=!this.flag;
+    //     }else{
+    //          this.clickClip[ this.currentIndex].end=(this.audioDuration*val).toFixed(2);
+    //          this.currentIndex++;
+    //           this.flag=!this.flag;
+    //     }
         
-      console.log(val,'持续时间',this.clickClip);
-    });
+    //   console.log(val,'持续时间',this.clickClip);
+    // });
     
     // wavesurfer.stop();
   },
@@ -156,17 +175,24 @@ export default {
         // let timeZone=(this.clickClip[index].start.toString()+','+this.clickClip[index].end.toString()).toString();
         this.wavesurfer.play()
     },
+    //根据视频返回的时间创建选区
+      myChoiceSquare(id,start,end){
+        //调用选区生成方法
+        this.wavesurfer.addRegion({
+             id,
+             start,
+             end,
+            loop: false,
+            drag: false,
+            //可调整大小
+            resize: false,
+            color: "rgba(50, 50, 200, 0.4)"
+        })
+      },
     mysave(){
-    //    if(this.clickClip.reverse()[0].end) {
-    //        this.$message({
-    //            type:'error',
-    //            message:'最后一个音频片段结束时间不能为空！'
-    //        });
-    //        return false
-    //    }
-       //获取裁剪区域
+    
        let list=this.wavesurfer.regions.list
-       console.log((list),'result');
+       console.log(list,'result');
        
 
     }

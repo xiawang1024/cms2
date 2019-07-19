@@ -260,6 +260,7 @@
              */
             renderList: function () {
                 const cropItemList = this.cropItemList.slice(0)
+                
                 return cropItemList.reverse()
             },
         },
@@ -293,6 +294,9 @@
                 // 时长更新后需更新界面
                 this.calculateTimeLineData()
             },
+            renderList(val){
+                this.$emit('cutList',val)
+            }
         },
 
         mounted () {
@@ -783,11 +787,11 @@
                 this.isCropping = false
 
                 const startTime = this.playingItem.startTime
-
                 this.$emit('play', startTime || 0)
             },
 
             pause () {
+                this.playingItem=undefined;
                 this.$emit('pause')
             },
 

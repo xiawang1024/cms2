@@ -116,7 +116,8 @@ export default {
     },
     handleEdit(index, row) {
       this.dialogVisible = true;
-      this.video_url = row.videoUrl;
+      // this.video_url = row.videoUrl;
+      this.video_url = row.editUrl
       this.audio_url = row.audioUrl;
       this.rowId = row.id;
       this.url = row.filePath;
