@@ -79,7 +79,7 @@ export default {
   data() {
     //图片尺寸验证
     var sizeCheck = (rule, value, callback) => {
-      console.log(value, "value");
+      // console.log(value, "value");
       let Img = new Image();
       Img.src = value;
       Img.onload = function() {
@@ -159,10 +159,10 @@ export default {
     //   this.ruleForm.logoPath=val;
     // },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      // console.log(file, fileList);
     },
     handlePreview(file) {
-      console.log(file);
+      // console.log(file);
     },
     handleSuccess(res) {
       var _this = this;
@@ -180,7 +180,7 @@ export default {
     // ----------
 
     beforeAvatarUpload(file) {
-      console.log((file, "file"));
+      // console.log((file, "file"));
 
       const isPNG = file.type === "image/png";
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -221,7 +221,7 @@ export default {
                 resolve();
               })
               .catch(error => {
-                console.log(error);
+                // console.log(error);
                 _this.formLoading = false;
                 reject(error);
               });

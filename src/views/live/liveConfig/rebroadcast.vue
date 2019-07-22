@@ -122,7 +122,7 @@ export default {
             if (response.data.code == 0) {
               _this.tableValue = response.data.result.content;
               _this.totalCount = response.data.result.total;
-              console.log(_this.tableValue,'value');
+              // console.log(_this.tableValue,'value');
               
             } else {
               this.$message({

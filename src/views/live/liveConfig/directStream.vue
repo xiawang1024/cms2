@@ -263,7 +263,7 @@ export default {
       return new Promise((resolve, reject) => {
         getStreamInfo(data)
           .then(response => {
-            console.log(response);
+            // console.log(response);
             if (response.data.code === 0) {
               _this.tableValue = response.data.result.content;
               _this.totalCount = response.data.result.total;

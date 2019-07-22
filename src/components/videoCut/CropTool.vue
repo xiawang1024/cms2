@@ -756,6 +756,7 @@
                 this.isSendingCrop = false
                 this.$emit('stop')
             },
+            
 
             /**
              * 切换片段播放暂停
@@ -897,7 +898,7 @@
 
                 })
 
-                console.log(tempCropItemList,'!!')
+                // console.log(tempCropItemList,'!!')
                 this.$emit('cutResult',tempCropItemList)
                 this.reset();
                 return tempCropItemList

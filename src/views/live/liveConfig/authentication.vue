@@ -231,7 +231,6 @@ export default {
       return new Promise((resolve, reject) => {
         childrenStreamAdressfile(tree.id)
           .then(response => {
-            console.log(response);
             if (response.data.code == 0) {
               _this.childrenNode = response.data.result;
               _resolve(_this.childrenNode);

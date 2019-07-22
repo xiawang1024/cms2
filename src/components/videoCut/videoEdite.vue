@@ -6,6 +6,7 @@
     </div>
     <video ref="video" :src="video_url" controls width="600px" />
     <CropTool
+      ref="CropTool"
       :duration="duration"
       :playing="playing"
       :current-playing-time="currentTime"
@@ -14,18 +15,19 @@
       @stop="stopVideo"
       @cutResult="cutResult"
       @cutList="propCutList"
+      @CloseDialog="playReset"
     />
     <audioWave :audio_url="audio_url" :cut-list="cutList" />
-    
   </div>
 </template>
 <script>
 import CropTool from "@/components/videoCut/CropTool.vue";
-import audioWave from "@/components/videoCut/audio.vue"
+import audioWave from "@/components/videoCut/audio.vue";
 export default {
   name: "VideoEdite",
   components: {
-    CropTool,audioWave
+    CropTool,
+    audioWave
   },
   props: {
     audio_url: {
@@ -42,7 +44,7 @@ export default {
       duration: 0,
       playing: false,
       currentTime: 0,
-      cutList:[]
+      cutList: []
     };
   },
   mounted() {
@@ -59,7 +61,6 @@ export default {
     videoElement.ontimeupdate = () => {
       this.currentTime = videoElement.currentTime;
     };
-    
   },
   methods: {
     seekVideo(seekTime) {
@@ -79,11 +80,16 @@ export default {
     cutResult(val) {
       //组件数据传递出去
       this.$emit("cutResult", val);
-      this.cutList=val
+      this.cutList = val;
     },
     // 裁剪值
-    propCutList(val){
-      this.cutList=val
+    propCutList(val) {
+      this.cutList = val;
+    },
+    //停止播放
+    playReset() {
+        this.$refs.video.pause();
+        this.$refs.CropTool.reset();
     }
   }
 };

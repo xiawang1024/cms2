@@ -11,12 +11,12 @@
       </div>
       <div ref="waveform" @click.stop="getPosition" class="box" @mousemove="printPosion" />
     </div>
-    <el-button @click="myplay">播放</el-button>
+    <!-- <el-button @click="myplay">播放</el-button>
     <el-button @click="mypause">暂停</el-button>
     <el-button @click="mystop">停止</el-button>
     <el-button @click="myclear">清空</el-button>
-    <el-button @click="mysave">裁剪</el-button>
-    <p>{{ audio_url }}</p>
+    <el-button @click="mysave">裁剪</el-button> -->
+    <!-- <p>{{ audio_url }}</p> -->
   </div>
   
 </template>
@@ -54,7 +54,7 @@ export default {
         this.wavesurfer.load(this.audio_url);
     },
     cutList(newValue,oldValue){
-      console.log(oldValue,newValue);
+      // console.log(oldValue,newValue);
       this.wavesurfer.clearRegions();
         newValue.forEach((element,index) => {
 
@@ -72,7 +72,7 @@ export default {
       container: audioElement,
       waveColor: "#6d9e8b",
       progressColor: "#368666",
-      cursorColor: "#0ff",
+      cursorColor: "#fff",
 
       color: "rgba(254, 255, 0, 0.8)",
       hideScrollbar: true,
@@ -125,8 +125,6 @@ export default {
   },
   beforeDestroy() {
     //销毁实例
-    console.log('des');
-    
     this.wavesurfer.destroy();
     this.wavesurfer=null;
   },
@@ -135,7 +133,7 @@ export default {
     getPosition(e) {
       e.stopPropagation();
 
-      console.log(e);
+      // console.log(e);
     },
     printPosion(e) {
     //   let x = 0;
@@ -168,7 +166,7 @@ export default {
     },
     handleDelete(index){
         this.clickClip.splice(index,1);
-        console.log(this.clickClip);
+        // console.log(this.clickClip);
         
     },
     handlePlay(index){
@@ -191,8 +189,8 @@ export default {
       },
     mysave(){
     
-       let list=this.wavesurfer.regions.list
-       console.log(list,'result');
+      //  let list=this.wavesurfer.regions.list
+      //  console.log(list,'result');
        
 
     }
