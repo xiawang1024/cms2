@@ -166,7 +166,7 @@ export default {
     },
     handleSuccess(res) {
       var _this = this;
-      _this.ruleForm.logoPath = res;
+      _this.ruleForm.logoPath = res.logoPath;
     },
     handleError() {
       this.$message({
