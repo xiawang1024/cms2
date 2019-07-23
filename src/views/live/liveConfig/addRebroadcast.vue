@@ -44,17 +44,22 @@
             >右下</el-radio>
           </template>
         </el-form-item>
-        <el-form-item label="logo" prop="logoPath">
+        <el-form-item
+          label="logo"
+          prop="logoPath"
+          v-show="ruleForm.logoDistance!='noLogo'"
+          :rules="ruleForm.logoDistance!='noLogo'?uprules:noUprules"
+        >
           <el-upload
             ref="logoupload"
             class="avatar-uploader"
-            action="http://gw.dianzhenkeji.com/live-stream/relaystream/addfile"
+            :action="action"
             :show-file-list="false"
             :on-success="handleSuccess"
             :before-upload="beforeAvatarUpload"
           >
             <img v-if="ruleForm.logoPath" :src="ruleForm.logoPath" class="avatar" >
-            <i v-else class="el-icon-plus avatar-uploader-icon"/>
+            <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
         </el-form-item>
       </el-form>
@@ -67,6 +72,7 @@
 </template>
 <script>
 // import pictureCut from '@/components/live/pictureCut'
+import baseUrl from "@/config/base-url";
 
 import { addrebroadcast } from "@/api/live/steamAdressManage.js";
 export default {
@@ -81,15 +87,19 @@ export default {
     //图片尺寸验证
     var sizeCheck = (rule, value, callback) => {
       // console.log(value, "value");
-      let Img = new Image();
-      Img.src = value;
-      Img.onload = function() {
-        if (Img.width != 120 && Img.height != 70) {
-          callback(new Error("请上传120*70像素的logo!"));
-        } else {
-          callback();
-        }
-      };
+      if (value) {
+        let Img = new Image();
+        Img.src = value;
+        Img.onload = function() {
+          if (Img.width != 120 && Img.height != 70) {
+            callback(new Error("请上传120*70像素的logo!"));
+          } else {
+            callback();
+          }
+        };
+      } else {
+        callback();
+      }
     };
 
     return {
@@ -103,17 +113,16 @@ export default {
       //   logoPath: ""
       // },
 
-        ruleForm: {
-          userName: "",
-          streamPwd: "",
-          relayStreamUrl: "",
-          logoDistance: "10:10",
-          relayTitle: "",
-          relayDetails: "",
-          logoPath: "",
-
-        },
-      action: "http://gw.dianzhenkeji.com/live-stream/relaystream/addfile",
+      ruleForm: {
+        userName: "",
+        streamPwd: "",
+        relayStreamUrl: "",
+        logoDistance: "10:10",
+        relayTitle: "",
+        relayDetails: "",
+        logoPath: ""
+      },
+      action: baseUrl.BASE_URL + "/live-stream/relaystream/addfile",
       rules: {
         userName: [
           { required: true, message: "请输入用户名", trigger: "blur" }
@@ -127,32 +136,34 @@ export default {
         ],
         relayDetails: [
           { required: true, message: "请输入转播描述", trigger: "blur" }
-        ],
-        logoPath: [
-          {
-            required: true,
-            message: "请上传一张120*70 像素的png格式图片",
-            trigger: "blur"
-          },
-          { validator: sizeCheck, trigger: "blur" }
         ]
       },
+      uprules: [
+        {
+          required: true,
+          message: "请上传一张120*70 像素的png格式图片",
+          trigger: "blur"
+        },
+        { validator: sizeCheck, trigger: "blur" }
+      ],
+      noUprules: [],
+
       formLoading: false
     };
   },
   watch: {
     dialogVisible(val) {
-        if (val) {
-          this.ruleForm = {
-            userName: "",
-            streamPwd: "",
-            relayStreamUrl: "",
-            logoDistance: "noLogo",
-            relayTitle: "",
-            relayDetails: "",
-            logoPath:''
-          };
-        }
+      if (val) {
+        this.ruleForm = {
+          userName: "",
+          streamPwd: "",
+          relayStreamUrl: "",
+          logoDistance: "noLogo",
+          relayTitle: "",
+          relayDetails: "",
+          logoPath: ""
+        };
+      }
     }
   },
   methods: {
@@ -182,28 +193,29 @@ export default {
 
     beforeAvatarUpload(file) {
       console.log((file, "file"));
-      if(file){
+      if (file) {
         const isPNG = file.type === "image/png";
-      const isLt2M = file.size / 1024 / 1024 < 2;
+        const isLt2M = file.size / 1024 / 1024 < 2;
 
-      if (!isPNG) {
-        this.$message.error("上传头像图片只能是 PNG 格式!");
+        if (!isPNG) {
+          this.$message.error("上传头像图片只能是 PNG 格式!");
+        }
+        if (!isLt2M) {
+          this.$message.error("上传头像图片大小不能超过 2MB!");
+        }
+        return isPNG && isLt2M;
+      } else {
+        return true;
       }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isPNG && isLt2M;
-      }else{
-        return true
-      }
-      
     },
     submiteSave() {
       var _this = this;
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
           this.formLoading = true;
-
+          if (this.ruleForm.logoDistance == "noLogo") {
+            this.ruleForm.logoPath = "";
+          }
           return new Promise((resolve, reject) => {
             addrebroadcast(this.ruleForm)
               .then(response => {
