@@ -2,15 +2,17 @@
   <div class="helpdoc-container">
     <template>
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="视频剪辑" name="0"/>
-        <el-tab-pane label="视频转码" name="1"/>
+        <el-tab-pane label="视频剪辑" name="0" />
+        <el-tab-pane label="视频转码" name="1" />
       </el-tabs>
     </template>
-    <el-table :data="tableValue" 
-              :load="load"
-              lazy
-              :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-              row-key="id">
+    <el-table
+      :data="tableValue"
+      :load="load"
+      lazy
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+      row-key="id"
+    >
       <el-table-column type="index" width="50" />
       <el-table-column prop="appName" width="150" label="APP名称" />
       <el-table-column prop="userName" width="120" label="用户名" />
@@ -43,23 +45,33 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-    <el-dialog title="视频剪辑" :visible.sync="dialogVisible" width="860px">
+    <el-dialog
+      title="视频剪辑"
+      :visible.sync="dialogVisible"
+      width="860px"
+      :before-close="moveCutContent"
+    >
       <videoEdite
         @cutResult="cutResult"
-        :video-url="rowUrl"
+        :video_url="video_url"
+        :audio_url="audio_url"
         v-loading="loading"
         element-loading-text="上传中..."
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(255, 255, 255, 0.8)"
+        ref="videoCut"
       />
-      
     </el-dialog>
   </div>
 </template>
 <script>
-import { streamfile, editeStreamfile,childrenStreamfile } from "@/api/live/streamFileManage.js";
+import {
+  streamfile,
+  editeStreamfile,
+  childrenStreamfile
+} from "@/api/live/streamFileManage.js";
 import videoEdite from "@/components/videoCut/videoEdite.vue";
-import { Promise } from 'q';
+import { Promise } from "q";
 export default {
   components: { videoEdite },
   data() {
@@ -71,18 +83,21 @@ export default {
       sortBy: "",
       order: "",
       dialogVisible: false,
-      rowUrl: "", //播放地址
+      audio_url: "", //音频播放地址
+      video_url: "", //视频播放地址
       rowId: "", //当前文件id
       url: "", //文件路径
       loading: false,
-      activeName:'0',
-      childrenNode:[],
+      activeName: "0",
+      childrenNode: []
     };
   },
   created() {
     this.requestTableValue();
   },
-  mounted() {},
+  mounted() {
+    
+  },
   methods: {
     requestTableValue() {
       var _this = this;
@@ -97,7 +112,7 @@ export default {
           .then(response => {
             if (response.data.code == 0) {
               _this.tableValue = response.data.result.content;
-              
+
               _this.totalCount = response.data.result.total;
             } else {
               this.$message({
@@ -114,7 +129,9 @@ export default {
     },
     handleEdit(index, row) {
       this.dialogVisible = true;
-      this.rowUrl = row.editUrl;
+      // this.video_url = row.videoUrl;
+      this.video_url = row.editUrl;
+      this.audio_url = row.audioUrl;
       this.rowId = row.id;
       this.url = row.filePath;
     },
@@ -151,8 +168,8 @@ export default {
       var _this = this;
       this.loading = true;
       //添加上 url , order, id 等字段
-      let data=[];
-      data=JSON.parse(JSON.stringify(value))
+      let data = [];
+      data = JSON.parse(JSON.stringify(value));
       data.map((item, index) => {
         //时间格式化00:00:00.0
         item.duration =
@@ -162,7 +179,8 @@ export default {
           (item.endTimeArr[1] - item.startTimeArr[1]) +
           ":" +
           (item.endTimeArr[2] -
-            item.startTimeArr[2] -1+
+            item.startTimeArr[2] -
+            1 +
             (item.duration - parseInt(item.duration)));
         item.startTime =
           item.startTimeArr[0] +
@@ -201,39 +219,41 @@ export default {
     },
     //tab切换
     handleClick(tab, event) {
-      if(this.activeName=='0'){
-          this.requestTableValue();
+      if (this.activeName == "0") {
+        this.requestTableValue();
       }
-      if(this.activeName=='1'){
-        this.tableValue=[]
+      if (this.activeName == "1") {
+        this.tableValue = [];
       }
+    },
 
-      },
-      
     load(tree, treeNode, resolve) {
       //传入当前节点id,查询子节点列表
       //发送请求，将请求结果resolve出去，
-      var _resolve=resolve;
-       var _this=this;
-        return new Promise((resolve,reject)=>{
+      var _resolve = resolve;
+      var _this = this;
+      return new Promise((resolve, reject) => {
         childrenStreamfile(tree.id)
-        .then(response=>{
-            if(response.data.code==0){
-              _this.childrenNode=response.data.result
-               _resolve( _this.childrenNode)
-            }else{
+          .then(response => {
+            if (response.data.code == 0) {
+              _this.childrenNode = response.data.result;
+              _resolve(_this.childrenNode);
+            } else {
               //没有子节点返回空值
-               _resolve([])
+              _resolve([]);
             }
-          resolve();
-        })
-        .catch(error=>{
-          reject(error);
-        })
-      })
-       
-      },
-      
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+    moveCutContent(done) {
+        this.$refs.videoCut.playReset();
+        done();
+        //关闭对话框
+    }
   }
 };
 </script>

@@ -72,7 +72,7 @@ $width:100px;
 
 .folderSize {
   /deep/i {
-    font-size: 70px;
+    font-size: 35px;
   }
 
   .folderName {
