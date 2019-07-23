@@ -102,7 +102,7 @@
                 @size-change="sizeChange"
                 @current-change="pageChange"
               />-->
-              <demo/>
+              <simpleUploader/>
               <pictureCut/>
             </el-scrollbar>
           </div>
@@ -114,10 +114,10 @@
 <script>
 import splitPane from "vue-splitpane";
 import physicalView from "./physicalView"
-import demo from "./demo";
+import simpleUploader from "./simpleUploader";
 import pictureCut from '@/components/live/pictureCut'
 export default {
-  components: { splitPane,physicalView,demo,pictureCut},
+  components: { splitPane,physicalView,simpleUploader,pictureCut},
   directives: {
     aleretAbility: {
       inserted(el) {

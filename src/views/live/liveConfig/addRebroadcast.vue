@@ -34,6 +34,7 @@
 
         <el-form-item label="角标位置" prop="logoDistance">
           <template>
+            <el-radio v-model="ruleForm.logoDistance" label="noLogo">无</el-radio>
             <el-radio v-model="ruleForm.logoDistance" label="10:10">左上</el-radio>
             <el-radio v-model="ruleForm.logoDistance" label="main_w-overlay_w-10:10">右上</el-radio>
             <el-radio v-model="ruleForm.logoDistance" label="10:main_h-overlay_h-10">左下</el-radio>
@@ -95,7 +96,7 @@ export default {
       // ruleForm: {
       //   userName: "15915315022",
       //   streamPwd: "1234567",
-      //   relayStreamUrl: "http://stream2.hndt.com/live/jtlk14.m3u8",
+      //   relayStreamUrl: "https://30539.hlsplay.aodianyun.com/lms_30539/tv_channel_296.m3u8",
       //   logoDistance: "10:10",
       //   relayTitle: "测试数据",
       //   relayDetails: "测试数据",
@@ -146,7 +147,7 @@ export default {
             userName: "",
             streamPwd: "",
             relayStreamUrl: "",
-            logoDistance: "10:10",
+            logoDistance: "noLogo",
             relayTitle: "",
             relayDetails: "",
             logoPath:''
@@ -180,9 +181,9 @@ export default {
     // ----------
 
     beforeAvatarUpload(file) {
-      // console.log((file, "file"));
-
-      const isPNG = file.type === "image/png";
+      console.log((file, "file"));
+      if(file){
+        const isPNG = file.type === "image/png";
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isPNG) {
@@ -192,6 +193,10 @@ export default {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isPNG && isLt2M;
+      }else{
+        return true
+      }
+      
     },
     submiteSave() {
       var _this = this;
@@ -208,7 +213,8 @@ export default {
                     message: response.data.msg
                   });
 
-                  _this.$refs.upload.clearFiles();
+                  _this.$refs.logoupload.clearFiles();
+                  // _this.handleVisible();
                   _this.$emit("closeDialog");
                   _this.$emit("refrashPage");
                 } else {
