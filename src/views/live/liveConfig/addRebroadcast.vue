@@ -48,7 +48,7 @@
           <el-upload
             ref="logoupload"
             class="avatar-uploader"
-            action="http://gw.test.dianzhenkeji.com/live-stream/relaystream/addfile"
+            action="http://gw.dianzhenkeji.com/live-stream/relaystream/addfile"
             :show-file-list="false"
             :on-success="handleSuccess"
             :before-upload="beforeAvatarUpload"
@@ -113,7 +113,7 @@ export default {
           logoPath: "",
 
         },
-      action: "http://gw.test.dianzhenkeji.com/live-stream/relaystream/addfile",
+      action: "http://gw.dianzhenkeji.com/live-stream/relaystream/addfile",
       rules: {
         userName: [
           { required: true, message: "请输入用户名", trigger: "blur" }
