@@ -74,7 +74,7 @@
         </el-form-item>
         <el-form-item
           v-for="(domain, index) in dynamicValidateForm.distributes"
-          :label="'分发流地址' + index"
+          :label="'分发流地址' + (index+1)"
           :key="domain.key"
           :prop="'distributes.' + index + '.value'"
           :rules="{
