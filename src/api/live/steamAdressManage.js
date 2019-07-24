@@ -1,5 +1,4 @@
 import request from "@/utils/request";
-
 let Cpath = "/live-stream";
 //直播流地址管理
 
@@ -55,6 +54,47 @@ export function rebroadcastList(data) {
         data.sortBy
       }&order=${data.order}`,
     method: "post",
+    // loadingConfig: {
+    //   noLoading: true
+    // }
+  });
+}
+
+//分发直播流接口
+export function addDistribute(data) {
+  return request({
+    url:
+      Cpath +
+      `/relaystream/addDistributeStream`,
+    method: "post",
+    data:data,
+    // loadingConfig: {
+    //   noLoading: true
+    // }
+  });
+}
+
+//分页条件检索分发流信息
+export function distributeList(data) {
+  return request({
+    url:
+      Cpath +
+      `/relaystream/distributepage?pageNo=${data.pageNo}&pageSize=${data.pageSize}&sortBy=${
+        data.sortBy
+      }&order=${data.order}`,
+    method: "post",
+    // loadingConfig: {
+    //   noLoading: true
+    // }
+  });
+}
+//根据分发流信息的id查子信息
+export function distributeChildrenList(id) {
+  return request({
+    url:
+      Cpath +
+      `/relaystream/distributbyPid?id=${id}`,
+    method: "get",
     // loadingConfig: {
     //   noLoading: true
     // }
