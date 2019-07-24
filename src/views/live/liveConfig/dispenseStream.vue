@@ -11,16 +11,18 @@
       row-key="id"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column prop="distributeTitle" label="标题" />
+      <el-table-column prop="distributeTitle" width="200" label="标题" />
       <el-table-column prop="distributeDetails" label="详情" />
-      <el-table-column prop="distributeTime" label="创建时间" />
+      <el-table-column prop="distributeTime" width="150" label="创建时间" />
+      <el-table-column prop="distributeNumber" width="90" label="转发路数" align="center" />
       <el-table-column prop="distributeStream" label="流地址" />
-      <el-table-column prop="distributeType" label="状态" >
+      <el-table-column prop="distributeType" width="90" label="状态" >
         <template slot-scope="scope">
           <span v-if="scope.row.distributeType==0" class="colorDanger">结束</span>
           <span v-if="scope.row.distributeType==1" class="colorSuccess">转播中</span>
         </template>
       </el-table-column>
+
       
     </el-table>
 
