@@ -5,22 +5,23 @@
     </div>
     <el-table 
       :data="tableValue"
-      @expand-change="loadChildeNode"
+      :load="load"
+      lazy
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+      row-key="id"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column type="expand">
-        <template slot-scope="scope">
-          <el-table :data="scope.row.children">
-            <el-table-column prop="source" label="分发流地址" />
-            <el-table-column prop="status" label="状态" />
-          </el-table>
-        </template>
-      </el-table-column>
       <el-table-column prop="distributeTitle" label="标题" />
       <el-table-column prop="distributeDetails" label="详情" />
       <el-table-column prop="distributeTime" label="创建时间" />
-      <el-table-column prop="distributeStream" label="输入流地址" />
-      
+       
+      <el-table-column prop="distributeStream" label="流地址" />
+      <el-table-column prop="distributeType" label="状态" >
+        <template slot-scope="scope">
+          <span v-if="scope.row.distributeType==0">结束</span>
+          <span v-if="scope.row.distributeType==1">转播中</span>
+        </template>
+      </el-table-column>
       
     </el-table>
 
@@ -53,7 +54,7 @@
         >
           <el-row>
             <el-col :span="19">
-              <el-input v-model="dynamicValidateForm.distributeDetails " size="mini"/>
+              <el-input type="textarea" v-model="dynamicValidateForm.distributeDetails " size="mini"/>
             </el-col>
           </el-row>
         </el-form-item>
@@ -183,18 +184,21 @@ export default {
           });
       });
     },
-    loadChildeNode(row,expandedRows){
-        var _this=this;
-        console.log(row,expandedRows,'asdf')
-        //根据父节点id 请求子节点数据
-        return new Promise((resolve, reject) => {
-        distributeChildrenList(row.id)
+    load(tree, treeNode, resolve) {
+      //传入当前节点id,查询子节点列表
+      //发送请求，将请求结果resolve出去，
+      var _resolve = resolve;
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        distributeChildrenList(tree.id)
           .then(response => {
             console.log(response);
             if (response.data.code == 0) {
               _this.childrenNode = response.data.result;
+              _resolve(_this.childrenNode);
             } else {
               //没有子节点返回空值
+              _resolve([]);
             }
             resolve();
           })
@@ -202,7 +206,6 @@ export default {
             reject(error);
           });
       });
-
     },
     handleAddDialog() {
       //添加对话框
