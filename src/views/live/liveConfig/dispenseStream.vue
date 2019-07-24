@@ -14,12 +14,11 @@
       <el-table-column prop="distributeTitle" label="标题" />
       <el-table-column prop="distributeDetails" label="详情" />
       <el-table-column prop="distributeTime" label="创建时间" />
-       
       <el-table-column prop="distributeStream" label="流地址" />
       <el-table-column prop="distributeType" label="状态" >
         <template slot-scope="scope">
-          <span v-if="scope.row.distributeType==0">结束</span>
-          <span v-if="scope.row.distributeType==1">转播中</span>
+          <span v-if="scope.row.distributeType==0" class="colorDanger">结束</span>
+          <span v-if="scope.row.distributeType==1" class="colorSuccess">转播中</span>
         </template>
       </el-table-column>
       
@@ -287,8 +286,15 @@ export default {
 <style lang="scss" scoped>
 .helpdoc-container {
   margin: 30px;
-}
+  
 .pagenation {
   margin: 30px 0;
+}
+  .colorSuccess {
+  color: #67c23a;
+}
+.colorDanger {
+  color: #f56c6c;
+}
 }
 </style>
