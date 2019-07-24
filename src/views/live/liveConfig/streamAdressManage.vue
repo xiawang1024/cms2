@@ -4,19 +4,21 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="鉴权直播" name="0" />
         <el-tab-pane label="拉转直播" name="1" />
+        <el-tab-pane label="分发直播" name="2" />
       </el-tabs>
     </template>
-    <authentication v-show="activeName=='0'" />
-    <rebroadcast v-show="activeName=='1'" />
-   
+    <authentication v-if="activeName=='0'" />
+    <rebroadcast v-if="activeName=='1'" />
+    <dispenseStream v-if="activeName=='2'"/>
   </div>
 </template>
 <script>
 import addRebroadcast from "@/views/live/liveConfig/addRebroadcast.vue";
 import rebroadcast from "@/views/live/liveConfig/rebroadcast.vue";
+import dispenseStream from "@/views/live/liveConfig/dispenseStream.vue";
 import authentication from "@/views/live/liveConfig/authentication.vue";
 export default {
-  components: { addRebroadcast, rebroadcast, authentication },
+  components: { addRebroadcast, rebroadcast, authentication,dispenseStream },
 
   data() {
     

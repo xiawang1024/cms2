@@ -28,7 +28,8 @@ export function editeStreamfile(data) {
       data,
       loadingConfig: {
         noLoading: true
-      }
+      },
+      timeout:60*1000
     });
   }
   //根据父id查询子节点信息
