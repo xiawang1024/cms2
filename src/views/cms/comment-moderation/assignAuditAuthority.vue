@@ -10,8 +10,6 @@
           :disabled="result.length=='0'?true:false"
         >添加用户</el-button>
       </div>
-
-      
       <div class="rightAside">
         <el-input
           class="searchinput"
@@ -295,8 +293,8 @@ export default {
         return false;
       } else {
          this.userDetaiRequest(this.result[0]);
-        
-       
+
+
       }
     },
 
@@ -401,7 +399,7 @@ export default {
            console.log(reject)
          })
       })
-     
+
     },
     //查询出全部有评论审核权限的用户
     requestRightUser() {
@@ -416,7 +414,7 @@ export default {
          .then(response=>{
            if(response.data.code==0){
              _this.userTotal=response.data.result.total;
-             _this.haveRightUser=response.data.result.content;
+             _this.haveRightUser=response.data.result.records;
 
 
            }else{
@@ -431,7 +429,7 @@ export default {
            console.log(reject)
          })
       })
-     
+
     },
     seeUserRight(index,row){
       var _this=this;
@@ -442,7 +440,7 @@ export default {
          .then(response=>{
            if(response.data.code==0){
                 _this.showUserRight=_this.toTree(response.data.result)
-            
+
            }else{
               this.$message({
                 type: "error",
@@ -459,7 +457,7 @@ export default {
 
 
     },
-    
+
 
     cleanLimite(index, row) {
       var _this = this;
@@ -485,13 +483,13 @@ export default {
           });
       });
     }
-    
+
   }
 };
 </script>
 <style scoped>
 .helpdoc-container {
- 
+
 }
 .rightAside {
   float: right;

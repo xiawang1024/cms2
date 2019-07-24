@@ -313,8 +313,8 @@ export default {
           .then(res => {
             if (res.data.code == 0) {
               // console.log(res,'ressss');
-              _this.tableData3 = res.data.result.content;
-              _this.totalCount = res.data.result.totalElements;
+              _this.tableData3 = res.data.result.records;
+              _this.totalCount = res.data.result.total;
 
               // _this.options = _this.myTree(res.data.result.content);
             } else {
@@ -340,7 +340,7 @@ export default {
               _this.$nextTick(()=>{
                  _this.options = _this.myTree(res.data.result);
               })
-             
+
             } else {
               _this.$message({
                 type: "error",
@@ -526,7 +526,7 @@ export default {
 </script>
 <style scoped>
 .helpdoc-container {
- 
+
 }
 .rightAside {
   float: right;
