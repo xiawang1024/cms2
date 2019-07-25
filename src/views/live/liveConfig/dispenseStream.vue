@@ -24,7 +24,7 @@
       </el-table-column>
       <el-table-column width="90" label="操作" >
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click.stop="handleRecover(scope.index,scope.row)">恢复</el-button>
+          <el-button size="mini" type="primary" :disabled="scope.row.distributeType==1" @click.stop="handleRecover(scope.index,scope.row)">恢复</el-button>
         </template>
       </el-table-column>
 
