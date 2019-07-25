@@ -3,12 +3,13 @@
     <div class="tool-bar">
       <el-button size="mini" type="primary" @click="handleAddDialog()">添加</el-button>
     </div>
-    <el-table 
+    <el-table
+      ref="distrbutetable"
       :data="tableValue"
       :load="load"
       lazy
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-      row-key="id"
+     
     >
       <el-table-column type="index" width="50" />
       <el-table-column prop="distributeTitle" width="200" label="标题" />
@@ -16,14 +17,22 @@
       <el-table-column prop="distributeTime" width="150" label="创建时间" />
       <el-table-column prop="distributeNumber" width="90" label="转发路数" align="center" />
       <el-table-column prop="distributeStream" label="流地址" />
-      <el-table-column prop="distributeType" width="90" label="状态" >
+      <el-table-column prop="distributeType" width="90" label="状态">
         <template slot-scope="scope">
           <span v-if="scope.row.distributeType==0" class="colorDanger">结束</span>
           <span v-if="scope.row.distributeType==1" class="colorSuccess">转播中</span>
         </template>
       </el-table-column>
-
-      
+      <el-table-column width="90" label="操作">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="primary"
+            :disabled="scope.row.distributeType==1"
+            @click.stop="handleRecover(scope.index,scope.row)"
+          >恢复</el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <el-dialog :visible.sync="vfromDialog" title="添加">
@@ -42,7 +51,7 @@
         >
           <el-row>
             <el-col :span="19">
-              <el-input v-model="dynamicValidateForm.distributeTitle " size="mini"/>
+              <el-input v-model="dynamicValidateForm.distributeTitle " size="mini" />
             </el-col>
           </el-row>
         </el-form-item>
@@ -55,7 +64,11 @@
         >
           <el-row>
             <el-col :span="19">
-              <el-input type="textarea" v-model="dynamicValidateForm.distributeDetails " size="mini"/>
+              <el-input
+                type="textarea"
+                v-model="dynamicValidateForm.distributeDetails "
+                size="mini"
+              />
             </el-col>
           </el-row>
         </el-form-item>
@@ -68,7 +81,7 @@
         >
           <el-row>
             <el-col :span="19">
-              <el-input v-model="dynamicValidateForm.inStream" size="mini"/>
+              <el-input v-model="dynamicValidateForm.inStream" size="mini" />
             </el-col>
           </el-row>
         </el-form-item>
@@ -83,7 +96,7 @@
         >
           <el-row>
             <el-col :span="19">
-              <el-input v-model="domain.value" size="mini"/>
+              <el-input v-model="domain.value" size="mini" />
             </el-col>
             <el-col :span="4" :offset="1">
               <el-button size="mini" @click.prevent="removeDomain(domain)">删除</el-button>
@@ -113,33 +126,44 @@
   </div>
 </template>
 <script>
-import { addDistribute,distributeList,distributeChildrenList } from "@/api/live/steamAdressManage.js";
+import {
+  addDistribute,
+  distributeList,
+  distributeChildrenList,
+  distributeRecover
+} from "@/api/live/steamAdressManage.js";
 export default {
   data() {
     return {
       tableValue: [
-          {
-              relayTitle:'qqq',
-              relayDetail:'bbb',
-              children:[{
-                  source:'ccc',
-                  status:'dddd'
-              },{
-                  source:'ccc',
-                  status:'dddd'
-              }]
-          },
-          {
-              relayTitle:'qqq',
-              relayDetail:'bbb',
-              children:[{
-                  source:'ccc',
-                  status:'dddd'
-              },{
-                  source:'ccc',
-                  status:'dddd'
-              }]
-          }
+        {
+          relayTitle: "qqq",
+          relayDetail: "bbb",
+          children: [
+            {
+              source: "ccc",
+              status: "dddd"
+            },
+            {
+              source: "ccc",
+              status: "dddd"
+            }
+          ]
+        },
+        {
+          relayTitle: "qqq",
+          relayDetail: "bbb",
+          children: [
+            {
+              source: "ccc",
+              status: "dddd"
+            },
+            {
+              source: "ccc",
+              status: "dddd"
+            }
+          ]
+        }
       ],
       pageNo: 1,
       pageSize: 10,
@@ -154,24 +178,31 @@ export default {
           }
         ]
       },
-      vfromDialog: false
+      vfromDialog: false,
+      maps: new Map(),
+      pmaps:new Map(),
     };
   },
-  created(){
-      this.updatePage();
+  created() {
+    this.updatePage();
   },
   methods: {
     //初始化表单数据
     updatePage() {
       var _this = this;
       return new Promise((resolve, reject) => {
-        distributeList({pageNo:this.pageNo, pageSize:this.pageSize,sortBy:'',order:''})
+        distributeList({
+          pageNo: this.pageNo,
+          pageSize: this.pageSize,
+          sortBy: "",
+          order: ""
+        })
           .then(response => {
             console.log(response, "response");
 
             if (response.data.code == 0) {
               _this.tableValue = response.data.result.content;
-              _this.totalCount=response.data.result.total;
+              _this.totalCount = response.data.result.total;
             } else {
               this.$message({
                 type: "error",
@@ -190,12 +221,19 @@ export default {
       //发送请求，将请求结果resolve出去，
       var _resolve = resolve;
       var _this = this;
+      const pid = tree.id;
+      this.maps.set(pid, { tree, treeNode, resolve });
       return new Promise((resolve, reject) => {
         distributeChildrenList(tree.id)
           .then(response => {
             console.log(response);
             if (response.data.code == 0) {
               _this.childrenNode = response.data.result;
+               _this.childrenNode.forEach(item=>{
+                 let cid=item.id;
+              _this.pmaps.set(cid,pid)
+
+               })
               _resolve(_this.childrenNode);
             } else {
               //没有子节点返回空值
@@ -272,7 +310,36 @@ export default {
         key: Date.now()
       });
     },
+    //恢复转发流
+    handleRecover(index, row) {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        distributeRecover(row.id).then(response => {
+          if (response.data.code == 0) {
+            this.$message({
+              type: "success",
+              message: response.data.msg
+            });
 
+            const pid =_this.pmaps.get(row.id);
+            if(pid){
+              const { tree, treeNode, resolve } = _this.maps.get(pid);
+            _this.$set(_this.$refs.distrbutetable.store.states.lazyTreeNodeMap, pid, []);
+            _this.load(tree, treeNode, resolve);
+            }else{
+            _this.updatePage();
+
+            }
+            
+          } else {
+            this.$message({
+              type: "error",
+              message: response.data.msg
+            });
+          }
+        });
+      });
+    },
     //分页
     handleSizeChange(val) {
       this.pageSize = val;
@@ -288,15 +355,15 @@ export default {
 <style lang="scss" scoped>
 .helpdoc-container {
   margin: 30px;
-  
-.pagenation {
-  margin: 30px 0;
-}
+
+  .pagenation {
+    margin: 30px 0;
+  }
   .colorSuccess {
-  color: #67c23a;
-}
-.colorDanger {
-  color: #f56c6c;
-}
+    color: #67c23a;
+  }
+  .colorDanger {
+    color: #f56c6c;
+  }
 }
 </style>

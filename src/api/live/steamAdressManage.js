@@ -100,3 +100,11 @@ export function distributeChildrenList(id) {
     // }
   });
 }
+
+//恢复转发信息
+export function distributeRecover(id){
+  return request({
+    url:Cpath+`/relaystream/recoverybyid?id=${id}`,
+    method:"put",
+  })
+}
