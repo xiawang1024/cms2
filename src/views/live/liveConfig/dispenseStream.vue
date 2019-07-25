@@ -7,6 +7,7 @@
       ref="distrbutetable"
       :data="tableValue"
       :load="load"
+      row-key="id"
       lazy
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
      
@@ -185,6 +186,7 @@ export default {
   },
   created() {
     this.updatePage();
+
   },
   methods: {
     //初始化表单数据
@@ -198,8 +200,6 @@ export default {
           order: ""
         })
           .then(response => {
-            console.log(response, "response");
-
             if (response.data.code == 0) {
               _this.tableValue = response.data.result.content;
               _this.totalCount = response.data.result.total;
@@ -355,7 +355,7 @@ export default {
 <style lang="scss" scoped>
 .helpdoc-container {
   margin: 30px;
-
+ 
   .pagenation {
     margin: 30px 0;
   }
