@@ -43,7 +43,12 @@
       <el-table-column prop="beginTime" width="180" label="开始时间" />
       <el-table-column prop="relayStreamUrl" width="180" label="转播流地址" />
       <el-table-column prop="streamAddress" label="直播流地址" />
-      <el-table-column prop="relayType" label="转播状态" />
+      <el-table-column prop="relayType" label="转播状态" >
+        <template slot-scope="scope">
+          <span v-if="scope.row.relayType=='已结束'" class="colorDanger">{{ scope.row.relayType }}</span>
+          <span v-else class="colorSuccess">{{ scope.row.relayType }}</span>
+        </template>
+      </el-table-column>
     </el-table>
     <!-- 分页 -->
     <el-pagination
@@ -210,6 +215,12 @@ export default {
 <style lang="scss" scoped>
 .helpdoc-container {
   margin: 30px;
+  .colorSuccess {
+    color: #67c23a;
+  }
+  .colorDanger {
+    color: #f56c6c;
+  }
 }
 .pagenation {
   margin: 30px 0;

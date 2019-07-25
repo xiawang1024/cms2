@@ -320,16 +320,11 @@ export default {
               type: "success",
               message: response.data.msg
             });
-
-            const pid =_this.pmaps.get(row.id);
-            if(pid){
+            const pid =_this.pmaps.get(row.id)||row.id;
               const { tree, treeNode, resolve } = _this.maps.get(pid);
             _this.$set(_this.$refs.distrbutetable.store.states.lazyTreeNodeMap, pid, []);
             _this.load(tree, treeNode, resolve);
-            }else{
-            _this.updatePage();
-
-            }
+            
             
           } else {
             this.$message({
