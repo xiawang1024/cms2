@@ -162,7 +162,8 @@ export default {
         getActiveUser(data)
           .then(response => {
             if (response.data.code == 0) {
-              let result = JSON.parse(response.data.result);
+              if(response.data.result!='errorCode=gw.APIACLDecline, errorMessage=ApiKey is not allowed(acl)'){
+                let result = JSON.parse(response.data.result);
               if (type == "android") {
                 _this.android_activeUserInfo = _this.formateDate(
                   result.activeUserInfo
@@ -170,6 +171,8 @@ export default {
               } else if (type == "Ios") {
                 _this.ios_activeUserInfo = _this.formateDate(result.activeUserInfo);
               }
+              }
+              
             }
             resolve();
           })
@@ -193,12 +196,13 @@ export default {
         getLaunches(appkey, this.startDate, this.endDate, this.periodType)
           .then(response => {
             if (response.data.code == 0) {
-              let result = JSON.parse(response.data.result);
-
+              if(response.data.result!='errorCode=gw.APIACLDecline, errorMessage=ApiKey is not allowed(acl)'){
+                let result = JSON.parse(response.data.result);
               if (type == "android") {
                 _this.android_launchInfo = _this.formateDate(result.launchInfo);
               } else if (type == "Ios") {
                 _this.ios_launchInfo = _this.formateDate(result.launchInfo);
+              }
               }
             }
             resolve();
@@ -214,12 +218,15 @@ export default {
         getNewUsers(appkey, this.startDate, this.endDate, this.periodType)
           .then(response => {
             if (response.data.code == 0) {
-              let result = JSON.parse(response.data.result);
+              if(response.data.result!='errorCode=gw.APIACLDecline, errorMessage=ApiKey is not allowed(acl)'){
+                let result = JSON.parse(response.data.result);
               if (type == "android") {
                 _this.android_newUser = _this.formateDate(result.newUserInfo);
               } else if (type == "Ios") {
                 _this.ios_newUser = _this.formateDate(result.newUserInfo);
               }
+              }
+              
             }
             resolve();
           })
@@ -236,7 +243,6 @@ export default {
             if (response.data.code == 0) {
               let result = response.data.result;
               let allUser = [];
-              console.log(result, "result");
 
               Object.values(result).forEach(item => {
                 if (item.key <= _this.today) {
