@@ -22,6 +22,11 @@
           <span v-if="scope.row.distributeType==1" class="colorSuccess">转播中</span>
         </template>
       </el-table-column>
+      <el-table-column width="90" label="操作" >
+        <template slot-scope="scope">
+          <el-button size="mini" type="primary" @click.stop="handleRecover(scope.index,scope.row)">恢复</el-button>
+        </template>
+      </el-table-column>
 
       
     </el-table>
@@ -113,7 +118,7 @@
   </div>
 </template>
 <script>
-import { addDistribute,distributeList,distributeChildrenList } from "@/api/live/steamAdressManage.js";
+import { addDistribute,distributeList,distributeChildrenList,distributeRecover } from "@/api/live/steamAdressManage.js";
 export default {
   data() {
     return {
@@ -272,7 +277,25 @@ export default {
         key: Date.now()
       });
     },
-
+    //恢复转发流
+    handleRecover(index,row){
+      return new Promise((resolve,reject)=>{
+        distributeRecover(row.id)
+        .then(response=>{
+          if(response.data.code==0){
+             this.$message({
+              type:'success',
+              message:response.data.msg
+            })
+          }else{
+            this.$message({
+              type:'error',
+              message:response.data.msg
+            })
+          }
+        })
+      })
+    },
     //分页
     handleSizeChange(val) {
       this.pageSize = val;
