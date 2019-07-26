@@ -3,38 +3,40 @@
     <div class="tool-bar">
       <el-button size="mini" type="primary" @click="handleAddDialog()">添加</el-button>
     </div>
-    <el-table
-      ref="distrbutetable"
-      :data="tableValue"
-      :load="load"
-      row-key="id"
-      lazy
-      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+    <template>
+      <el-table
+        ref="distrbutetable"
+        :data="tableValue"
+        :load="load"
+        row-key="id"
+        lazy
+        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
      
-    >
-      <el-table-column type="index" width="50" />
-      <el-table-column prop="distributeTitle" width="200" label="标题" />
-      <el-table-column prop="distributeDetails" label="详情" />
-      <el-table-column prop="distributeTime" width="150" label="创建时间" />
-      <el-table-column prop="distributeNumber" width="90" label="转发路数" align="center" />
-      <el-table-column prop="distributeStream" label="流地址" />
-      <el-table-column prop="distributeType" width="90" label="状态">
-        <template slot-scope="scope">
-          <span v-if="scope.row.distributeType==0" class="colorDanger">结束</span>
-          <span v-if="scope.row.distributeType==1" class="colorSuccess">转播中</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="90" label="操作">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="primary"
-            :disabled="scope.row.distributeType==1"
-            @click.stop="handleRecover(scope.index,scope.row)"
-          >恢复</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+      >
+        <el-table-column type="index" width="50" />
+        <el-table-column prop="distributeTitle" width="200" label="标题" />
+        <el-table-column prop="distributeDetails" label="详情" />
+        <el-table-column prop="distributeTime" width="150" label="创建时间" />
+        <el-table-column prop="distributeNumber" width="90" label="转发路数" align="center" />
+        <el-table-column prop="distributeStream" label="流地址" />
+        <el-table-column prop="distributeType" width="90" label="状态">
+          <template slot-scope="scope">
+            <span v-if="scope.row.distributeType==0" class="colorDanger">结束</span>
+            <span v-if="scope.row.distributeType==1" class="colorSuccess">转播中</span>
+          </template>
+        </el-table-column>
+        <el-table-column width="90" label="操作">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="primary"
+              :disabled="scope.row.distributeType==1"
+              @click.stop="handleRecover(scope.index,scope.row)"
+            >恢复</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </template>
 
     <el-dialog :visible.sync="vfromDialog" title="添加">
       <el-form
@@ -136,36 +138,7 @@ import {
 export default {
   data() {
     return {
-      tableValue: [
-        {
-          relayTitle: "qqq",
-          relayDetail: "bbb",
-          children: [
-            {
-              source: "ccc",
-              status: "dddd"
-            },
-            {
-              source: "ccc",
-              status: "dddd"
-            }
-          ]
-        },
-        {
-          relayTitle: "qqq",
-          relayDetail: "bbb",
-          children: [
-            {
-              source: "ccc",
-              status: "dddd"
-            },
-            {
-              source: "ccc",
-              status: "dddd"
-            }
-          ]
-        }
-      ],
+      tableValue: [],
       pageNo: 1,
       pageSize: 10,
       totalCount: 0,
@@ -189,6 +162,24 @@ export default {
 
   },
   methods: {
+     load1(tree, treeNode, resolve) {
+        setTimeout(() => {
+          resolve([
+            {
+              id: 31,
+              date: '2016-05-01',
+              name: '王小虎',
+              address: '上海市普陀区金沙江路 1519 弄'
+            }, {
+              id: 32,
+              date: '2016-05-01',
+              name: '王小虎',
+              address: '上海市普陀区金沙江路 1519 弄'
+            }
+          ])
+        }, 1000)
+      },
+    
     //初始化表单数据
     updatePage() {
       var _this = this;
@@ -335,6 +326,7 @@ export default {
         });
       });
     },
+   
     //分页
     handleSizeChange(val) {
       this.pageSize = val;
