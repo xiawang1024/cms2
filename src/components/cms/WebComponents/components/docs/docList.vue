@@ -18,7 +18,7 @@
       </el-table-column>
       <el-table-column prop="articleTitle" label="标题" min-width="300" show-overflow-tooltip>
         <template slot-scope="scope">
-          <span v-if="checkAuth('cms:article:stick')" class="titleClick" @click="editDoc(scope.row)">{{ scope.row.articleTitle }}</span>
+          <span v-if="checkAuth('cms:article:edit')" class="titleClick" @click="editDoc(scope.row)">{{ scope.row.articleTitle }}</span>
           <span v-else>{{ scope.row.articleTitle }}</span>
           <i class="el-icon-picture-outline" title="正文有图" v-if="scope.row.contentImagesList && scope.row.contentImagesList.length"/>
           <i class="el-icon-folder-opened" title="附件有图" v-if="documentHasImg(scope.row.articleAttachmentsList)"/>
