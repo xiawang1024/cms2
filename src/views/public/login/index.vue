@@ -258,6 +258,7 @@
           .dispatch('LoginByUsername', this.loginForm)
           .then(() => {
             this.loading = false
+            console.log(this.$route,'路由地址')
             if(this.$route.query.forward){
               this.$store.commit('SET_SKIP_URL',this.$route.query.forward)
             }else{
