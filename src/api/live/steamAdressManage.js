@@ -108,3 +108,11 @@ export function distributeRecover(id){
     method:"put",
   })
 }
+
+//删除转发信息
+export function distributeDelete(id){
+  return request({
+    url:Cpath+`/relaystream/deletebydistributeid?id=${id}`,
+    method:"delete",
+  })
+}

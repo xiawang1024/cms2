@@ -25,7 +25,7 @@
             <span v-if="scope.row.distributeType==1" class="colorSuccess">转播中</span>
           </template>
         </el-table-column>
-        <el-table-column width="90" label="操作">
+        <el-table-column width="180" label="操作">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -33,6 +33,13 @@
               :disabled="scope.row.distributeType==1"
               @click.stop="handleRecover(scope.index,scope.row)"
             >恢复</el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              :disabled="scope.row.distributeType!=0"
+              @click.stop="handleDelete(scope.index,scope.row)"
+            >删除</el-button>
+
           </template>
         </el-table-column>
       </el-table>
@@ -133,7 +140,8 @@ import {
   addDistribute,
   distributeList,
   distributeChildrenList,
-  distributeRecover
+  distributeRecover,
+  distributeDelete
 } from "@/api/live/steamAdressManage.js";
 export default {
   data() {
@@ -297,6 +305,35 @@ export default {
               const { tree, treeNode, resolve } = _this.maps.get(pid);
             _this.$set(_this.$refs.distrbutetable.store.states.lazyTreeNodeMap, pid, []);
             _this.load(tree, treeNode, resolve);
+            
+            
+          } else {
+            this.$message({
+              type: "error",
+              message: response.data.msg
+            });
+          }
+        });
+      });
+    },
+    // 删除转发流
+    handleDelete(index, row){
+          var _this = this;
+      return new Promise((resolve, reject) => {
+        distributeDelete(row.id).then(response => {
+          if (response.data.code == 0) {
+            this.$message({
+              type: "success",
+              message: response.data.msg
+            });
+
+            const pid =_this.pmaps.get(row.id)||row.id;
+            if(pid){
+               const { tree, treeNode, resolve } = _this.maps.get(pid);
+            _this.$set(_this.$refs.distrbutetable.store.states.lazyTreeNodeMap, pid, []);
+            _this.load(tree, treeNode, resolve);
+            }
+             
             
             
           } else {

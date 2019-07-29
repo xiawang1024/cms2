@@ -153,10 +153,13 @@ const user = {
 
             commit('SET_CURRENT_INFOR', res.data.result)
             setBaseInfor(res.data.result)
-            //设置cookie
+            if(state.skipUrl){
+              //设置cookie
             console.log(res.data.result,'resdata')
             setCookie(state,'userId',res.data.result.userId,7)
 
+            }
+            
             // removeAuth()
             resolve()
           })
