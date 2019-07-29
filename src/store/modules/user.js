@@ -5,7 +5,7 @@
 import { loginByUsername, logout, getUserInfo, userCurrent } from '@/api/login'
 import { columnListAll } from '@/api/cms/columnManage'
 import { UserCurrent } from '@/api/user/user'
-import { getAuth, setAuth, removeAuth, setBaseInfor, setColumnAll, setColumnAllOrigin } from '@/utils/auth'
+import { getAuth, setAuth, removeAuth, setBaseInfor, setColumnAll, setColumnAllOrigin,setCookie } from '@/utils/auth'
 import { sha1 } from '@/utils/index'
 import router from '@/router'
 // 获取当前用户
@@ -65,7 +65,8 @@ const user = {
     },
     siteName: '内容发布子系统',
     currentInfor: {},
-    columnAll: []
+    columnAll: [],
+    skipUrl:''
   },
 
   mutations: {
@@ -108,6 +109,9 @@ const user = {
     },
     SET_COLUMN_ALL_ORIGIN: (state, columnAll) => {
       state.columnAllOrigin = columnAll
+    },
+    SET_SKIP_URL:(state,url)=>{
+      state.skipUrl=url
     }
   },
 
@@ -149,6 +153,10 @@ const user = {
 
             commit('SET_CURRENT_INFOR', res.data.result)
             setBaseInfor(res.data.result)
+            //设置cookie
+            console.log(res.data.result,'resdata')
+            setCookie(state,'userId',res.data.result.userId,7)
+
             // removeAuth()
             resolve()
           })
@@ -297,6 +305,8 @@ const user = {
         })
       }
     }
+     
+
   }
 }
 
