@@ -36,7 +36,7 @@
             <el-button
               size="mini"
               type="danger"
-              :disabled="scope.row.distributeType!=0"
+              :disabled="scope.row.distributeType==1"
               @click.stop="handleDelete(scope.index,scope.row)"
             >删除</el-button>
 
@@ -163,6 +163,7 @@ export default {
       vfromDialog: false,
       maps: new Map(),
       pmaps:new Map(),
+      indexMap:new Map(),
     };
   },
   created() {
@@ -184,6 +185,10 @@ export default {
             if (response.data.code == 0) {
               _this.tableValue = response.data.result.content;
               _this.totalCount = response.data.result.total;
+              _this.tableValue.forEach((item,index)=>{
+              _this.indexMap.set(item.id,index)
+
+              })
             } else {
               this.$message({
                 type: "error",
@@ -255,6 +260,7 @@ export default {
                     message: response.data.msg
                   });
                   _this.updatePage();
+                   _this.dynamicValidateForm.distributes=[{value:''}]
                 } else {
                   this.$message({
                     type: "error",
@@ -326,15 +332,22 @@ export default {
               type: "success",
               message: response.data.msg
             });
-
-            const pid =_this.pmaps.get(row.id)||row.id;
-            if(pid){
+           
+            let pid =_this.pmaps.get(row.id)||row.id;
+            //计算父节点在本页数据中的索引值
+            let order=_this.indexMap.get(pid) 
+            _this.tableValue[order].distributeNumber--;
+            if(_this.tableValue[order].distributeNumber<=0){
+              _this.updatePage()
+            }else{
+              if(pid){
                const { tree, treeNode, resolve } = _this.maps.get(pid);
             _this.$set(_this.$refs.distrbutetable.store.states.lazyTreeNodeMap, pid, []);
             _this.load(tree, treeNode, resolve);
             }
              
-            
+            }
+
             
           } else {
             this.$message({

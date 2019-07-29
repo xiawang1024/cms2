@@ -73,7 +73,7 @@
             <el-button
               slot="reference"
               size="mini"
-              type="prime"
+              type="primary"
               @click="handleShare(scope.$index, scope.row)"
             >分享</el-button>
           </el-popover>

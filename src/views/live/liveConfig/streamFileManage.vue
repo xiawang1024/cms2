@@ -23,7 +23,7 @@
       <el-table-column prop="filePath" label="文件路径" show-overflow-tooltip />
       <el-table-column label="操作" width="180">
         <template slot-scope="scope">
-          <el-button size="mini" type="prime" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="primary" :disabled="scope.row.filePath==null||scope.row.filePath==''" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button
             size="mini"
             type="danger"
@@ -71,7 +71,7 @@ import {
   childrenStreamfile
 } from "@/api/live/streamFileManage.js";
 import videoEdite from "@/components/videoCut/videoEdite.vue";
-import { Promise } from "q";
+  import simplifySecond from '@/utils/videoCut/simplifySecond'
 export default {
   components: { videoEdite },
   data() {
@@ -172,26 +172,13 @@ export default {
       data = JSON.parse(JSON.stringify(value));
       data.map((item, index) => {
         //时间格式化00:00:00.0
-        item.duration =
-          item.endTimeArr[0] -
-          item.startTimeArr[0] +
-          ":" +
-          (item.endTimeArr[1] - item.startTimeArr[1]) +
-          ":" +
-          (item.endTimeArr[2] -
-            item.startTimeArr[2] -
-            1 +
-            (item.duration - parseInt(item.duration)));
-        item.startTime =
-          item.startTimeArr[0] +
-          ":" +
-          item.startTimeArr[1] +
-          ":" +
-          (parseInt(item.startTimeArr[2]) +
-            (item.startTime - parseInt(item.startTime)));
+         let time=item.duration
+         const times = simplifySecond(time < 0 ? 0 : time)
+        item.duration = times.hours+':'+ times.minutes+':'+times.seconds
         item.order = index;
         item.url = this.url;
         item.id = this.rowId;
+      
       });
       //执行保存请求
       return new Promise((resolve, reject) => {
@@ -259,7 +246,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .helpdoc-container {
-  margin: 30px;
+ 
 }
 .pagenation {
   margin: 30px 0;
