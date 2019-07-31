@@ -2,12 +2,20 @@
  * 用户相关
  */
 
-import { loginByUsername, logout, getUserInfo, userCurrent } from '@/api/login'
-import { columnListAll } from '@/api/cms/columnManage'
-import { UserCurrent } from '@/api/user/user'
-import { getAuth, setAuth, removeAuth, setBaseInfor, setColumnAll, setColumnAllOrigin,setCookie } from '@/utils/auth'
-import { sha1 } from '@/utils/index'
-import router from '@/router'
+import { loginByUsername, logout, getUserInfo, userCurrent } from "@/api/login";
+import { columnListAll } from "@/api/cms/columnManage";
+import { UserCurrent } from "@/api/user/user";
+import {
+  getAuth,
+  setAuth,
+  removeAuth,
+  setBaseInfor,
+  setColumnAll,
+  setColumnAllOrigin,
+  setCookie
+} from "@/utils/auth";
+import { sha1 } from "@/utils/index";
+import router from "@/router";
 // 获取当前用户
 // var getCurrentInfor = function() {
 //   return new Promise((resolve, reject) => {
@@ -21,183 +29,195 @@ import router from '@/router'
 //       })
 //   })
 // }
-var toTree = (data)=> {
+var toTree = data => {
   // 删除 所有 children,以防止多次调用
   data.forEach(function(item) {
-    delete item.children
-  })
+    delete item.children;
+  });
   // 将数据存储为 以 id 为 KEY 的 map 索引数据列
-  var map = {}
+  var map = {};
   data.forEach(function(item) {
-    map[item.channelId] = item
-  })
-  var val = []
+    map[item.channelId] = item;
+  });
+  var val = [];
   data.forEach(function(item) {
-    item.label = item.channelName
-    item.id = item.channelId
-    item.value = item.channelId
+    item.label = item.channelName;
+    item.id = item.channelId;
+    item.value = item.channelId;
     // 以当前遍历项，的pid,去map对象中找到索引的id
-    var parent = map[item.parentChannelId]
+    var parent = map[item.parentChannelId];
     // 好绕啊，如果找到索引，那么说明此项不在顶级当中,那么需要把此项添加到，他对应的父级中
     if (parent) {
       // item.label = item[channelName]
-      (parent.children || (parent.children = [])).push(item)
+      (parent.children || (parent.children = [])).push(item);
     } else {
       // item.label = item[channelName]
-      val.push(item)
+      val.push(item);
     }
-  })
-  return val
-}
-const defaultSysList = ['cms', 'userCenter', 'interaction', 'program','newsCommand','live']
+  });
+  return val;
+};
+const defaultSysList = [
+  "cms",
+  "userCenter",
+  "interaction",
+  "program",
+  "newsCommand",
+  "live"
+];
 const user = {
   state: {
     token: getAuth(),
-    name: '',
-    avatar: 'http://www.hndt.com/podcast/976/1131/res/EEghUGNE.jpg?1511506999379',
+    name: "",
+    avatar:
+      "http://www.hndt.com/podcast/976/1131/res/EEghUGNE.jpg?1511506999379",
     authorities: [],
     // sysList: ['0', '1', '2', '3','4'],
     sysList: [],
     // sysType: '0',
-    sysType: window.sessionStorage.getItem('sysType') || 'cms',
+    sysType: window.sessionStorage.getItem("sysType") || "cms",
     setting: {
       articlePlatform: []
     },
-    siteName: '内容发布子系统',
+    siteName: "内容发布子系统",
     currentInfor: {},
     columnAll: [],
-    skipUrl:''
+    skipUrl: ""
   },
 
   mutations: {
     SET_TOKEN: (state, token) => {
-      state.token = token
+      state.token = token;
     },
 
     SET_SETTING: (state, setting) => {
-      state.setting = setting
+      state.setting = setting;
     },
 
     SET_NAME: (state, name) => {
-      state.name = name
+      state.name = name;
     },
     SET_AVATAR: (state, avatar) => {
-      state.avatar = avatar
+      state.avatar = avatar;
     },
 
     SET_AUTHORITIES: (state, authorities) => {
-      state.authorities = authorities
+      state.authorities = authorities;
     },
     SET_SYS_LIST: (state, sysList) => {
-      state.sysList = sysList
+      state.sysList = sysList;
     },
     SET_SYS_TYPE: (state, sysType) => {
-      window.sessionStorage.setItem('sysType', sysType)
-      state.sysType = sysType
+      window.sessionStorage.setItem("sysType", sysType);
+      state.sysType = sysType;
     },
     SET_TENANT_ID: (state, tenantId) => {
-      state.tenantId = tenantId
+      state.tenantId = tenantId;
     },
     SET_SITE_NAME: (state, siteName) => {
-      state.siteName = siteName
+      state.siteName = siteName;
     },
     SET_CURRENT_INFOR: (state, currentInfor) => {
-      state.currentInfor = currentInfor
+      state.currentInfor = currentInfor;
     },
     SET_COLUMN_ALL: (state, columnAll) => {
-      state.columnAll = columnAll
+      state.columnAll = columnAll;
     },
     SET_COLUMN_ALL_ORIGIN: (state, columnAll) => {
-      state.columnAllOrigin = columnAll
+      state.columnAllOrigin = columnAll;
     },
-    SET_SKIP_URL:(state,url)=>{
-      state.skipUrl=url
+    SET_SKIP_URL: (state, url) => {
+      state.skipUrl = url;
     }
   },
 
   actions: {
     // 站点名称
     SetSiteName({ commit }, siteName) {
-      console.log(siteName)
-      commit('SET_SITE_NAME', siteName)
+      console.log(siteName);
+      commit("SET_SITE_NAME", siteName);
     },
     // 用户名登录
     LoginByUsername({ commit }, userInfo) {
-      const username = userInfo.username.trim()
+      const username = userInfo.username.trim();
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password)
-          .then((response) => {
-            const data = response.data
-            commit('SET_TOKEN', data.access_token)
+          .then(response => {
+            const data = response.data;
+            commit("SET_TOKEN", data.access_token);
             // commit('SET_SYS_TYPE', 'cms')
-            setAuth(data)
+            setAuth(data);
             // getCurrentInfor()
             // userCurrent()
-            if(response.data.code == '600') {
-              reject(response.data)
+            if (response.data.code == "600") {
+              reject(response.data);
             }
-            resolve()
+            resolve();
           })
-          .catch((error) => {
-            reject(error)
-          })
-      })
+          .catch(error => {
+            reject(error);
+          });
+      });
     },
     // 获取当前登陆用户信息
     GetCurrentInfor({ commit, state }) {
-      setBaseInfor({})
+      setBaseInfor({});
       return new Promise((resolve, reject) => {
         userCurrent(state.token)
-          .then((res) => {
+          .then(res => {
             // commit('SET_TOKEN', '')
-
-            commit('SET_CURRENT_INFOR', res.data.result)
-            setBaseInfor(res.data.result)
-            if(state.skipUrl){
+            commit("SET_CURRENT_INFOR", res.data.result);
+            setBaseInfor(res.data.result);
+            if (state.skipUrl) {
               //设置cookie
-            console.log(res.data.result,'resdata')
-            setCookie(state,'userId',res.data.result.userId,7)
-
+              let userIdJWT = res.data.result.userIdJWT;
+              setCookie(state,"userId",userIdJWT, 7);
             }
-            
+
             // removeAuth()
-            resolve()
+            resolve();
           })
-          .catch((error) => {
-            reject(error)
-          })
-      })
+          .catch(error => {
+            reject(error);
+          });
+      });
     },
     // 获取登陆用户全部栏目
     GetColumnAll({ commit, state }) {
-      setColumnAll([])
+      setColumnAll([]);
       return new Promise((resolve, reject) => {
         columnListAll({}, 1, 1000)
-          .then((res) => {
-            commit('SET_COLUMN_ALL', toTree(res.data.result.content))
-            commit('SET_COLUMN_ALL_ORIGIN', toTree(res.data.result.content))
-            setColumnAll(toTree(res.data.result.content))
-            setColumnAllOrigin(res.data.result.content)
-            resolve()
+          .then(res => {
+            commit("SET_COLUMN_ALL", toTree(res.data.result.content));
+            commit("SET_COLUMN_ALL_ORIGIN", toTree(res.data.result.content));
+            setColumnAll(toTree(res.data.result.content));
+            setColumnAllOrigin(res.data.result.content);
+            resolve();
           })
-          .catch((error) => {
-            reject(error)
-          })
-      })
+          .catch(error => {
+            reject(error);
+          });
+      });
     },
     // 获取用户信息
     GetUserInfo({ commit, state }) {
-      let getSysList = []
+      let getSysList = [];
       return new Promise((resolve, reject) => {
         getUserInfo(state.token)
-          .then((response) => {
-            const data = response.data
-            if (data.user_authorities.permissionCodeList && data.user_authorities.permissionCodeList.length > 0) {
+          .then(response => {
+            const data = response.data;
+            if (
+              data.user_authorities.permissionCodeList &&
+              data.user_authorities.permissionCodeList.length > 0
+            ) {
               // 验证返回的authorities是否是一个非空数组
 
-              commit('SET_AUTHORITIES', data.user_authorities.permissionCodeList)
+              commit(
+                "SET_AUTHORITIES",
+                data.user_authorities.permissionCodeList
+              );
             } else {
-              reject('getInfo: authorities must be a non-null array !')
+              reject("getInfo: authorities must be a non-null array !");
             }
             /**
              * 子系统列表
@@ -208,22 +228,24 @@ const user = {
             //   }
             // })
             getSysList = defaultSysList.filter(item => {
-              return data.user_authorities.permissionCodeList.includes(item)
-            })
-            let resSysList = window.sessionStorage.getItem('sysType') ? window.sessionStorage.getItem('sysType') : getSysList[0]
-            commit('SET_SYS_LIST', getSysList)
-            commit('SET_SYS_TYPE',resSysList)
+              return data.user_authorities.permissionCodeList.includes(item);
+            });
+            let resSysList = window.sessionStorage.getItem("sysType")
+              ? window.sessionStorage.getItem("sysType")
+              : getSysList[0];
+            commit("SET_SYS_LIST", getSysList);
+            commit("SET_SYS_TYPE", resSysList);
             // this.$store.dispatch('selectSysType', `${sysType}`)
             // console.log(getSysList, '111111')
             // data.user_authorities.permissionCodeList
-            commit('SET_NAME', data.name)
-            commit('SET_TENANT_ID', data.tenant_id)
-            resolve(data)
+            commit("SET_NAME", data.name);
+            commit("SET_TENANT_ID", data.tenant_id);
+            resolve(data);
           })
-          .catch((error) => {
-            reject(error)
-          })
-      })
+          .catch(error => {
+            reject(error);
+          });
+      });
     },
 
     // 登出
@@ -231,86 +253,101 @@ const user = {
       return new Promise((resolve, reject) => {
         logout(state.token)
           .then(() => {
-            commit('SET_TOKEN', '')
-            commit('SET_AUTHORITIES', [])
-            commit('SET_SYS_TYPE', '')
-            removeAuth()
-            resolve()
+            commit("SET_TOKEN", "");
+            commit("SET_AUTHORITIES", []);
+            commit("SET_SYS_TYPE", "");
+            removeAuth();
+            resolve();
           })
-          .catch((error) => {
-            reject(error)
-          })
-      })
+          .catch(error => {
+            reject(error);
+          });
+      });
     },
 
     // 前端 登出
     FedLogOut({ commit }) {
-      return new Promise((resolve) => {
-        commit('SET_TOKEN', '')
-        commit('SET_SYS_TYPE', '')
-        commit('SET_AUTHORITIES', [])
-        removeAuth()
-        resolve()
-      })
+      return new Promise(resolve => {
+        commit("SET_TOKEN", "");
+        commit("SET_SYS_TYPE", "");
+        commit("SET_AUTHORITIES", []);
+        removeAuth();
+        resolve();
+      });
     },
 
     // 动态修改权限
     ChangeRoles({ commit, dispatch }, authority) {
-      return new Promise((resolve) => {
-        commit('SET_TOKEN', authority)
-        setAuth(authority)
-        getUserInfo(authority).then((response) => {
-          const data = response.data
+      return new Promise(resolve => {
+        commit("SET_TOKEN", authority);
+        setAuth(authority);
+        getUserInfo(authority).then(response => {
+          const data = response.data;
 
-          commit('SET_AUTHORITIES', data.authorities)
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          dispatch('GenerateRoutes', data) // 动态修改权限后 重绘侧边菜单
-          resolve()
-        })
-      })
+          commit("SET_AUTHORITIES", data.authorities);
+          commit("SET_NAME", data.name);
+          commit("SET_AVATAR", data.avatar);
+          dispatch("GenerateRoutes", data); // 动态修改权限后 重绘侧边菜单
+          resolve();
+        });
+      });
     },
     /**
-     * 选择子系统，动态修改路由 
+     * 选择子系统，动态修改路由
      */
     selectSysType({ commit, dispatch, getters, state }, sysType) {
-      commit('SET_SYS_TYPE', sysType)
-      router.push({ path: '/' })
-      dispatch('delAllViews') // 清除tagViews
-      dispatch('GenerateRoutes', { authorities: getters.authorities }).then(() => {
-        /**
-         * 更新动态路由
-         */
-        router.addRoutes(getters.addRouters)
-      }) // 动态修改权限后 重绘侧边菜单
-      if (sysType === 'interaction') {
-        var redirectUrl = ''
+      commit("SET_SYS_TYPE", sysType);
+      router.push({ path: "/" });
+      dispatch("delAllViews"); // 清除tagViews
+      dispatch("GenerateRoutes", { authorities: getters.authorities }).then(
+        () => {
+          /**
+           * 更新动态路由
+           */
+          router.addRoutes(getters.addRouters);
+        }
+      ); // 动态修改权限后 重绘侧边菜单
+      if (sysType === "interaction") {
+        var redirectUrl = "";
         return new Promise((resolve, reject) => {
           UserCurrent()
             .then(async res => {
-              console.log(res)
+              console.log(res);
               if (res.data.code === 0) {
                 // 20190319 互动中心的访问，跳转到外部地址
-                let Base64 = require("js-base64").Base64//还是require
-                let nameBase64 = Base64.encodeURI(res.data.result.userName)//还是那些操作
-                let timestamp = new Date().getTime()
-                let token = '/api/manager/login.do?name=' + nameBase64 + '&id=' + res.data.result.userId + '&time=' +  timestamp + '&appID=3a155aaea71de649f2de2171da173280&secret=d875465ae925eac87354bab6f053967137521e90'
-                let url = 'http://hudong.hndt.com/h5/hd/api/manager/login.do?name=' + nameBase64 + '&id=' + res.data.result.userId + '&time=' +  timestamp + '&appID=3a155aaea71de649f2de2171da173280&token=' + sha1(token)
-                console.log(nameBase64, url)
-                redirectUrl = url
-                window.open(redirectUrl)
-                resolve()
+                let Base64 = require("js-base64").Base64; //还是require
+                let nameBase64 = Base64.encodeURI(res.data.result.userName); //还是那些操作
+                let timestamp = new Date().getTime();
+                let token =
+                  "/api/manager/login.do?name=" +
+                  nameBase64 +
+                  "&id=" +
+                  res.data.result.userId +
+                  "&time=" +
+                  timestamp +
+                  "&appID=3a155aaea71de649f2de2171da173280&secret=d875465ae925eac87354bab6f053967137521e90";
+                let url =
+                  "http://hudong.hndt.com/h5/hd/api/manager/login.do?name=" +
+                  nameBase64 +
+                  "&id=" +
+                  res.data.result.userId +
+                  "&time=" +
+                  timestamp +
+                  "&appID=3a155aaea71de649f2de2171da173280&token=" +
+                  sha1(token);
+                console.log(nameBase64, url);
+                redirectUrl = url;
+                window.open(redirectUrl);
+                resolve();
               }
             })
-            .catch((error) => {
-              reject(error)
-            })
-        })
+            .catch(error => {
+              reject(error);
+            });
+        });
       }
     }
-     
-
   }
-}
+};
 
-export default user
+export default user;

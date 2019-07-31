@@ -111,7 +111,6 @@ function getCurrentTime() {
  */
 //将用户信息存入cookie
 export const setCookie=(state,cname,cvalue,exdays)=>{
-  console.log(state,'111')
 let d = new Date();
 d.setTime(d.getTime()+(exdays*24*60*60*1000));
 let expires = "expires="+d.toGMTString();
