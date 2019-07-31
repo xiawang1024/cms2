@@ -33,15 +33,28 @@ export default {
         [];
       }
     },
-    chartsvalue: {
-      type: Object,
-      default: function() {
-        return {
-          articleCountDaily: [],
-          clickNumDaily: [],
-          articleCount: [],
-          clickNum: []
-        };
+    articleCountDaily: {
+      type: Array,
+      default: () => {
+        [];
+      }
+    },
+    clickNumDaily: {
+      type: Array,
+      default: () => {
+        [];
+      }
+    },
+    articleCount: {
+      type: Array,
+      default: () => {
+        [];
+      }
+    },
+    clickNum: {
+      type: Array,
+      default: () => {
+        [];
       }
     }
   },
@@ -56,9 +69,21 @@ export default {
     timevalue() {
       this.initChart();
     },
-    chartsvalue:function(oldValue,newValue) {
+    clickNum:function(newValue,oldValue) {
       this.initChart();
-      
+     
+    },
+    articleCountDaily:function(newValue,oldValue) {
+      this.initChart();
+     
+    },
+    clickNumDaily:function(newValue,oldValue) {
+      this.initChart();
+     
+    },
+    articleCount:function(newValue,oldValue) {
+      this.initChart();
+     
     },
     immediate: true,
     deep: true
@@ -123,67 +148,55 @@ export default {
             name: "每日发稿量",
             type: "line",
             // stack: "总量",
-            data: _this.chartsvalue.articleCountDaily
+            data: _this.articleCountDaily
           },
           {
             name: "每日点击数",
             type: "line",
             // stack: "总量",
-            data: _this.chartsvalue.clickNumDaily
+            data: _this.clickNumDaily
           },
           {
             name: "发稿总数",
             type: "line",
             // stack: "总量",
-            data: _this.chartsvalue.articleCount
+            data: _this.articleCount
           },
           {
             name: "点击总数",
             type: "line",
             // stack: "总量",
-            data: _this.chartsvalue.clickNum
+            data: _this.clickNum
           }
         ]
       });
     },
-    show(value1, value2) {
-      var getDate = function(str) {
-        var tempDate = new Date();
-        var list = str.split("-");
-        tempDate.setFullYear(list[0]);
-        tempDate.setMonth(list[1] - 1);
-        tempDate.setDate(list[2]);
-        return tempDate;
-      };
-      var date1 = getDate(value1);
-      var date2 = getDate(value2);
-      if (date1 > date2) {
-        var tempDate = date1;
-        date1 = date2;
-        date2 = tempDate;
-      }
-      date1.setDate(date1.getDate() + 1);
-      let allDate = [value1];
-      while (
-        !(
-          date1.getFullYear() == date2.getFullYear() &&
-          date1.getMonth() == date2.getMonth() &&
-          date1.getDate() == date2.getDate()
-        )
-      ) {
-        allDate.push(
-          date1.getFullYear() +
-            "-" +
-            (date1.getMonth() + 1) +
-            "-" +
-            date1.getDate()
-        );
+    show(start,end){
+            var result = [];
+            var beginDay = start.split("-");
+            var endDay = end.split("-");
+            var diffDay = new Date();
+            var dateList = new Array;
+            var i = 0;
+            diffDay.setDate(beginDay[2]);
+            diffDay.setMonth(beginDay[1]-1);
+            diffDay.setFullYear(beginDay[0]);
+            result.push(start);
+            while(i == 0){
+                var countDay = diffDay.getTime() + 24 * 60 * 60 * 1000;
+                diffDay.setTime(countDay);
+                dateList[2] = diffDay.getDate();
+                dateList[1] = diffDay.getMonth() + 1;
+                dateList[0] = diffDay.getFullYear();
+                if(String(dateList[1]).length == 1){dateList[1] = "0"+dateList[1]}
+                if(String(dateList[2]).length == 1){dateList[2] = "0"+dateList[2]}
+                result.push(dateList[0]+"-"+dateList[1]+"-"+dateList[2]);
+                if(dateList[0] == endDay[0] && dateList[1] == endDay[1] && dateList[2] == endDay[2]){ i = 1;
+                }
+            }
+           this.xdate = result;
+        }
 
-        date1.setDate(date1.getDate() + 1);
-      }
-      allDate.push(value2);
-      this.xdate = allDate;
-    }
   }
 };
 </script>

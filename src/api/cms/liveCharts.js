@@ -6,8 +6,8 @@ let Cpath = "";
 // let umengPath = "http://192.168.7.40:53006/baiduStatistics/umengAppList";
 let umengPath = "/baiduStatistics/umengAppList";
 //发稿量前缀
-// let articlePath='http://192.168.7.40:53006/baiduStatistics/articleStatistics';
-let articlePath='/baiduStatistics/articleStatistics';
+let articlePath='http://192.168.7.38:53015/baiduStatistics/articleStatistics';
+// let articlePath='/baiduStatistics/articleStatistics';
 
 //百度接口
 //获取用户的站点列表

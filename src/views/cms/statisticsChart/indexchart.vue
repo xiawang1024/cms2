@@ -144,12 +144,12 @@
         <div class="rightpart">
           <div class="floor">
             <div class="smallbox">
-              <p class="mytitle">发稿量（7日平均）</p>
-              <h3>{{ chartValue.articleCountAverageWeek==null?'--':chartValue.articleCountAverageWeek }}</h3>
+              <p class="mytitle">发稿量（7日累计）</p>
+              <h3>{{ chartValue.articleCountWeek==null?'--':chartValue.articleCountWeek }}</h3>
               <p>
                 同比
-                <span>{{ chartValue.articleCountAverageWeekChangePre==null?'--':(chartValue.articleCountAverageWeekChangePre*100).toFixed(2) }}%</span>
-                <span v-if="chartValue.articleCountAverageWeekChangePre>0" class="redarrow">↑</span>
+                <span>{{ chartValue.articleCountWeekChangePre==null?'--':(chartValue.articleCountWeekChangePre*100).toFixed(2) }}%</span>
+                <span v-if="chartValue.articleCountWeekChangePre>0" class="redarrow">↑</span>
                 <span v-else class="greenarrow">↓</span>
               </p>
             </div>

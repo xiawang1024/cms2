@@ -1,7 +1,6 @@
 <template>
   <div class="mycharts">
     <div class="tool-bar">
-
       <el-cascader
         v-if="checkAuth('cms:charts:channel')"
         change-on-select
@@ -11,7 +10,7 @@
         size="mini"
       />
     </div>
-    <articleTitle :datavalue="datavalue"/>
+    <articleTitle :datavalue="datavalue" />
     <div class="dateselect">
       <div class="block">
         <el-date-picker
@@ -31,7 +30,10 @@
       height="450px"
       width="100%"
       :timevalue="timevalue"
-      :chartsvalue="chartsvalue"
+      :click-num="clickNum"
+      :article-count-daily="articleCountDaily"
+      :click-num-daily="clickNumDaily"
+      :article-count="articleCount"
     />
   </div>
 </template>
@@ -49,9 +51,13 @@ export default {
   data() {
     return {
       datavalue: {},
-      chartsvalue: {},
-      options:[],
-      chanelSelect:'',
+      articleCountDaily: [],
+      clickNumDaily: [],
+      articleCount: [],
+      clickNum: [],
+
+      options: [],
+      chanelSelect: "",
       startDate: "",
       endDate: "",
       periodType: "daily",
@@ -61,13 +67,13 @@ export default {
       page: "1",
       timevalue: [],
       activeName: "first",
-      channelId: "1108265560111714304", //暂时写死
-      tenantId: "hndzkj",
+      channelId: "1108649093510598656", //暂时写死
+      tenantId: "hndzkj"
     };
   },
   created() {
     this.getTime();
-    this.InitInfo();  //获取频道  暂时写死
+    this.InitInfo(); //获取频道  暂时写死
     this.Init();
   },
   mounted() {},
@@ -97,7 +103,7 @@ export default {
               _this.options = _this.toTree(result);
               //默认显示第一个频道数据
               _this.channelId=result[0].value;
-              _this.chanelSelect=_this.channelId;
+              _this.chanelSelect = _this.channelId;
             }
           })
           .catch(reject => {
@@ -107,8 +113,8 @@ export default {
     },
     //请求折线图数据
     fetchActiveUser() {
+      var _this = this;
       return new Promise((resolve, reject) => {
-        var _this = this;
         let data = {
           channelId: this.channelId,
           startDate: this.startDate,
@@ -118,26 +124,10 @@ export default {
           .then(response => {
             if (response.data.code == 0) {
               let result = response.data.result;
-              _this.$set(
-                this.chartsvalue,
-                "articleCountDaily",
-                _this.formateDate(result, "articleCountDaily")
-              );
-              _this.$set(
-                this.chartsvalue,
-                "clickNumDaily",
-                _this.formateDate(result, "clickNumDaily")
-              );
-              _this.$set(
-                this.chartsvalue,
-                "articleCount",
-                _this.formateDate(result, "articleCount")
-              );
-              _this.$set(
-                this.chartsvalue,
-                "clickNum",
-                _this.formateDate(result, "clickNum")
-              );
+              _this.articleCountDaily = _this.formateDate(result,"articleCountDaily");
+              _this.clickNumDaily = _this.formateDate(result, "clickNumDaily");
+              _this.articleCount = _this.formateDate(result, "articleCount");
+              _this.clickNum = _this.formateDate(result, "clickNum");
             }
           })
           .catch(reject => {
@@ -217,8 +207,8 @@ export default {
 
     //频道切换
     handleCommand(val) {
-      console.log(val,'val')
-      this.channelId=this.chanelSelect.reverse()[0]
+      console.log(val, "val");
+      this.channelId = this.chanelSelect.reverse()[0];
       this.Init();
     },
     //日期选择
@@ -246,16 +236,16 @@ export default {
         (day < 10 ? "0" + day : day);
       this.timevalue = [this.startDate, this.endDate];
     },
-    checkAuth (authKey) {
+    checkAuth(authKey) {
       if (this.$store.getters.authorities.indexOf(authKey) === -1) {
-        return false
+        return false;
       } else {
-        return true
+        return true;
       }
     },
     //生成树方法
-    toTree(data){
-       // 删除 所有 children,以防止多次调用
+    toTree(data) {
+      // 删除 所有 children,以防止多次调用
       data.forEach(function(item) {
         delete item.children;
       });
