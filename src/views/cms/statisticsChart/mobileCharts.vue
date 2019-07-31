@@ -72,7 +72,7 @@ export default {
       periodType: "daily",
       date: "2019-05-01",
       IosAppKey: "",
-      androidAppKey:'',
+      androidAppKey: "",
       perPage: "15",
       page: "1",
       timevalue: [],
@@ -98,16 +98,11 @@ export default {
   mounted() {},
   methods: {
     getTime() {
-      let date = new Date();
+       let date = new Date();
       let year = date.getFullYear("yyyy");
       let mon = date.getMonth("MM");
       let day = date.getDate("dd");
-      this.startDate =
-        year +
-        "-" +
-        (mon < 10 ? "0" + mon : mon) +
-        "-" +
-        (day < 10 ? "0" + day : day);
+
       this.endDate =
         year +
         "-" +
@@ -115,6 +110,16 @@ export default {
         "-" +
         (day < 10 ? "0" + day : day);
       this.today = this.endDate;
+      let lw = new Date(date - 1000 * 60 * 60 * 24 * 30); //最后一个数字30可改，30天的意思
+      let lastY = lw.getFullYear();
+      let lastM = lw.getMonth() + 1;
+      let lastD = lw.getDate();
+      this.startDate =
+        lastY +
+        "-" +
+        (lastM < 10 ? "0" + lastM : lastM) +
+        "-" +
+        (lastD < 10 ? "0" + lastD : lastD); //三十天之let
       this.timevalue = [this.startDate, this.endDate];
     },
     InitInfo() {
@@ -126,9 +131,9 @@ export default {
       this.fetchActiveUser(this.IosAppKey, "Ios");
       this.fetchActiveUser(this.androidAppKey, "android");
       this.fetchAppList();
-      this.fetchTrend(this.IosAppKey,'Ios');
+      this.fetchTrend(this.IosAppKey, "Ios");
 
-      this.fetchTrend(this.androidAppKey,'android');
+      this.fetchTrend(this.androidAppKey, "android");
       // this.fetchDurations();
       this.fetchLaunches(this.IosAppKey, "Ios");
       this.fetchLaunches(this.androidAppKey, "android");
@@ -145,8 +150,8 @@ export default {
 
       // }
       if (this.tenantId == "nanyangradio") {
-      this.IosAppKey = "5cbd29613fc19548f9000c25";
-      this.androidAppKey = "5cc5930e4ca357f82b00083c";
+        this.IosAppKey = "5cbd29613fc19548f9000c25";
+        this.androidAppKey = "5cc5930e4ca357f82b00083c";
       }
     },
     //请求数据umeng
@@ -162,17 +167,21 @@ export default {
         getActiveUser(data)
           .then(response => {
             if (response.data.code == 0) {
-              if(response.data.result!='errorCode=gw.APIACLDecline, errorMessage=ApiKey is not allowed(acl)'){
+              if (
+                response.data.result !=
+                "errorCode=gw.APIACLDecline, errorMessage=ApiKey is not allowed(acl)"
+              ) {
                 let result = JSON.parse(response.data.result);
-              if (type == "android") {
-                _this.android_activeUserInfo = _this.formateDate(
-                  result.activeUserInfo
-                );
-              } else if (type == "Ios") {
-                _this.ios_activeUserInfo = _this.formateDate(result.activeUserInfo);
+                if (type == "android") {
+                  _this.android_activeUserInfo = _this.formateDate(
+                    result.activeUserInfo
+                  );
+                } else if (type == "Ios") {
+                  _this.ios_activeUserInfo = _this.formateDate(
+                    result.activeUserInfo
+                  );
+                }
               }
-              }
-              
             }
             resolve();
           })
@@ -196,13 +205,18 @@ export default {
         getLaunches(appkey, this.startDate, this.endDate, this.periodType)
           .then(response => {
             if (response.data.code == 0) {
-              if(response.data.result!='errorCode=gw.APIACLDecline, errorMessage=ApiKey is not allowed(acl)'){
+              if (
+                response.data.result !=
+                "errorCode=gw.APIACLDecline, errorMessage=ApiKey is not allowed(acl)"
+              ) {
                 let result = JSON.parse(response.data.result);
-              if (type == "android") {
-                _this.android_launchInfo = _this.formateDate(result.launchInfo);
-              } else if (type == "Ios") {
-                _this.ios_launchInfo = _this.formateDate(result.launchInfo);
-              }
+                if (type == "android") {
+                  _this.android_launchInfo = _this.formateDate(
+                    result.launchInfo
+                  );
+                } else if (type == "Ios") {
+                  _this.ios_launchInfo = _this.formateDate(result.launchInfo);
+                }
               }
             }
             resolve();
@@ -218,15 +232,17 @@ export default {
         getNewUsers(appkey, this.startDate, this.endDate, this.periodType)
           .then(response => {
             if (response.data.code == 0) {
-              if(response.data.result!='errorCode=gw.APIACLDecline, errorMessage=ApiKey is not allowed(acl)'){
+              if (
+                response.data.result !=
+                "errorCode=gw.APIACLDecline, errorMessage=ApiKey is not allowed(acl)"
+              ) {
                 let result = JSON.parse(response.data.result);
-              if (type == "android") {
-                _this.android_newUser = _this.formateDate(result.newUserInfo);
-              } else if (type == "Ios") {
-                _this.ios_newUser = _this.formateDate(result.newUserInfo);
+                if (type == "android") {
+                  _this.android_newUser = _this.formateDate(result.newUserInfo);
+                } else if (type == "Ios") {
+                  _this.ios_newUser = _this.formateDate(result.newUserInfo);
+                }
               }
-              }
-              
             }
             resolve();
           })
@@ -251,7 +267,7 @@ export default {
                   allUser.push("--");
                 }
               });
-             
+
               if (type == "android") {
                 _this.android_totalUser = allUser;
               } else if (type == "Ios") {
@@ -265,19 +281,18 @@ export default {
           });
       });
     },
-    fetchTrend(key,type) {
+    fetchTrend(key, type) {
       var _this = this;
       return new Promise((resolve, reject) => {
         getTrend(key)
           .then(response => {
             if (response.data.code == 0) {
               let result = response.data.result;
-              if(type=='Ios'){
+              if (type == "Ios") {
                 _this.ios_datavalue = result;
-              }else if(type=='android'){
+              } else if (type == "android") {
                 _this.android_datavalue = result;
               }
-              
             }
             resolve();
           })
@@ -311,16 +326,15 @@ export default {
     formateDate(value) {
       let result = [];
       value.forEach(item => {
-          //有值得放值
+        //有值得放值
         if (item.value) {
           result.push(item.value);
         } else {
           //没有值得返回0，处理措施：1，当前日期之前的按0 显示，当前日期之后的替换为 '--',echarts 不进行折线的绘制
-          if(item.date<=this.today){
-          result.push(0);
-          }else{
-          result.push("--");
-
+          if (item.date <= this.today) {
+            result.push(0);
+          } else {
+            result.push("--");
           }
         }
       });
