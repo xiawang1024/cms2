@@ -4,12 +4,12 @@
       <div class="leftpart">
         <div class="floor">
           <div class="smallbox">
-            <p class="mytitle">发稿量（7日平均）</p>
-            <h3>{{ datavalue.articleCountAverageWeek==null?'--':datavalue.articleCountAverageWeek }}</h3>
+            <p class="mytitle">发稿量（7日累计）</p>
+            <h3>{{ datavalue.articleCountWeek==null?'--':datavalue.articleCountWeek }}</h3>
             <p>
               同比
-              <span>{{ datavalue.articleCountAverageWeekChangePre==null?'--':(datavalue.articleCountAverageWeekChangePre*100).toFixed(2) }}%</span>
-              <span v-if="datavalue.articleCountAverageWeekChangePre>0" class="redarrow">↑</span>
+              <span>{{ datavalue.articleCountWeekChangePre==null?'--':(datavalue.articleCountWeekChangePre*100).toFixed(2) }}%</span>
+              <span v-if="datavalue.articleCountWeekChangePre>0" class="redarrow">↑</span>
               <span v-else class="greenarrow">↓</span>
             </p>
           </div>

@@ -3,7 +3,7 @@
     <div class="el-card__header" v-if="checkAuth('cms:charts:author')">
       <v-search :search-settings="searchSettings" @search="searchItem" :hide-reset="true" />
     </div>
-    <div class="tool-bar"/>
+    <div class="tool-bar" />
     <articleTitle :datavalue="datavalue" />
     <div class="dateselect">
       <div class="block">
@@ -24,7 +24,10 @@
       height="450px"
       width="100%"
       :timevalue="timevalue"
-      :chartsvalue="chartsvalue"
+      :click-num="clickNum"
+      :article-count-daily="articleCountDaily"
+      :click-num-daily="clickNumDaily"
+      :article-count="articleCount"
     />
   </div>
 </template>
@@ -43,7 +46,11 @@ export default {
     return {
       //uemng
       datavalue: {},
-      chartsvalue: {},
+      articleCountDaily: [],
+      clickNumDaily: [],
+      articleCount: [],
+      clickNum: [],
+
       startDate: "",
       endDate: "",
       periodType: "daily",
@@ -53,11 +60,11 @@ export default {
       page: "1",
       timevalue: [],
       activeName: "first",
-      defaultAuthor:'',
+      defaultAuthor: "",
       channelId: "1108260929071616000",
       authorList: [],
-      author: "hndzkj",
-      tenantId: "hndzkj",
+      author: "南阳人民广播电台",
+      tenantId: "nanyangradio",
       searchSettings: [
         {
           label: "作者",
@@ -119,8 +126,8 @@ export default {
     },
     //请求折线图数据
     fetchActiveUser() {
+      var _this = this;
       return new Promise((resolve, reject) => {
-        var _this = this;
         let data = {
           tenantId: this.tenantId,
           author: this.author,
@@ -131,25 +138,13 @@ export default {
           .then(response => {
             if (response.data.code == 0) {
               let result = response.data.result;
-              _this.$set(
-                this.chartsvalue,
-                "articleCountDaily",
-                _this.formateDate(result, "articleCountDaily")
-              );
-              _this.$set(
-                this.chartsvalue,
-                "clickNumDaily",
-                _this.formateDate(result, "clickNumDaily")
-              );
-              _this.$set(
-                this.chartsvalue,
-                "articleCount",
-                _this.formateDate(result, "articleCount")
-              );
-              _this.$set(
-                this.chartsvalue,
-                "clickNum",
-                _this.formateDate(result, "clickNum")
+              _this.clickNumDaily = _this.formateDate(result, "clickNumDaily");
+              _this.articleCount = _this.formateDate(result, "articleCount");
+              _this.clickNum = _this.formateDate(result, "clickNum");
+              _this.clickNum = _this.formateDate(result, "clickNum");
+              _this.articleCountDaily = _this.formateDate(
+                result,
+                "articleCountDaily"
               );
             }
           })
