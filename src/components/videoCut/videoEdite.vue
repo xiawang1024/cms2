@@ -18,16 +18,20 @@
       @CloseDialog="playReset"
     />
     <audioWave :audio_url="audio_url" :cut-list="cutList" />
+    <logoEdite :time.sync="propCutList"/>
+
   </div>
 </template>
 <script>
 import CropTool from "@/components/videoCut/CropTool.vue";
 import audioWave from "@/components/videoCut/audio.vue";
+import logoEdite from "@/components/videoCut/logoEdite.vue";
 export default {
   name: "VideoEdite",
   components: {
     CropTool,
-    audioWave
+    audioWave,
+    logoEdite
   },
   props: {
     audio_url: {
@@ -46,6 +50,9 @@ export default {
       currentTime: 0,
       cutList: []
     };
+  },
+  watch:{
+   
   },
   mounted() {
     const videoElement = this.$refs.video;
