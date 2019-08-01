@@ -234,22 +234,28 @@ export default {
       this.fetchActiveUser();
     },
     getTime() {
-      let date = new Date();
+     let date = new Date();
       let year = date.getFullYear("yyyy");
       let mon = date.getMonth("MM");
       let day = date.getDate("dd");
-      this.startDate =
-        year +
-        "-" +
-        (mon < 10 ? "0" + mon : mon) +
-        "-" +
-        (day - 1 < 10 ? "0" + (day - 1) : day - 1);
+
       this.endDate =
         year +
         "-" +
         (mon + 1 < 10 ? "0" + (mon + 1) : mon + 1) +
         "-" +
         (day < 10 ? "0" + day : day);
+      this.today = this.endDate;
+      let lw = new Date(date - 1000 * 60 * 60 * 24 * 30); //最后一个数字30可改，30天的意思
+      let lastY = lw.getFullYear();
+      let lastM = lw.getMonth() + 1;
+      let lastD = lw.getDate();
+      this.startDate =
+        lastY +
+        "-" +
+        (lastM < 10 ? "0" + lastM : lastM) +
+        "-" +
+        (lastD < 10 ? "0" + lastD : lastD); //三十天之let
       this.timevalue = [this.startDate, this.endDate];
     },
     checkAuth(authKey) {
