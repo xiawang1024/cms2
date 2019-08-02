@@ -3,8 +3,9 @@
     <el-dialog
       title="添加logo"
       :visible.sync="dialogVisible"
-      width="30%"
+      width="45%"
       :before-close="handleVisible"
+      append-to-body
     >
       <el-form
         :model="ruleForm"
@@ -14,25 +15,20 @@
         v-loading="formLoading"
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(255, 255, 255, 0.7)"
+        align="center"
       >
-        <el-form-item
-          label="logo"
-          prop="logoPath"
-          v-show="ruleForm.logoDistance!='noLogo'"
-          :rules="ruleForm.logoDistance!='noLogo'?uprules:noUprules"
+        <el-upload
+          ref="logoupload"
+          class="avatar-uploader"
+          :action="action"
+          :show-file-list="false"
+          :on-success="handleSuccess"
+          :before-upload="beforeAvatarUpload"
         >
-          <el-upload
-            ref="logoupload"
-            class="avatar-uploader"
-            :action="action"
-            :show-file-list="false"
-            :on-success="handleSuccess"
-            :before-upload="beforeAvatarUpload"
-          >
-            <img v-if="ruleForm.logoPath" :src="ruleForm.logoPath" class="avatar" >
-            <i v-else class="el-icon-plus avatar-uploader-icon" />
-          </el-upload>
-        </el-form-item>
+          <img v-if="ruleForm.logoPath" :src="ruleForm.logoPath" class="avatar" >
+          <i v-else class="el-icon-plus avatar-uploader-icon" />
+        </el-upload>
+
         <el-form-item label="角标位置" prop="logoDistance">
           <template>
             <el-radio v-model="ruleForm.logoDistance" label="10:10">左上</el-radio>
@@ -99,16 +95,7 @@ export default {
       formLoading: false
     };
   },
-  watch: {
-    dialogVisible(val) {
-      if (val) {
-        this.ruleForm = {
-          logoDistance: "noLogo",
-          logoPath: ""
-        };
-      }
-    }
-  },
+ 
   methods: {
     // getUrl(val){
     //   this.ruleForm.logoPath=val;

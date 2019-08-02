@@ -2,7 +2,7 @@
   <div>
     <div>
       <ul class="lgoshaft" ref="logoBar">
-        <li v-for="(item,index) in time" :key="index" :style="computedStyle(item,index)">
+        <li v-for="(item,index) in cutList" :key="index" :style="'left:' + item.leftPosition + 'px;' + 'width:' + item.width+'px'">
           <span
             v-if="item.logoPath==''||item.logoPath==null"
             @click="handleAddLogo(index)"
@@ -10,12 +10,11 @@
           <img v-else :src="item.logoPath" alt >
         </li>
       </ul>
-      <p>{{ logoBarWidth }}</p>
     </div> 
     <addLogo 
       @putLogo="putLogo"
       @closeDialog="closeDialog" 
-      :dialog-visible="dialogVisible"
+      :dialog-visible="addDialogVisible"
     />
   </div>
 </template>
@@ -23,42 +22,38 @@
 import addLogo from './addLogo'
 export default {
     components:{addLogo},
+    props:{
+      cutList:{
+        type:Array,
+        default:()=>{
+          []
+        }
+      },
+      duration:{
+        type:Number,
+        default:0
+      }
+    },
   data() {
     return {
-      time: [
-        {
-          start: 1,
-          end: 10,
-          logoPath:
-            "http://172.20.5.4:8080/dl/2019/7/25/1154334138531053568HoneyBee.png"
-        },
-        {
-          start: 20,
-          end: 30,
-          logoPath: ""
-        },
-        {
-          start: 40,
-          end: 55,
-          
-        }
-      ],
-      total: 60,
       logoBarWidth:820,
-      dialogVisible:false,
+      addDialogVisible:false,
       currentIndex:'',
 
     };
   },
-  watch:{
-      time(){
-          this.$emit(':update',this.time)
-      }
+   watch:{
+   cutList(newValue){
+     newValue.forEach((item,index) => {
+        this.computedStyle()
+     });
+   },
+   deep:true,
+   immediate:true,
   },
   mounted() {
     this.$nextTick(() => {
       this.drawLogo();
-      this.getStyle(this.$refs.logoBar,'width')
     });
   },
   
@@ -67,26 +62,22 @@ export default {
        
     },
     handleAddLogo(index) {
-      this.dialogVisible=true;
+      this.addDialogVisible=true;
       this.currentIndex=index;
     },
-    computedStyle(item, index) {
-      let leftPosition = (item.start / this.total) * this.logoBarWidth;
-      let width = ((item.end - item.start) / this.total) * this.logoBarWidth;
-      return "left:" + leftPosition + "px;" + "width:" + width+'px';
+    computedStyle() {
+      this.cutList.forEach((item,index)=>{
+         item.leftPosition = (item.startTime / this.duration) * this.logoBarWidth;
+      item.width = ((item.endTime - item.startTime) / this.duration) * this.logoBarWidth;
+      })
     },
-    getStyle(node, styleType) {
-     this.logoBarWidth= node.currentStyle
-        ? node.currentStyle[styleType]
-        : getComputedStyle(node)[styleType]; //浏览器中有node.currentStyle方法就用，没有就用另一个
-    },
+   
     closeDialog(){
-        this.dialogVisible=false;
+        this.addDialogVisible=false;
     },
     putLogo(value){
         //合并对象
-         Object.assign( this.time[this.currentIndex], value);
-         console.log(this.time,'this.time')
+          this.$emit("putLogo",this.currentIndex,value)
     }
   }
 };
@@ -106,9 +97,13 @@ export default {
     left: 0;
     width: 20px;
     line-height: 100px;
-    background-color: rgba(50, 64, 255, 0.466);
+    background-color: rgba(50, 64, 150, 0.466);
     span {
-      color: red;
+      color: #AAA;
+      cursor: pointer;
+    }
+    span:hover{
+      color:#fff
     }
     img {
       vertical-align: middle;

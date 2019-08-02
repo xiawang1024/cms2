@@ -18,7 +18,16 @@
       <el-table-column prop="userName" width="120" label="用户名" />
       <el-table-column prop="recordBeginTime" width="180" :formatter="formatStart" label="录制开始时间" />
       <el-table-column prop="recordEngTime" width="180" :formatter="formatEnd" label="录制结束时间" />
-      <el-table-column prop="recordFormat" width="80" label="录制格式" />
+      <el-table-column prop="resolution" width="100" label="分辨率" />
+      <el-table-column prop="fileSize" width="120" label="文件大小" :formatter="formatSize" />
+      <el-table-column prop="fileType" width="120" label="编辑状态" >
+        <template scope="scope">
+          <span v-if="scope.row.fileType==0" class="colorSuccess">成功</span>
+          <span v-if="scope.row.fileType==1" class="colorWarning" >编辑中...</span>
+          <span v-if="scope.row.fileType==2" class="colorDanger" >失败</span>
+
+        </template>
+      </el-table-column>
       <el-table-column prop="recordLength" width="80" label="录制时长" />
       <el-table-column prop="filePath" label="文件路径" show-overflow-tooltip />
       <el-table-column label="操作" width="180">
@@ -154,7 +163,20 @@ export default {
       }
       return date;
     },
-
+    formatSize(row){
+       let fileSizeMsg = "";
+      if (row.fileSize) {
+         let fileSizeByte = row.fileSize;
+    if (fileSizeByte < 1048576) fileSizeMsg = (fileSizeByte / 1024).toFixed(2) + "KB";
+    else if (fileSizeByte == 1048576) fileSizeMsg = "1MB";
+    else if (fileSizeByte > 1048576 && fileSizeByte < 1073741824) fileSizeMsg = (fileSizeByte / (1024 * 1024)).toFixed(2) + "MB";
+    else if (fileSizeByte > 1048576 && fileSizeByte == 1073741824) fileSizeMsg = "1GB";
+    else if (fileSizeByte > 1073741824 && fileSizeByte < 1099511627776) fileSizeMsg = (fileSizeByte / (1024 * 1024 * 1024)).toFixed(2) + "GB";
+    else fileSizeMsg = "文件超过1TB";
+    return fileSizeMsg;
+      }
+      return fileSizeMsg;
+    },
     //分页处理
     handleSizeChange(val) {
       this.pageSize = val;
@@ -172,14 +194,29 @@ export default {
       data = JSON.parse(JSON.stringify(value));
       data.map((item, index) => {
         //时间格式化00:00:00.0
-         let time=item.duration
+         let time=(item.endTime-item.startTime)
          const times = simplifySecond(time < 0 ? 0 : time)
         item.duration = times.hours+':'+ times.minutes+':'+times.seconds
         item.order = index;
-        item.url = this.url;
-        item.id = this.rowId;
+        item.filepath = this.url;
+        item.fileId = this.rowId;
       
       });
+      //保存数据格式
+      /**
+       * [
+            {
+              "duration": "00:01:50.0",
+              "fileId": "401",
+              "logoDistance": "10:10",
+              "logoPath": "http://172.20.5.4:8080/dl/2019/7/31/1156403148202442752HoneyBee.png",
+              "orders": "0",
+              "startTime": "00:00:10.0",
+              "filepath": "/home/nieyabing/nginx/nginx-rtmp-module/tmp/vod/2019/7/30/1591531502020190730100454.mp4"
+            }
+            ]
+       */
+       
       //执行保存请求
       return new Promise((resolve, reject) => {
         editeStreamfile(data)
@@ -246,7 +283,16 @@ export default {
 </script>
 <style lang="scss" scoped>
 .helpdoc-container {
- 
+  margin: 30px;
+  .colorSuccess {
+    color: #67c23a;
+  }
+  .colorDanger {
+    color: #f56c6c;
+  }
+ .colorWarning{
+   color:#E6A23C;
+ }
 }
 .pagenation {
   margin: 30px 0;

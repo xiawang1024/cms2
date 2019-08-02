@@ -8,7 +8,7 @@
       row-key="id"
     >
       <el-table-column type="index" width="50" />
-      <el-table-column prop="userName" width="150" label="用户名" />
+      <el-table-column prop="userName" width="180" label="用户名" />
       <el-table-column prop="picPath" width="200" label="直播快照">
         <template slot-scope="scope">
           <img :src="scope.row.picPath==null?defaultPath:scope.row.picPath" alt class="imgStyle" >

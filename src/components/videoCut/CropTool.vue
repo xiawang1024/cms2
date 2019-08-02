@@ -768,6 +768,7 @@
                 }
                 else {
                     this.playSelectedClip(index)
+                    this.$emit("audioPlay",index)
                 }
             },
 
