@@ -416,7 +416,7 @@
               </el-upload>
             </template>
             <!-- 视频上传 -->
-            <template v-else-if="item.type=='video'">
+            <!-- <template v-else-if="item.type=='video'">
               <el-upload
                 :action="upURL"
                 :file-list="formModel[item.name]"
@@ -446,7 +446,41 @@
                   <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
                 </div>
               </el-upload>
+            </template> -->
+            <!-- 分片上传 -->
+            <template v-else-if="item.type=='video'">
+              <el-upload
+                :action="upURL"
+                :file-list="formModel[item.name]"
+                :multiple="item.multiple"
+                :name="'file'"
+                :limit="item.limit"
+                :before-upload="beforeUploadCallbacks[item.name]"
+                :on-success="uploadCallbacks[item.name]"
+                :on-preview="handlePreviewFile"
+                :on-remove="removeCallbacks[item.name]"
+                :on-exceed="handelUploadExceed"
+                :on-error="handleUploadError"
+                :disabled="item.disabled"
+                :http-request="handleUploadRequest"
+                class="upload-file"
+                accept="video/mp4"
+              >
+                <el-button
+                  :disabled="isUploading"
+                  size="mini"
+                  type="primary"
+                >点击上传</el-button>
+                <div
+                  v-if="item.tip"
+                  slot="tip"
+                  class="el-upload__tip"
+                >{{ item.tip }}
+                  <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
+                </div>
+              </el-upload>
             </template>
+            <!-- 分片上传 -->
             <!--城市远程搜索-->
             <template v-else-if="item.type=='remoteCity'">
               <website-select
@@ -572,6 +606,7 @@ import Viewer from "viewerjs";
 import baseUrl from "@/config/base-url";
 import { hashCode } from "@/utils/common.js";
 import request from '@/utils/request'
+import {uploadByPieces} from './lib/utils'
 export default {
   name: "VForm",
 
@@ -626,6 +661,11 @@ export default {
   },
   data() {
     return {
+      // 分片上传
+      uploading: false,
+      loadingText: '上传进度',
+      fileList: [],
+      // 分片上传
       imgViewer: null,
       dataOptions: {
         shortcuts: [
@@ -713,7 +753,14 @@ export default {
     },
     formData() {
       this.updateForm();
+    },
+    // 分片上传
+    fileList (fileList) {
+      this.$nextTick(() => {
+        this.dealUpload()
+      })
     }
+    // 分片上传
   },
   mounted() {
     this.updateForm();
@@ -736,6 +783,31 @@ export default {
   },
 
   methods: {
+    // 分片上传
+    dealUpload () {
+      this.uploading = true
+      uploadByPieces({
+        files: this.fileList,
+        pieceSize: 10,
+        chunkUrl: '输入分片上传的地址',
+        fileUrl: '整个文件上传的地址',
+        progress: (num) => {
+          this.loadingText = '上传进度' + num + '%'
+        },
+        success: (data) => {
+          this.uploading = false
+          this.$emit('uploaded', data)
+        },
+        error: (e) => {
+          this.uploading = false
+        }
+      })
+    },
+    // 上传请求
+    handleUploadRequest (back) {
+      this.fileList.push(back.file)
+    },
+    // 分片上传
     // 自定义上传多图上传图片
     defineRequest(name, file) {
       let getfile = file.file
