@@ -45,6 +45,9 @@
         </el-col>
       </el-row>
     </div>
+    <div>
+      <uploader :options="options" :file-status-text="statusText" class="uploader-example" ref="uploader" @file-complete="fileComplete" @complete="complete"/>
+    </div>
     <div class="upload-btn">
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
       <!-- <el-button type = "primary" size="small" @click = "save">存草稿</el-button>
@@ -74,6 +77,22 @@ export default {
   },
   data () {
     return {
+      // 分段上传
+      options: {
+        target: 'http://172.20.5.4:55030/basefile/upload?fileRefId=jkhjkhjkhj', // '//jsonplaceholder.typicode.com/posts/',
+        testChunks: false
+      },
+      attrs: {
+        accept: 'image/*'
+      },
+      statusText: {
+        success: '成功了',
+        error: '出错了',
+        uploading: '上传中',
+        paused: '暂停中',
+        waiting: '等待中'
+      },
+       // 分段上传
       showPreview: false,
       fileType: '2',
       form: {
@@ -192,8 +211,19 @@ export default {
     if(this.contextMenu.docId) {
       this.getDocumentInfor(this.contextMenu.docId)
     }
+    this.$nextTick(() => {
+      window.uploader = this.$refs.uploader.uploader
+    })
   },
   methods: {
+    // 分段上传
+    complete () {
+      console.log('complete', arguments)
+    },
+    fileComplete () {
+      console.log('file complete', arguments)
+    },
+    // 分段上传
     // 关闭
     colseSet() {
       this.rightCardShow = false
