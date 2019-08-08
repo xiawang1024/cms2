@@ -111,7 +111,8 @@
         dialogGoogleBindingSecretKey: '',
         dialogGoogleBindingQrCodeBase64: '',
         dialogGoogleDoubleCheckVisible: false,
-        dialogGoogleInputSecondCheckkey: ''
+        dialogGoogleInputSecondCheckkey: '',
+        forward:''
       }
     },
     watch: {
@@ -254,11 +255,17 @@
       },
       handleLogin() {
         this.loading = true
+         if(this.$route.query.forward){
+              this.forward=this.$route.query.forward;
+              this.$store.commit('SET_SKIP_URL',this.$route.query.forward)
+            }
         this.$store
           .dispatch('LoginByUsername', this.loginForm)
           .then(() => {
             this.loading = false
+            if(!this.forward){
             this.$router.push({ path: this.redirect || '/' })
+            }
             this.$store.dispatch('GetCurrentInfor')
             this.$store.dispatch('GetColumnAll')
           })

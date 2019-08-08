@@ -11,8 +11,8 @@
       </div>
       <div ref="waveform" @click.stop="getPosition" class="box" @mousemove="printPosion" />
     </div>
-    <!-- <el-button @click="myplay">播放</el-button>
-    <el-button @click="mypause">暂停</el-button>
+    <!-- <el-button @click="myplay">播放</el-button> -->
+    <!--<el-button @click="mypause">暂停</el-button>
     <el-button @click="mystop">停止</el-button>
     <el-button @click="myclear">清空</el-button>
     <el-button @click="mysave">裁剪</el-button> -->
@@ -72,7 +72,7 @@ export default {
       container: audioElement,
       waveColor: "#6d9e8b",
       progressColor: "#368666",
-      cursorColor: "#fff",
+      cursorColor: "#444",
 
       color: "rgba(254, 255, 0, 0.8)",
       hideScrollbar: true,
@@ -89,6 +89,7 @@ export default {
     this.wavesurfer.load(this.audio_url);
     //加载完获取音频长度
     this.wavesurfer.on("ready", () => {
+      this.wavesurfer.setVolume(0);
       this.audioDuration = this.wavesurfer.getDuration();
 
 
@@ -142,10 +143,10 @@ export default {
     //   this.wavesurfer.skip(time)
     //   console.log(x,time);
     },
-    myplay() {
+    myplay(start,end) {
       if (this.wavesurfer) {
         //播放区间（start,end）
-        this.wavesurfer.play(5,20);
+        this.wavesurfer.play(start,end);
       }
     },
     mypause() {

@@ -16,18 +16,22 @@
       @cutResult="cutResult"
       @cutList="propCutList"
       @CloseDialog="playReset"
+      @audioPlay="audioPlay"
     />
-    <audioWave :audio_url="audio_url" :cut-list="cutList" />
+    <audioWave :audio_url="audio_url" :cut-list="cutList" ref="audioWave"/>
+    <logoEdite :cut-list="cutList" :duration="duration" @putLogo="putLogo"/>
   </div>
 </template>
 <script>
 import CropTool from "@/components/videoCut/CropTool.vue";
 import audioWave from "@/components/videoCut/audio.vue";
+import logoEdite from "@/components/videoCut/logoEdite.vue";
 export default {
   name: "VideoEdite",
   components: {
     CropTool,
-    audioWave
+    audioWave,
+    logoEdite
   },
   props: {
     audio_url: {
@@ -47,6 +51,7 @@ export default {
       cutList: []
     };
   },
+ 
   mounted() {
     const videoElement = this.$refs.video;
     videoElement.ondurationchange = () => {
@@ -77,10 +82,16 @@ export default {
       this.$refs.video.pause();
       this.$refs.video.currentTime = 0;
     },
+    putLogo(index,val){
+         Object.assign( this.cutList[index], val);
+
+
+    },
     cutResult(val) {
+      // this.cutList = val;
       //组件数据传递出去
-      this.$emit("cutResult", val);
-      this.cutList = val;
+      this.$emit("cutResult", this.cutList);
+      
     },
     // 裁剪值
     propCutList(val) {
@@ -90,6 +101,14 @@ export default {
     playReset() {
         this.$refs.video.pause();
         this.$refs.CropTool.reset();
+    },
+    //播放选中片段（音频weavsufer）
+    audioPlay(index){
+      //取反
+      let audioList=JSON.parse(JSON.stringify(this.cutList)).reverse();
+      let start=audioList[index].startTime;
+      let end=audioList[index].endTime;
+      this.$refs.audioWave.myplay(start,end)
     }
   }
 };

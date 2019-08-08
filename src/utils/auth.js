@@ -104,3 +104,24 @@ function setTokenExpireTime(auth) {
 function getCurrentTime() {
   return Date.parse(new Date()) / 1000
 }
+
+/**
+ * 设置cookie
+ * 
+ */
+//将用户信息存入cookie
+export const setCookie=(state,cname,cvalue,exdays)=>{
+let d = new Date();
+d.setTime(d.getTime()+(exdays*24*60*60*1000));
+let expires = "expires="+d.toGMTString();
+let domain='domain=.dianzhenkeji.com'
+document.cookie = cname + "=" + cvalue+";" + expires+';'+domain+';path=/'
+//清除localstorage信息，再次登录避免进入
+localStorage.removeItem('hnDt_token');
+localStorage.removeItem('BaseInfor');
+localStorage.removeItem('columnsAllOrigin');
+localStorage.removeItem('columnsAll');
+//保存过之后页面跳转
+location.href='http://'+state.skipUrl
+
+}
