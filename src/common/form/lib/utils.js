@@ -75,7 +75,7 @@ export const uploadByPieces = ({files, chunkUrl, fileUrl, pieceSize = 5, progres
   // 对分片已经处理完毕的文件进行上传
   const uploadFile = (currentFile) => {
     let makeFileForm = new FormData()
-    makeFileForm.append('md5', currentFile.fileMD5)
+    makeFileForm.append('md5', currentFile.md5)
     makeFileForm.append('file_name', currentFile.name)
     // fetch({ // 合并文件
     //   type: 'post',
@@ -107,13 +107,14 @@ export const uploadByPieces = ({files, chunkUrl, fileUrl, pieceSize = 5, progres
     })
   }
   const uploadChunk = (currentFile, chunkInfo, fileIndex) => {
+    console.log(currentFile, 'currentFile12')
     let fetchForm = new FormData()
     fetchForm.append('file_name', currentFile.name)
     fetchForm.append('md5', currentFile.fileMD5)
     fetchForm.append('file', chunkInfo.chunk)
     fetchForm.append('chunks', chunkInfo.chunkCount)
     fetchForm.append('chunk_index', chunkInfo.currentChunk)
-    fetchForm.append('chunk_md5', chunkInfo.chunkMD5)
+    fetchForm.append('identifier', chunkInfo.chunkMD5)
     // fetch({
     //   type: 'post',
     //   url: chunkUrl,
