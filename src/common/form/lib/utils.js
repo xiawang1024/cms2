@@ -103,14 +103,14 @@ export const uploadByPieces = ({files, chunkUrl, fileUrl, pieceSize = 5, progres
       success && success(res)
       successAllCount++
     }).catch((error) => {
-      error && error(e)
+      // error && error(e)
     })
   }
   const uploadChunk = (currentFile, chunkInfo, fileIndex) => {
     let fetchForm = new FormData()
     fetchForm.append('file_name', currentFile.name)
     fetchForm.append('md5', currentFile.fileMD5)
-    fetchForm.append('data', chunkInfo.chunk)
+    fetchForm.append('file', chunkInfo.chunk)
     fetchForm.append('chunks', chunkInfo.chunkCount)
     fetchForm.append('chunk_index', chunkInfo.currentChunk)
     fetchForm.append('chunk_md5', chunkInfo.chunkMD5)
