@@ -788,7 +788,7 @@ export default {
       this.uploading = true
       uploadByPieces({
         files: this.fileList,
-        pieceSize: 10,
+        pieceSize: 1,
         chunkUrl: '输入分片上传的地址',
         fileUrl: '整个文件上传的地址',
         progress: (num) => {

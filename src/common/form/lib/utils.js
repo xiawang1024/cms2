@@ -54,7 +54,7 @@ export const uploadByPieces = ({files, chunkUrl, fileUrl, pieceSize = 5, progres
       AllChunk = AllChunk + chunkCount // 计算全局chunk数
       // let fileSize = currentFile.file.size // 文件大小
       // 针对单个文件进行chunk上传
-      for (var i = 0; i < chunkCount; i++) {
+      for (let i = 0; i < chunkCount; i++) {
         const { chunk } = getChunkInfo(currentFile.file, i, chunkSize)
         let chunkFR = new FileReader()
         chunkFR.readAsBinaryString(chunk)
@@ -63,6 +63,7 @@ export const uploadByPieces = ({files, chunkUrl, fileUrl, pieceSize = 5, progres
           let chunkMD5 = md5(chunkBolb)
           // this.readingFile = false
           uploadChunk(currentFile, {chunkMD5, chunk, currentChunk: i, chunkCount}, fileIndex)
+          console.log(1234)
         }, false)
       }
     })
@@ -109,14 +110,14 @@ export const uploadByPieces = ({files, chunkUrl, fileUrl, pieceSize = 5, progres
     })
   }
   const uploadChunk = (currentFile, chunkInfo, fileIndex) => {
-    console.log(currentFile, 'currentFile12')
     let fetchForm = new FormData()
     fetchForm.append('file_name', currentFile.name)
     fetchForm.append('md5', currentFile.fileMD5)
     fetchForm.append('file', chunkInfo.chunk)
-    fetchForm.append('chunks', chunkInfo.chunkCount)
-    fetchForm.append('chunk_index', chunkInfo.currentChunk)
+    fetchForm.append('totalChunks', chunkInfo.chunkCount)
+    fetchForm.append('chunkNumber', chunkInfo.currentChunk)
     fetchForm.append('identifier', chunkInfo.chunkMD5)
+    fetchForm.append('currentSize', chunkInfo.chunk.size)
     // fetch({
     //   type: 'post',
     //   url: chunkUrl,
