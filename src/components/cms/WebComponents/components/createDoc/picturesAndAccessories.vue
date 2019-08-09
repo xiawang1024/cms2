@@ -45,9 +45,9 @@
         </el-col>
       </el-row>
     </div>
-    <div>
+    <!-- <div>
       <uploader :options="options" :file-status-text="statusText" class="uploader-example" ref="uploader" @file-complete="fileComplete" @complete="complete"/>
-    </div>
+    </div> -->
     <div class="upload-btn">
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
       <!-- <el-button type = "primary" size="small" @click = "save">存草稿</el-button>
@@ -62,6 +62,7 @@
 // import { DOWN_URL } from '@/config/base-url'
 import { mapGetters } from 'vuex'
 import { createDocument, editDocument, documentInfor } from '@/api/cms/article'
+// import { needMerge } from "@/api/simpleUpload.js";
 export default {
   props: {
     activeName: {
@@ -78,20 +79,31 @@ export default {
   data () {
     return {
       // 分段上传
-      options: {
-        target: 'http://172.20.5.4:55030/basefile/upload?fileRefId=jkhjkhjkhj', // '//jsonplaceholder.typicode.com/posts/',
-        testChunks: false
-      },
-      attrs: {
-        accept: 'image/*'
-      },
-      statusText: {
-        success: '成功了',
-        error: '出错了',
-        uploading: '上传中',
-        paused: '暂停中',
-        waiting: '等待中'
-      },
+      // options: {
+      //   target: "http://fupload.test.dianzhenkeji.com/chunk/chunk",
+      //   testChunks: true,
+      //   // simultaneousUploads: 1,
+      //   //后端约定值20M （勿改）
+      //   chunkSize: 20* 1024 * 1024,
+      //   // 服务器分片校验函数，秒传及断点续传基础
+      //   checkChunkUploadedByResponse: function(chunk, message) {
+      //     let objMessage = JSON.parse(message);
+      //     if (objMessage.result.skipUpload) {
+      //       return true;
+      //     }
+      //     return (objMessage.result.uploadedChunkList || []).indexOf(chunk.offset + 1) >= 0;
+      //   }
+      // },
+      // attrs: {
+      //   accept: 'image/*'
+      // },
+      // statusText: {
+      //   success: '成功了',
+      //   error: '出错了',
+      //   uploading: '上传中',
+      //   paused: '暂停中',
+      //   waiting: '等待中'
+      // },
        // 分段上传
       showPreview: false,
       fileType: '2',
@@ -111,6 +123,16 @@ export default {
           //   hidden: false,
           //   maxSize: 1024*5
           // },
+          {
+            label: '分段上传',
+            name: 'simpleVideo',
+            type: 'simpleVideo',
+            required: false,
+            maxSize: 1024*800,
+            limit: 1,
+            // hasTextInput: true,
+            hidden: false
+          },
           {
             label: '视频',
             name: 'contentVideosList',
@@ -211,18 +233,41 @@ export default {
     if(this.contextMenu.docId) {
       this.getDocumentInfor(this.contextMenu.docId)
     }
-    this.$nextTick(() => {
-      window.uploader = this.$refs.uploader.uploader
-    })
+    // this.$nextTick(() => {
+    //   window.uploader = this.$refs.uploader.uploader
+    // })
   },
   methods: {
     // 分段上传
-    complete () {
-      console.log('complete', arguments)
-    },
-    fileComplete () {
-      console.log('file complete', arguments)
-    },
+    // complete () {
+    //   console.log('complete', arguments)
+    // },
+    // fileComplete () {
+    //   console.log('file complete', arguments)
+    //   console.log(this.$store.state.absolutePath,'qwe')
+    // //   console.log("file complete", arguments);
+    //   const file = arguments[0].file;
+    //   return new Promise((resolve, reject) => {
+    //     needMerge({
+    //       filename: file.name,
+    //       identifier: arguments[0].uniqueIdentifier,
+    //       totalSize: file.size,
+    //       type: file.type,
+    //     })
+    //       .then(response => {
+    //         //文件合并成功;
+    //         // Bus.$emit("fileSuccess");
+    //         // this.statusRemove(file.id);
+
+    //         resolve();
+    //       })
+    //       .catch(error => {
+    //         reject(error);
+    //       });
+    //   });
+     
+  
+    // },
     // 分段上传
     // 关闭
     colseSet() {

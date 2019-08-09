@@ -27,16 +27,16 @@
       <div class="uploader-file-progress" :class="progressingClass" :style="progressStyle"/>
       <div class="uploader-file-info">
         <div class="uploader-file-name"><i class="uploader-file-icon" :icon="fileCategory"/>{{ file.name }}</div>
-        <div class="uploader-file-size">{{ formatedSize }}</div>
-        <div class="uploader-file-meta"/>
-        <div class="uploader-file-status">
+        <!-- <div class="uploader-file-size">{{ formatedSize }}</div> -->
+        <!-- <div class="uploader-file-meta"/> -->
+        <!-- <div class="uploader-file-status">
           <span v-show="status !== 'uploading'">{{ statusText }}</span>
           <span v-show="status === 'uploading'">
             <span>{{ progressStyle.progress }}</span>
             <em>{{ formatedAverageSpeed }}</em>
             <i>{{ formatedTimeRemaining }}</i>
           </span>
-        </div>
+        </div> -->
         <div class="uploader-file-actions">
           <span class="uploader-file-pause" @click="pause"/>
           <span class="uploader-file-resume" @click="resume"/>️
@@ -44,11 +44,7 @@
           <span class="uploader-file-remove" @click="remove"/>
         </div>
         <div class="uploader-file-setting">
-          <span>设为封面</span>
           <span @click="remove">删除</span>
-          <span>添加水印</span>
-          <!-- <i>设为封面</i><br/>
-          <i @click="remove">删除</i> -->
         </div>
       </div>
     </slot>
@@ -344,7 +340,7 @@ export default {
     height: 100%;
     background: #67c23a;
     transform: translateX(-100%);
-    height: 5px;
+    height: 2px;
     bottom: 4px;
     border-radius: 5px
   }
@@ -375,7 +371,7 @@ export default {
     height: 100%;
   }
   .uploader-file-name {
-    width: 45%;
+    width: 75%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -399,6 +395,7 @@ export default {
   }
   .uploader-file-icon[icon="folder"]::before {
     content: "📂";
+    background: url("../../../assets/images/image-icon.png");
   }
   .uploader-file-icon[icon="image"]::before {
     content: "📊";

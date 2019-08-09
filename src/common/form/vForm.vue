@@ -416,38 +416,6 @@
               </el-upload>
             </template>
             <!-- 视频上传 -->
-            <!-- <template v-else-if="item.type=='video'">
-              <el-upload
-                :action="upURL"
-                :file-list="formModel[item.name]"
-                :multiple="item.multiple"
-                :name="'file'"
-                :limit="item.limit"
-                :before-upload="beforeUploadCallbacks[item.name]"
-                :on-success="uploadCallbacks[item.name]"
-                :on-preview="handlePreviewFile"
-                :on-remove="removeCallbacks[item.name]"
-                :on-exceed="handelUploadExceed"
-                :on-error="handleUploadError"
-                :disabled="item.disabled"
-                class="upload-file"
-                accept="video/mp4"
-              >
-                <el-button
-                  :disabled="isUploading"
-                  size="mini"
-                  type="primary"
-                >点击上传</el-button>
-                <div
-                  v-if="item.tip"
-                  slot="tip"
-                  class="el-upload__tip"
-                >{{ item.tip }}
-                  <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
-                </div>
-              </el-upload>
-            </template> -->
-            <!-- 分片上传 -->
             <template v-else-if="item.type=='video'">
               <el-upload
                 :action="upURL"
@@ -462,7 +430,6 @@
                 :on-exceed="handelUploadExceed"
                 :on-error="handleUploadError"
                 :disabled="item.disabled"
-                :http-request="handleUploadRequest"
                 class="upload-file"
                 accept="video/mp4"
               >
@@ -479,6 +446,16 @@
                   <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
                 </div>
               </el-upload>
+            </template>
+            <!-- 分片上传 -->
+            <template v-else-if="item.type=='simpleVideo'">
+           
+              <uploader 
+                :options="options" 
+                :file-status-text="statusText" 
+                ref="uploader" 
+                @file-complete="fileComplete" 
+                @complete="complete"/>
             </template>
             <!-- 分片上传 -->
             <!--城市远程搜索-->
@@ -606,7 +583,8 @@ import Viewer from "viewerjs";
 import baseUrl from "@/config/base-url";
 import { hashCode } from "@/utils/common.js";
 import request from '@/utils/request'
-import {uploadByPieces} from './lib/utils'
+// import {uploadByPieces} from './lib/utils'
+import { needMerge } from "@/api/simpleUpload.js";
 export default {
   name: "VForm",
 
@@ -662,10 +640,36 @@ export default {
   data() {
     return {
       // 分片上传
-      uploading: false,
-      loadingText: '上传进度',
-      fileList: [],
-      // 分片上传
+      // uploading: false,
+      // loadingText: '上传进度',
+      // fileList: [],
+      //分片上传
+      options: {
+        target: "http://fupload.test.dianzhenkeji.com/chunk/chunk",
+        testChunks: true,
+        simultaneousUploads: 1,
+        //后端约定值20M （勿改）
+        chunkSize: 10* 1024 * 1024,
+        // 服务器分片校验函数，秒传及断点续传基础
+        checkChunkUploadedByResponse: function(chunk, message) {
+          let objMessage = JSON.parse(message);
+          if (objMessage.result.skipUpload) {
+            return true;
+          }
+          return (objMessage.result.uploadedChunkList || []).indexOf(chunk.offset + 1) >= 0;
+        }
+      },
+      attrs: {
+        accept: 'image/*'
+      },
+      statusText: {
+        success: '成功了',
+        error: '出错了',
+        uploading: '上传中',
+        paused: '暂停中',
+        waiting: '等待中'
+      },
+       // 分片上传
       imgViewer: null,
       dataOptions: {
         shortcuts: [
@@ -755,11 +759,11 @@ export default {
       this.updateForm();
     },
     // 分片上传
-    fileList (fileList) {
-      this.$nextTick(() => {
-        this.dealUpload()
-      })
-    }
+    // fileList (fileList) {
+    //   this.$nextTick(() => {
+    //     this.dealUpload()
+    //   })
+    // }
     // 分片上传
   },
   mounted() {
@@ -783,30 +787,56 @@ export default {
   },
 
   methods: {
+    // 分段上传
+    complete () {
+      console.log('complete', arguments)
+    },
+    fileComplete () {
+      const file = arguments[0].file;
+      return new Promise((resolve, reject) => {
+        needMerge({
+          filename: file.name,
+          identifier: arguments[0].uniqueIdentifier,
+          totalSize: file.size,
+          type: file.type,
+        })
+          .then(response => {
+            //文件合并成功;
+            // Bus.$emit("fileSuccess");
+            // this.statusRemove(file.id);
+
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+    // 分段上传
     // 分片上传
-    dealUpload () {
-      this.uploading = true
-      uploadByPieces({
-        files: this.fileList,
-        pieceSize: 1,
-        chunkUrl: '输入分片上传的地址',
-        fileUrl: '整个文件上传的地址',
-        progress: (num) => {
-          this.loadingText = '上传进度' + num + '%'
-        },
-        success: (data) => {
-          this.uploading = false
-          this.$emit('uploaded', data)
-        },
-        error: (e) => {
-          this.uploading = false
-        }
-      })
-    },
-    // 上传请求
-    handleUploadRequest (back) {
-      this.fileList.push(back.file)
-    },
+    // dealUpload () {
+    //   this.uploading = true
+    //   uploadByPieces({
+    //     files: this.fileList,
+    //     pieceSize: 1,
+    //     chunkUrl: '输入分片上传的地址',
+    //     fileUrl: '整个文件上传的地址',
+    //     progress: (num) => {
+    //       this.loadingText = '上传进度' + num + '%'
+    //     },
+    //     success: (data) => {
+    //       this.uploading = false
+    //       this.$emit('uploaded', data)
+    //     },
+    //     error: (e) => {
+    //       this.uploading = false
+    //     }
+    //   })
+    // },
+    // // 上传请求
+    // handleUploadRequest (back) {
+    //   this.fileList.push(back.file)
+    // },
     // 分片上传
     // 自定义上传多图上传图片
     defineRequest(name, file) {
