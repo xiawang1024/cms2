@@ -5,7 +5,7 @@
       <uploader-drop>
         <!-- <p>Drop files here to upload or</p> -->
         <div class="bgc-img">
-          <uploader-btn>点击选择图片</uploader-btn>
+          <uploader-btn>点击上传</uploader-btn>
           <!-- <div class="img-desc">或将图片拖拽到这里，单次最多可选择300张</div> -->
         </div>
         <!-- <uploader-btn :directory="true">select folder</uploader-btn> -->

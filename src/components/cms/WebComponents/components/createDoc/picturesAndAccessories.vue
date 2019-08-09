@@ -125,7 +125,7 @@ export default {
           // },
           {
             label: '分段上传',
-            name: 'simpleVideo',
+            name: 'contentVideosList',
             type: 'simpleVideo',
             required: false,
             maxSize: 1024*800,

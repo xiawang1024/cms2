@@ -313,9 +313,9 @@ export default {
 <style>
   .uploader-file {
     position: relative;
-    height: 60px;
-    line-height: 60px;
-    overflow: hidden;
+    height: 25px;
+    line-height: 25px;
+    /* overflow: hidden; */
     /* border-bottom: 1px solid #cdcdcd; */
   }
   .uploader-file[status="waiting"] .uploader-file-pause,
@@ -341,7 +341,7 @@ export default {
     background: #67c23a;
     transform: translateX(-100%);
     height: 2px;
-    bottom: 4px;
+    bottom: -5px;
     border-radius: 5px
   }
   .uploader-file-progressing {
@@ -366,6 +366,7 @@ export default {
   .uploader-file-status,
   .uploader-file-setting,
   .uploader-file-actions {
+    line-height: 16px;
     float: left;
     position: relative;
     height: 100%;
@@ -378,36 +379,46 @@ export default {
     text-indent: 14px;
   }
   .uploader-file-icon {
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 16px;
     display: inline-block;
     vertical-align: top;
-    margin-top: 13px;
+    margin-top: -1px;
     margin-right: 8px;
+    margin-left:-13px;
   }
-  .uploader-file-icon::before {
+  /* .uploader-file-icon::before {
     content: "📃";
     display: block;
     height: 100%;
     font-size: 24px;
     line-height: 1;
     text-indent: 0;
+  } */
+  .uploader-file-icon[icon="folder"] {
+    /* content: "📂"; */
+    background: url("../../../assets/simpleImage/image-icon.png");
+    background-size: cover;
   }
-  .uploader-file-icon[icon="folder"]::before {
-    content: "📂";
-    background: url("../../../assets/images/image-icon.png");
+  .uploader-file-icon[icon="image"] {
+   
+    background: url("../../../assets/simpleImage/image-icon.png");
+    background-size: cover;
   }
-  .uploader-file-icon[icon="image"]::before {
-    content: "📊";
+  .uploader-file-icon[icon="video"] {
+    /* content: "📹"; */
+    background: url("../../../assets/simpleImage/video-icon.png");
+    background-size: cover;
   }
-  .uploader-file-icon[icon="video"]::before {
-    content: "📹";
+  .uploader-file-icon[icon="audio"] {
+    /* content: "🎵"; */
+    background: url("../../../assets/simpleImage/video-icon.png");
+    background-size: cover;
   }
-  .uploader-file-icon[icon="audio"]::before {
-    content: "🎵";
-  }
-  .uploader-file-icon[icon="document"]::before {
-    content: "📋";
+  .uploader-file-icon[icon="document"] {
+    /* content: "📋"; */
+    background: url("../../../assets/simpleImage/text-icon.png");
+    background-size: cover;
   }
   .uploader-file-size {
     width: 13%;

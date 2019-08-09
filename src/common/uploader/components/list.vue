@@ -59,5 +59,6 @@ export default {
     cursor: pointer;
     margin-bottom: 10px;
     border-radius: 5px;
+    border: 1px solid #c0ccda;
   }
 </style>
