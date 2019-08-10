@@ -1,5 +1,6 @@
 <template>
   <div class="uploader-list">
+    {{ fileList }}
     <slot :file-list="fileList">
       <ul>
         <li v-for="(file, index) in fileList" :key="file.id" @click="lookView(file, index)" class="file-list">

@@ -67,6 +67,12 @@ export default {
           waiting: 'waiting'
         }
       }
+    },
+    defaultFileList: {
+      type: Array,
+      default () {
+        return []
+      }
     }
   },
   data () {
@@ -76,6 +82,7 @@ export default {
       fileList: []
     }
   },
+  
   created () {
     this.options.initialPaused = !this.autoStart
     const uploader = new Uploader(this.options)
@@ -87,6 +94,20 @@ export default {
     uploader.on('fileRemoved', this.fileRemoved)
     uploader.on('filesSubmitted', this.filesSubmitted)
     uploader.on('fileSuccess', this.fileSuccess)
+    // this.uploader.addFile(rFile)
+    // this.$nextTick(() => {
+    //   console.log(this.defaultFileList, '默认列表')
+    // })
+    if(this.defaultFileList.length) {
+      this.defaultFileList.forEach((ele) => {
+        let rFile = new File(['xx'], 'image1.jpg', {
+          type: 'video/*',
+        })
+        rFile.url = '1111'
+        console.log(rFile, 'rFile')
+        this.uploader.addFile(rFile)
+      })
+    }
   },
   destroyed () {
     const uploader = this.uploader
@@ -99,8 +120,8 @@ export default {
     this.uploader = null
   },
   methods: {
-    review(file) {
-      this.$emit('fileInfor', file)
+    review(file, index) {
+      this.$emit('fileInfor', {file, index})
     },
     uploadStart () {
       this.started = true

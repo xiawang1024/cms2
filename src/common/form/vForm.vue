@@ -3,6 +3,9 @@
     :class="formSettings.length == 1?'v-form--single': 'v-form--multiple'"
     class="v-form"
   >
+    <div>
+      <el-button @click = "getAllData">点击</el-button>
+    </div>
     <!-- {{formData}} -->
     <!-- <pre>{{formModel}}</pre> -->
     <!-- <pre>{{uploadCallbacks}}</pre> -->
@@ -453,9 +456,11 @@
               <uploader 
                 :options="options" 
                 :file-status-text="statusText" 
+                :default-file-list="textData"
                 ref="uploader" 
-                @file-complete="fileComplete" 
-                @complete="complete"/>
+                @file-success="fileComplete" 
+                @complete="complete"
+                @fileInfor="fileInfor"/>
             </template>
             <!-- 分片上传 -->
             <!--城市远程搜索-->
@@ -639,6 +644,7 @@ export default {
   },
   data() {
     return {
+      textData: ['http://cmsres.test.dianzhenkeji.com/anonymous/2019/8/2/1157219789140267008.mp4'],
       // 分片上传
       // uploading: false,
       // loadingText: '上传进度',
@@ -778,7 +784,8 @@ export default {
               item.type == "img" ||
               item.type == "file" ||
               item.type == "audio" ||
-              item.type == "video"
+              item.type == "video" ||
+              item.type == "simpleVideo"
           )
       ) {
         // this.getUpToken()
@@ -788,11 +795,15 @@ export default {
 
   methods: {
     // 分段上传
+    fileInfor(file, index) {
+      console.log(file, index)
+    },
     complete () {
       console.log('complete', arguments)
     },
     fileComplete () {
       const file = arguments[0].file;
+      console.log(file, 'file')
       return new Promise((resolve, reject) => {
         needMerge({
           filename: file.name,
@@ -801,6 +812,7 @@ export default {
           type: file.type,
         })
           .then(response => {
+            // console.log()
             //文件合并成功;
             // Bus.$emit("fileSuccess");
             // this.statusRemove(file.id);
@@ -811,6 +823,9 @@ export default {
             reject(error);
           });
       });
+    },
+    getAllData() {
+      console.log(this.formModel, 'formModel')
     },
     // 分段上传
     // 分片上传
@@ -1058,7 +1073,8 @@ export default {
                 item.type == "img" ||
                 item.type == "file" ||
                 item.type == "audio" ||
-                item.type == "video"
+                item.type == "video" ||
+                item.type == "simpleVideo"
               ) {
                 tmpModel[item.name] = [];
               } else if (item.type == "slot") {
@@ -1077,7 +1093,8 @@ export default {
               item.type == "img" ||
               item.type == "file" ||
               item.type == "audio" ||
-              item.type == "video"
+              item.type == "video" || 
+              item.type == "simpleVideo"
             ) {
               tmpUploadCallback[item.name] = (response, file, fileList) => {
                 this.handleUploadFile(item.name, response, file, fileList);
