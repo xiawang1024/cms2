@@ -658,13 +658,13 @@ export default {
         //后端约定值20M （勿改）
         chunkSize: 10* 1024 * 1024,
         // 服务器分片校验函数，秒传及断点续传基础
-        checkChunkUploadedByResponse: function(chunk, message) {
-          let objMessage = JSON.parse(message);
-          if (objMessage.result.skipUpload) {
-            return true;
-          }
-          return (objMessage.result.uploadedChunkList || []).indexOf(chunk.offset + 1) >= 0;
-        }
+        // checkChunkUploadedByResponse: function(chunk, message) {
+        //   let objMessage = JSON.parse(message);
+        //   if (objMessage.result.skipUpload) {
+        //     return true;
+        //   }
+        //   return (objMessage.result.uploadedChunkList || []).indexOf(chunk.offset + 1) >= 0;
+        // }
       },
       attrs: {
         accept: 'image/*'

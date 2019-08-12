@@ -1,5 +1,6 @@
 <template>
   <div class="uploader-file" :status="status">
+    <!-- <div @click.stop="uploadAgain(file)" ref="uploadAgain">上传</div> -->
     <slot
       :file="file"
       :list="list"
@@ -25,330 +26,304 @@
       :file-category="fileCategory"
     >
       <div class="uploader-file-progress" :class="progressingClass" :style="progressStyle"/>
-      <div class="upoading-file">
-        <!-- <div>
-          <a class="el-upload-list__item-name">
-            <i class="el-icon-document"></i>
-          </a>
-        </div> -->
-        <div class="upoading-file-left">
-          <i class="el-icon-document"/>
-          {{ file.name }}
+      <div class="uploader-file-info">
+        <div class="uploader-file-name"><i class="el-icon-document" style="color:#909399"/>{{ file.name }}</div>
+        <div class="uploader-file-size">{{ formatedSize }}</div>
+        <div class="uploader-file-status">
+          <!-- <span v-show="status !== 'uploading'">{{statusText}}</span> -->
+          <span v-show="status === 'uploading'">
+            <span>{{ progressStyle.progress }}</span>
+            <!-- <em>{{formatedAverageSpeed}}</em> -->
+            <!-- <i>{{formatedTimeRemaining}}</i> -->
+          </span>
         </div>
         <div class="uploader-file-actions">
           <span class="uploader-file-pause" @click="pause"/>
-          <span class="uploader-file-resume" @click="resume"/>️
+          <span class="uploader-file-resume" @click="resume">️</span>
           <span class="uploader-file-retry" @click="retry"/>
           <span class="uploader-file-remove" @click="remove"/>
+          <!-- <uploader-btn>select files</uploader-btn> -->
         </div>
-        <!-- <div class="uploader-file-name">
-          <a class="el-upload-list__item-name" style="line-height:1.8">
-            <i class="el-icon-document"></i>
-             {{ file.name }}
-          </a>
-         
-        </div> -->
-        <!-- <div class="uploader-file-size">{{ formatedSize }}</div> -->
-        <!-- <div class="uploader-file-meta"/> -->
-        <!-- <div class="uploader-file-status">
-          <span v-show="status !== 'uploading'">{{ statusText }}</span>
-          <span v-show="status === 'uploading'">
-            <span>{{ progressStyle.progress }}</span>
-            <em>{{ formatedAverageSpeed }}</em>
-            <i>{{ formatedTimeRemaining }}</i>
-          </span>
-        </div> -->
-        <!-- <div class="uploader-file-actions">
-          <span class="uploader-file-pause" @click="pause"/>
-          <span class="uploader-file-resume" @click="resume"/>️
-          <span class="uploader-file-retry" @click="retry"/>
-          <span class="uploader-file-remove" @click="remove"/>
-        </div> -->
-        <!-- <div class="uploader-file-setting">
-          <span @click="remove">删除</span>
-        </div> -->
       </div>
     </slot>
   </div>
 </template>
 
 <script>
-import Uploader from 'simple-uploader.js'
-import events from '../common/file-events'
-import { secondsToStr } from '../common/utils'
+  import Uploader from 'simple-uploader.js'
+  import events from '../common/file-events'
+  import { secondsToStr } from '../common/utils'
+  import UploaderBtn from './btn.vue'
+  import { uploaderMixin, supportMixin } from '../common/mixins'
+  const COMPONENT_NAME = 'uploader-file'
 
-const COMPONENT_NAME = 'uploader-file'
-
-export default {
-  name: COMPONENT_NAME,
-  props: {
-    file: {
-      type: Object,
-      default () {
-        return {}
+  export default {
+    name: COMPONENT_NAME,
+    components: {
+      UploaderBtn
+    },
+    mixins: [uploaderMixin, supportMixin],
+    props: {
+      file: {
+        type: Object,
+        default () {
+          return {}
+        }
+      },
+      list: {
+        type: Boolean,
+        default: false
       }
     },
-    list: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data () {
-    return {
-      response: null,
-      paused: false,
-      error: false,
-      averageSpeed: 0,
-      currentSpeed: 0,
-      isComplete: false,
-      isUploading: false,
-      size: 0,
-      formatedSize: '',
-      uploadedSize: 0,
-      progress: 0,
-      timeRemaining: 0,
-      type: '',
-      extension: '',
-      progressingClass: ''
-    }
-  },
-  computed: {
-    fileCategory () {
-      const extension = this.extension
-      const isFolder = this.file.isFolder
-      let type = isFolder ? 'folder' : 'unknown'
-      const categoryMap = this.file.uploader.opts.categoryMap
-      const typeMap = categoryMap || {
-        image: ['gif', 'jpg', 'jpeg', 'png', 'bmp', 'webp'],
-        video: ['mp4', 'm3u8', 'rmvb', 'avi', 'swf', '3gp', 'mkv', 'flv'],
-        audio: ['mp3', 'wav', 'wma', 'ogg', 'aac', 'flac'],
-        document: ['doc', 'txt', 'docx', 'pages', 'epub', 'pdf', 'numbers', 'csv', 'xls', 'xlsx', 'keynote', 'ppt', 'pptx']
+    data () {
+      return {
+        response: null,
+        paused: false,
+        error: false,
+        averageSpeed: 0,
+        currentSpeed: 0,
+        isComplete: false,
+        isUploading: false,
+        size: 0,
+        formatedSize: '',
+        uploadedSize: 0,
+        progress: 0,
+        timeRemaining: 0,
+        type: '',
+        extension: '',
+        progressingClass: ''
       }
-      Object.keys(typeMap).forEach((_type) => {
-        const extensions = typeMap[_type]
-        if (extensions.indexOf(extension) > -1) {
-          type = _type
+    },
+    computed: {
+      fileCategory () {
+        const extension = this.extension
+        const isFolder = this.file.isFolder
+        let type = isFolder ? 'folder' : 'unknown'
+        const categoryMap = this.file.uploader.opts.categoryMap
+        const typeMap = categoryMap || {
+          image: ['gif', 'jpg', 'jpeg', 'png', 'bmp', 'webp'],
+          video: ['mp4', 'm3u8', 'rmvb', 'avi', 'swf', '3gp', 'mkv', 'flv'],
+          audio: ['mp3', 'wav', 'wma', 'ogg', 'aac', 'flac'],
+          document: ['doc', 'txt', 'docx', 'pages', 'epub', 'pdf', 'numbers', 'csv', 'xls', 'xlsx', 'keynote', 'ppt', 'pptx']
+        }
+        Object.keys(typeMap).forEach((_type) => {
+          const extensions = typeMap[_type]
+          if (extensions.indexOf(extension) > -1) {
+            type = _type
+          }
+        })
+        return type
+      },
+      progressStyle () {
+        const progress = Math.floor(this.progress * 100)
+        const style = `translateX(${Math.floor(progress - 100)}%)`
+        return {
+          progress: `${progress}%`,
+          webkitTransform: style,
+          mozTransform: style,
+          msTransform: style,
+          transform: style
+        }
+      },
+      formatedAverageSpeed () {
+        return `${Uploader.utils.formatSize(this.averageSpeed)} / s`
+      },
+      status () {
+        const isUploading = this.isUploading
+        const isComplete = this.isComplete
+        const isError = this.error
+        const paused = this.paused
+        if (isComplete) {
+          return 'success'
+        } else if (isError) {
+          return 'error'
+        } else if (isUploading) {
+          return 'uploading'
+        } else if (paused) {
+          return 'paused'
+        } else {
+          return 'waiting'
+        }
+      },
+      statusText () {
+        const status = this.status
+        const fileStatusText = this.file.uploader.fileStatusText
+        let txt = status
+        if (typeof fileStatusText === 'function') {
+          txt = fileStatusText(status, this.response)
+        } else {
+          txt = fileStatusText[status]
+        }
+        return txt || status
+      },
+      formatedTimeRemaining () {
+        const timeRemaining = this.timeRemaining
+        const file = this.file
+        if (timeRemaining === Number.POSITIVE_INFINITY || timeRemaining === 0) {
+          return ''
+        }
+        let parsedTimeRemaining = secondsToStr(timeRemaining)
+        const parseTimeRemaining = file.uploader.opts.parseTimeRemaining
+        if (parseTimeRemaining) {
+          parsedTimeRemaining = parseTimeRemaining(timeRemaining, parsedTimeRemaining)
+        }
+        return parsedTimeRemaining
+      }
+    },
+    watch: {
+      status (newStatus, oldStatus) {
+        if (oldStatus && newStatus === 'uploading' && oldStatus !== 'uploading') {
+          this.tid = setTimeout(() => {
+            this.progressingClass = 'uploader-file-progressing'
+          }, 200)
+        } else {
+          clearTimeout(this.tid)
+          this.progressingClass = ''
+        }
+      }
+    },
+    mounted () {
+      const staticProps = ['paused', 'error', 'averageSpeed', 'currentSpeed']
+      const fnProps = [
+        'isComplete',
+        'isUploading',
+        {
+          key: 'size',
+          fn: 'getSize'
+        },
+        {
+          key: 'formatedSize',
+          fn: 'getFormatSize'
+        },
+        {
+          key: 'uploadedSize',
+          fn: 'sizeUploaded'
+        },
+        'progress',
+        'timeRemaining',
+        {
+          key: 'type',
+          fn: 'getType'
+        },
+        {
+          key: 'extension',
+          fn: 'getExtension'
+        }
+      ]
+      staticProps.forEach(prop => {
+        this[prop] = this.file[prop]
+      })
+      fnProps.forEach((fnProp) => {
+        if (typeof fnProp === 'string') {
+          this[fnProp] = this.file[fnProp]()
+        } else {
+          this[fnProp.key] = this.file[fnProp.fn]()
         }
       })
-      return type
-    },
-    progressStyle () {
-      const progress = Math.floor(this.progress * 100)
-      const style = `translateX(${Math.floor(progress - 100)}%)`
-      return {
-        progress: `${progress}%`,
-        webkitTransform: style,
-        mozTransform: style,
-        msTransform: style,
-        transform: style
-      }
-    },
-    formatedAverageSpeed () {
-      return `${Uploader.utils.formatSize(this.averageSpeed)} / s`
-    },
-    status () {
-      const isUploading = this.isUploading
-      const isComplete = this.isComplete
-      const isError = this.error
-      const paused = this.paused
-      if (isComplete) {
-        return 'success'
-      } else if (isError) {
-        return 'error'
-      } else if (isUploading) {
-        return 'uploading'
-      } else if (paused) {
-        return 'paused'
-      } else {
-        return 'waiting'
-      }
-    },
-    statusText () {
-      const status = this.status
-      const fileStatusText = this.file.uploader.fileStatusText
-      let txt = status
-      if (typeof fileStatusText === 'function') {
-        txt = fileStatusText(status, this.response)
-      } else {
-        txt = fileStatusText[status]
-      }
-      return txt || status
-    },
-    formatedTimeRemaining () {
-      const timeRemaining = this.timeRemaining
-      const file = this.file
-      if (timeRemaining === Number.POSITIVE_INFINITY || timeRemaining === 0) {
-        return ''
-      }
-      let parsedTimeRemaining = secondsToStr(timeRemaining)
-      const parseTimeRemaining = file.uploader.opts.parseTimeRemaining
-      if (parseTimeRemaining) {
-        parsedTimeRemaining = parseTimeRemaining(timeRemaining, parsedTimeRemaining)
-      }
-      return parsedTimeRemaining
-    }
-  },
-  watch: {
-    status (newStatus, oldStatus) {
-      if (oldStatus && newStatus === 'uploading' && oldStatus !== 'uploading') {
-        this.tid = setTimeout(() => {
-          this.progressingClass = 'uploader-file-progressing'
-        }, 200)
-      } else {
-        clearTimeout(this.tid)
-        this.progressingClass = ''
-      }
-    }
-  },
-  destroyed () {
-    events.forEach((event) => {
-      this.file.uploader.off(event, this._handlers[event])
-    })
-    this._handlers = null
-  },
-  mounted () {
-    const staticProps = ['paused', 'error', 'averageSpeed', 'currentSpeed']
-    const fnProps = [
-      'isComplete',
-      'isUploading',
-      {
-        key: 'size',
-        fn: 'getSize'
-      },
-      {
-        key: 'formatedSize',
-        fn: 'getFormatSize'
-      },
-      {
-        key: 'uploadedSize',
-        fn: 'sizeUploaded'
-      },
-      'progress',
-      'timeRemaining',
-      {
-        key: 'type',
-        fn: 'getType'
-      },
-      {
-        key: 'extension',
-        fn: 'getExtension'
-      }
-    ]
-    staticProps.forEach(prop => {
-      this[prop] = this.file[prop]
-    })
-    fnProps.forEach((fnProp) => {
-      if (typeof fnProp === 'string') {
-        this[fnProp] = this.file[fnProp]()
-      } else {
-        this[fnProp.key] = this.file[fnProp.fn]()
-      }
-    })
 
-    const handlers = this._handlers = {}
-    const eventHandler = (event) => {
-      handlers[event] = (...args) => {
-        this.fileEventsHandler(event, args)
-      }
-      return handlers[event]
-    }
-    events.forEach((event) => {
-      this.file.uploader.on(event, eventHandler(event))
-    })
-  },
-  methods: {
-    _actionCheck () {
-      this.paused = this.file.paused
-      this.error = this.file.error
-      this.isUploading = this.file.isUploading()
-    },
-    pause () {
-      this.file.pause()
-      this._actionCheck()
-      this._fileProgress()
-    },
-    resume () {
-      this.file.resume()
-      this._actionCheck()
-    },
-    remove () {
-      this.file.cancel()
-      console.log(this.file, 'this.file')
-      console.log('cancel')
-    },
-    retry () {
-      this.file.retry()
-      this._actionCheck()
-    },
-    processResponse (message) {
-      let res = message
-      try {
-        res = JSON.parse(message)
-      } catch (e) {
-        console.log(e)
-      }
-      this.response = res
-    },
-    fileEventsHandler (event, args) {
-      const rootFile = args[0]
-      const file = args[1]
-      const target = this.list ? rootFile : file
-      if (this.file === target) {
-        if (this.list && event === 'fileSuccess') {
-          this.processResponse(args[2])
-          return
+      const handlers = this._handlers = {}
+      const eventHandler = (event) => {
+        handlers[event] = (...args) => {
+          this.fileEventsHandler(event, args)
         }
-        this[`_${event}`].apply(this, args)
+        return handlers[event]
       }
+      events.forEach((event) => {
+        this.file.uploader.on(event, eventHandler(event))
+      })
     },
-    _fileProgress () {
-      this.progress = this.file.progress()
-      this.averageSpeed = this.file.averageSpeed
-      this.currentSpeed = this.file.currentSpeed
-      this.timeRemaining = this.file.timeRemaining()
-      this.uploadedSize = this.file.sizeUploaded()
-      this._actionCheck()
+    destroyed () {
+      events.forEach((event) => {
+        this.file.uploader.off(event, this._handlers[event])
+      })
+      this._handlers = null
     },
-    _fileSuccess (rootFile, file, message) {
-      if (rootFile) {
+    methods: {
+      uploadAgain (val) {
+        console.log(val, 'val')
+        // this.file.uploader.assignBrowse(this.$refs.uploadAgain, false, false, {})
+        this.file.uploader()
+      },
+      _actionCheck () {
+        this.paused = this.file.paused
+        this.error = this.file.error
+        this.isUploading = this.file.isUploading()
+      },
+      pause () {
+        this.file.pause()
+        this._actionCheck()
+        this._fileProgress()
+      },
+      resume () {
+        this.file.resume()
+        this._actionCheck()
+      },
+      remove () {
+        this.file.cancel()
+      },
+      retry () {
+        this.file.retry()
+        this._actionCheck()
+        console.log(this.file, 'file')
+      },
+      processResponse (message) {
+        let res = message
+        try {
+          res = JSON.parse(message)
+        } catch (e) {
+          console.log(e)
+        }
+        this.response = res
+      },
+      fileEventsHandler (event, args) {
+        const rootFile = args[0]
+        const file = args[1]
+        const target = this.list ? rootFile : file
+        if (this.file === target) {
+          if (this.list && event === 'fileSuccess') {
+            this.processResponse(args[2])
+            return
+          }
+          this[`_${event}`].apply(this, args)
+        }
+      },
+      _fileProgress () {
+        this.progress = this.file.progress()
+        this.averageSpeed = this.file.averageSpeed
+        this.currentSpeed = this.file.currentSpeed
+        this.timeRemaining = this.file.timeRemaining()
+        this.uploadedSize = this.file.sizeUploaded()
+        this._actionCheck()
+      },
+      _fileSuccess (rootFile, file, message) {
+        if (rootFile) {
+          this.processResponse(message)
+        }
+        this._fileProgress()
+        this.error = false
+        this.isComplete = true
+        this.isUploading = false
+      },
+      _fileComplete () {
+        this._fileSuccess()
+      },
+      _fileError (rootFile, file, message) {
+        this._fileProgress()
         this.processResponse(message)
+        this.error = true
+        this.isComplete = false
+        this.isUploading = false
       }
-      this._fileProgress()
-      this.error = false
-      this.isComplete = true
-      this.isUploading = false
     },
-    _fileComplete () {
-      this._fileSuccess()
-    },
-    _fileError (rootFile, file, message) {
-      this._fileProgress()
-      this.processResponse(message)
-      this.error = true
-      this.isComplete = false
-      this.isUploading = false
-    }
   }
-}
 </script>
 
-<style lang="scss">
-  .upoading-file {
-    display: flex;
-    .upoading-file-left{
-      padding-left:4px;
-      color: #606266;
-      flex:1;
-      i {
-        color: #909399
-      }
-    }
-  }
+<style>
   .uploader-file {
     position: relative;
     height: 25px;
     line-height: 25px;
-    /* overflow: hidden; */
+    overflow: hidden;
     /* border-bottom: 1px solid #cdcdcd; */
   }
   .uploader-file[status="waiting"] .uploader-file-pause,
@@ -358,11 +333,11 @@ export default {
   .uploader-file[status="paused"] .uploader-file-resume {
     display: block;
   }
-  .uploader-file[status="error"] .uploader-file-retry {
+ .uploader-file-retry {
     display: block;
   }
   .uploader-file[status="success"] .uploader-file-remove {
-    display: none;
+    /* display: none; */
   }
   .uploader-file[status="error"] .uploader-file-progress {
     background: #ffe0e0;
@@ -371,11 +346,8 @@ export default {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: #67c23a;
+    background: #e2eeff;
     transform: translateX(-100%);
-    height: 2px;
-    bottom: -5px;
-    border-radius: 5px
   }
   .uploader-file-progressing {
     transition: all .4s linear;
@@ -397,89 +369,67 @@ export default {
   .uploader-file-size,
   .uploader-file-meta,
   .uploader-file-status,
-  .uploader-file-setting,
   .uploader-file-actions {
-    line-height: 16px;
     float: left;
     position: relative;
     height: 100%;
   }
   .uploader-file-name {
-    width: 75%;
+    width: 37%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     text-indent: 14px;
   }
   .uploader-file-icon {
-    width: 18px;
-    height: 16px;
+    width: 24px;
+    height: 24px;
     display: inline-block;
     vertical-align: top;
-    margin-top: -1px;
+    margin-top: 13px;
     margin-right: 8px;
-    margin-left:-13px;
   }
-  /* .uploader-file-icon::before {
+  .uploader-file-icon::before {
     content: "📃";
     display: block;
     height: 100%;
     font-size: 24px;
     line-height: 1;
     text-indent: 0;
-  } */
-  .uploader-file-icon[icon="folder"] {
-    /* content: "📂"; */
-    /* background: url("../../../assets/simpleImage/image-icon.png"); */
-    background-size: cover;
   }
-  .uploader-file-icon[icon="image"] {
-   
-    /* background: url("../../../assets/simpleImage/image-icon.png"); */
-    background-size: cover;
+  .uploader-file-icon[icon="folder"]::before {
+    content: "📂";
   }
-  .uploader-file-icon[icon="video"] {
-    /* content: "📹"; */
-    /* background: url("../../../assets/simpleImage/video-icon.png"); */
-    background-size: cover;
+  .uploader-file-icon[icon="image"]::before {
+    content: "📊";
   }
-  .uploader-file-icon[icon="audio"] {
-    /* content: "🎵"; */
-    /* background: url("../../../assets/simpleImage/video-icon.png"); */
-    background-size: cover;
+  .uploader-file-icon[icon="video"]::before {
+    content: "📹";
   }
-  .uploader-file-icon[icon="document"] {
-    /* content: "📋"; */
-    /* background: url("../../../assets/simpleImage/text-icon.png"); */
-    background-size: cover;
+  .uploader-file-icon[icon="audio"]::before {
+    content: "🎵";
+  }
+  .uploader-file-icon[icon="document"]::before {
+    content: "📋";
   }
   .uploader-file-size {
-    width: 13%;
+    width: 23%;
     text-indent: 10px;
   }
   .uploader-file-meta {
     width: 8%;
   }
   .uploader-file-status {
-    width: 10%;
+    width: 15%;
     text-indent: 20px;
   }
-  .uploader-file-setting{
-    width: 14%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .uploader-file-setting > span{
-     line-height: 20px;
-  }
   .uploader-file-actions {
-    width: 75px;
+    width: 25%;
     display: flex;
     justify-content: flex-end;
   }
   .uploader-file-actions > span {
-    display: none;
+    /* display: none; */
     float: left;
     width: 16px;
     height: 16px;

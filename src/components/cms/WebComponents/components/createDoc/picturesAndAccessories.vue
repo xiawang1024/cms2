@@ -1,5 +1,5 @@
 <template>
-  <div class="upload-file">
+  <div class="document-upload-file">
     <div class="type-choose">
       <el-radio-group v-model="fileType" size="mini" @change="typeChange">
         <!-- <el-radio-button label="0">上传图片</el-radio-button> -->
@@ -14,7 +14,7 @@
           <v-form ref="imageForm" :form-settings="imageSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail" @removeFile="removeFile"/>
           <!-- <v-form ref="videoForm" :form-settings="videoSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail"/> -->
         </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="10" :xl="10" >
+        <el-col :xs="24" :sm="24" :md="12" :lg="10" :xl="10" >
           <div v-if="rightCardShow">
             <v-form ref="vForm" :form-settings="fileSettings" :form-data="singleData" label-width="80px" :show-button = "showButton">
               <template slot="information">
@@ -461,7 +461,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .upload-file {
+  .document-upload-file {
     .upload-btn {
       padding-left: 80px;
     }
@@ -482,6 +482,7 @@ export default {
         }
       }
       .v-form {
+        min-width:420px;
        .form-section {
          overflow: visible;
          border-bottom: none;

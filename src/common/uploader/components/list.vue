@@ -60,8 +60,5 @@ export default {
     border-radius: 5px;
     border: 1px solid #c0ccda;
     margin-top:10px;
-    .uploader-file{
-      overflow: hidden;
-    }
   }
 </style>
