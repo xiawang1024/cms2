@@ -97,7 +97,7 @@ export default {
             name: 'contentVideosList',
             type: 'video',
             required: false,
-            maxSize: 1024*800,
+            // maxSize: 1024*800,
             limit: 1,
             // hasTextInput: true,
             hidden: false
@@ -108,7 +108,7 @@ export default {
             type: 'audio',
             required: false,
             // hasTextInput: true,
-            maxSize: 1024*800,
+            // maxSize: 1024*800,
             limit: 1,
             hidden: true
           },
@@ -117,7 +117,7 @@ export default {
             name: 'articleAttachmentsList',
             type: 'file',
             required: false,
-            maxSize: 1024*200,
+            // maxSize: 1024*200,
             // hasTextInput: true,
             hidden: true
           },
