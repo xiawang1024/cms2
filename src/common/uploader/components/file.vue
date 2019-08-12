@@ -25,8 +25,29 @@
       :file-category="fileCategory"
     >
       <div class="uploader-file-progress" :class="progressingClass" :style="progressStyle"/>
-      <div class="uploader-file-info">
-        <div class="uploader-file-name"><i class="uploader-file-icon" :icon="fileCategory"/>{{ file.name }}</div>
+      <div class="upoading-file">
+        <!-- <div>
+          <a class="el-upload-list__item-name">
+            <i class="el-icon-document"></i>
+          </a>
+        </div> -->
+        <div class="upoading-file-left">
+          <i class="el-icon-document"/>
+          {{ file.name }}
+        </div>
+        <div class="uploader-file-actions">
+          <span class="uploader-file-pause" @click="pause"/>
+          <span class="uploader-file-resume" @click="resume"/>️
+          <span class="uploader-file-retry" @click="retry"/>
+          <span class="uploader-file-remove" @click="remove"/>
+        </div>
+        <!-- <div class="uploader-file-name">
+          <a class="el-upload-list__item-name" style="line-height:1.8">
+            <i class="el-icon-document"></i>
+             {{ file.name }}
+          </a>
+         
+        </div> -->
         <!-- <div class="uploader-file-size">{{ formatedSize }}</div> -->
         <!-- <div class="uploader-file-meta"/> -->
         <!-- <div class="uploader-file-status">
@@ -37,15 +58,15 @@
             <i>{{ formatedTimeRemaining }}</i>
           </span>
         </div> -->
-        <div class="uploader-file-actions">
+        <!-- <div class="uploader-file-actions">
           <span class="uploader-file-pause" @click="pause"/>
           <span class="uploader-file-resume" @click="resume"/>️
           <span class="uploader-file-retry" @click="retry"/>
           <span class="uploader-file-remove" @click="remove"/>
-        </div>
-        <div class="uploader-file-setting">
+        </div> -->
+        <!-- <div class="uploader-file-setting">
           <span @click="remove">删除</span>
-        </div>
+        </div> -->
       </div>
     </slot>
   </div>
@@ -252,6 +273,7 @@ export default {
     },
     remove () {
       this.file.cancel()
+      console.log(this.file, 'this.file')
       console.log('cancel')
     },
     retry () {
@@ -310,7 +332,18 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+  .upoading-file {
+    display: flex;
+    .upoading-file-left{
+      padding-left:4px;
+      color: #606266;
+      flex:1;
+      i {
+        color: #909399
+      }
+    }
+  }
   .uploader-file {
     position: relative;
     height: 25px;
@@ -397,27 +430,27 @@ export default {
   } */
   .uploader-file-icon[icon="folder"] {
     /* content: "📂"; */
-    background: url("../../../assets/simpleImage/image-icon.png");
+    /* background: url("../../../assets/simpleImage/image-icon.png"); */
     background-size: cover;
   }
   .uploader-file-icon[icon="image"] {
    
-    background: url("../../../assets/simpleImage/image-icon.png");
+    /* background: url("../../../assets/simpleImage/image-icon.png"); */
     background-size: cover;
   }
   .uploader-file-icon[icon="video"] {
     /* content: "📹"; */
-    background: url("../../../assets/simpleImage/video-icon.png");
+    /* background: url("../../../assets/simpleImage/video-icon.png"); */
     background-size: cover;
   }
   .uploader-file-icon[icon="audio"] {
     /* content: "🎵"; */
-    background: url("../../../assets/simpleImage/video-icon.png");
+    /* background: url("../../../assets/simpleImage/video-icon.png"); */
     background-size: cover;
   }
   .uploader-file-icon[icon="document"] {
     /* content: "📋"; */
-    background: url("../../../assets/simpleImage/text-icon.png");
+    /* background: url("../../../assets/simpleImage/text-icon.png"); */
     background-size: cover;
   }
   .uploader-file-size {
@@ -441,15 +474,17 @@ export default {
      line-height: 20px;
   }
   .uploader-file-actions {
-    width: 10%;
+    width: 75px;
+    display: flex;
+    justify-content: flex-end;
   }
   .uploader-file-actions > span {
     display: none;
     float: left;
     width: 16px;
     height: 16px;
-    margin-top: 16px;
-    margin-right: 10px;
+    margin-top: 4px;
+    margin-right: 4px;
     cursor: pointer;
     background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAABkCAYAAAD0ZHJ6AAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAJcEhZcwAACxMAAAsTAQCanBgAAARkSURBVGje7ZnfS1NRHMAH4ptPkvQSuAdBkCxD8FUQJMEULUgzy1KyyPVQ4JMiiP4Bvg6EwUQQfMmwhwRDshwaKUjDVCgoSdDNHkzTJZ6+Z37Purve8+PeTb2TM/ggu+ew89l33x8H9BBCPG7GowXTJej3+wnDvEm0JuLC04+EYWftVAUv+fiCvDUdQR1BHUEdQR3BTIygvixoQS14XgTtthLVdpNWwXRLqvQ724LplFRtyrYF0yVpFLQrKRVMh6RZ0I6kkmCqklaCqpKZH0FX56Crq9jVfdDVk0RfFrSgFsxkQVmLcdKCVrKySCrryhPEyYShhzOcrFtG0EoilfHHk1CRU5rF6ZjNZhlVOW6RnMSVyyilKies4pO41diVy8wIujoHXV3FGdMHXTtJKLFYTLhZtq4vC1rwXApCZTIqgR6g1PBMCO9DL3bMMSqBHqDU8EyISDAHiGKvWwcCQG2KgjlAFCDAOhAAap0K5gKLphk8mqJgLrCIgoxRJ4J5wKpJ7gAoMkn5EBXBPGDVJHcAFJmkfIhQcAql1oBpTvTol9gG9pm4RHAKpdaAaU706JfYBvaZuJVgPQrt4sFlnOh5MC/p3lmJYD0K7eLBZZzoeTAv6d5ZnuAYHjpgEOnk5F0ufhG6v1ggOIaHDhhEOjl5l4tfhO4vthLcwAMrFNvLJO5vEwhu4IEViu1lEve3WQmyoihQFBzG/V0CQVYUBYqCw7i/SxTBcpsRbFeIYLnNCLZbCY5b5KAnxRwct8hBj9McZFVMW0ihRNBuFdMWUigRlFaxuQ9WWYjRMTiIe5z0wSoLMToGB3GPsA9aTZIJoB+nRgBnM1tzOkkmgH6cGgGczWzNpzqLx3n/aULJJgezeNw07oxQySbVywKjBOgFRnDs+VEsx8FlgVEC9AIjOPb8KJYjvSzoG7UW1IJaUAtqQS14toLNM5fN5APdwBJA8G83Pk/aK/rgzVvXzeQD3cASQPBvNz5P2ssTzAaGUIrHEO6zI5gNDKEUjyHcxxWkh4Ylcowwk1QQpIeGJXKMMJO0EgwqyjGCioJBJvDrxRMSuVOTJEXfbz1/bHwWtBL0yoQehK6RucgE+bGzanzulQh6E3IgQV+xpc8kcrfuSO7eTfJ3ZYmQw0Oy9azVKOk1C/bJ5D5F38YPeLfx0rjWJxHsS0SqsSYuxySjj5qO5Oj7xQWy2VBtFOwzCy6ryH3YfE3uh64Y1xckgstJPydEjkkeHv07Iy4Xaao15+KCWTBx6M/db+T9xivSErqaJDdzXI6yLRE8Vgg0coex/SPJvT0SbWu0KpZtbgSpCH3NRt7I5OxHkObc6heU+/M/J5vrpBFM5GBLqCQux14COXs5CNXK5OjPGm1tSMrJSOMNYQ4mVTGV/L6zTL7+DovkbFUxbSW0Wo05l8hJWsU+cRWfSh+Mt5Lb1ck/J1TvVsdDaR/MiEni+llsdZuZp62EViu+96bpNjNPWwmtVnzvFd5m9IVVC54x/wA7gNvqFG9vXQAAAABJRU5ErkJggg==") no-repeat 0 0;
   }

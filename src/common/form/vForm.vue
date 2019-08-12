@@ -452,15 +452,16 @@
             </template>
             <!-- 分片上传 -->
             <template v-else-if="item.type=='simpleVideo'">
-           
               <uploader 
                 :options="options" 
                 :file-status-text="statusText" 
-                :default-file-list="textData"
+                :default-file-list="formModel[item.name]"
+                :uploader-name="item.name"
                 ref="uploader" 
                 @file-success="fileComplete" 
                 @complete="complete"
-                @fileInfor="fileInfor"/>
+                @fileInfor="fileInfor"
+                :on-remove="removeCallbacks[item.name]"/>
             </template>
             <!-- 分片上传 -->
             <!--城市远程搜索-->
@@ -803,7 +804,7 @@ export default {
     },
     fileComplete () {
       const file = arguments[0].file;
-      console.log(file, 'file')
+      console.log(arguments, 'arguments')
       return new Promise((resolve, reject) => {
         needMerge({
           filename: file.name,
@@ -816,7 +817,13 @@ export default {
             //文件合并成功;
             // Bus.$emit("fileSuccess");
             // this.statusRemove(file.id);
+            console.log(this.$refs.uploader[0], 'this.$refs.uploader')
+            this.$refs.uploader[0].fileList[this.$refs.uploader[0].fileList.length - 1].result = response.data.result
 
+            // this.$refs.uploader[0].fileList[this.$refs.uploader[0].fileList.length - 1].cancel()
+            // console.log(this.$refs.uploader[0].fileList[this.$refs.uploader[0].fileList.length - 1], 'remove')
+            console.log(this.formModel, 'formModel')
+            this.formModel[this.$refs.uploader[0].uploaderName].push(response.data.result)
             resolve();
           })
           .catch(error => {
@@ -1101,7 +1108,6 @@ export default {
               };
               tmpRemoveCallback[item.name] = (file, fileList) => {
                 this.handleRemoveFile(item.name, file, fileList);
-                console.log("remove");
                 this.$emit("removeFile");
               };
               tmpBeforeUploadCallback[item.name] = file => {
@@ -1151,7 +1157,8 @@ export default {
     },
     // 移除上传文件回调
     handleRemoveFile(name, file, fileList) {
-      console.log(fileList);
+      console.log(fileList, '123456');
+      console.log(file, '123456');
       this.formModel[name].forEach((item, index) => {
         if (file.uid == item.uid) {
           this.formModel[name].splice(index, 1);

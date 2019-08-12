@@ -10,6 +10,7 @@
         </div>
         <!-- <uploader-btn :directory="true">select folder</uploader-btn> -->
       </uploader-drop>
+      <uploaded-file :uploaded-list = "successFiles" @remove="remove"/>
       <uploader-list @review="review"/>
     </slot>
   </div>
@@ -24,7 +25,7 @@ import UploaderUnsupport from './unsupport.vue'
 import UploaderList from './list.vue'
 import UploaderFiles from './files.vue'
 import UploaderFile from './file.vue'
-
+import UploadedFile from './uploadedFile'
 const COMPONENT_NAME = 'uploader'
 const FILE_ADDED_EVENT = 'fileAdded'
 const FILES_ADDED_EVENT = 'filesAdded'
@@ -43,7 +44,8 @@ export default {
     UploaderUnsupport,
     UploaderList,
     UploaderFiles,
-    UploaderFile
+    UploaderFile,
+    UploadedFile
   },
   props: {
     options: {
@@ -73,16 +75,32 @@ export default {
       default () {
         return []
       }
-    }
+    },
+    uploaderName: {
+      type: String,
+      default: ''
+    },
+    onRemove: {
+      type: Function,
+      default: function() {}
+    },
   },
   data () {
     return {
       started: false,
       files: [],
-      fileList: []
+      fileList: [],
+      successFiles: []
     }
   },
-  
+  watch: {
+    defaultFileList(val) {
+      this.successFiles = val.map((ele) => {
+        return ele
+      })
+      console.log(this.successFiles, 'this.successFiles')
+    }
+  },
   created () {
     this.options.initialPaused = !this.autoStart
     const uploader = new Uploader(this.options)
@@ -98,16 +116,16 @@ export default {
     // this.$nextTick(() => {
     //   console.log(this.defaultFileList, '默认列表')
     // })
-    if(this.defaultFileList.length) {
-      this.defaultFileList.forEach((ele) => {
-        let rFile = new File(['xx'], 'image1.jpg', {
-          type: 'video/*',
-        })
-        rFile.url = '1111'
-        console.log(rFile, 'rFile')
-        this.uploader.addFile(rFile)
-      })
-    }
+    // if(this.defaultFileList.length) {
+    //   this.defaultFileList.forEach((ele) => {
+    //     let rFile = new File(['xx'], 'image1.jpg', {
+    //       type: 'video/*',
+    //     })
+    //     rFile.url = '1111'
+    //     console.log(rFile, 'rFile')
+    //     this.uploader.addFile(rFile)
+    //   })
+    // }
   },
   destroyed () {
     const uploader = this.uploader
@@ -120,6 +138,10 @@ export default {
     this.uploader = null
   },
   methods: {
+    remove(file, index) {
+      console.log(file, index)
+      this.onRemove(file, this.successFiles)
+    },
     review(file, index) {
       this.$emit('fileInfor', {file, index})
     },

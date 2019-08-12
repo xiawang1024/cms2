@@ -40,12 +40,12 @@ export default {
   .uploader-btn {
     display: inline-block;
     position: relative;
-    padding: 4px 8px;
-    font-size: 100%;
-    line-height: 1.4;
+    padding: 7px 15px;
+    font-size: 12px;
+    line-height: 1;
     border: 1px solid #666;
     cursor: pointer;
-    border-radius: 2px;
+    border-radius: 3px;
     background: none;
     outline: none;
     background-color: #409eff;

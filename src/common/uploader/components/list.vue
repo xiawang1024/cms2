@@ -1,6 +1,5 @@
 <template>
   <div class="uploader-list">
-    {{ fileList }}
     <slot :file-list="fileList">
       <ul>
         <li v-for="(file, index) in fileList" :key="file.id" @click="lookView(file, index)" class="file-list">
@@ -58,8 +57,11 @@ export default {
   }
   .file-list {
     cursor: pointer;
-    margin-bottom: 10px;
     border-radius: 5px;
     border: 1px solid #c0ccda;
+    margin-top:10px;
+    .uploader-file{
+      overflow: hidden;
+    }
   }
 </style>
