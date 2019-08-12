@@ -30,6 +30,7 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
+      console.log(this.uploader, 'mmmm')
       this.uploader.uploader.assignBrowse(this.$refs.btn, this.directory, this.single, this.attrs)
     })
   }

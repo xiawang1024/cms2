@@ -128,10 +128,11 @@ export default {
             name: 'contentVideosList',
             type: 'simpleVideo',
             required: false,
-            maxSize: 1024*800,
+            maxSize: 1024*1024*800,
             limit: 1,
             // hasTextInput: true,
-            hidden: false
+            hidden: false,
+            accept: 'video/mp4'
           },
           {
             label: '视频',

@@ -3,9 +3,6 @@
     :class="formSettings.length == 1?'v-form--single': 'v-form--multiple'"
     class="v-form"
   >
-    <div>
-      <el-button @click = "getAllData">点击</el-button>
-    </div>
     <!-- {{formData}} -->
     <!-- <pre>{{formModel}}</pre> -->
     <!-- <pre>{{uploadCallbacks}}</pre> -->
@@ -461,7 +458,12 @@
                 @file-success="fileComplete" 
                 @complete="complete"
                 @fileInfor="fileInfor"
-                :on-remove="removeCallbacks[item.name]"/>
+                :on-remove="removeCallbacks[item.name]"
+                :on-preview="handlePreviewFile"
+                :max-size="item.maxSize"
+                :limit="item.limit"
+                :accept="item.accept"
+              />
             </template>
             <!-- 分片上传 -->
             <!--城市远程搜索-->
@@ -658,20 +660,20 @@ export default {
         //后端约定值20M （勿改）
         chunkSize: 10* 1024 * 1024,
         // 服务器分片校验函数，秒传及断点续传基础
-        // checkChunkUploadedByResponse: function(chunk, message) {
-        //   let objMessage = JSON.parse(message);
-        //   if (objMessage.result.skipUpload) {
-        //     return true;
-        //   }
-        //   return (objMessage.result.uploadedChunkList || []).indexOf(chunk.offset + 1) >= 0;
-        // }
+        checkChunkUploadedByResponse: function(chunk, message) {
+          let objMessage = JSON.parse(message);
+          if (objMessage.result.skipUpload) {
+            return true;
+          }
+          return (objMessage.result.uploadedChunkList || []).indexOf(chunk.offset + 1) >= 0;
+        }
       },
       attrs: {
-        accept: 'image/*'
+        // accept: 'video/mp4'
       },
       statusText: {
-        success: '成功了',
-        error: '出错了',
+        success: '成功',
+        error: '出错',
         uploading: '上传中',
         paused: '暂停中',
         waiting: '等待中'
@@ -817,22 +819,26 @@ export default {
             //文件合并成功;
             // Bus.$emit("fileSuccess");
             // this.statusRemove(file.id);
-            console.log(this.$refs.uploader[0], 'this.$refs.uploader')
             this.$refs.uploader[0].fileList[this.$refs.uploader[0].fileList.length - 1].result = response.data.result
 
-            // this.$refs.uploader[0].fileList[this.$refs.uploader[0].fileList.length - 1].cancel()
+            this.$refs.uploader[0].fileList[this.$refs.uploader[0].fileList.length - 1].cancel()
             // console.log(this.$refs.uploader[0].fileList[this.$refs.uploader[0].fileList.length - 1], 'remove')
-            console.log(this.formModel, 'formModel')
-            this.formModel[this.$refs.uploader[0].uploaderName].push(response.data.result)
+            let fileInfor = {
+              name: response.data.result.fileName,
+              url: baseUrl.DOWN_URL + response.data.result.filePath,
+              size: response.data.result.fileSize,
+              createTime: response.data.result.createTime,
+              desc: '', 
+              title: '', 
+              coverBool:false
+            }
+            this.formModel[this.$refs.uploader[0].uploaderName].push(fileInfor)
             resolve();
           })
           .catch(error => {
             reject(error);
           });
       });
-    },
-    getAllData() {
-      console.log(this.formModel, 'formModel')
     },
     // 分段上传
     // 分片上传

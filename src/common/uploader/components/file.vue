@@ -172,7 +172,19 @@
     },
     watch: {
       status (newStatus, oldStatus) {
+        
         if (oldStatus && newStatus === 'uploading' && oldStatus !== 'uploading') {
+          console.log(this.uploader, 'this.file.uploader')
+          console.log(this.file, 'this.file')
+          if(this.uploader.maxSize > 0 && this.file.size > this.uploader.maxSize) {
+            this.file.cancel()
+            this.$message.warning('上传文件超出限制')
+          } else if(this.uploader.limit > 0 && this.uploader.successFiles.length >= this.uploader.limit) {
+            this.file.cancel()
+            this.$message.warning(`只能上传${this.uploader.limit}个文件`)
+
+          }
+          
           this.tid = setTimeout(() => {
             this.progressingClass = 'uploader-file-progressing'
           }, 200)

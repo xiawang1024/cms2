@@ -4,7 +4,7 @@
       <li v-for="(successFile, index) in uploadedList" :key="index" @click="lookView(successFile, index)" class="el-upload-list__item is-success">
         <!-- <uploader-file :file="file" :list="true" ref="uploaderFile"/> -->
         <a class="el-upload-list__item-name">
-          <i class="el-icon-document"/>{{ successFile.name }}
+          <i class="el-icon-document"/>{{ successFile.name || successFile.fileName }}
         </a>
         <label class="el-upload-list__item-status-label">
           <i :class="{
@@ -33,8 +33,8 @@ export default {
   computed: {
   },
   methods: {
-    lookView(file, index) {
-      console.log(file, index)
+    lookView(file) {
+      this.$emit('lookView', file)
     }
   }
 }
