@@ -71,9 +71,9 @@ export default {
       totalCount: 0,
       listLoading: false,
       searchSettings: [{
-        label: '栏目名称',
+        label: '类型',
         name: 'type',
-        placeholder: '栏目名称',
+        placeholder: '类型',
         visible: true,
         type: 'select',
         options: [
@@ -82,7 +82,7 @@ export default {
             value: 'ID'         
           },
           {
-            label: '频率名称',
+            label: '栏目名称',
             value: 'name'         
           }
         ]
