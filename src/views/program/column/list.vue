@@ -71,9 +71,9 @@ export default {
       totalCount: 0,
       listLoading: false,
       searchSettings: [{
-        label: '类型',
+        label: '栏目名称',
         name: 'type',
-        placeholder: '类型',
+        placeholder: '栏目名称',
         visible: true,
         type: 'select',
         options: [
