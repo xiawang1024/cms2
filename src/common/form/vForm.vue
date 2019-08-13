@@ -454,7 +454,7 @@
                 :file-status-text="statusText" 
                 :default-file-list="formModel[item.name]"
                 :uploader-name="item.name"
-                ref="uploader" 
+                :ref="item.name" 
                 @file-success="fileComplete" 
                 @complete="complete"
                 @fileInfor="fileInfor"
@@ -647,7 +647,6 @@ export default {
   },
   data() {
     return {
-      textData: ['http://cmsres.test.dianzhenkeji.com/anonymous/2019/8/2/1157219789140267008.mp4'],
       // 分片上传
       // uploading: false,
       // loadingText: '上传进度',
@@ -804,13 +803,15 @@ export default {
     complete () {
       console.log('complete', arguments)
     },
-    fileComplete () {
-      const file = arguments[0].file;
-      console.log(arguments, 'arguments')
+    fileComplete (file) {
+      console.log(file, '3333')
+      // const file = file;
+      // console.log(arguments, 'arguments')
       return new Promise((resolve, reject) => {
         needMerge({
           filename: file.name,
-          identifier: arguments[0].uniqueIdentifier,
+          // identifier: arguments[0].uniqueIdentifier,
+          identifier: file.uniqueIdentifier,
           totalSize: file.size,
           type: file.type,
         })
@@ -819,9 +820,12 @@ export default {
             //文件合并成功;
             // Bus.$emit("fileSuccess");
             // this.statusRemove(file.id);
-            this.$refs.uploader[0].fileList[this.$refs.uploader[0].fileList.length - 1].result = response.data.result
-
-            this.$refs.uploader[0].fileList[this.$refs.uploader[0].fileList.length - 1].cancel()
+            // console.log(response, 'response')
+            // console.log(this.uploader, 'this.$refs')
+            console.log(this.$refs.contentVideosList[0].fileList, 'this.uploader')
+            this.$refs[file.uploaderName][0].fileList[this.$refs[file.uploaderName][0].fileList.length - 1].result = response.data.result
+             
+            this.$refs[file.uploaderName][0].fileList[this.$refs[file.uploaderName][0].fileList.length - 1].cancel()
             // console.log(this.$refs.uploader[0].fileList[this.$refs.uploader[0].fileList.length - 1], 'remove')
             let fileInfor = {
               name: response.data.result.fileName,
@@ -832,7 +836,7 @@ export default {
               title: '', 
               coverBool:false
             }
-            this.formModel[this.$refs.uploader[0].uploaderName].push(fileInfor)
+            this.formModel[file.uploaderName].push(fileInfor)
             resolve();
           })
           .catch(error => {

@@ -124,42 +124,42 @@ export default {
           //   maxSize: 1024*5
           // },
           {
-            label: '分段上传',
+            label: '分段视频上传',
             name: 'contentVideosList',
             type: 'simpleVideo',
             required: false,
             maxSize: 1024*1024*800,
-            limit: 1,
+            limit: 3,
             // hasTextInput: true,
             hidden: false,
             accept: 'video/mp4'
           },
+          // {
+          //   label: '视频',
+          //   name: 'contentVideosList',
+          //   type: 'video',
+          //   required: false,
+          //   maxSize: 1024*800,
+          //   limit: 1,
+          //   // hasTextInput: true,
+          //   hidden: false
+          // },
           {
-            label: '视频',
-            name: 'contentVideosList',
-            type: 'video',
-            required: false,
-            maxSize: 1024*800,
-            limit: 1,
-            // hasTextInput: true,
-            hidden: false
-          },
-          {
-            label: '音频',
+            label: '分段音频',
             name: 'contentAudioList',
-            type: 'audio',
+            type: 'simpleVideo',
             required: false,
             // hasTextInput: true,
-            maxSize: 1024*800,
+            maxSize: 1024*1024*800,
             limit: 1,
             hidden: true
           },
           {
-            label: '其他',
+            label: '分段其他',
             name: 'articleAttachmentsList',
-            type: 'file',
+            type: 'simpleVideo',
             required: false,
-            maxSize: 1024*200,
+            maxSize: 1024*1024*800,
             // hasTextInput: true,
             hidden: true
           },

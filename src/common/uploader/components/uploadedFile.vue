@@ -1,7 +1,9 @@
 <template>
   <div class="uploaded-list">
-    <ul class="">
-      <li v-for="(successFile, index) in uploadedList" :key="index" @click="lookView(successFile, index)" class="el-upload-list__item is-success">
+    <transition-group 
+      tag="ul"
+      class="el-upload-list" name="el-list">
+      <li v-for="(successFile, index) in uploadedList" :key="index" @click.stop ="lookView(successFile, index)" class="el-upload-list__item is-success">
         <!-- <uploader-file :file="file" :list="true" ref="uploaderFile"/> -->
         <a class="el-upload-list__item-name">
           <i class="el-icon-document"/>{{ successFile.name || successFile.fileName }}
@@ -12,9 +14,10 @@
             'el-icon-circle-check': true,
           }"/>
         </label>
-        <i class="el-icon-close" @click="$emit('remove', successFile)"/>
+        <i class="el-icon-close" @click.stop="$emit('remove', successFile)"/>
       </li>
-    </ul>
+    
+    </transition-group>
   </div>
 </template>
 <script>
@@ -45,6 +48,7 @@ export default {
   li {
       border: 1px solid #c0ccda;
       margin-top:10px;
+      // transition: all .5s cubic-bezier(.55,0,.1,1);
     }
   }
 </style>

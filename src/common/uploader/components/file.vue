@@ -27,7 +27,10 @@
     >
       <div class="uploader-file-progress" :class="progressingClass" :style="progressStyle"/>
       <div class="uploader-file-info">
-        <div class="uploader-file-name"><i class="el-icon-document" style="color:#909399"/>{{ file.name }}</div>
+        <div class="uploader-file-name">
+          <i class="el-icon-document" style="color:#909399"/>
+          {{ file.name }}
+        </div>
         <div class="uploader-file-size">{{ formatedSize }}</div>
         <div class="uploader-file-status">
           <!-- <span v-show="status !== 'uploading'">{{statusText}}</span> -->
@@ -385,13 +388,14 @@
     float: left;
     position: relative;
     height: 100%;
+    color: #606266;
   }
   .uploader-file-name {
     width: 37%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    text-indent: 14px;
+    text-indent: 2px;
   }
   .uploader-file-icon {
     width: 24px;

@@ -213,7 +213,12 @@ export default {
     },
     fileSuccess(rootFile, file, message, chunk) {
       file.cmsPath = JSON.parse(message)
-      this.$emit('fileSuccess', message)
+      // console.log(message, 'message')
+      // console.log(rootFile, 'rootFile')
+      // console.log(file, 'file')
+      // console.log(this.uploaderName, 'uploaderName')
+      file.uploaderName = this.uploaderName
+      this.$emit('fileSuccess', file)
       if (file.ignored || rootFile.ignored) {
         return false
       }
