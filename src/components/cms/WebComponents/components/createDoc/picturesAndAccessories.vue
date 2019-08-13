@@ -78,33 +78,7 @@ export default {
   },
   data () {
     return {
-      // 分段上传
-      // options: {
-      //   target: "http://fupload.test.dianzhenkeji.com/chunk/chunk",
-      //   testChunks: true,
-      //   // simultaneousUploads: 1,
-      //   //后端约定值20M （勿改）
-      //   chunkSize: 20* 1024 * 1024,
-      //   // 服务器分片校验函数，秒传及断点续传基础
-      //   checkChunkUploadedByResponse: function(chunk, message) {
-      //     let objMessage = JSON.parse(message);
-      //     if (objMessage.result.skipUpload) {
-      //       return true;
-      //     }
-      //     return (objMessage.result.uploadedChunkList || []).indexOf(chunk.offset + 1) >= 0;
-      //   }
-      // },
-      // attrs: {
-      //   accept: 'image/*'
-      // },
-      // statusText: {
-      //   success: '成功了',
-      //   error: '出错了',
-      //   uploading: '上传中',
-      //   paused: '暂停中',
-      //   waiting: '等待中'
-      // },
-       // 分段上传
+      // 点击图片是否预览
       showPreview: false,
       fileType: '2',
       form: {
@@ -114,52 +88,38 @@ export default {
       formData: {},
       imageSettings: [{
         items: [
-          // {
-          //   label: '图片',
-          //   name: 'contentImagesList',
-          //   type: 'img',
-          //   required: false,
-          //   // hasTextInput: true,
-          //   hidden: false,
-          //   maxSize: 1024*5
-          // },
           {
-            label: '分段视频上传',
+            label: '视频',
             name: 'contentVideosList',
             type: 'simpleVideo',
             required: false,
-            maxSize: 1024*1024*800,
-            limit: 3,
+            // maxSize: 1024*1024*800,
+            limit: 1,
             // hasTextInput: true,
             hidden: false,
-            accept: 'video/mp4'
+            acceptFile: {
+              accept: 'video/mp4'
+            }
           },
-          // {
-          //   label: '视频',
-          //   name: 'contentVideosList',
-          //   type: 'video',
-          //   required: false,
-          //   maxSize: 1024*800,
-          //   limit: 1,
-          //   // hasTextInput: true,
-          //   hidden: false
-          // },
           {
-            label: '分段音频',
+            label: '音频',
             name: 'contentAudioList',
             type: 'simpleVideo',
             required: false,
             // hasTextInput: true,
-            maxSize: 1024*1024*800,
+            // maxSize: 1024*1024*800,
             limit: 1,
-            hidden: true
+            hidden: true,
+            acceptFile: {
+              accept: 'audio/mp3'
+            }
           },
           {
-            label: '分段其他',
+            label: '其他',
             name: 'articleAttachmentsList',
             type: 'simpleVideo',
             required: false,
-            maxSize: 1024*1024*800,
+            // maxSize: 1024*1024*800,
             // hasTextInput: true,
             hidden: true
           },
@@ -182,17 +142,6 @@ export default {
             name: 'desc',
             type: 'textarea',
           },
-          {
-            label: '设为封面',
-            name: 'coverBool',
-            type: 'switch',
-            hidden: false
-          },
-          // {
-          //   label: '自定义',
-          //   name: 'define',
-          //   type: 'slot'
-          // },
           {
             label: '',
             name: 'btn',
@@ -234,42 +183,8 @@ export default {
     if(this.contextMenu.docId) {
       this.getDocumentInfor(this.contextMenu.docId)
     }
-    // this.$nextTick(() => {
-    //   window.uploader = this.$refs.uploader.uploader
-    // })
   },
   methods: {
-    // 分段上传
-    // complete () {
-    //   console.log('complete', arguments)
-    // },
-    // fileComplete () {
-    //   console.log('file complete', arguments)
-    //   console.log(this.$store.state.absolutePath,'qwe')
-    // //   console.log("file complete", arguments);
-    //   const file = arguments[0].file;
-    //   return new Promise((resolve, reject) => {
-    //     needMerge({
-    //       filename: file.name,
-    //       identifier: arguments[0].uniqueIdentifier,
-    //       totalSize: file.size,
-    //       type: file.type,
-    //     })
-    //       .then(response => {
-    //         //文件合并成功;
-    //         // Bus.$emit("fileSuccess");
-    //         // this.statusRemove(file.id);
-
-    //         resolve();
-    //       })
-    //       .catch(error => {
-    //         reject(error);
-    //       });
-    //   });
-     
-  
-    // },
-    // 分段上传
     // 关闭
     colseSet() {
       this.rightCardShow = false
@@ -332,28 +247,28 @@ export default {
           this.imageSettings[0].items[1].hidden = true
           this.imageSettings[0].items[2].hidden = true
           this.imageSettings[0].items[3].hidden = true
-          this.fileSettings[0].items[3].hidden = false
+       
           break
         case '1':
           this.imageSettings[0].items[1].hidden = false
           // this.imageSettings[0].items[0].hidden = true
           this.imageSettings[0].items[2].hidden = true
           this.imageSettings[0].items[0].hidden = true
-          this.fileSettings[0].items[3].hidden = true
+    
           break
         case '2':
           this.imageSettings[0].items[1].hidden = true
           // this.imageSettings[0].items[0].hidden = true
           this.imageSettings[0].items[0].hidden = false
           this.imageSettings[0].items[2].hidden = true
-          this.fileSettings[0].items[3].hidden = true
+        
           break
         case '3':
           this.imageSettings[0].items[0].hidden = true
           // this.imageSettings[0].items[0].hidden = true
           this.imageSettings[0].items[1].hidden = true
           this.imageSettings[0].items[2].hidden = false
-          this.fileSettings[0].items[3].hidden = true
+      
           break
       }
     },
@@ -364,7 +279,6 @@ export default {
       })
     },
     createDoc(formData) {
-      console.log(formData, '附件添加')
       var _this = this
       return new Promise((resolve, reject) => {
         createDocument(formData)

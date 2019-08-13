@@ -28,9 +28,13 @@ export default {
       }
     }
   },
+  watch: {
+    attrs (val) {
+      console.log(val, 'attr')
+    }
+  },
   mounted () {
     this.$nextTick(() => {
-      console.log(this.uploader, 'mmmm')
       this.uploader.uploader.assignBrowse(this.$refs.btn, this.directory, this.single, this.attrs)
     })
   }

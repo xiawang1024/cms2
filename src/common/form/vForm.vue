@@ -462,9 +462,16 @@
                 :on-preview="handlePreviewFile"
                 :max-size="item.maxSize"
                 :limit="item.limit"
-                :accept="item.accept"
+                :accept="item.acceptFile"
               />
             </template>
+            <!--
+               default-file-list 默认文件列表
+               uploader-name 上传组件的名字， 在一个页面多个上传组件时便于区分
+               max-size 文件大小限制
+               limit 文件数量限制
+               accept 文件类型限制
+            -->
             <!-- 分片上传 -->
             <!--城市远程搜索-->
             <template v-else-if="item.type=='remoteCity'">
@@ -647,13 +654,9 @@ export default {
   },
   data() {
     return {
-      // 分片上传
-      // uploading: false,
-      // loadingText: '上传进度',
-      // fileList: [],
-      //分片上传
+      //分片上传参数设置
       options: {
-        target: "http://fupload.test.dianzhenkeji.com/chunk/chunk",
+        target: baseUrl.SIMPLE_UPLOAD_URL,
         testChunks: true,
         simultaneousUploads: 1,
         //后端约定值20M （勿改）
@@ -668,7 +671,7 @@ export default {
         }
       },
       attrs: {
-        // accept: 'video/mp4'
+        accept: '*'
       },
       statusText: {
         success: '成功',
@@ -766,13 +769,6 @@ export default {
     formData() {
       this.updateForm();
     },
-    // 分片上传
-    // fileList (fileList) {
-    //   this.$nextTick(() => {
-    //     this.dealUpload()
-    //   })
-    // }
-    // 分片上传
   },
   mounted() {
     this.updateForm();
@@ -803,30 +799,20 @@ export default {
     complete () {
       console.log('complete', arguments)
     },
+    // 分段上传完成后合并文件
     fileComplete (file) {
-      console.log(file, '3333')
-      // const file = file;
-      // console.log(arguments, 'arguments')
       return new Promise((resolve, reject) => {
         needMerge({
           filename: file.name,
-          // identifier: arguments[0].uniqueIdentifier,
           identifier: file.uniqueIdentifier,
           totalSize: file.size,
           type: file.type,
         })
           .then(response => {
-            // console.log()
-            //文件合并成功;
-            // Bus.$emit("fileSuccess");
-            // this.statusRemove(file.id);
-            // console.log(response, 'response')
-            // console.log(this.uploader, 'this.$refs')
-            console.log(this.$refs.contentVideosList[0].fileList, 'this.uploader')
+            // 将返回结果添加到文件中
             this.$refs[file.uploaderName][0].fileList[this.$refs[file.uploaderName][0].fileList.length - 1].result = response.data.result
-             
+            // 删除上传文件
             this.$refs[file.uploaderName][0].fileList[this.$refs[file.uploaderName][0].fileList.length - 1].cancel()
-            // console.log(this.$refs.uploader[0].fileList[this.$refs.uploader[0].fileList.length - 1], 'remove')
             let fileInfor = {
               name: response.data.result.fileName,
               url: baseUrl.DOWN_URL + response.data.result.filePath,
@@ -844,32 +830,6 @@ export default {
           });
       });
     },
-    // 分段上传
-    // 分片上传
-    // dealUpload () {
-    //   this.uploading = true
-    //   uploadByPieces({
-    //     files: this.fileList,
-    //     pieceSize: 1,
-    //     chunkUrl: '输入分片上传的地址',
-    //     fileUrl: '整个文件上传的地址',
-    //     progress: (num) => {
-    //       this.loadingText = '上传进度' + num + '%'
-    //     },
-    //     success: (data) => {
-    //       this.uploading = false
-    //       this.$emit('uploaded', data)
-    //     },
-    //     error: (e) => {
-    //       this.uploading = false
-    //     }
-    //   })
-    // },
-    // // 上传请求
-    // handleUploadRequest (back) {
-    //   this.fileList.push(back.file)
-    // },
-    // 分片上传
     // 自定义上传多图上传图片
     defineRequest(name, file) {
       let getfile = file.file

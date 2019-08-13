@@ -5,7 +5,7 @@
       <uploader-drop>
         <!-- <p>Drop files here to upload or</p> -->
         <div class="bgc-img">
-          <uploader-btn ref="uploadBtn">点击上传</uploader-btn>
+          <uploader-btn ref="uploadBtn" :attrs="accept">点击上传</uploader-btn>
           <!-- <div class="img-desc">或将图片拖拽到这里，单次最多可选择300张</div> -->
         </div>
         <!-- <uploader-btn :directory="true">select folder</uploader-btn> -->
@@ -96,9 +96,12 @@ export default {
       type: Number,
       default: 0
     },
+    // 上传文件类型
     accept: {
-      type: String,
-      default: ''
+      type: Object,
+      default: () => {
+        return {}
+      }
     }
   },
   data () {
@@ -115,6 +118,9 @@ export default {
         return ele
       })
       console.log(this.successFiles, 'this.successFiles')
+    },
+    accept(val) {
+      console.log(val, 'accept')
     }
   },
   created () {
@@ -129,20 +135,6 @@ export default {
     uploader.on('fileRemoved', this.fileRemoved)
     uploader.on('filesSubmitted', this.filesSubmitted)
     uploader.on('fileSuccess', this.fileSuccess)
-    // this.uploader.addFile(rFile)
-    // this.$nextTick(() => {
-    //   console.log(this.defaultFileList, '默认列表')
-    // })
-    // if(this.defaultFileList.length) {
-    //   this.defaultFileList.forEach((ele) => {
-    //     let rFile = new File(['xx'], 'image1.jpg', {
-    //       type: 'video/*',
-    //     })
-    //     rFile.url = '1111'
-    //     console.log(rFile, 'rFile')
-    //     this.uploader.addFile(rFile)
-    //   })
-    // }
   },
   destroyed () {
     const uploader = this.uploader
@@ -172,8 +164,6 @@ export default {
       // console.log('start')
     },
     fileAdded (file, event) {
-      console.log(file, 'file')
-      console.log(event, 'event')
       this.$emit(kebabCase(FILE_ADDED_EVENT), file)
       if (file.ignored) {
         // is ignored, filter it
@@ -181,17 +171,11 @@ export default {
       }
     },
     uploadChange(event) {
-      // console.log(event, 'event111')
-      // console.log(this.$refs.uploadBtn.$refs.btn, '11')
-      this.uploader.uploader.assignBrowse(this.$refs.uploadBtn.$refs.btn, false, true, {
-        accept: 'video/mp4'
-      })
-      // this.$refs.uploadBtn.attrs = {
-      //   directory: false,
-      //   single: false,
-      //   support: true,
-      //   accept: 'video/mp4'
-      // }
+      // this.$nextTick(()=> {
+      //   this.uploader.uploader.assignBrowse(this.$refs.uploadBtn.$refs.btn, false, true, {
+      //     accept: 'video/mp4'
+      //   })
+      // })
     },
     filesAdded (files, fileList) {
       this.$emit(kebabCase(FILES_ADDED_EVENT), files, fileList)
@@ -213,10 +197,6 @@ export default {
     },
     fileSuccess(rootFile, file, message, chunk) {
       file.cmsPath = JSON.parse(message)
-      // console.log(message, 'message')
-      // console.log(rootFile, 'rootFile')
-      // console.log(file, 'file')
-      // console.log(this.uploaderName, 'uploaderName')
       file.uploaderName = this.uploaderName
       this.$emit('fileSuccess', file)
       if (file.ignored || rootFile.ignored) {
