@@ -97,7 +97,7 @@ export default {
             name: 'contentVideosList',
             type: 'video',
             required: false,
-            // maxSize: 1024*800,
+            maxSize: 1024*1024*3,
             limit: 1,
             // hasTextInput: true,
             hidden: false

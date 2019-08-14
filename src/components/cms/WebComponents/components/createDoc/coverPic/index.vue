@@ -132,27 +132,25 @@ export default {
         })
         }
         this.formData = {}
-        // 封面图片赋值
+        this.formData.contentImagesList = imgSrc
         if(imgSrc.length && this.getDocInformation.coverImagesList.length) {
-          this.formData.contentImagesList = imgSrc
-          imgSrc.forEach((src) => {
-            this.getDocInformation.coverImagesList.forEach((storeImage) => {
-              if(src.url === storeImage.url) {
-                // this.formData.contentImagesList.push(storeImage)
-                src = Object.assign(src, storeImage)
-              }else {
-                this.formData.contentImagesList.push(storeImage)
-              }
-            })
+          imgSrc = imgSrc.concat(this.getDocInformation.coverImagesList)
+          // 图片列表去重
+          let obj = {}
+          let resArray = []
+          imgSrc.forEach((ele) => {
+            if(!obj[ele.url]) {
+              resArray.push(ele)
+              obj[ele.url] = ele
+            }
           })
+          this.formData.contentImagesList = resArray
         } else {
           this.formData.contentImagesList = imgSrc.concat(this.getDocInformation.coverImagesList)
         }
       }
       // 存储封面图片
       if(oldVal == 'coverPic') {
-        console.log('coverPic')
-        console.log(this.$refs.imageForm.formModel.contentImagesList)
         this.$store.dispatch('setCoverList', this.$refs.imageForm.formModel.contentImagesList)
       }
     }
