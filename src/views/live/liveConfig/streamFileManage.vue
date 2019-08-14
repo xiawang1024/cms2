@@ -21,7 +21,7 @@
       <el-table-column prop="resolution" width="100" label="分辨率" />
       <el-table-column prop="fileSize" width="120" label="文件大小" :formatter="formatSize" />
       <el-table-column prop="fileType" width="120" label="编辑状态" >
-        <template scope-scope="scope">
+        <template slot-scope="scope">
           <span v-if="scope.row.fileType==0" class="colorSuccess">成功</span>
           <span v-if="scope.row.fileType==1" class="colorWarning" >编辑中...</span>
           <span v-if="scope.row.fileType==2" class="colorDanger" >失败</span>
