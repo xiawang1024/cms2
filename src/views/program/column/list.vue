@@ -82,7 +82,7 @@ export default {
             value: 'ID'         
           },
           {
-            label: '频率名称',
+            label: '栏目名称',
             value: 'name'         
           }
         ]
