@@ -66,9 +66,8 @@ const newscommandRouterMap = [manageClue,commandDispatch,manuscriptClue,fileClue
  * 直播
  */
 import livePage from './routers/live/livePage'
-import fileManage from './routers/live/fileManage'
 
-const liveRouterMap = [livePage,fileManage]
+const liveRouterMap = [livePage]
 /**
  * 路由map
  */
