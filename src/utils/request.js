@@ -186,6 +186,21 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   (res) => {
     requestLoading.close(res.config.url)
+    console.log(res.data.code, 'res')
+    if(res.data.code === 0) {
+      return res
+    }
+    // 对响应数据做些事
+    if (res.data && res.data.code === -1) {
+      if (!res.config.requestConfig || !res.config.requestConfig.noErrorMsg) {
+        let msg = res.data.msg || res.data.message || '系统错误'
+        Message({
+          message: msg,
+          type: 'error'
+        })
+      }
+      return Promise.reject(res.data)
+    }
     return res
   },
   (error) => {

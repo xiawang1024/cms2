@@ -65,6 +65,8 @@ export default {
     externalLink: '外链',
     commentModeration:'新闻评论',
     assignAuditAuthority:'分配审核权限',
+    sensitiveWord: '敏感词过滤',
+    userExtend: '扩展对象',
     checkComment:'评论审核',
     webSite: '网站',
     publishDocument: '发布文章',
