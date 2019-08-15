@@ -45,8 +45,8 @@ const commentModeration = {
        *  扩展对象
        */
       path: 'userExtend',
-      component: () => import(`@/${path}/userExtend`),
-      name: 'userExtend',
+      component: () => import(`@/${path}/userSwitch`),
+      name: 'userSwitch',
       meta: { title: 'userExtend', icon: 'extend', role: 'cms', }
     }
   ]

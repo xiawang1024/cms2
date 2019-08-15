@@ -1,25 +1,19 @@
 <template>
-  <div class="sensitive-word">
+  <div class="user-switch">
     <div class="v-search-header">
       <v-search :search-settings="searchSettings" @search="searchItem"/>
     </div>
     <div class="tool-bar">
       <el-button type="primary" size="mini" @click="handel('add')">新增</el-button>
-      <a href="http://static1.1byongche.com/%E4%BF%9D%E5%8D%95%E6%A8%A1%E6%9D%BF.xlsx" class="middle-style">
-        <el-button size="mini">下载模板</el-button>
-      </a>
-      <el-upload class="upload"
-                 :action="importUrl"
-                 :on-success="uploadSuccess"
-                 :before-upload="beforeAvatarUpload"
-                 :on-error="onError"
-                 :headers="uploadHeaders"
-                 :show-file-list="false">
-        <el-button size="mini">批量导入</el-button>
-      </el-upload>
     </div>
     <el-table :data="tableData" style="width: 100%" highlight-current-row >
-      <el-table-column prop="word" label="敏感词" min-width="150" show-overflow-tooltip/>
+      <el-table-column prop="objectId" label="租户" min-width="150" show-overflow-tooltip/>
+      <el-table-column prop="state" label="审核类型" min-width="150" show-overflow-tooltip>
+        <template slot-scope="scope">
+          <span v-if="scope.row.state == true">先发后审</span>
+          <span v-else>先审后发</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="createTime" label="创建日期" min-width="150" show-overflow-tooltip/>
       <el-table-column label="操作" fixed="right" width="150">
         <template slot-scope="scope">
@@ -35,9 +29,8 @@
   </div>
 </template>
 <script>
-import { createSensitive, fetchSensitiveList, updateSensitive, deleteSensitive } from "@/api/cms/sensitiveWord";
+import { createSwitch, fetchSwitchsList, updateSwitch, deleteSwitch } from "@/api/cms/userSwitch";
 import Pagination from '@/common/Pagination'
-import baseUrl from "@/config/base-url";
 export default {
   components: {
     Pagination
@@ -50,12 +43,23 @@ export default {
         {
           items: [
             {
-              label: '敏感词',
-              name: 'word',
+              label: '租户',
+              name: 'objectId',
               type: 'text',
               valueType: 'string',
               required: true,
-              placeholder: '请输入敏感词'
+              placeholder: '请输入租户'
+            },
+            {
+              label: '审核方式',
+              name: 'state',
+              type: 'switch',
+              activeText: '先发后审',
+              inactiveText: '先审后发',
+              inactiveColor: '#13ce66',
+              activeValue: true,
+              inactiveValue: false,
+              value: true
             }
           ]
         }
@@ -64,14 +68,14 @@ export default {
       isLoading: false,
       handelType: 'add',
       searchSettings: [{
-        label: '敏感词',
-        name: 'word',
+        label: '租户',
+        name: 'objectId',
         type: 'text',
-        placeholder: '请输入敏感词',
+        placeholder: '请输入租户',
         visible: true
       }],
       searchData: {
-        word: ''
+        objectId: ''
       },
       page: 1,
       pageSize: 10,
@@ -80,48 +84,22 @@ export default {
     }
   },
   computed: {
-    importUrl() {
-      return  `${baseUrl.BASE_URL}/news-comment/sensitive-words/import-excel`
-    },
-    uploadHeaders() {
-      return {
-        Authorization: 'bearer ' + this.$store.getters.token.access_token
-      }
-    }
   },
   mounted() {
-    this.getSensitiveList()
+    this.getSwitchList()
   },
   methods: {
-    uploadSuccess() {
-      this.$message.success('批量导入成功')
-      this.getSensitiveList()
-    },
-    beforeAvatarUpload(file) {
-      let isXls
-      if (file.name) {
-        isXls = file.name.split('.')[file.name.split('.').length -1]
-      }
-      if ((isXls !== 'xls') && (isXls !== 'xlsx')) {
-        this.$message.warning('导入文件只能是.xls 或 .xlsx 格式')
-        return false
-      }
-      return isXls
-    },
-    onError() {
-
-    },
     sizeChange(val) {
       this.pageSize = val
-      this.getSensitiveList()
+      this.getSwitchList()
     },
     pageChange(val) {
       this.page = val
-      this.getSensitiveList()
+      this.getSwitchList()
     },
-    getSensitiveList() {
+    getSwitchList() {
       return new Promise((resolve, reject) => {
-        fetchSensitiveList(this.searchData.word, this.page, this.pageSize).then(async res => {
+        fetchSwitchsList(this.searchData.objectId, this.page, this.pageSize).then(async res => {
           this.total = res.data.result.total
           this.tableData = res.data.result.records
           // 结束
@@ -135,7 +113,7 @@ export default {
     },
     searchItem(data) {
       this.searchData = data
-      this.getSensitiveList()
+      this.getSwitchList()
     },
     handel(type, row) {
       this.isLoading = false
@@ -149,46 +127,42 @@ export default {
       this.dialogVisible = true
     },
     handleDelete(row) {
-      this.$confirm('确定删除该敏感词吗?', '提示', {
+      this.$confirm('确定删除该审核设置吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         return new Promise((resolve, reject) => {
-          deleteSensitive(row.sensitiveId)
+          deleteSwitch(row.switchId)
             .then(response => {
               this.$message.success('删除成功')
-              this.getSensitiveList()
+              this.getSwitchList()
               resolve()
             })
             .catch(error => {
               reject(error)
             })
       })
-        // this.$message({
-        //   type: 'success',
-        //   message: '删除成功!'
-        // });
       }).catch(() => {     
       })
     },
     submitSave(data) {
       this.isLoading = true
       if(this.handelType === 'add') {
-        this.addSensitive(data)
+        this.addSwitch(data)
       } else {
-        this.editSensitive(data, this.formData.sensitiveId)
+        this.editSwitch(data, this.formData.switchId)
       }
     },
-    editSensitive(data, id) {
-      data.sensitiveId = id
+    editSwitch(data, id) {
+      data.switchId = id
       return new Promise((resolve, reject) => {
-        updateSensitive(data)
+        updateSwitch(data)
           .then(response => {
             this.$message.success('编辑成功')
             this.dialogVisible = false
             this.isLoading = false
-            this.getSensitiveList()
+            this.getSwitchList()
             resolve()
           })
           .catch(error => {
@@ -197,14 +171,14 @@ export default {
           })
       })
     },
-    addSensitive(data) {
+    addSwitch(data) {
       return new Promise((resolve, reject) => {
-        createSensitive(data)
+        createSwitch(data)
           .then(response => {
             this.$message.success('添加成功')
             this.dialogVisible = false
             this.isLoading = false
-            this.getSensitiveList()
+            this.getSwitchList()
             resolve()
           })
           .catch(error => {
@@ -217,14 +191,9 @@ export default {
 }
 </script>
 <style lang="scss">
-  .sensitive-word{
+  .user-switch{
     .tool-bar{
       margin-top:10px;
-      display: flex;
-      .middle-style{
-        margin-left:10px;
-        margin-right:10px;
-      }
     }
     .v-form{
       .save-btn{
