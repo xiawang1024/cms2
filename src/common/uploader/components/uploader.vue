@@ -5,11 +5,12 @@
       <uploader-drop>
         <!-- <p>Drop files here to upload or</p> -->
         <div class="bgc-img">
-          <uploader-btn>点击选择图片</uploader-btn>
-          <div class="img-desc">或将图片拖拽到这里，单次最多可选择300张</div>
+          <uploader-btn ref="uploadBtn" :attrs="accept">点击上传</uploader-btn>
+          <!-- <div class="img-desc">或将图片拖拽到这里，单次最多可选择300张</div> -->
         </div>
         <!-- <uploader-btn :directory="true">select folder</uploader-btn> -->
       </uploader-drop>
+      <uploaded-file :uploaded-list = "successFiles" @remove="remove" @lookView="lookView"/>
       <uploader-list @review="review"/>
     </slot>
   </div>
@@ -24,12 +25,12 @@ import UploaderUnsupport from './unsupport.vue'
 import UploaderList from './list.vue'
 import UploaderFiles from './files.vue'
 import UploaderFile from './file.vue'
-
+import UploadedFile from './uploadedFile'
 const COMPONENT_NAME = 'uploader'
 const FILE_ADDED_EVENT = 'fileAdded'
 const FILES_ADDED_EVENT = 'filesAdded'
 const UPLOAD_START_EVENT = 'uploadStart'
-
+const UPLOAD_CHANGE = 'change'
 export default {
   name: COMPONENT_NAME,
   provide () {
@@ -43,7 +44,8 @@ export default {
     UploaderUnsupport,
     UploaderList,
     UploaderFiles,
-    UploaderFile
+    UploaderFile,
+    UploadedFile
   },
   props: {
     options: {
@@ -67,13 +69,58 @@ export default {
           waiting: 'waiting'
         }
       }
+    },
+    defaultFileList: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    uploaderName: {
+      type: String,
+      default: ''
+    },
+    onRemove: {
+      type: Function,
+      default: function() {}
+    },
+    onPreview: {
+      type: Function,
+      default: function() {}
+    },
+    maxSize: {
+      type: Number,
+      default: 0
+    },
+    limit: {
+      type: Number,
+      default: 0
+    },
+    // 上传文件类型
+    accept: {
+      type: Object,
+      default: () => {
+        return {}
+      }
     }
   },
   data () {
     return {
       started: false,
       files: [],
-      fileList: []
+      fileList: [],
+      successFiles: []
+    }
+  },
+  watch: {
+    defaultFileList(val) {
+      this.successFiles = val.map((ele) => {
+        return ele
+      })
+      console.log(this.successFiles, 'this.successFiles')
+    },
+    accept(val) {
+      console.log(val, 'accept')
     }
   },
   created () {
@@ -84,6 +131,7 @@ export default {
     uploader.on('catchAll', this.allEvent)
     uploader.on(FILE_ADDED_EVENT, this.fileAdded)
     uploader.on(FILES_ADDED_EVENT, this.filesAdded)
+    uploader.on(UPLOAD_CHANGE, this.uploadChange)
     uploader.on('fileRemoved', this.fileRemoved)
     uploader.on('filesSubmitted', this.filesSubmitted)
     uploader.on('fileSuccess', this.fileSuccess)
@@ -99,11 +147,21 @@ export default {
     this.uploader = null
   },
   methods: {
-    review(file) {
-      this.$emit('fileInfor', file)
+    // 点击查看文件
+    lookView(file) {
+      // console.log(file, 'lookView')
+      this.onPreview(file)
+    },
+    remove(file, index) {
+      console.log(file, index)
+      this.onRemove(file, this.successFiles)
+    },
+    review(file, index) {
+      this.$emit('fileInfor', {file, index})
     },
     uploadStart () {
       this.started = true
+      // console.log('start')
     },
     fileAdded (file, event) {
       this.$emit(kebabCase(FILE_ADDED_EVENT), file)
@@ -111,6 +169,13 @@ export default {
         // is ignored, filter it
         return false
       }
+    },
+    uploadChange(event) {
+      // this.$nextTick(()=> {
+      //   this.uploader.uploader.assignBrowse(this.$refs.uploadBtn.$refs.btn, false, true, {
+      //     accept: 'video/mp4'
+      //   })
+      // })
     },
     filesAdded (files, fileList) {
       this.$emit(kebabCase(FILES_ADDED_EVENT), files, fileList)
@@ -132,7 +197,8 @@ export default {
     },
     fileSuccess(rootFile, file, message, chunk) {
       file.cmsPath = JSON.parse(message)
-      this.$emit('fileSuccess', message)
+      file.uploaderName = this.uploaderName
+      this.$emit('fileSuccess', file)
       if (file.ignored || rootFile.ignored) {
         return false
       }

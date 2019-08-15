@@ -1,5 +1,5 @@
 <template>
-  <div class="upload-file">
+  <div class="document-upload-file">
     <div class="type-choose">
       <el-radio-group v-model="fileType" size="mini" @change="typeChange">
         <!-- <el-radio-button label="0">上传图片</el-radio-button> -->
@@ -14,7 +14,7 @@
           <v-form ref="imageForm" :form-settings="imageSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail" @removeFile="removeFile"/>
           <!-- <v-form ref="videoForm" :form-settings="videoSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail"/> -->
         </el-col>
-        <el-col :xs="24" :sm="12" :md="12" :lg="10" :xl="10" >
+        <el-col :xs="24" :sm="24" :md="12" :lg="10" :xl="10" >
           <div v-if="rightCardShow">
             <v-form ref="vForm" :form-settings="fileSettings" :form-data="singleData" label-width="80px" :show-button = "showButton">
               <template slot="information">
@@ -45,6 +45,9 @@
         </el-col>
       </el-row>
     </div>
+    <!-- <div>
+      <uploader :options="options" :file-status-text="statusText" class="uploader-example" ref="uploader" @file-complete="fileComplete" @complete="complete"/>
+    </div> -->
     <div class="upload-btn">
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
       <!-- <el-button type = "primary" size="small" @click = "save">存草稿</el-button>
@@ -59,6 +62,7 @@
 // import { DOWN_URL } from '@/config/base-url'
 import { mapGetters } from 'vuex'
 import { createDocument, editDocument, documentInfor } from '@/api/cms/article'
+// import { needMerge } from "@/api/simpleUpload.js";
 export default {
   props: {
     activeName: {
@@ -74,6 +78,7 @@ export default {
   },
   data () {
     return {
+      // 点击图片是否预览
       showPreview: false,
       fileType: '2',
       form: {
@@ -83,41 +88,38 @@ export default {
       formData: {},
       imageSettings: [{
         items: [
-          // {
-          //   label: '图片',
-          //   name: 'contentImagesList',
-          //   type: 'img',
-          //   required: false,
-          //   // hasTextInput: true,
-          //   hidden: false,
-          //   maxSize: 1024*5
-          // },
           {
             label: '视频',
             name: 'contentVideosList',
-            type: 'video',
+            type: 'simpleVideo',
             required: false,
-            maxSize: 1024*1024*3,
+            maxSize: 1024*1024*1024*3,
             limit: 1,
             // hasTextInput: true,
-            hidden: false
+            hidden: false,
+            acceptFile: {
+              accept: 'video/mp4'
+            }
           },
           {
             label: '音频',
             name: 'contentAudioList',
-            type: 'audio',
+            type: 'simpleVideo',
             required: false,
             // hasTextInput: true,
-            // maxSize: 1024*800,
+            // maxSize: 1024*1024*800,
             limit: 1,
-            hidden: true
+            hidden: true,
+            acceptFile: {
+              accept: 'audio/mp3'
+            }
           },
           {
             label: '其他',
             name: 'articleAttachmentsList',
-            type: 'file',
+            type: 'simpleVideo',
             required: false,
-            // maxSize: 1024*200,
+            // maxSize: 1024*1024*800,
             // hasTextInput: true,
             hidden: true
           },
@@ -140,17 +142,6 @@ export default {
             name: 'desc',
             type: 'textarea',
           },
-          {
-            label: '设为封面',
-            name: 'coverBool',
-            type: 'switch',
-            hidden: false
-          },
-          // {
-          //   label: '自定义',
-          //   name: 'define',
-          //   type: 'slot'
-          // },
           {
             label: '',
             name: 'btn',
@@ -256,28 +247,28 @@ export default {
           this.imageSettings[0].items[1].hidden = true
           this.imageSettings[0].items[2].hidden = true
           this.imageSettings[0].items[3].hidden = true
-          this.fileSettings[0].items[3].hidden = false
+       
           break
         case '1':
           this.imageSettings[0].items[1].hidden = false
           // this.imageSettings[0].items[0].hidden = true
           this.imageSettings[0].items[2].hidden = true
           this.imageSettings[0].items[0].hidden = true
-          this.fileSettings[0].items[3].hidden = true
+    
           break
         case '2':
           this.imageSettings[0].items[1].hidden = true
           // this.imageSettings[0].items[0].hidden = true
           this.imageSettings[0].items[0].hidden = false
           this.imageSettings[0].items[2].hidden = true
-          this.fileSettings[0].items[3].hidden = true
+        
           break
         case '3':
           this.imageSettings[0].items[0].hidden = true
           // this.imageSettings[0].items[0].hidden = true
           this.imageSettings[0].items[1].hidden = true
           this.imageSettings[0].items[2].hidden = false
-          this.fileSettings[0].items[3].hidden = true
+      
           break
       }
     },
@@ -288,7 +279,6 @@ export default {
       })
     },
     createDoc(formData) {
-      console.log(formData, '附件添加')
       var _this = this
       return new Promise((resolve, reject) => {
         createDocument(formData)
@@ -386,7 +376,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .upload-file {
+  .document-upload-file {
     .upload-btn {
       padding-left: 80px;
     }
@@ -407,6 +397,7 @@ export default {
         }
       }
       .v-form {
+        min-width:420px;
        .form-section {
          overflow: visible;
          border-bottom: none;

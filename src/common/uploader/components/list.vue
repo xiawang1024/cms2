@@ -45,14 +45,20 @@ export default {
     top:0;
   }
   .uploader-list
-  .uploader-list > ul {
+  .uploader-list ul {
+    list-style: none;
+    margin: 0;
+    padding: 0
+  }
+  ul {
     list-style: none;
     margin: 0;
     padding: 0
   }
   .file-list {
     cursor: pointer;
-    margin-bottom: 10px;
     border-radius: 5px;
+    border: 1px solid #c0ccda;
+    margin-top:10px;
   }
 </style>

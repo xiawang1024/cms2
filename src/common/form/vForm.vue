@@ -447,6 +447,32 @@
                 </div>
               </el-upload>
             </template>
+            <!-- 分片上传 -->
+            <template v-else-if="item.type=='simpleVideo'">
+              <uploader 
+                :options="options" 
+                :file-status-text="statusText" 
+                :default-file-list="formModel[item.name]"
+                :uploader-name="item.name"
+                :ref="item.name" 
+                @file-success="fileComplete" 
+                @complete="complete"
+                @fileInfor="fileInfor"
+                :on-remove="removeCallbacks[item.name]"
+                :on-preview="handlePreviewFile"
+                :max-size="item.maxSize"
+                :limit="item.limit"
+                :accept="item.acceptFile"
+              />
+            </template>
+            <!--
+               default-file-list 默认文件列表
+               uploader-name 上传组件的名字， 在一个页面多个上传组件时便于区分
+               max-size 文件大小限制
+               limit 文件数量限制
+               accept 文件类型限制
+            -->
+            <!-- 分片上传 -->
             <!--城市远程搜索-->
             <template v-else-if="item.type=='remoteCity'">
               <website-select
@@ -572,6 +598,8 @@ import Viewer from "viewerjs";
 import baseUrl from "@/config/base-url";
 import { hashCode } from "@/utils/common.js";
 import request from '@/utils/request'
+// import {uploadByPieces} from './lib/utils'
+import { needMerge } from "@/api/simpleUpload.js";
 export default {
   name: "VForm",
 
@@ -626,6 +654,33 @@ export default {
   },
   data() {
     return {
+      //分片上传参数设置
+      options: {
+        target: baseUrl.SIMPLE_UPLOAD_URL,
+        testChunks: true,
+        simultaneousUploads: 1,
+        //后端约定值20M （勿改）
+        chunkSize: 10* 1024 * 1024,
+        // 服务器分片校验函数，秒传及断点续传基础
+        checkChunkUploadedByResponse: function(chunk, message) {
+          let objMessage = JSON.parse(message);
+          if (objMessage.result.skipUpload) {
+            return true;
+          }
+          return (objMessage.result.uploadedChunkList || []).indexOf(chunk.offset + 1) >= 0;
+        }
+      },
+      attrs: {
+        accept: '*'
+      },
+      statusText: {
+        success: '成功',
+        error: '出错',
+        uploading: '上传中',
+        paused: '暂停中',
+        waiting: '等待中'
+      },
+       // 分片上传
       imgViewer: null,
       dataOptions: {
         shortcuts: [
@@ -713,7 +768,7 @@ export default {
     },
     formData() {
       this.updateForm();
-    }
+    },
   },
   mounted() {
     this.updateForm();
@@ -727,7 +782,8 @@ export default {
               item.type == "img" ||
               item.type == "file" ||
               item.type == "audio" ||
-              item.type == "video"
+              item.type == "video" ||
+              item.type == "simpleVideo"
           )
       ) {
         // this.getUpToken()
@@ -736,6 +792,44 @@ export default {
   },
 
   methods: {
+    // 分段上传
+    fileInfor(file, index) {
+      console.log(file, index)
+    },
+    complete () {
+      console.log('complete', arguments)
+    },
+    // 分段上传完成后合并文件
+    fileComplete (file) {
+      return new Promise((resolve, reject) => {
+        needMerge({
+          filename: file.name,
+          identifier: file.uniqueIdentifier,
+          totalSize: file.size,
+          type: file.type,
+        })
+          .then(response => {
+            // 将返回结果添加到文件中
+            this.$refs[file.uploaderName][0].fileList[this.$refs[file.uploaderName][0].fileList.length - 1].result = response.data.result
+            // 删除上传文件
+            this.$refs[file.uploaderName][0].fileList[this.$refs[file.uploaderName][0].fileList.length - 1].cancel()
+            let fileInfor = {
+              name: response.data.result.fileName,
+              url: baseUrl.DOWN_URL + response.data.result.filePath,
+              size: response.data.result.fileSize,
+              createTime: response.data.result.createTime,
+              desc: '', 
+              title: '', 
+              coverBool:false
+            }
+            this.formModel[file.uploaderName].push(fileInfor)
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
     // 自定义上传多图上传图片
     defineRequest(name, file) {
       let getfile = file.file
@@ -956,7 +1050,8 @@ export default {
                 item.type == "img" ||
                 item.type == "file" ||
                 item.type == "audio" ||
-                item.type == "video"
+                item.type == "video" ||
+                item.type == "simpleVideo"
               ) {
                 tmpModel[item.name] = [];
               } else if (item.type == "slot") {
@@ -975,14 +1070,14 @@ export default {
               item.type == "img" ||
               item.type == "file" ||
               item.type == "audio" ||
-              item.type == "video"
+              item.type == "video" || 
+              item.type == "simpleVideo"
             ) {
               tmpUploadCallback[item.name] = (response, file, fileList) => {
                 this.handleUploadFile(item.name, response, file, fileList);
               };
               tmpRemoveCallback[item.name] = (file, fileList) => {
                 this.handleRemoveFile(item.name, file, fileList);
-                console.log("remove");
                 this.$emit("removeFile");
               };
               tmpBeforeUploadCallback[item.name] = file => {
@@ -1032,7 +1127,8 @@ export default {
     },
     // 移除上传文件回调
     handleRemoveFile(name, file, fileList) {
-      console.log(fileList);
+      console.log(fileList, '123456');
+      console.log(file, '123456');
       this.formModel[name].forEach((item, index) => {
         if (file.uid == item.uid) {
           this.formModel[name].splice(index, 1);
