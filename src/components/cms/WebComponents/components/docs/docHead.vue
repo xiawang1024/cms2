@@ -216,6 +216,12 @@ export default {
       this.multipleList.forEach((ele) => {
         this.documentIds.push(ele.articleId)
       })
+      for(let i=0; i<this.multipleList.length; i++) {
+        if(this.multipleList[i].articleStatus == 1) {
+          this.$message.warning('选择文章包含正在审核的文章，不能进行该操作！')
+          return
+        }
+      }
       switch(command) {
         case '1':
           this.title = '发布'
