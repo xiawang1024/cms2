@@ -1,5 +1,8 @@
 <template>
   <div class="helpdoc-container">
+    <div class="v-search-header">
+      <v-search :search-settings="searchSettings" @search="searchItem"/>
+    </div>
     <div class="tool-bar">
       <div class="leftAside">
         <el-button size="mini" type="primary" :disabled="!selectList.length>0" @click="handlePass('index','row','many')">批量通过</el-button>
@@ -24,6 +27,7 @@
             v-model="columnSelection"
             :options="options"
             @change="handleChange"
+            clearable
             size="mini"
           />
         </div>
@@ -137,6 +141,33 @@ export default {
       topStatus: "default",
       dropValue: "显示全部",
       timerassign:null,
+      // 搜索修改
+      searchSettings: [{
+        label: '显示方式',
+        name: 'top',
+        type: 'select',
+        placeholder: '请选择',
+        options: [
+          {
+            label: '置顶',
+            value: true
+          }, {
+            label: '非置顶',
+            value: false
+          }
+        ],
+        visible: true
+      }, {
+        label: '栏目',
+        name: 'channelId',
+        type: 'cascader',
+        placeholder: '请选择',
+        options: [
+        ],
+        visible: true
+      }],
+      searchData: {
+      },
     };
   },
   created() {
@@ -339,6 +370,7 @@ export default {
             if (res.data.code == "0") {
               _this.$nextTick(()=>{
                  _this.options = _this.myTree(res.data.result);
+                 this.searchSettings[1].options = _this.myTree(res.data.result)
               })
 
             } else {
@@ -353,8 +385,6 @@ export default {
           });
       });
     },
-
-    search() {},
     resetChoice() {
       this.reviewType = "default";
       this.topStatus = "default";
@@ -394,6 +424,16 @@ export default {
       } else if (this.reviewType === "ColumnCheck") {
         this.requestTreeColumn();
       }
+    },
+    searchItem(data) {
+      this.searchData = data
+      // this.getSensitiveList()
+      this.pageNo = 1;
+      this.pageSize = 10;
+      this.totalCount = 0;
+      this.reviewType = "ColumnCheck";
+      this.currentChannelId = data.reverse()[0];
+      this.requestTreeColumn();
     },
     //查询树
     handleChange(value) {
@@ -536,6 +576,7 @@ export default {
 }
 .tool-bar {
   overflow: hidden;
+  margin-top:10px;
 }
 .block {
   display: inline-block;
@@ -557,9 +598,13 @@ export default {
 .colorDanger {
   color: #f56c6c;
 }
-/deep/.mytextstyle{
+.mytextstyle{
   font-size: 16px;
   letter-spacing: 1px;
   padding: 5px 0;
+}
+.el-pagination{
+  margin-top:30px;
+  margin-bottom:30px;
 }
 </style>
