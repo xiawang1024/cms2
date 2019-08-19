@@ -75,9 +75,7 @@
               <div class="leftdiv">处理状态</div>
             </el-col>
             <el-col :span="19">
-              <div
-                :class="[formData.auditStatus==1?'colgreen':'colred','rightdiv']"
-              >{{ formData.auditStatus01 }}</div>
+              <div :class="[formData.auditStatus==1?'colgreen':'colred','rightdiv']">{{ formData.auditStatus01 }}</div>
             </el-col>
           </el-row>
           <el-row>
@@ -113,10 +111,45 @@
             </el-col>
           </el-row>
         </div>
+
       </el-main>
-      <el-main v-if="auditStatus==0" class="elmain3">
-        <el-button size="small" @click="amendDiscloseStateBtn(1)" type="primary">审核通过</el-button>
-        <el-button size="small" @click="amendDiscloseStateBtn(2)" type="danger">审核拒绝</el-button>
+      <div
+        class="videoUrl"
+        v-if="formImgVide"
+      >
+        <div
+          class="img-wrap-list"
+          v-for="(item,index) in formImgVide"
+          :key="index"
+        >
+          <div class="video-wrap">
+            <video
+              v-if="item.dataFlag == false"
+              controls="controls"
+              :src="item.dataUrl"
+            />
+            <img
+              v-if="item.dataFlag==true"
+              :src="item.dataUrl"
+              alt=""
+            >
+          </div>
+        </div>
+      </div>
+      <el-main
+        v-if="auditStatus==0"
+        class="elmain3"
+      >
+        <el-button
+          size="small"
+          @click="amendDiscloseStateBtn(1)"
+          type="primary"
+        >审核通过</el-button>
+        <el-button
+          size="small"
+          @click="amendDiscloseStateBtn(2)"
+          type="danger"
+        >审核拒绝</el-button>
       </el-main>
     </el-container>
     <!-- <div>{{discloseClassify}}</div> -->
@@ -136,7 +169,8 @@ export default {
       formData: {},
       searchlist: [],
       auditStatus: 0,
-      discloseId: ""
+      discloseId: "",
+      formImgVide: {}
     };
   },
   computed: {
@@ -182,9 +216,13 @@ export default {
         discloseInfor(res)
           .then(response => {
             _this.formData = response.data.result;
+
             _this.auditStatus = _this.formData.auditStatus;
             _this.discloseClassify();
             _this.amendState();
+            if (response.data.result.videoUrl) {
+              _this.formImgVide = response.data.result.videoUrl;
+            }
             resolve();
           })
           .catch(error => {
@@ -360,5 +398,35 @@ export default {
   .colred {
     color: #f56c6c;
   }
+}
+.videoUrl {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.videoUrl .img-wrap-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.videoUrl .img-wrap-list .video-wrap {
+  width: 100%;
+  height: 300px;
+}
+.videoUrl .img-wrap-list .video-wrap video {
+  width: 100%;
+  height: 100%;
+}
+// .videoUrl .img-wrap-list .img-wrap {
+//   width: 45%;
+//   height: 300px;
+// }
+.videoUrl .img-wrap-list .video-wrap img {
+  width: 100%;
+  height: auto;
 }
 </style>
