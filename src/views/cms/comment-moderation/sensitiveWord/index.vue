@@ -110,13 +110,13 @@ export default {
           // document.body.appendChild(link);
           // link.click();
           // resolve()
-          // let blob = new Blob([res.data], {type: 'application/vnd.ms-excel'})
-          // var link = document.createElement('a');
-          // console.log(link, 'link')
-          // link.href = window.URL.createObjectURL(blob);
-          // console.log(link.href, 'link.href')
-          // link.download = "导出.xlsx";
-          // link.click();
+          let blob = new Blob([res.data],{type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'})
+          var link = document.createElement('a');
+          console.log(link, 'link')
+          link.href = window.URL.createObjectURL(blob);
+          console.log(link.href, 'link.href')
+          link.download = "导出.xlsx";
+          link.click();
           //  download('导出.xlsx', res.data)
         })
           .catch(err => {

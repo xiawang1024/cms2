@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+request.defaults.headers.contentType = 'application/json;charset=utf-8'
 // import axios from 'axios'
 export function fetchSensitiveList(word, pageNo, pageSize) {
   let selectWord = word ? word : ''

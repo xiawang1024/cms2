@@ -168,6 +168,7 @@ request.interceptors.request.use(
         // config.headers = {
         //   'Content-Type': 'application/json;charset=utf-8'
         // }
+        //config.headers[Content-Type] = 'application/json;charset=utf-8'
       }
       requestLoading.open(config.loadingConfig, config.baseURL, config.url)
       return config
