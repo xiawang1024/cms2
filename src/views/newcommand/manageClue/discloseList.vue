@@ -8,9 +8,7 @@
         :class="[activeClass0 == 0 ? 'activeClass0':'','auditBtns','auditBtnAll']"
       >
         全部申请(
-        <span
-          class="auditBtnSpan"
-        >{{ discloseStatenum[0]+discloseStatenum[1]+discloseStatenum[2] }}</span> )
+        <span class="auditBtnSpan">{{ discloseStatenum[0]+discloseStatenum[1]+discloseStatenum[2] }}</span> )
       </div>
       <div
         @click="auditBtnsClik(1,$event)"
@@ -35,7 +33,12 @@
       </div>
     </div>
     <div class="v-search-header">
-      <v-search :search-settings="searchSettings" @search="searchItem"/>
+      <v-search
+        :search-settings="searchSettings"
+        @search="searchItem"
+        label-width="90px"
+        size="mini"
+      />
     </div>
     <div class="tool-bar">
       <el-button
@@ -50,10 +53,22 @@
       :header-cell-style="{color:'#000'}"
       :data="tableData"
       style="width: 100%"
-      size="mini">
+      size="mini"
+    >
       >
-      <el-table-column min-width="300" align="left" prop="breakingName" label="标题" show-overflow-tooltip/>
-      <el-table-column min-width="100" align="left" prop="newsOrigin" label="线索来源">
+      <el-table-column
+        min-width="300"
+        align="left"
+        prop="breakingName"
+        label="标题"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        min-width="100"
+        align="left"
+        prop="newsOrigin"
+        label="线索来源"
+      >
         <template slot-scope="scope">
           <span v-if="scope.row.newsOrigin == 0">电话</span>
           <span v-if="scope.row.newsOrigin == 1">数据接口</span>
@@ -63,17 +78,50 @@
           <span v-if="scope.row.newsOrigin == 5">其他</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="100" align="left" prop="breakingType" label="爆料分类"/>
-      <el-table-column min-width="100" align="left" prop="breakingPeople" label="爆料人"/>
-      <el-table-column min-width="100" align="left" prop="auditStatus" label="处理状态">
+      <el-table-column
+        min-width="100"
+        align="left"
+        prop="breakingType"
+        label="爆料分类"
+      />
+      <el-table-column
+        min-width="100"
+        align="left"
+        prop="breakingPeople"
+        label="爆料人"
+      />
+      <el-table-column
+        min-width="100"
+        align="left"
+        prop="auditStatus"
+        label="处理状态"
+      >
         <template slot-scope="scope">
-          <span class="colyellow" v-if="scope.row.auditStatus == 0">待处理</span>
-          <span class="colgreen" v-if="scope.row.auditStatus == 1">已通过</span>
-          <span class="colred" v-if="scope.row.auditStatus == 2">已拒绝</span>
+          <span
+            class="colyellow"
+            v-if="scope.row.auditStatus == 0"
+          >待处理</span>
+          <span
+            class="colgreen"
+            v-if="scope.row.auditStatus == 1"
+          >已通过</span>
+          <span
+            class="colred"
+            v-if="scope.row.auditStatus == 2"
+          >已拒绝</span>
         </template>
       </el-table-column>·
-      <el-table-column min-width="220" align="left" prop="breakingTime" label="爆料时间"/>
-      <el-table-column min-width="220" align="left" label="操作">
+      <el-table-column
+        min-width="220"
+        align="left"
+        prop="breakingTime"
+        label="爆料时间"
+      />
+      <el-table-column
+        min-width="220"
+        align="left"
+        label="操作"
+      >
         <template slot-scope="scope">
           <div style="text-align:left">
             <el-button
@@ -156,8 +204,16 @@ export default {
           type: "text"
         },
         {
-          label: "爆料时间",
-          name: "breakingTime",
+          label: "开始时间",
+          name: "startTime",
+          placeholder: "请选择时间",
+          visible: true,
+          options: [],
+          type: "date"
+        },
+        {
+          label: "结束时间",
+          name: "endTime",
           placeholder: "请选择时间",
           visible: true,
           options: [],
@@ -227,7 +283,9 @@ export default {
       discloseStatenum: [0, 0, 0], //爆料状态数值
       uplistdata: {
         breakingName: "",
-        breakingTime: "",
+        // breakingTime: "",
+        startTime: "",
+        endTime: "",
         auditStatus: "",
         pageNo: 1,
         pageSize: 15
@@ -238,7 +296,7 @@ export default {
     $route(val) {
       // this.uplistdata.assign(this.searchData);
       // this.columnList(this.uplistdata);
-      this.reloadlist()
+      this.reloadlist();
     }
   },
   mounted() {
@@ -271,10 +329,12 @@ export default {
         this.activeClass0 = 0;
       }
       this.searchData = searchData;
-      if ("breakingTime" in this.searchData) {
-        this.searchData.breakingTime = this.timeFormat(
-          this.searchData.breakingTime
-        );
+      if ("startTime" in this.searchData) {
+        this.searchData.startTime = this.timeFormat(this.searchData.startTime);
+        this.searchData.endTime = this.timeFormat(this.searchData.endTime);
+      }
+      if ("endTime" in this.searchData) {
+        this.searchData.endTime = this.timeFormat(this.searchData.endTime);
       }
       this.pageNum = 1;
       let res = {};
@@ -301,10 +361,11 @@ export default {
         discloseList(res)
           .then(response => {
             let content = response.data.result.content;
-            content.forEach((element, idnex) => {
-              element.breakingType =
-                _this.discloseClassify[element.breakingType - 1].typeName;
-            });
+            // console.log(content, "ssss");
+            // content.forEach((element, idnex) => {
+            //   element.breakingType =
+            //     _this.discloseClassify[element.breakingType - 1].typeName;
+            // });
             _this.tableData = content;
             _this.totalCount = response.data.result.total;
             resolve();
@@ -326,7 +387,7 @@ export default {
             // 初始化搜索信息
             let res = {
               breakingName: "",
-              breakingTime: "",
+              startTime: "",
               pageNo: _this.pageNum,
               pageSize: _this.pageSize
             };
@@ -345,7 +406,6 @@ export default {
       } else {
         this.uplistdata.auditStatus = "";
       }
-      console.log(this.auditStatus);
       this.columnList(this.uplistdata);
     },
     /**
@@ -357,7 +417,7 @@ export default {
         discloseState(num)
           .then(response => {
             _this.$nextTick(function() {
-              this.$set(_this.discloseStatenum,num,response.data.result)
+              this.$set(_this.discloseStatenum, num, response.data.result);
             });
             resolve();
           })
@@ -388,7 +448,8 @@ export default {
       this.pageSize = val;
       let res = {
         breakingName: "",
-        breakingTime: "",
+        startTime: "",
+        endTime: "",
         auditStatus: null,
         pageNo: this.pageNum,
         pageSize: this.pageSize
@@ -399,7 +460,8 @@ export default {
       this.pageNum = val;
       let res = {
         breakingName: "",
-        breakingTime: "",
+        startTime: "",
+        endTime: "",
         auditStatus: null,
         pageNo: this.pageNum,
         pageSize: this.pageSize
@@ -433,77 +495,77 @@ export default {
 </script>
 <style lang='scss' scoped>
 .column-manages {
-.confirm {
-  height: 28px;
-  margin-left: 10px;
-}
-.operate {
-  width: 122px;
-  margin-left: 10px;
-}
-.choose {
-  padding-left: 16px;
-}
-.topdiv {
-  display: flex;
-  justify-content: space-between;
-  background: rgba(243, 243, 243, 1);
-  align-items: center;
-  height: 60px;
-  box-sizing: border-box;
-  padding: 0 18px;
-}
-.topdivLeft {
-  position: relative;
-  font-family: "微软雅黑";
-  font-weight: 400;
-  font-style: normal;
-  color: #999999;
-  box-sizing: border-box;
-  padding: 0 10px;
-}
-.topdivLeft::before {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 5px;
-  height: 24px;
-  content: "";
-  background: #409eff;
-}
-.auditBtn {
-  display: flex;
-  align-items: center;
-  width: 520px;
-  justify-content: space-between;
-}
-.auditBtns {
-  cursor: pointer;
-  width: 113px;
-  height: 32px;
-  line-height: 32px;
-  background: inherit;
-  background-color: white;
-  font-family: "微软雅黑";
-  font-weight: 400;
-  font-style: normal;
-  border-width: 1px;
-  border-style: solid;
-  border-color: rgba(228, 228, 228, 1);
-  border-radius: 4px;
-  text-align: center;
-  font-size: 14px;
-}
-.activeClass0 {
-  background-color: #409eff;
-  color: white;
-  .auditBtnSpan {
-    color: white;
+  .confirm {
+    height: 28px;
+    margin-left: 10px;
   }
-}
-.auditBtnSpan {
-  color: rgb(240, 72, 68);
-}
+  .operate {
+    width: 122px;
+    margin-left: 10px;
+  }
+  .choose {
+    padding-left: 16px;
+  }
+  .topdiv {
+    display: flex;
+    justify-content: space-between;
+    background: rgba(243, 243, 243, 1);
+    align-items: center;
+    height: 60px;
+    box-sizing: border-box;
+    padding: 0 18px;
+  }
+  .topdivLeft {
+    position: relative;
+    font-family: "微软雅黑";
+    font-weight: 400;
+    font-style: normal;
+    color: #999999;
+    box-sizing: border-box;
+    padding: 0 10px;
+  }
+  .topdivLeft::before {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 5px;
+    height: 24px;
+    content: "";
+    background: #409eff;
+  }
+  .auditBtn {
+    display: flex;
+    align-items: center;
+    width: 520px;
+    justify-content: space-between;
+  }
+  .auditBtns {
+    cursor: pointer;
+    width: 113px;
+    height: 32px;
+    line-height: 32px;
+    background: inherit;
+    background-color: white;
+    font-family: "微软雅黑";
+    font-weight: 400;
+    font-style: normal;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(228, 228, 228, 1);
+    border-radius: 4px;
+    text-align: center;
+    font-size: 14px;
+  }
+  .activeClass0 {
+    background-color: #409eff;
+    color: white;
+    .auditBtnSpan {
+      color: white;
+    }
+  }
+  .auditBtnSpan {
+    color: rgb(240, 72, 68);
+  }
   // margin: 30px;
   .pagination {
     margin-top: 20px;
@@ -539,7 +601,7 @@ export default {
   .colred {
     color: #f56c6c;
   }
-  .el-card__header{
+  .el-card__header {
     padding-bottom: 0px;
   }
 }

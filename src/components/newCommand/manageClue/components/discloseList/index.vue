@@ -1,9 +1,19 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-08-19 15:25:26
+ * @LastEditTime: 2019-08-19 15:38:54
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div class="column-manage">
     <div class="topdiv">
       <div class="topdivLeft">爆料列表</div>
       <div class="topdivRight">
-        <el-button icon="el-icon-refresh" type="primary">刷新</el-button>
+        <el-button
+          icon="el-icon-refresh"
+          type="primary"
+        >刷新</el-button>
       </div>
     </div>
 
@@ -22,18 +32,27 @@
         待审核(
         <span class="auditBtnSpan">1000</span> )
       </div>
-      <div @click="auditBtnsClik(2,$event)" :class="[activeClass0 == 2 ? 'activeClass0':'','auditBtns','auditBtnOrder']">
+      <div
+        @click="auditBtnsClik(2,$event)"
+        :class="[activeClass0 == 2 ? 'activeClass0':'','auditBtns','auditBtnOrder']"
+      >
         已通过(
         <span class="auditBtnSpan">1000</span> )
       </div>
-      <div @click="auditBtnsClik(3,$event)" :class="[activeClass0 == 3 ? 'activeClass0':'','auditBtns','auditBtnOrder']">
+      <div
+        @click="auditBtnsClik(3,$event)"
+        :class="[activeClass0 == 3 ? 'activeClass0':'','auditBtns','auditBtnOrder']"
+      >
         已拒绝(
         <span class="auditBtnSpan">1000</span> )
       </div>
     </div>
 
     <div class="v-search-header">
-      <v-search :search-settings="searchSettings" @search="searchItem"/>
+      <v-search
+        :search-settings="searchSettings"
+        @search="searchItem"
+      />
     </div>
     <div class="tool-bar">
       <el-button
@@ -44,53 +63,108 @@
       >添加</el-button>
     </div>
 
-    <el-table ref="multipleTable" :header-cell-style="{color:'#000'}" :data="tableData" style="width: 100%">
-      <el-table-column align="center" type="selection"/>
-      <el-table-column align="center" prop="channelName" label="标题" show-overflow-tooltip/>
+    <el-table
+      ref="multipleTable"
+      :header-cell-style="{color:'#000'}"
+      :data="tableData"
+      style="width: 100%"
+    >
+      <el-table-column
+        align="center"
+        type="selection"
+      />
+      <el-table-column
+        align="center"
+        prop="channelName"
+        label="标题"
+        show-overflow-tooltip
+      />
 
-      <el-table-column align="center" prop="channelCode" label="线索来源"/>
-      <el-table-column align="center" prop="domainName" label="爆料分类"/>
-      <el-table-column align="center" prop="managerUser" label="爆料人"/>
-      <el-table-column align="center" prop="hiddenFlag" label="处理状态">
+      <el-table-column
+        align="center"
+        prop="channelCode"
+        label="线索来源"
+      />
+      <el-table-column
+        align="center"
+        prop="domainName"
+        label="爆料分类"
+      />
+      <el-table-column
+        align="center"
+        prop="managerUser"
+        label="爆料人"
+      />
+      <el-table-column
+        align="center"
+        prop="hiddenFlag"
+        label="处理状态"
+      >
         <template slot-scope="scope">
           <span v-if="scope.row.hiddenFlag == 1">待处理</span>
           <span v-else>已通过</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" prop="modifyTime" label="爆料时间"/>
+      <el-table-column
+        align="center"
+        prop="modifyTime"
+        label="爆料时间"
+      />
 
-      <el-table-column align="center" label="操作" width="150">
-        <template v-if="checkAuth('cms:channel:operation')" slot-scope="scope">
+      <el-table-column
+        align="center"
+        label="操作"
+        width="150"
+      >
+        <template
+          v-if="checkAuth('cms:channel:operation')"
+          slot-scope="scope"
+        >
           <el-button type="text">审核</el-button>
           <el-button
             type="text"
             v-if="checkAuth('cms:channel:delete')"
             @click="columnDel(scope.row)"
           >编辑</el-button>
-          <el-button type="text" @click="columnAddEdit('discloseView')">查看详情</el-button>
+          <el-button
+            type="text"
+            @click="columnAddEdit('discloseView')"
+          >查看详情</el-button>
         </template>
       </el-table-column>
     </el-table>
     <div class="bottomdiv">
       <div class="btmdivleft">
         <div class="choose">
-          <el-checkbox size="medium" @change="allchooses" v-model="allchoose">全选</el-checkbox>
+          <el-checkbox
+            size="medium"
+            @change="allchooses"
+            v-model="allchoose"
+          >全选</el-checkbox>
         </div>
         <div class="operate">
           <template>
-            <el-select size="mini" v-model="operateVal" placeholder="批量操作">
+            <el-select
+              size="mini"
+              v-model="operateVal"
+              placeholder="批量操作"
+            >
               <el-option
                 v-for="item in options1"
                 :key="item.value"
                 :label="item.label"
-                :value="item.value"/>
+                :value="item.value"
+              />
             </el-select>
           </template>
 
         </div>
-        <el-button class="confirm" size="mini">确定</el-button>
-        
+        <el-button
+          class="confirm"
+          size="mini"
+        >确定</el-button>
+
       </div>
       <div class="btmright">
         <el-pagination
@@ -119,18 +193,22 @@ export default {
   mixins: [mixins],
   data() {
     return {
-      allchoose:false,
-        options1: [{
-          value: '选项1',
-          label: '审核'
-        }, {
-          value: '选项2',
-          label: '删除'
-        }, {
-          value: '选项3',
-          label: '其他'
-        }],
-        operateVal:'',
+      allchoose: false,
+      options1: [
+        {
+          value: "选项1",
+          label: "审核"
+        },
+        {
+          value: "选项2",
+          label: "删除"
+        },
+        {
+          value: "选项3",
+          label: "其他"
+        }
+      ],
+      operateVal: "",
       activeClass0: 0,
       tableData: [],
       pageNum: 1,
@@ -145,7 +223,7 @@ export default {
           options: [],
           type: "cascader"
         },
-         {
+        {
           label: "爆料时间",
           name: "discloseTime",
           placeholder: "请选择时间",
@@ -153,7 +231,7 @@ export default {
           options: [],
           type: "date"
         },
-             
+
         {
           label: "状态",
           name: "chulistate",
@@ -175,7 +253,7 @@ export default {
             }
           ]
         },
-            {
+        {
           label: "申请时间",
           name: "applyforTime",
           placeholder: "请选择时间",
@@ -204,7 +282,8 @@ export default {
               value: 2
             }
           ]
-        },         {
+        },
+        {
           label: "处理时间",
           name: "manageTime",
           placeholder: "请选择时间",
@@ -230,24 +309,23 @@ export default {
     this.columnSearchList();
   },
   methods: {
-    allchooses(){
-      var _this=this
-      if(this.allchoose){
-    this.tableData.forEach(row => {
-            _this.$refs.multipleTable.toggleRowSelection(row, true);
-          });
-
-      }else{
-            this.tableData.forEach(row => {
-     _this.$refs.multipleTable.toggleRowSelection(row, false);
-
-          });
+    allchooses() {
+      var _this = this;
+      if (this.allchoose) {
+        this.tableData.forEach(row => {
+          _this.$refs.multipleTable.toggleRowSelection(row, true);
+        });
+      } else {
+        this.tableData.forEach(row => {
+          _this.$refs.multipleTable.toggleRowSelection(row, false);
+        });
       }
     },
     auditBtnsClik(num, e) {
       //  e.target 点击的元素  e.currentTarget是绑定事件元素
-      console.log(e);
-      console.log(num);
+      console.log(666666555555444444);
+      console.log(e, "4444");
+      console.log(num, "66655");
       this.activeClass0 = num;
     },
     columnSearchList() {
@@ -255,6 +333,7 @@ export default {
       return new Promise((resolve, reject) => {
         columnList({}, 1, 1000)
           .then(response => {
+            console.log(response, "666");
             this.$nextTick(() => {
               _this.searchSettings[0].options = _this.toTree(
                 response.data.result.content
@@ -398,24 +477,24 @@ export default {
 </script>
 
 <style lang='scss'>
-.confirm{
+.confirm {
   height: 28px;
   margin-left: 10px;
 }
-.operate{
-width: 122px;
-    margin-left: 10px;
+.operate {
+  width: 122px;
+  margin-left: 10px;
 }
-.btmdivleft{
+.btmdivleft {
   display: flex;
-  align-items:center;
+  align-items: center;
 }
-.bottomdiv{
-      display: flex;
-    justify-content: space-between;
-    align-items: center;
+.bottomdiv {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.choose{
+.choose {
   padding-left: 16px;
 }
 .topdiv {
@@ -443,7 +522,7 @@ width: 122px;
   width: 5px;
   height: 24px;
   content: "";
-  background: #409EFF;
+  background: #409eff;
 }
 .auditBtn {
   height: 80px;
@@ -470,7 +549,7 @@ width: 122px;
   font-size: 14px;
 }
 .activeClass0 {
-  background-color: #409EFF;
+  background-color: #409eff;
   color: white;
   .auditBtnSpan {
     color: white;
@@ -490,7 +569,6 @@ width: 122px;
     margin-bottom: 20px;
   }
   .el-table {
-
     .space-holder {
       width: 2px;
       height: 20px;

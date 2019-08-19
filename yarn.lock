@@ -1268,7 +1268,7 @@ babel-register@^6.26.0:
     mkdirp "^0.5.1"
     source-map-support "^0.4.15"
 
-babel-runtime@6.x, babel-runtime@^6.18.0, babel-runtime@^6.22.0, babel-runtime@^6.26.0:
+babel-runtime@6.x, babel-runtime@^6.11.6, babel-runtime@^6.18.0, babel-runtime@^6.22.0, babel-runtime@^6.26.0:
   version "6.26.0"
   resolved "http://registry.npm.taobao.org/babel-runtime/download/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
   integrity sha1-llxwWGaOgrVde/4E/yM3vItWR/4=
@@ -1863,6 +1863,15 @@ clipboard@1.7.1:
     select "^1.1.2"
     tiny-emitter "^2.0.0"
 
+clipboard@^2.0.0:
+  version "2.0.4"
+  resolved "https://registry.npm.taobao.org/clipboard/download/clipboard-2.0.4.tgz#836dafd66cf0fea5d71ce5d5b0bf6e958009112d"
+  integrity sha1-g22v1mzw/qXXHOXVsL9ulYAJES0=
+  dependencies:
+    good-listener "^1.2.2"
+    select "^1.1.2"
+    tiny-emitter "^2.0.0"
+
 cliui@^3.2.0:
   version "3.2.0"
   resolved "http://registry.npm.taobao.org/cliui/download/cliui-3.2.0.tgz#120601537a916d29940f934da3b48d585a39213d"
@@ -2298,16 +2307,16 @@ css-declaration-sorter@^4.0.1:
     postcss "^7.0.1"
     timsort "^0.3.0"
 
-css-loader@1.0.0:
-  version "1.0.0"
-  resolved "http://registry.npm.taobao.org/css-loader/download/css-loader-1.0.0.tgz#9f46aaa5ca41dbe31860e3b62b8e23c42916bf56"
-  integrity sha1-n0aqpcpB2+MYYOO2K44jxCkWv1Y=
+css-loader@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.npm.taobao.org/css-loader/download/css-loader-1.0.1.tgz#6885bb5233b35ec47b006057da01cc640b6b79fe"
+  integrity sha1-aIW7UjOzXsR7AGBX2gHMZAtref4=
   dependencies:
     babel-code-frame "^6.26.0"
     css-selector-tokenizer "^0.7.0"
     icss-utils "^2.1.0"
     loader-utils "^1.0.2"
-    lodash.camelcase "^4.3.0"
+    lodash "^4.17.11"
     postcss "^6.0.23"
     postcss-modules-extract-imports "^1.2.0"
     postcss-modules-local-by-default "^1.2.0"
@@ -2670,7 +2679,7 @@ delayed-stream@~1.0.0:
   resolved "http://registry.npm.taobao.org/delayed-stream/download/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
   integrity sha1-3zrhmayt+31ECqrgsp4icrJOxhk=
 
-delegate@^3.1.2:
+delegate@^3.1.2, delegate@^3.2.0:
   version "3.2.0"
   resolved "http://registry.npm.taobao.org/delegate/download/delegate-3.2.0.tgz#b66b71c3158522e8ab5744f720d8ca0c2af59166"
   integrity sha1-tmtxwxWFIuirV0T3INjKDCr1kWY=
@@ -5044,11 +5053,6 @@ lodash.assign@^4.2.0:
   version "4.2.0"
   resolved "http://registry.npm.taobao.org/lodash.assign/download/lodash.assign-4.2.0.tgz#0d99f3ccd7a6d261d19bdaeb9245005d285808e7"
   integrity sha1-DZnzzNem0mHRm9rrkkUAXShYCOc=
-
-lodash.camelcase@^4.3.0:
-  version "4.3.0"
-  resolved "http://registry.npm.taobao.org/lodash.camelcase/download/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
-  integrity sha1-soqmKIorn8ZRA1x3EfZathkDMaY=
 
 lodash.clonedeep@^4.3.2, lodash.clonedeep@^4.5.0:
   version "4.5.0"
@@ -7657,10 +7661,10 @@ simple-swizzle@^0.2.2:
   dependencies:
     is-arrayish "^0.3.1"
 
-simple-uploader.js@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.npm.taobao.org/simple-uploader.js/download/simple-uploader.js-0.5.0.tgz#bf468d369922b1ca132b29c3e26e484f958c85fa"
-  integrity sha1-v0aNNpkiscoTKynD4m5IT5WMhfo=
+simple-uploader.js@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.npm.taobao.org/simple-uploader.js/download/simple-uploader.js-0.5.1.tgz#2ef48f9af4bc2fef2d2a7a46b81fe98c3954ee97"
+  integrity sha1-LvSPmvS8L+8tKnpGuB/pjDlU7pc=
 
 slash@^1.0.0:
   version "1.0.0"
@@ -7785,6 +7789,11 @@ source-map@^0.6.1, source-map@~0.6.0, source-map@~0.6.1:
   version "0.6.1"
   resolved "http://registry.npm.taobao.org/source-map/download/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha1-dHIq8y6WFOnCh6jQu95IteLxomM=
+
+spark-md5@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npm.taobao.org/spark-md5/download/spark-md5-3.0.0.tgz#3722227c54e2faf24b1dc6d933cc144e6f71bfef"
+  integrity sha1-NyIifFTi+vJLHcbZM8wUTm9xv+8=
 
 spdx-correct@^3.0.0:
   version "3.1.0"
@@ -8742,6 +8751,13 @@ vue-awesome@^3.5.1:
   resolved "https://registry.npm.taobao.org/vue-awesome/download/vue-awesome-3.5.2.tgz#d9cf3780884790b83075f8a2703ecec2f217ad9f"
   integrity sha1-2c83gIhHkLgwdfiicD7OwvIXrZ8=
 
+vue-clipboard2@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.npm.taobao.org/vue-clipboard2/download/vue-clipboard2-0.3.0.tgz#b04d3f9a2d46f12ca85178445930b38463640b22"
+  integrity sha1-sE0/mi1G8SyoUXhEWTCzhGNkCyI=
+  dependencies:
+    clipboard "^2.0.0"
+
 vue-count-to@1.0.13:
   version "1.0.13"
   resolved "http://registry.npm.taobao.org/vue-count-to/download/vue-count-to-1.0.13.tgz#3e7573ea6e64c2b2972f64e0a2ab2e23c7590ff3"
@@ -8769,6 +8785,13 @@ vue-i18n@7.3.2:
   resolved "http://registry.npm.taobao.org/vue-i18n/download/vue-i18n-7.3.2.tgz#1205bb8811323fd5c44e57e4fd619beaf2f7a9a1"
   integrity sha1-EgW7iBEyP9XETlfk/WGb6vL3qaE=
 
+vue-image-crop-upload@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.npm.taobao.org/vue-image-crop-upload/download/vue-image-crop-upload-2.5.0.tgz#2dcf499e5b4944bc5077fc30b5f24d5e977f313c"
+  integrity sha1-Lc9JnltJRLxQd/wwtfJNXpd/MTw=
+  dependencies:
+    babel-runtime "^6.11.6"
+
 vue-loader@15.3.0:
   version "15.3.0"
   resolved "http://registry.npm.taobao.org/vue-loader/download/vue-loader-15.3.0.tgz#b474d10a4e93d934a78c147fc3e314b370e9fc54"
@@ -8792,12 +8815,12 @@ vue-simple-context-menu@^3.0.1:
   dependencies:
     v-click-outside "^2.0.2"
 
-vue-simple-uploader@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.npm.taobao.org/vue-simple-uploader/download/vue-simple-uploader-0.7.0.tgz#a6939c7446d97d52af39fb02bac9e360d95e0a41"
-  integrity sha1-ppOcdEbZfVKvOfsCusnjYNleCkE=
+vue-simple-uploader@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.npm.taobao.org/vue-simple-uploader/download/vue-simple-uploader-0.7.1.tgz#9791897e74d198dee526e718691c93aa02c31ea9"
+  integrity sha1-l5GJfnTRmN7lJucYaRyTqgLDHqk=
   dependencies:
-    simple-uploader.js "^0.5.0"
+    simple-uploader.js "^0.5.1"
 
 vue-splitpane@1.0.2:
   version "1.0.2"
@@ -8850,6 +8873,16 @@ watchpack@^1.5.0:
     chokidar "^2.0.2"
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
+
+wavesurfer.js@^2.0.0-beta01:
+  version "2.2.1"
+  resolved "https://registry.npm.taobao.org/wavesurfer.js/download/wavesurfer.js-2.2.1.tgz#066ccd85d1ce70b64bd5a5b491e2c797645a6973"
+  integrity sha1-BmzNhdHOcLZL1aW0keLHl2RaaXM=
+
+wavesurfer@^1.3.4:
+  version "1.3.4"
+  resolved "https://registry.npm.taobao.org/wavesurfer/download/wavesurfer-1.3.4.tgz#17908abd20da11a8db460c5a176679621d519bfa"
+  integrity sha1-F5CKvSDaEajbRgxaF2Z5Yh1Rm/o=
 
 wbuf@^1.1.0, wbuf@^1.7.3:
   version "1.7.3"
