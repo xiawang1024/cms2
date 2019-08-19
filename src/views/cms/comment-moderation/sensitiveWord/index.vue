@@ -5,7 +5,7 @@
     </div>
     <div class="tool-bar">
       <el-button type="primary" size="mini" @click="handel('add')">新增</el-button>
-      <a href="http://static1.1byongche.com/%E4%BF%9D%E5%8D%95%E6%A8%A1%E6%9D%BF.xlsx" class="middle-style">
+      <a href="http://gw.test.dianzhenkeji.com/news-comment/敏感词模板.xlsx " class="middle-style">
         <el-button size="mini">下载模板</el-button>
       </a>
       <el-upload class="upload"
