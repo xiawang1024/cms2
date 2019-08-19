@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-
+// import axios from 'axios'
 export function fetchSensitiveList(word, pageNo, pageSize) {
   let selectWord = word ? word : ''
   return request({
@@ -42,3 +42,42 @@ export function deleteSensitive(id) {
     method: 'delete'
   })
 }
+export function downloadExcel(accessToken) {
+  return request({
+    url: 'http://gw.test.dianzhenkeji.com/news-comment/敏感词模板.xlsx',
+    method: 'get',
+    responseType:'blob',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    }
+  })
+  // postAjax(accessToken)
+}
+// function postAjax (accessToken) {
+//   axios({
+//     // baseURL: baseUrl || '/',
+//     method: 'post',
+//     url: 'http://gw.test.dianzhenkeji.com/news-comment/敏感词模板.xlsx',
+//     responseType: 'blob',
+//     headers: {
+//       'Content-Type': 'application/json;charset=utf-8',
+//       'Authorization': accessToken
+//     }
+//   })
+//     .then(res => {
+//       // Message.success('导出数据成功')
+//       // download(fileName, res.data)
+//       let blob = new Blob([res.data])
+//       var link = document.createElement('a')
+//       console.log(link, 'link')
+//       link.href = window.URL.createObjectURL(blob)
+//       console.log(link.href, 'link.href')
+//       link.download = '导出.xlsx'
+//       link.click()
+//       // loading.close()
+//     })
+//     .catch(error => {
+//       // Message.warning(error.msg ? error.msg : '导出失败')
+//       // loading.close()
+//     })
+// }

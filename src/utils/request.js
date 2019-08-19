@@ -6,7 +6,10 @@ import { refreshToken } from '@/api/login'
 import qs from 'qs' // 序列化表单数据
 const request = axios.create({
   baseURL: baseUrl.BASE_URL || '/',
-  timeout: 10000
+  timeout: 10000,
+  // headers: {
+  //   'Content-Type': 'application/json;charset=utf-8'
+  // }
 })
 
 // 请求接口loading页面
@@ -75,6 +78,8 @@ function onRefreshed(token) {
  */
 request.interceptors.request.use(
   (config) => {
+    console.log(config, 'config')
+    // config.headers[Content-Type] = 'application/json;charset=UTF-8'
     const auth = getAuth()
     /**
      * 判断是否已登录
