@@ -16,6 +16,7 @@
           <el-col :span="19">
             <div class="article-content-left">
               <video :src="videolist[0].url" controls="controls" width="100%" height="400px" v-if="videolist.length"/>
+              <img :src="coverImage.url" alt="" v-else class="cover-img">
               <!-- <audio :src="videolist[0].url" controls="controls" width="100%" height="400px" v-if="videolist.length"/> -->
               <aplayer 
                 autoplay :music="{
@@ -46,26 +47,16 @@
                 <div>作者：{{ documentInfor.articleAuthor }}</div>
                 <div>点击量：{{ documentInfor.clickNum }}</div>
                 <div>发布时间：{{ documentInfor.createTime }}</div>
-                 
+                <div v-if="documentInfor.extFieldsList && documentInfor.extFieldsList.length">
+                  <div v-for="(ele, index) in documentInfor.extFieldsList" :key="index">
+                    {{ ele.label }}:{{ ele.fieldValue }}
+                  </div>
+                </div>
               </div>
             </div>
           </el-col>
         </el-row>
       </div>
-      <!-- <div v-if="documentInfor.articleType =='1'">
-        <el-row :gutter="20" >
-          <el-col :span="6" v-for="(ele, index) in imageList" :key="index">
-            <div class="image-list">
-              <img :src="ele.url" alt="">
-            </div>
-          </el-col>
-        </el-row>
-      </div> -->
-      <!-- <div>
-        <div class="link-to">
-          <span size="small" class="link-url" @click="openLink(documentInfor.linkTo)">{{ documentInfor.linkTo }}</span>
-        </div>
-      </div> -->
     </div>
   </el-dialog>
 </template>
@@ -91,7 +82,8 @@ export default {
       documentInfor: {},
       imageList: [],
       videolist: [],
-      audioList: []
+      audioList: [],
+      coverImage: {}
     }
   },
   watch: {
@@ -114,6 +106,17 @@ export default {
       }
       return arrResoult
     },
+    getCover(imgList) {
+      if(imgList && imgList.length) {
+        for(let i=0; i<imgList.length; i++) {
+          if(imgList[i].coverBool) {
+            return imgList[i]
+          }
+        }
+      } else {
+        return {}
+      }
+    },
     handleClose() {
       this.$emit('update:dialogVisible', false)
     },
@@ -125,6 +128,8 @@ export default {
             this.imageList = this.differenceFile(response.data.result.articleAttachmentsList, 'IMG')
             this.videolist = this.differenceFile(response.data.result.articleAttachmentsList, 'VIDEO')
             this.audioList = this.differenceFile(response.data.result.articleAttachmentsList, 'AUDIO')
+            this.coverImage = this.getCover(response.data.result.coverImagesList)
+            console.log(this.coverImage, '123')
             resolve()
           })
           .catch((error) => {
@@ -197,7 +202,7 @@ export default {
           color: #999;
           display: block;
           border-bottom: 1px solid #dbdbdb;
-          padding: 10px 0;
+          padding: 18px 0;
         }
         .seoDescription-content{
           font-size: 15px;
@@ -212,6 +217,12 @@ export default {
         color: #666;
         padding: 10px 0 20px 0;
         line-height: 30px;
+      }
+    }
+    .article-content-left{
+      .cover-img{
+         width:100%;
+         height:auto;
       }
     }
   }
