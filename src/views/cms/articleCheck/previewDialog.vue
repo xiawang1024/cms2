@@ -2,16 +2,41 @@
   <el-dialog
     title="文章详情"
     :visible.sync="dialogVisible"
-    width="60%"
+    width="80%"
     class="check-preview1-dialog"
-    :before-close="handleClose">
-    <div v-if="documentInfor.articleId">
-      <h3>{{ documentInfor.articleTitle }}</h3>
-      <div>
-        {{ documentInfor.createTime }}
-        <span v-if="documentInfor.createUser">{{ documentInfor.createUser }}</span>
+    :before-close="handleClose"
+    :close-on-click-modal="false"
+  >
+    <div class="acticel-preview">
+      <div class="article-title">{{ documentInfor.articleTitle }}</div>
+      <div class="article-content">
+        <!-- {{ documentInfor.createTime }}
+        <span v-if="documentInfor.createUser">{{ documentInfor.createUser }}</span> -->
+        <el-row :gutter="20">
+          <el-col :span="19">
+            <div class="article-content-left">
+              <video :src="videolist[0].url" controls="controls" width="100%" height="400px" v-if="videolist.length"/>
+              <!-- <audio :src="videolist[0].url" controls="controls" width="100%" height="400px" v-if="videolist.length"/> -->
+              <aplayer 
+                autoplay :music="{
+                  title: audioList[0].name,
+                  artist: audioList[0].title,
+                  src: audioList[0].url,
+                  pic: 'https://cn-east-17-aplayer-35525609.oss.dogecdn.com/secretbase.jpg'
+                }"
+                v-if="audioList.length"
+              />
+              <div class="article-content" v-html="documentInfor.contentBody"/>
+            </div>
+          </el-col>
+          <el-col :span="5">
+            <div class="article-content-right">
+              right
+            </div>
+          </el-col>
+        </el-row>
       </div>
-      <div v-if="documentInfor.articleType =='1'">
+      <!-- <div v-if="documentInfor.articleType =='1'">
         <el-row :gutter="20" >
           <el-col :span="6" v-for="(ele, index) in imageList" :key="index">
             <div class="image-list">
@@ -19,22 +44,22 @@
             </div>
           </el-col>
         </el-row>
-      </div>
-      <div v-if="documentInfor.articleType =='3'">
-        <!-- <span>转载地址 </span>
-        <a :href="documentInfor.linkTo">{{ documentInfor.linkTo }}</a> -->
-        转载地址
+      </div> -->
+      <!-- <div>
         <div class="link-to">
           <span size="small" class="link-url" @click="openLink(documentInfor.linkTo)">{{ documentInfor.linkTo }}</span>
         </div>
-      </div>
-      <div v-html="documentInfor.contentBody"/>
+      </div> -->
     </div>
   </el-dialog>
 </template>
 <script>
 import { documentInfor } from '@/api/cms/articleCheck'
+import Aplayer from 'vue-aplayer'
 export default {
+  components: {
+    Aplayer
+  },
   props: {
     dialogVisible: {
       default: false,
@@ -48,7 +73,9 @@ export default {
   data() {
     return {
       documentInfor: {},
-      imageList: []
+      imageList: [],
+      videolist: [],
+      audioList: []
     }
   },
   watch: {
@@ -80,6 +107,11 @@ export default {
           .then((response) => {
             this.documentInfor = response.data.result
             this.imageList = this.differenceFile(response.data.result.articleAttachmentsList, 'IMG')
+            this.videolist = this.differenceFile(response.data.result.articleAttachmentsList, 'VIDEO')
+            this.audioList = this.differenceFile(response.data.result.articleAttachmentsList, 'AUDIO')
+            console.log(this.imageList)
+            console.log(this.videolist)
+            console.log(this.audioList)
             resolve()
           })
           .catch((error) => {
@@ -110,6 +142,28 @@ export default {
       width:auto;
       img{
         height:100%;
+      }
+    }
+    .article-title{
+      color: #333;
+      font-size: 30px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 40px;
+      margin-top: 40px;
+      width:100%;
+    }
+    .aplayer{
+      margin:0;
+    }
+    .aplayer-body{
+      .aplayer-pic{
+        background-color: #0076ee !important;
+      }
+    }
+    .article-content{
+      img{
+        max-width: 100%;
       }
     }
   }

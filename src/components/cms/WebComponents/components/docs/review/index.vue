@@ -1,69 +1,103 @@
 <template>
-  <div class="doc-review-dialog">
-    <el-dialog
-      :visible.sync="dialogVisible"
-      title="预览"
-      width="60%"
-      :before-close="colseMe"
-    > 
-      <div>
-        <h3>{{ documentInfor.articleTitle }}</h3>
-        <div>
-          {{ documentInfor.createTime }}
-          <span v-if="documentInfor.createUser">{{ documentInfor.createUser }}</span>
-        </div>
-        <div v-if="documentInfor.articleType =='1'">
-          <el-row :gutter="20" >
-            <el-col :span="6" v-for="(ele, index) in imageList" :key="index">
-              <div class="image-list">
-                <img :src="ele.url" alt="">
+  <el-dialog
+    title="文章详情"
+    :visible.sync="dialogVisible"
+    width="80%"
+    class="check-preview1-dialog"
+    :before-close="handleClose"
+    :close-on-click-modal="false"
+  >
+    <div class="acticel-preview">
+      <div class="article-title">{{ documentInfor.articleTitle }}</div>
+      <div class="article">
+        <!-- {{ documentInfor.createTime }}
+        <span v-if="documentInfor.createUser">{{ documentInfor.createUser }}</span> -->
+        <el-row :gutter="20">
+          <el-col :span="19">
+            <div class="article-content-left">
+              <video :src="videolist[0].url" controls="controls" width="100%" height="400px" v-if="videolist.length"/>
+              <!-- <audio :src="videolist[0].url" controls="controls" width="100%" height="400px" v-if="videolist.length"/> -->
+              <aplayer 
+                autoplay :music="{
+                  title: audioList[0].name,
+                  artist: audioList[0].title,
+                  src: audioList[0].url,
+                  pic: 'https://cn-east-17-aplayer-35525609.oss.dogecdn.com/secretbase.jpg'
+                }"
+                v-if="audioList.length"
+              />
+              <div class="article-content" v-html="documentInfor.contentBody"/>
+            </div>
+          </el-col>
+          <el-col :span="5">
+            <div class="article-content-right">
+              <div class="seoDescription">
+                <div class="seoDescription-title">摘要</div>
+                <div class="seoDescription-content">
+                  <span v-if="documentInfor.seoDescription">{{ documentInfor.seoDescription }}</span>
+                  <span v-else>暂无</span>
+                </div>
               </div>
-            </el-col>
-          </el-row>
-        </div>
-        <div v-if="documentInfor.articleType =='3'">
-          <!-- <span>转载地址 </span>
-          <a :href="documentInfor.linkTo">{{ documentInfor.linkTo }}</a> -->
-          转载地址
-          <div class="link-to">
-            <span size="small" class="link-url" @click="openLink(documentInfor.linkTo)">{{ documentInfor.linkTo }}</span>
-          </div>
-        </div>
-        <div v-html="contentBody"/>
+            </div>
+            <div class="article-content-right">
+              <div class="other">
+                <div>关键字：{{ documentInfor.seoKeywords }}</div>
+                <div>来源：{{ documentInfor.articleOrigin }}</div>
+                <div>作者：{{ documentInfor.articleAuthor }}</div>
+                <div>点击量：{{ documentInfor.clickNum }}</div>
+                <div>发布时间：{{ documentInfor.createTime }}</div>
+                 
+              </div>
+            </div>
+          </el-col>
+        </el-row>
       </div>
-      <!-- <span slot="footer" class="dialog-footer">
-        <el-button @click="$emit('update:dialogVisible', false)" size="small">取消</el-button>
-        <el-button type="primary" @click="$emit('update:dialogVisible', false)" size="small">确定</el-button>
-      </span> -->
-    </el-dialog>
-  </div>
+      <!-- <div v-if="documentInfor.articleType =='1'">
+        <el-row :gutter="20" >
+          <el-col :span="6" v-for="(ele, index) in imageList" :key="index">
+            <div class="image-list">
+              <img :src="ele.url" alt="">
+            </div>
+          </el-col>
+        </el-row>
+      </div> -->
+      <!-- <div>
+        <div class="link-to">
+          <span size="small" class="link-url" @click="openLink(documentInfor.linkTo)">{{ documentInfor.linkTo }}</span>
+        </div>
+      </div> -->
+    </div>
+  </el-dialog>
 </template>
 <script>
-import { documentInfor } from '@/api/cms/article'
+import { documentInfor } from '@/api/cms/articleCheck'
+import Aplayer from 'vue-aplayer'
 export default {
-  name: 'DocReview',
+  components: {
+    Aplayer
+  },
   props: {
     dialogVisible: {
       default: false,
       type: Boolean
     },
-    documentInfor: {
-      default: ()=> {
-        return {}
-      },
-      type: Object
+    articleId: {
+      default: '',
+      type: String
     }
   },
   data() {
     return {
-      contentBody: '',
-      imageList: []
+      documentInfor: {},
+      imageList: [],
+      videolist: [],
+      audioList: []
     }
   },
   watch: {
     dialogVisible(val) {
       if(val) {
-        this.getDocumentInfor(this.documentInfor.articleId)
+        this.getDocumentInfor(this.articleId)
       }
     }
   },
@@ -80,22 +114,17 @@ export default {
       }
       return arrResoult
     },
+    handleClose() {
+      this.$emit('update:dialogVisible', false)
+    },
     getDocumentInfor(id) {
-      var _this = this
       return new Promise((resolve, reject) => {
         documentInfor(id)
           .then((response) => {
-            _this.contentBody = response.data.result.contentBody
-            _this.imageList = _this.differenceFile(response.data.result.articleAttachmentsList, 'IMG')
-            console.log(_this.imageList, '_this.imageList')
-            // _this.docInfor = response.data.result
-            // _this.$emit('docInfor', _this.docInfor)
-            // _this.typeForm.articleType = response.data.result.articleType ? response.data.result.articleType : 0
-            // if(_this.docInfor.extFieldsList && _this.docInfor.extFieldsList.length) {
-            //   _this.docInfor.extFieldsList.forEach((ele) => {
-            //     _this.docInfor[ele.label] = ele.fieldValue
-            //   })
-            // }
+            this.documentInfor = response.data.result
+            this.imageList = this.differenceFile(response.data.result.articleAttachmentsList, 'IMG')
+            this.videolist = this.differenceFile(response.data.result.articleAttachmentsList, 'VIDEO')
+            this.audioList = this.differenceFile(response.data.result.articleAttachmentsList, 'AUDIO')
             resolve()
           })
           .catch((error) => {
@@ -103,18 +132,11 @@ export default {
           })
       })
     },
-    colseMe() {
-      this.$emit('update:dialogVisible', false)
-      // if(this.tableData.length) {
-      //   this.$emit('handelSuccess')
-      // }
-    }
   }
 }
 </script>
 <style lang="scss">
-.doc-review-dialog{
-  .el-dialog {
+  .check-preview1-dialog{
     .el-dialog__header{
       border-bottom: 1px solid #ebeef5;
     }
@@ -135,7 +157,62 @@ export default {
         height:100%;
       }
     }
-  }
-}
-</style>
+    .article{
+      .el-col-19 {
+        min-height: 200px;
+      }
+    }
+    .article-title{
+      color: #333;
+      font-size: 30px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 40px;
+      margin-top: 40px;
+      width:100%;
+    }
+    .aplayer{
+      margin:0;
+    }
+    .aplayer-body{
+      .aplayer-pic{
+        background-color: #0076ee !important;
+      }
+    }
+    .article-content{
+      img{
+        max-width: 100%;
+      }
 
+    }
+    .article-content-right{
+        width: 100%;
+        height: auto;
+        background: #f2f4f7;
+        margin-bottom: 25px;
+        padding: 0 20px;
+      .seoDescription{
+        .seoDescription-title{
+          font-size: 18px;
+          color: #999;
+          display: block;
+          border-bottom: 1px solid #dbdbdb;
+          padding: 10px 0;
+        }
+        .seoDescription-content{
+          font-size: 15px;
+          color: #666;
+          padding: 10px 0 20px 0;
+          line-height: 30px;
+        }
+      }
+      .other{
+        margin-top:30px;
+        font-size: 15px;
+        color: #666;
+        padding: 10px 0 20px 0;
+        line-height: 30px;
+      }
+    }
+  }
+</style>

@@ -98,7 +98,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <review-dialog :dialog-visible.sync="dialogVisible" :document-infor="documentInfor"/>
+    <review-dialog :dialog-visible.sync="dialogVisible" :article-id="documentInfor.articleId"/>
     <step-dialog :dialog-visible.sync="stepVisible" :document-infor="documentInfor"/>
     
   </div>
