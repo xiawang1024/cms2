@@ -13,14 +13,15 @@
     <div class="reproduce-btn">
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
       <!-- <el-button type = "primary" size="mini" @click = "save('docContentForm', '0', 'saveOnly')">保存</el-button> -->
-      <el-button type = "primary" size="mini" @click = "save('docContentForm', '0')">存草稿</el-button>
-      <el-button type = "primary" size="mini" @click = "save('docContentForm', '11')">保存并发布</el-button>
+      <el-button :disabled="Boolean(contextMenu.docId) && (baseInfor.userName !== docInfor.createUser)" type = "primary" size="mini" @click = "save('docContentForm', '0')">存草稿</el-button>
+      <el-button :disabled="Boolean(contextMenu.docId) && (baseInfor.userName !== docInfor.createUser)" type = "primary" size="mini" @click = "save('docContentForm', '11')">保存并发布</el-button>
     </div>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import { createDocument, editDocument } from '@/api/cms/article'
+import store from 'store'
 export default {
   name: 'Reproduce',
   props: {
@@ -65,7 +66,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['contextMenu', 'getDocInformation'])
+    ...mapGetters(['contextMenu', 'getDocInformation']),
+     baseInfor() {
+      return store.get('BaseInfor') 
+    }
   },
   watch: {
     docInfor(val) {

@@ -52,8 +52,8 @@
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
       <!-- <el-button type = "primary" size="small" @click = "save">存草稿</el-button>
       <el-button type = "primary" size="small" @click = "save">保存并发布</el-button> -->
-      <el-button type = "primary" size="mini" @click = "save('0')">存草稿</el-button>
-      <el-button type = "primary" size="mini" @click = "save('11')">保存并发布</el-button>
+      <el-button :disabled="Boolean(contextMenu.docId) && (baseInfor.userName !== docInformation.createUser)" type = "primary" size="mini" @click = "save('0')">存草稿</el-button>
+      <el-button :disabled="Boolean(contextMenu.docId) && (baseInfor.userName !== docInformation.createUser)" type = "primary" size="mini" @click = "save('11')">保存并发布</el-button>
     </div>
   </div>
 </template>
@@ -62,6 +62,7 @@
 // import { DOWN_URL } from '@/config/base-url'
 import { mapGetters } from 'vuex'
 import { createDocument, editDocument, documentInfor } from '@/api/cms/article'
+import store from 'store'
 // import { needMerge } from "@/api/simpleUpload.js";
 export default {
   props: {
@@ -164,7 +165,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['contextMenu', 'treeTags', 'getDocInformation'])
+    ...mapGetters(['contextMenu', 'treeTags', 'getDocInformation']),
+    baseInfor() {
+      return store.get('BaseInfor') 
+    }
   },
   watch: {
     activeName(val, oldval) {
@@ -174,7 +178,6 @@ export default {
       //   }
       // }
       if(oldval == 'picturesAndAccessories') {
-        console.log(this.getSubmitData(), 'picturesAndAccessoriesData')
         this.$store.dispatch('setAttachmentsList', this.getSubmitData())
       }
     }
@@ -235,9 +238,6 @@ export default {
       this.filedetail.title = this.$refs.vForm.formModel.title
       this.filedetail.coverBool = this.$refs.vForm.formModel.coverBool
       this.$message.success('保存成功')
-      
-      console.log(this.$refs.imageForm.formModel.contentImagesList, 'imageForm')
-      console.log(this.filedetail, 'filedetail')
     },
     typeChange(val) {
       this.rightCardShow = false

@@ -18,8 +18,8 @@
         <div class="btn-list">
           <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
           <!-- <el-button type = "primary" size="mini" @click = "save('docContentForm', '0', 'saveOnly')">保存</el-button> -->
-          <el-button type = "primary" size="mini" @click = "save('docContentForm', '0')">存草稿</el-button>
-          <el-button type = "primary" size="mini" @click = "save('docContentForm', '11')">保存并发布</el-button>
+          <el-button :disabled="Boolean(contextMenu.docId) && (baseInfor.userName !== docInfor.createUser)" type = "primary" size="mini" @click = "save('docContentForm', '0')">存草稿</el-button>
+          <el-button :disabled="Boolean(contextMenu.docId) && (baseInfor.userName !== docInfor.createUser)" type = "primary" size="mini" @click = "save('docContentForm', '11')">保存并发布</el-button>
           <!-- <el-button type = "primary" size="small" @click = "save('docContentForm')">保存并发布</el-button> -->
           <!-- <el-button type = "primary" size="small" @click = "save">保存并关闭</el-button>
           <el-button type = "primary" size="small" @click = "save">保存并发布</el-button> -->
@@ -64,6 +64,7 @@ import Tinymce from '@/components/Tinymce'
 import { createDocument, editDocument, editQuoteDocument } from '@/api/cms/article'
 import { mapGetters } from 'vuex'
 import { handleDate } from '@/utils/date-filter'
+import store from 'store'
 export default {
   name: 'ImageText',
   components: { Tinymce },
@@ -177,7 +178,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['contextMenu', 'getDocInformation'])
+    ...mapGetters(['contextMenu', 'getDocInformation', 'currentInfor']),
+    baseInfor() {
+      return store.get('BaseInfor') 
+    }
   },
   watch: {
     docInfor(val) {
@@ -210,6 +214,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.contextMenu.docId, 'this.contextMenu.docId')
     if(this.sourceList.length) {
       this.baseSettings[0].items[1].options = this.sourceList
     }
@@ -363,9 +368,6 @@ export default {
       return resoultObj
     },
     save(formName, publishType, saveType) {
-      console.log(this.extendsList, 'this.extendsList.')
-      console.log(this.getDocInformation, 'this.getDocInformation')
-      // this.$refs.otherForm.updateRule()
       let resoultObj = Object.assign(this.$refs.baseForm.formModel, this.$refs.otherForm.formModel, this.docContentForm, this.adddocSet)
       // 获取扩展字段的值
       let extendsFields = []
