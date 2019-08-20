@@ -361,11 +361,18 @@ export default {
         discloseList(res)
           .then(response => {
             let content = response.data.result.content;
-            // console.log(content, "ssss");
             // content.forEach((element, idnex) => {
             //   element.breakingType =
             //     _this.discloseClassify[element.breakingType - 1].typeName;
             // });
+            let descName = _this.discloseClassify;
+            descName.forEach((el, index) => {
+              content.forEach((element, idnex) => {
+                if (el.numberNo === element.breakingType) {
+                  element.breakingType = el.typeName;
+                }
+              });
+            });
             _this.tableData = content;
             _this.totalCount = response.data.result.total;
             resolve();
