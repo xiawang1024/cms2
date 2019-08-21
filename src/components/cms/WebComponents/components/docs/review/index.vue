@@ -31,7 +31,7 @@
             </div>
           </el-col>
           <el-col :span="5">
-            <div class="article-content-right">
+            <!-- <div class="article-content-right">
               <div class="seoDescription">
                 <div class="seoDescription-title">摘要</div>
                 <div class="seoDescription-content">
@@ -39,14 +39,19 @@
                   <span v-else>暂无</span>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="article-content-right">
               <div class="other">
                 <div>关键字：{{ documentInfor.seoKeywords }}</div>
                 <div>来源：{{ documentInfor.articleOrigin }}</div>
                 <div>作者：{{ documentInfor.articleAuthor }}</div>
+                <div>摘要：{{ documentInfor.seoDescription }}</div>
                 <div>点击量：{{ documentInfor.clickNum }}</div>
                 <div>发布时间：{{ documentInfor.createTime }}</div>
+                <div>设置：{{ documentInfor.topFlag ==1 ? '置顶' : '' }} {{ documentInfor.hiddenFlag ==1 ? '隐身' : '' }} </div>
+                <div>提取码：{{ documentInfor.extractCode }}</div>
+                <div>排序号：{{ documentInfor.seqNo }}</div>
+                <div>展现形式：{{ articleType[documentInfor.articleShowStyle] }}</div>
                 <div v-if="documentInfor.extFieldsList && documentInfor.extFieldsList.length">
                   <div v-for="(ele, index) in documentInfor.extFieldsList" :key="index">
                     {{ ele.label }}:{{ ele.fieldValue }}
@@ -83,7 +88,15 @@ export default {
       imageList: [],
       videolist: [],
       audioList: [],
-      coverImage: {}
+      coverImage: {},
+      articleType: {
+        0: '无图样式',
+        1: '单图样式',
+        4: '大图样式',
+        6: '三图样式',
+        8: '视频样式',
+        9: '专题样式'
+      }
     }
   },
   watch: {
@@ -94,6 +107,33 @@ export default {
     }
   },
   methods: {
+    articleTypeChange() {
+
+    },
+    //  {
+    //         label: '无图样式',
+    //         value: 0
+    //       },
+    //       {
+    //         label: '单图样式',
+    //         value: 1
+    //       },
+    //       {
+    //         label: '大图样式',
+    //         value: 4
+    //       },
+    //       {
+    //         label: '三图样式',
+    //         value: 6
+    //       },
+    //       {
+    //         label: '视频样式',
+    //         value: 8
+    //       },
+    //       {
+    //         label: '专题样式',
+    //         value: 9
+    //       }
     openLink(val) {
       window.open(val)
     },
