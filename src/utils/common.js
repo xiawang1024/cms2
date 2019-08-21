@@ -36,6 +36,7 @@ export const download = ((fileName, data, needAppendDate = true) => {
   document.body.appendChild(a)
   return function (fileName, data) {
     var url = window.URL.createObjectURL(data)
+    console.log(url, 'url')
     a.href = url
     if (needAppendDate) {
       let tmpName = fileName.split('.')

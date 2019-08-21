@@ -10,6 +10,7 @@ let SIMPLE_MERGE_URL = 'http://fupload.test.dianzhenkeji.com'
 if (process.env.NODE_ENV) {
   if (process.env.NODE_ENV == 'development') {
     BASE_URL = ' http://gw.test.dianzhenkeji.com' // 测试地址
+    // BASE_URL = ' http://192.168.7.55:8093' // 测试地址
     UP_URL = 'http://fupload.test.dianzhenkeji.com/basefile/upload?fileRefId='
     DOWN_URL = 'http://cmsres.test.dianzhenkeji.com'
     SIMPLE_UPLOAD_URL = 'http://fupload.test.dianzhenkeji.com/chunk/chunk'

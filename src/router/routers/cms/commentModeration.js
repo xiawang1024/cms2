@@ -23,15 +23,32 @@ const commentModeration = {
       meta: { title: 'checkComment', icon: 'docSource', role: 'cms:checkComment' }
     },
     {
-        /**
-         * 分配审核栏目权限
-         */
-        path: 'assignAuditAuthority',
-        component: () => import(`@/${path}/assignAuditAuthority`),
-        name: 'assignAuditAuthority',
-        meta: { title: 'assignAuditAuthority', icon: 'docSource', role: 'cms:assignmentRight', }
-      }
-   
+      /**
+       * 分配审核栏目权限
+       */
+      path: 'assignAuditAuthority',
+      component: () => import(`@/${path}/assignAuditAuthority`),
+      name: 'assignAuditAuthority',
+      meta: { title: 'assignAuditAuthority', icon: 'docSource', role: 'cms:assignmentRight', }
+    },
+    {
+      /**
+       *  敏感词过滤
+       */
+      path: 'sensitiveWord',
+      component: () => import(`@/${path}/sensitiveWord`),
+      name: 'sensitiveWord',
+      meta: { title: 'sensitiveWord', icon: 'sensitive', role: 'cms', }
+    },
+    {
+      /**
+       *  扩展对象
+       */
+      path: 'userExtend',
+      component: () => import(`@/${path}/userSwitch`),
+      name: 'userSwitch',
+      meta: { title: 'userExtend', icon: 'extend', role: 'cms', }
+    }
   ]
 }
 

@@ -6,7 +6,10 @@ import { refreshToken } from '@/api/login'
 import qs from 'qs' // 序列化表单数据
 const request = axios.create({
   baseURL: baseUrl.BASE_URL || '/',
-  timeout: 10000
+  timeout: 10000,
+  // headers: {
+  //   'Content-Type': 'application/json;charset=utf-8'
+  // }
 })
 
 // 请求接口loading页面
@@ -75,6 +78,8 @@ function onRefreshed(token) {
  */
 request.interceptors.request.use(
   (config) => {
+    console.log(config, 'config')
+    // config.headers[Content-Type] = 'application/json;charset=UTF-8'
     const auth = getAuth()
     /**
      * 判断是否已登录
@@ -151,18 +156,12 @@ request.interceptors.request.use(
         })
         return retry
       }
-      if(config.method !== 'get') {
-        if(config.requestBodyType && config.requestBodyType === 'formData') {
-          config.data = qs.stringify(config.data)
-          // config.headers = {
-          //   'Content-Type': 'application/x-www-form-urlencoded'
-          // }
-        }
-      } else {
-        // config.data = JSON.stringify(config.data)
-        // config.headers = {
-        //   'Content-Type': 'application/json;charset=utf-8'
-        // }
+      if(config.requestBodyType && config.requestBodyType === 'formData') {
+        config.data = qs.stringify(config.data)
+      }
+      if (config.method === 'get') {
+        //  给data赋值以绕过if判断
+        config.data = true 
       }
       requestLoading.open(config.loadingConfig, config.baseURL, config.url)
       return config
@@ -186,6 +185,21 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   (res) => {
     requestLoading.close(res.config.url)
+    console.log(res.data.code, 'res')
+    if(res.data.code === 0) {
+      return res
+    }
+    // 对响应数据做些事
+    if (res.data && res.data.code === -1) {
+      if (!res.config.requestConfig || !res.config.requestConfig.noErrorMsg) {
+        let msg = res.data.msg || res.data.message || '系统错误'
+        Message({
+          message: msg,
+          type: 'error'
+        })
+      }
+      return Promise.reject(res.data)
+    }
     return res
   },
   (error) => {

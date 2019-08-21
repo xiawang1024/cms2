@@ -23,11 +23,7 @@
       <el-table-column type="selection" width="30"/>
       <el-table-column type="index"/>
       <el-table-column prop="nickName" width="60" label="昵称" :formatter="nicName" show-overflow-tooltip/>
-      <el-table-column prop="articleTitle" min-width="100" label="文章标题" show-overflow-tooltip>
-        <template slot-scope="scope">
-          <span class="new-comment-title" @click="handelDetail(scope.row.articleTitle)">{{ scope.row.articleTitle }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column prop="articleTitle" min-width="100" label="文章标题" show-overflow-tooltip/>
       <el-table-column prop="comment" min-width="400" label="评论内容" class-name="mytextstyle"/>
       <el-table-column prop="top" width="80" label="置顶状态">
         <template slot-scope="scope">
@@ -42,7 +38,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="source" width="70" label="来源" :formatter="sourceStatus"/>
-      <el-table-column prop="createTime" width="160" label="评论时间"/>
+      <el-table-column prop="createTime" min-width="160" label="评论时间"/>
       <el-table-column width="240" label="操作">
         <template slot-scope="scope">
           <el-button
@@ -77,13 +73,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <v-page :visible.sync="showDetail" @goBack="goBack">
-      <h3 slot="title">{{ articleTitle }}</h3>
-      <template slot="content">
-        <comment-infor :article-title="articleTitle"/>
-        <!-- 详情页组件 -->
-      </template>
-    </v-page>
     <el-pagination
       class="fenyeDiv"
       :current-page="pageNo"
@@ -107,11 +96,17 @@ import {
   getColumnList
 } from "@/api/cms/reviewComment";
 import { setInterval, clearInterval } from 'timers';
-import commentInfor from './commentInfor'
 export default {
   name: "CheckComment",
-  components: {
-    commentInfor
+  props: {
+    articleTitle: {
+      type: String,
+      default: ''
+    },
+    visible: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -126,12 +121,6 @@ export default {
       // 搜索修改
       searchSettings: [
         {
-          label: '标题',
-          name: 'title',
-          type: 'text',
-          placeholder: '请输入标题',
-          visible: true
-        }, {
         label: '显示方式',
         name: 'top',
         type: 'select',
@@ -146,26 +135,27 @@ export default {
           }
         ],
         visible: true
-      }, {
+      }, 
+      {
         label: '栏目',
         name: 'channelId',
         type: 'cascader',
         placeholder: '请选择',
         options: [
         ],
-        visible: false,
+        visible: true,
         changeOnSelect: true
       }],
       searchData: {
-      },
-      showDetail: false,
-      articleTitle: ''
+      }
     };
   },
   created() {
     //获取初始化数据
   },
   mounted() {
+    // console.log(this.articleTitle)
+    // this.searchData.title = this.articleTitle
     this.$nextTick(() => {
       this.criticismList();
       this.clumnTree();
@@ -178,15 +168,8 @@ export default {
     this.timerassign=null;
   },
   methods: {
-    handelDetail(val) {
-      this.showDetail = true
-      this.articleTitle = val
-      clearInterval(this.timerassign);
-      this.timerassign=null;
-    },
     goBack() {
-      this.criticismList();
-      this.timer();
+
     },
     timer(){
       this.timerassign= setInterval(()=>{
@@ -344,7 +327,7 @@ export default {
         userId: JSON.parse(localStorage.getItem("BaseInfor")).userId,
         channelId: this.currentChannelId,
         top: this.searchData.top,
-        title: this.searchData.title
+        title: this.articleTitle
       };
       this.requestCriticsmList(params);
     },
@@ -383,7 +366,7 @@ export default {
           .then(res => {
             if (res.data.code == "0") {
               _this.$nextTick(()=>{
-                 this.searchSettings[2].options = _this.myTree(res.data.result)
+                 this.searchSettings[1].options = _this.myTree(res.data.result)
               })
 
             } else {
@@ -434,7 +417,7 @@ export default {
         pageSize: this.pageSize,
         userId: JSON.parse(localStorage.getItem("BaseInfor")).userId,
         top: this.searchData.top,
-        title: this.searchData.title
+        title: this.articleTitle
       };
       this.requestCriticsmList(params);
     },
