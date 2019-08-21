@@ -3,8 +3,8 @@
     <div class="v-search-header">
       <v-search :search-settings="searchSettings" @search="searchItem"/>
     </div>
-    <div class="tool-bar">
-      <el-button type="primary" size="mini" @click="handel('add')">新增</el-button>
+    <div class="sensitive-word-tool-bar">
+      <el-button size="mini" type="primary" @click="handel('add')">新增</el-button>
       <!-- <a href="http://gw.test.dianzhenkeji.com/news-comment/敏感词模板.xlsx" class="middle-style">
         <el-button size="mini">下载模板</el-button>
       </a> -->
@@ -251,12 +251,14 @@ export default {
 </script>
 <style lang="scss">
   .sensitive-word{
-    .tool-bar{
+    .upload{
+      display: inline-block;
+    }
+    .sensitive-word-tool-bar{
       margin-top:10px;
-      display: flex;
       .middle-style{
-        margin-left:10px;
-        margin-right:10px;
+        // margin-left:10px;
+        // margin-right:10px;
       }
     }
     .v-form{
