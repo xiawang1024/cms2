@@ -120,28 +120,22 @@ export default {
       timerassign:null,
       // 搜索修改
       searchSettings: [
-      //   {
-      //     label: '标题',
-      //     name: 'title',
-      //     type: 'text',
-      //     placeholder: '请输入标题',
-      //     visible: true
-      //   }, {
-      //   label: '显示方式',
-      //   name: 'top',
-      //   type: 'select',
-      //   placeholder: '请选择',
-      //   options: [
-      //     {
-      //       label: '置顶',
-      //       value: true
-      //     }, {
-      //       label: '非置顶',
-      //       value: false
-      //     }
-      //   ],
-      //   visible: true
-      // }, 
+        {
+        label: '显示方式',
+        name: 'top',
+        type: 'select',
+        placeholder: '请选择',
+        options: [
+          {
+            label: '置顶',
+            value: 'true'
+          }, {
+            label: '非置顶',
+            value: 'false'
+          }
+        ],
+        visible: true
+      }, 
       {
         label: '栏目',
         name: 'channelId',
@@ -149,7 +143,8 @@ export default {
         placeholder: '请选择',
         options: [
         ],
-        visible: true
+        visible: true,
+        changeOnSelect: true
       }],
       searchData: {
       }
@@ -160,7 +155,7 @@ export default {
   },
   mounted() {
     // console.log(this.articleTitle)
-    this.searchData.title = this.articleTitle
+    // this.searchData.title = this.articleTitle
     this.$nextTick(() => {
       this.criticismList();
       this.clumnTree();
@@ -353,7 +348,7 @@ export default {
         userId: JSON.parse(localStorage.getItem("BaseInfor")).userId,
         channelId: this.currentChannelId,
         top: this.searchData.top,
-        title: this.searchData.title
+        title: this.articleTitle
       };
       this.requestCriticsmList(params);
     },
@@ -392,7 +387,7 @@ export default {
           .then(res => {
             if (res.data.code == "0") {
               _this.$nextTick(()=>{
-                 this.searchSettings[0].options = _this.myTree(res.data.result)
+                 this.searchSettings[1].options = _this.myTree(res.data.result)
               })
 
             } else {
@@ -427,7 +422,7 @@ export default {
       this.criticismList();
     },
     searchItem(data) {
-      // this.searchData = data
+      this.searchData = data
       // this.getSensitiveList()
       this.pageNo = 1;
       this.pageSize = 10;
@@ -443,7 +438,7 @@ export default {
         pageSize: this.pageSize,
         userId: JSON.parse(localStorage.getItem("BaseInfor")).userId,
         top: this.searchData.top,
-        title: this.searchData.title
+        title: this.articleTitle
       };
       this.requestCriticsmList(params);
     },
