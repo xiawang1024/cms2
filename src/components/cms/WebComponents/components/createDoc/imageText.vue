@@ -18,8 +18,8 @@
         <div class="btn-list">
           <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
           <!-- <el-button type = "primary" size="mini" @click = "save('docContentForm', '0', 'saveOnly')">保存</el-button> -->
-          <el-button :disabled="Boolean(contextMenu.docId) && (baseInfor.userName !== docInfor.createUser)" type = "primary" size="mini" @click = "save('docContentForm', '0')">存草稿</el-button>
-          <el-button :disabled="Boolean(contextMenu.docId) && (baseInfor.userName !== docInfor.createUser)" type = "primary" size="mini" @click = "save('docContentForm', '11')">保存并发布</el-button>
+          <el-button :disabled="Boolean(contextMenu.docId) && (docInfor.articleStatus ==1) && (baseInfor.userName !== docInfor.createUser)" type = "primary" size="mini" @click = "save('docContentForm', '0')">存草稿</el-button>
+          <el-button :disabled="Boolean(contextMenu.docId) && (docInfor.articleStatus ==1) && (baseInfor.userName !== docInfor.createUser)" type = "primary" size="mini" @click = "save('docContentForm', '11')">保存并发布</el-button>
           <!-- <el-button type = "primary" size="small" @click = "save('docContentForm')">保存并发布</el-button> -->
           <!-- <el-button type = "primary" size="small" @click = "save">保存并关闭</el-button>
           <el-button type = "primary" size="small" @click = "save">保存并发布</el-button> -->

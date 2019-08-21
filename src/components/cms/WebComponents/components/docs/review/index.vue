@@ -112,6 +112,9 @@ export default {
           if(imgList[i].coverBool) {
             return imgList[i]
           }
+          if(i >= imgList.length - 1) {
+            return {}
+          }
         }
       } else {
         return {}
