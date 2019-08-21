@@ -156,19 +156,12 @@ request.interceptors.request.use(
         })
         return retry
       }
-      if(config.method !== 'get') {
-        if(config.requestBodyType && config.requestBodyType === 'formData') {
-          config.data = qs.stringify(config.data)
-          // config.headers = {
-          //   'Content-Type': 'application/x-www-form-urlencoded'
-          // }
-        }
-      } else {
-        // config.data = JSON.stringify(config.data)
-        // config.headers = {
-        //   'Content-Type': 'application/json;charset=utf-8'
-        // }
-        //config.headers[Content-Type] = 'application/json;charset=utf-8'
+      if(config.requestBodyType && config.requestBodyType === 'formData') {
+        config.data = qs.stringify(config.data)
+      }
+      if (config.method === 'get') {
+        //  给data赋值以绕过if判断
+        config.data = true 
       }
       requestLoading.open(config.loadingConfig, config.baseURL, config.url)
       return config

@@ -5,10 +5,10 @@
     </div>
     <div class="tool-bar">
       <el-button type="primary" size="mini" @click="handel('add')">新增</el-button>
-      <a href="http://gw.test.dianzhenkeji.com/news-comment/敏感词模板.xlsx" class="middle-style">
+      <!-- <a href="http://gw.test.dianzhenkeji.com/news-comment/敏感词模板.xlsx" class="middle-style">
         <el-button size="mini">下载模板</el-button>
-      </a>
-      <el-button type="primary" @click="downModel">下载</el-button>
+      </a> -->
+      <el-button size="mini" @click="downModel" class="middle-style">下载</el-button>
       <el-upload class="upload"
                  :action="importUrl"
                  :on-success="uploadSuccess"
@@ -96,34 +96,35 @@ export default {
   },
   methods: {
     downModel() {
-      // downloadExcel('bearer ' + this.$store.getters.token.access_token)
-      return new Promise((resolve, reject) => {
-        downloadExcel().then(async res => {
-          // this.total = res.data.result.total
-          // this.tableData = res.data.result.records
-          // 结束
-          console.log(res.data, 'res')
-          // const url = window.URL.createObjectURL(new Blob([res.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'}));
-          // const link = document.createElement('a');
-          // link.href = url;
-          // link.setAttribute('download', '下载模板');
-          // document.body.appendChild(link);
-          // link.click();
-          // resolve()
-          let blob = new Blob([res.data],{type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'})
-          var link = document.createElement('a');
-          console.log(link, 'link')
-          link.href = window.URL.createObjectURL(blob);
-          console.log(link.href, 'link.href')
-          link.download = "导出.xlsx";
-          link.click();
-          //  download('导出.xlsx', res.data)
-        })
-          .catch(err => {
-            console.log('err: ', err)
-            reject(err)
-          })
-      })
+      downloadExcel('bearer ' + this.$store.getters.token.access_token)
+      // return new Promise((resolve, reject) => {
+      //   downloadExcel().then(async res => {
+      //     // this.total = res.data.result.total
+      //     // this.tableData = res.data.result.records
+      //     // 结束
+      //     console.log(res.data, 'res')
+      //     // const url = window.URL.createObjectURL(new Blob([res.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'}));
+      //     // const link = document.createElement('a');
+      //     // link.href = url;
+      //     // link.setAttribute('download', '下载模板');
+      //     // document.body.appendChild(link);
+      //     // link.click();
+      //     // resolve()
+      //     console.log()
+      //     // let blob = new Blob([res.data],{type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'})
+      //     // var link = document.createElement('a');
+      //     // console.log(link, 'link')
+      //     // link.href = window.URL.createObjectURL(blob);
+      //     // console.log(link.href, 'link.href')
+      //     // link.download = "导出.xlsx";
+      //     // link.click();
+      //     download('导出.xlsx', res.data)
+      //   })
+      //     .catch(err => {
+      //       console.log('err: ', err)
+      //       reject(err)
+      //     })
+      // })
     },
     uploadSuccess() {
       this.$message.success('批量导入成功')
