@@ -178,11 +178,6 @@ export default {
       },10*1000)
     },
     handleTop(index, row) {
-      this.$confirm('确定置顶该文章吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
         if (row.top == true) {
         this.putTop({
           commentId: row.commentId,
@@ -194,8 +189,6 @@ export default {
             flag: true
           });
         }
-        }).catch(() => {        
-      })
     },
     putTop(data) {
       var _this = this;
@@ -224,7 +217,7 @@ export default {
       this.deleteRequest(this.selectList.toString());
     },
     handleDelete(index, row) {
-       this.$confirm('确定删除该文章吗?', '提示', {
+       this.$confirm('确定删除该评论吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -269,11 +262,6 @@ export default {
     handleclick(val) {
     },
     handlePass(index, row, many) {
-      this.$confirm('确定通过该文章吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
         let data = {};
         if (many == "many") {
           data = {
@@ -287,15 +275,8 @@ export default {
           };
         }
         this.saveCheck(data);
-      }).catch(() => {        
-      })
     },
     handleRefuse(index, row, many) {
-      this.$confirm('确定拒绝该文章吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
         let data = {};
         if (many == "many") {
           data = {
@@ -309,8 +290,6 @@ export default {
           };
         }
       this.saveCheck(data);
-      }).catch(() => {        
-      })
     },
 
     saveCheck(data) {

@@ -8,7 +8,7 @@
       <!-- <a href="http://gw.test.dianzhenkeji.com/news-comment/敏感词模板.xlsx" class="middle-style">
         <el-button size="mini">下载模板</el-button>
       </a> -->
-      <el-button size="mini" @click="downModel" class="middle-style">下载</el-button>
+      <!-- <el-button size="mini" @click="downModel" class="middle-style">下载</el-button> -->
       <el-upload class="upload"
                  :action="importUrl"
                  :on-success="uploadSuccess"
