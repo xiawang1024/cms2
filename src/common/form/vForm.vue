@@ -649,7 +649,7 @@ export default {
     },
     showPreview: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   data() {
