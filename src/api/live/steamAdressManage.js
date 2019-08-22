@@ -28,7 +28,18 @@ export function childrenStreamAdressfile(id) {
     }
   });
 }
-
+//删除
+export function deleteSource(id){
+  return request({
+    url:
+      Cpath +
+      `/streamaddress/deletebyid?id=${id}`,
+    method: "delete",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
 
 //转播流地址管理
 //添加转播流信息
@@ -116,3 +127,4 @@ export function distributeDelete(id){
     method:"delete",
   })
 }
+

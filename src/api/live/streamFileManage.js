@@ -44,3 +44,15 @@ export function editeStreamfile(data) {
       }
     });
   }
+  //删除
+  export function deleteStreamFile(id){
+    return request({
+      url:
+        Cpath +
+        `/streamfile/deletebyid?id=${id}`,
+      method: "delete",
+      loadingConfig: {
+        noLoading: true
+      }
+    });
+  }
