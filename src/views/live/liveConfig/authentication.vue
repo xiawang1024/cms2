@@ -82,7 +82,6 @@
             size="mini"
             type="danger"
             @click="handleDelete(scope.$index, scope.row)"
-            :disabled="true"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -106,6 +105,7 @@
 import {
   managaStreamAddress,
   childrenStreamAdressfile,
+  deleteSource,
 } from "@/api/live/steamAdressManage.js";
 export default {
   data() {
@@ -192,7 +192,44 @@ export default {
         type: "error"
       });
     },
-    handleDelete() {},
+    handleDelete(index,row) {
+      var _this = this;
+      this.$confirm("此操作将永久删除该资源, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          new Promise((resolve, reject) => {
+            deleteSource(row.id)
+              .then(response => {
+                if (response.data.result == "删除成功") {
+                  this.$message({
+                    type: "success",
+                    message: "删除成功!"
+                  });
+                  _this.requestTableValue();
+                } else {
+                  this.$message({
+                    type: "error",
+                    message: "删除失败，请稍后再试!"
+                  });
+                }
+
+                resolve();
+              })
+              .catch(reject => {
+                console.log(reject);
+              });
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
 
     //时间格式化
     formatStart(row) {

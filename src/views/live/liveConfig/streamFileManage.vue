@@ -37,7 +37,6 @@
             size="mini"
             type="danger"
             @click="handleDelete(scope.$index, scope.row)"
-            :disabled="true"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -77,7 +76,8 @@
 import {
   streamfile,
   editeStreamfile,
-  childrenStreamfile
+  childrenStreamfile,
+  deleteStreamFile
 } from "@/api/live/streamFileManage.js";
 import videoEdite from "@/components/videoCut/videoEdite.vue";
   import simplifySecond from '@/utils/videoCut/simplifySecond'
@@ -144,7 +144,44 @@ export default {
       this.rowId = row.id;
       this.url = row.filePath;
     },
-    handleDelete() {},
+    handleDelete(index,row) {
+       var _this = this;
+      this.$confirm("此操作将永久删除该资源, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          new Promise((resolve, reject) => {
+            deleteStreamFile(row.id)
+              .then(response => {
+                if (response.data.result == "删除成功") {
+                  this.$message({
+                    type: "success",
+                    message: "删除成功!"
+                  });
+                  _this.requestTableValue();
+                } else {
+                  this.$message({
+                    type: "error",
+                    message: "删除失败，请稍后再试!"
+                  });
+                }
+
+                resolve();
+              })
+              .catch(reject => {
+                console.log(reject);
+              });
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
 
     //时间格式化
     formatStart(row) {
