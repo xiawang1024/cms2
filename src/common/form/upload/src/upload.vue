@@ -9,7 +9,7 @@ export default {
   },
   props: {
     type: {
-      type: String,
+      type:String,
       default: ''
     },
     action: {
@@ -34,15 +34,15 @@ export default {
     },
     withCredentials: {
       type: Boolean,
-      default: false
+      default: true
     },
     multiple: {
       type: Boolean,
       default: false
     },
-    accept:  {
+    accept: {
       type: String,
-      default: ''
+      required: true
     },
     onStart: {
       type: Function,
@@ -65,8 +65,8 @@ export default {
       default: noop
     },
     drag: {
-      type: Function,
-      default: noop
+      type: Boolean,
+      default: false
     },
     onPreview: {
       type: Function,
@@ -84,10 +84,10 @@ export default {
     },
     autoUpload: {
       type: Boolean,
-      default: false
+      default: true
     },
-    listType:  {
-      type: String,
+    listType: {
+      type:String,
       default: ''
     },
     httpRequest: {
@@ -102,7 +102,7 @@ export default {
       type: Number,
       default: 1
     },
-    onExceed:  {
+    onExceed: {
       type: Function,
       default: function() {}
     }

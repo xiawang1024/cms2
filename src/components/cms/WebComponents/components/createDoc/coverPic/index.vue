@@ -4,14 +4,12 @@
       <el-row :gutter="20">
         <el-col :sm="12" :md="12" :lg="12" :xl="12">
           <v-form ref="imageForm" :form-settings="imageSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail" @removeFile="removeFile"/>
-          <!-- <v-form ref="videoForm" :form-settings="videoSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail"/> -->
         </el-col>
         <el-col :sm="10" :md="10" :lg="10" :xl="10" >
           <div v-if="rightCardShow"/>
         </el-col>
       </el-row>
     </div>
-    <!-- <image-detail :dialogVisible.sync="showImage"></image-detail> -->
     <el-dialog
       title="图片"
       :visible.sync="dialogVisible"
@@ -21,27 +19,21 @@
         <template slot="information">
           <div class="file-infor">
             <div class="file-img">
-              <img :src="filedetail.url" alt="" >
+              <img :src="filedetail.url" alt="" style="width:auto; height:175px;">
             </div>
             <div class="desc">
-              <div>{{ filedetail.name }}</div>
-              <div v-if="filedetail.createTime">{{ parseInt(filedetail.createTime)|timeFilter }}</div>
-              <div v-if="filedetail.size">{{ Math.floor(filedetail.size / 1024) }} kb</div>
+              <div style="line-height:18px">{{ filedetail.name }}</div>
+              <div style="line-height:18px" v-if="filedetail.createTime">{{ parseInt(filedetail.createTime)|timeFilter }}</div>
+              <div style="line-height:18px" v-if="filedetail.size">{{ Math.floor(filedetail.size / 1024) }} kb</div>
             </div>
           </div>
         </template>
         <template slot="btn">
           <el-button type="primary" size="mini" @click ="setFile">保存</el-button>
-          <el-button size="mini" @click="colseSet">关闭</el-button>
         </template>
       </v-form>
-      <!-- <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible=false">取 消</el-button>
-        <el-button type="primary" size="mini" @click="dialogVisible=false">确 定</el-button>
-      </span> -->
     </el-dialog>
     <div class="upload-btn">
-      <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
       <el-button type = "primary" size="small" @click = "savePic('0')" v-if="!contextMenu.docId">存草稿</el-button>
       <el-button type = "primary" size="small" @click = "savePic('11')" v-if="!contextMenu.docId">保存并发布</el-button>
       <el-button type = "primary" size="mini" @click="savePic" v-if="contextMenu.docId">保存封面</el-button>
@@ -314,6 +306,11 @@ export default {
 </script>
 <style lang="scss">
   .article-cover-pic{
+    .el-dialog__body{
+      .form-section{
+        border-bottom:none;
+      }
+    }
     .upload-btn {
       padding-left: 80px;
     }
@@ -360,14 +357,14 @@ export default {
          .file-img {
            width: 100%;
            img {
-             height: 100px !important;
-             width:100px;
+             width:100%;
            }
          }
          .file-infor {
             .desc {
               div {
                 color: #C0C4CC;
+                height: 20px;
               }
             }
          }

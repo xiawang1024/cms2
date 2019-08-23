@@ -85,9 +85,9 @@
         default: false
       },
       handlePreview: {
-      type: Function,
-      default: noop
-    },
+        type: Function,
+        default: noop
+      },
       listType: {
         type: String,
         default: ''
@@ -125,6 +125,7 @@
 </script>
 <style lang="scss">
   .define-img-upload{
+    margin-bottom: 15px !important;
     position: relative;
     .el-upload-list__item-name{
       height:70px;

@@ -48,7 +48,7 @@ export default {
     },
     multiple: {
       type: Boolean,
-      default: true
+      default: false
     },
     name: {
       type: String,
@@ -56,7 +56,7 @@ export default {
     },
     drag: {
       type: Boolean,
-      default: true
+      default: false
     },
     dragger: {
       type: Boolean,
@@ -70,7 +70,7 @@ export default {
       type: Boolean,
       default: true
     },
-    accept:  {
+    accept: {
       type: String,
       default: ''
     },
@@ -130,7 +130,7 @@ export default {
     },
     disabled: {
       type: Boolean,
-      default: true
+      default: false
     },
     limit: {
       type: Number,
