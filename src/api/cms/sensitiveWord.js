@@ -1,6 +1,7 @@
 import request from '@/utils/request'
 // request.defaults.headers.contentType = 'application/json;charset=utf-8'
 import axios from 'axios'
+import { Message } from 'element-ui'
 import { download } from '@/utils/common'
 export function fetchSensitiveList(word, pageNo, pageSize) {
   let selectWord = word ? word : ''
@@ -59,7 +60,7 @@ function postAjax (accessToken) {
   axios({
     // baseURL: baseUrl || '/',
     method: 'get',
-    url: 'http://gw.test.dianzhenkeji.com/news-comment/敏感词模板.xlsx',
+    url: 'http://gw.test.dianzhenkeji.com/news-comment/template.xlsx',
     responseType: 'blob',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -67,26 +68,10 @@ function postAjax (accessToken) {
     }
   })
     .then(res => {
-      // console.log(res, 'res')
-      // var fr = new FileReader();
-      // fr.readAsDataURL(res.data);
-      // fr.onload=function(e) {
-      //   console.log(e, 'e')
-      // }
-      download('导出.xlsx', res.data)
-      // Message.success('导出数据成功')
-      // download(fileName, res.data)
-      // let blob = new Blob([res.data])
-      // var link = document.createElement('a')
-      // console.log(link, 'link')
-      // link.href = window.URL.createObjectURL(blob)
-      // console.log(link.href, 'link.href')
-      // link.download = '导出.xlsx'
-      // link.click()
-      // loading.close()
+      download('template.xlsx', res.data)
+      Message.success('下载成功')
     })
     .catch(error => {
-      // Message.warning(error.msg ? error.msg : '导出失败')
-      // loading.close()
+      Message.warning(error.msg ? error.msg : '导出失败')
     })
 }
