@@ -229,6 +229,7 @@ export default {
     remark: '点评',
     search: '搜索',
     add: '添加',
+    batchAdd: '批量导入',
     export: '导出',
     reviewer: '审核人',
     id: '序号',
