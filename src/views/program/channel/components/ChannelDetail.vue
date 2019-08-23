@@ -23,6 +23,9 @@
         <el-form-item style="margin-bottom: 40px;" label="指定排序" class="redItem" prop="showOrder">
           <el-input v-model="postForm.showOrder" maxlength="10" placeholder="请输入数字"/>
         </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" label="关联文章id" prop="articleId">
+          <el-input v-model="postForm.articleId" maxlength="10" placeholder="请输入文章ID"/>
+        </el-form-item>
         <el-form-item style="margin-bottom: 40px;">
           <MDinput type="tel" v-model="channelHotline" :maxlength="100" name="name">
             频率热线
@@ -65,7 +68,6 @@
             name="file"
             list-type="picture-card"
             :show-file-list="false"
-            :on-remove="handleRemove"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
             :on-error="imgUploadError">
@@ -105,7 +107,8 @@ const defaultForm = {
   status: 1,          // 状态0未启用1启用
   streams: '',        // 频率直播地址
   videoStreams: '',   // 频率视频直播地址
-  secondName: ''      // 第二名称
+  secondName: '',     // 第二名称
+  articleId: ''
 }
 
 export default {
@@ -180,6 +183,9 @@ export default {
         }, {
           class_id: 6,
           class_name: '听电视'
+        }, {
+          class_id: 11,
+          calss_name: '电视'
         }],
       upLoadData: {
         fileRefId: 'program-channel'
@@ -309,21 +315,16 @@ export default {
         var url = baseUrl.UP_URL+"program" // 文件服务地址
         return url
     },
-    handleRemove(file, fileList) {//移除图片
-        this.$message({
-            type: 'info',
-            message: '已删除原有图片',
-            duration: 6000
-        });
-      },
     beforeAvatarUpload(file) {//文件上传之前调用做一些拦截限制
-        const isJPG = true
-        // const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 3
+        const isJPG = 
+        file.type === 'image/jpeg' ||
+        file.type === 'image/jpg' ||
+        file.type === 'image/png'
+        const isLt2M = file.size / 1024 / 1024 < 2
  
-        // if (!isJPG) {
-        //   this.$message.error('上传头像图片只能是 JPG 格式!');
-        // }
+        if (!isJPG) {
+          this.$message.error('上传图片只能是 JPG/JPEG/PNG 格式!');
+        }
         if (!isLt2M) {
           this.$message.error('上传图片大小不能超过 2MB!')
         }

@@ -29,7 +29,6 @@
             name="file"
             list-type="picture-card"
             :show-file-list="false"
-            :on-remove="handleRemove"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
             :on-error="imgUploadError">
@@ -171,21 +170,16 @@ export default {
         var url = baseUrl.UP_URL+"program" // 文件服务地址
         return url
     },
-    handleRemove(file, fileList) {//移除图片
-        this.$message({
-            type: 'info',
-            message: '已删除原有图片',
-            duration: 6000
-        });
-      },
     beforeAvatarUpload(file) {//文件上传之前调用做一些拦截限制
-        const isJPG = true
-        // const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 3
+        const isJPG = 
+        file.type === 'image/jpeg' ||
+        file.type === 'image/jpg' ||
+        file.type === 'image/png'
+        const isLt2M = file.size / 1024 / 1024 < 2
  
-        // if (!isJPG) {
-        //   this.$message.error('上传头像图片只能是 JPG 格式!');
-        // }
+        if (!isJPG) {
+          this.$message.error('上传图片只能是 JPG/JPEG/PNG 格式!');
+        }
         if (!isLt2M) {
           this.$message.error('上传图片大小不能超过 2MB!')
         }
