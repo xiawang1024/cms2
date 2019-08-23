@@ -6,7 +6,7 @@ import { refreshToken } from '@/api/login'
 import qs from 'qs' // 序列化表单数据
 const request = axios.create({
   baseURL: baseUrl.BASE_URL || '/',
-  timeout: 10000
+  timeout: 20000
 })
 
 // 请求接口loading页面

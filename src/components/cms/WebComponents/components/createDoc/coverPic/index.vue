@@ -7,29 +7,39 @@
           <!-- <v-form ref="videoForm" :form-settings="videoSettings" :form-data="formData" label-width="80px" :show-preview="showPreview" :show-button = "showButton" @fileDetail="fileDetail"/> -->
         </el-col>
         <el-col :sm="10" :md="10" :lg="10" :xl="10" >
-          <div v-if="rightCardShow">
-            <v-form ref="vForm" :form-settings="fileSettings" :form-data="singleData" label-width="80px" :show-button = "showButton">
-              <template slot="information">
-                <div class="file-infor">
-                  <div class="file-img">
-                    <img :src="filedetail.url" alt="">
-                  </div>
-                  <div class="desc">
-                    <div>{{ filedetail.name }}</div>
-                    <div v-if="filedetail.createTime">{{ parseInt(filedetail.createTime)|timeFilter }}</div>
-                    <div v-if="filedetail.size">{{ Math.floor(filedetail.size / 1024) }} kb</div>
-                  </div>
-                </div>
-              </template>
-              <template slot="btn">
-                <el-button type="primary" size="mini" @click ="setFile">保存</el-button>
-                <el-button size="mini" @click="colseSet">关闭</el-button>
-              </template>
-            </v-form>
-          </div>
+          <div v-if="rightCardShow"/>
         </el-col>
       </el-row>
     </div>
+    <!-- <image-detail :dialogVisible.sync="showImage"></image-detail> -->
+    <el-dialog
+      title="图片"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <v-form ref="vForm" :form-settings="fileSettings" :form-data="singleData" label-width="80px" :show-button = "showButton">
+        <template slot="information">
+          <div class="file-infor">
+            <div class="file-img">
+              <img :src="filedetail.url" alt="" >
+            </div>
+            <div class="desc">
+              <div>{{ filedetail.name }}</div>
+              <div v-if="filedetail.createTime">{{ parseInt(filedetail.createTime)|timeFilter }}</div>
+              <div v-if="filedetail.size">{{ Math.floor(filedetail.size / 1024) }} kb</div>
+            </div>
+          </div>
+        </template>
+        <template slot="btn">
+          <el-button type="primary" size="mini" @click ="setFile">保存</el-button>
+          <el-button size="mini" @click="colseSet">关闭</el-button>
+        </template>
+      </v-form>
+      <!-- <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible=false">取 消</el-button>
+        <el-button type="primary" size="mini" @click="dialogVisible=false">确 定</el-button>
+      </span> -->
+    </el-dialog>
     <div class="upload-btn">
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
       <el-button type = "primary" size="small" @click = "savePic('0')" v-if="!contextMenu.docId">存草稿</el-button>
@@ -41,7 +51,11 @@
 <script>
 import { mapGetters } from 'vuex'
 import { documentInfor, picCoverHandel, createDocument } from '@/api/cms/article'
+// import imageDetail from './imageDetail'
 export default {
+  components: {
+    // imageDetail
+  },
   props: {
     activeName: {
       default: '',
@@ -73,19 +87,21 @@ export default {
       fileSettings: [{
         items: [
           {
-            label: '附件详情',
+            label: '图片详情',
             name: 'information',
             type: 'slot'
           },
           {
             label: '标题',
             name: 'title',
-            type: 'text'
+            type: 'text',
+            placeholder: '请输入标题'
           },
           {
             label: '描述',
             name: 'desc',
             type: 'textarea',
+            placeholder: '请输入描述'
           },
           {
             label: '设为封面',
@@ -105,7 +121,8 @@ export default {
           },
         ]
       }],
-      formData: {}
+      formData: {},
+      dialogVisible: false
     }
   },
   computed: {
@@ -165,17 +182,26 @@ export default {
      // 关闭
     colseSet() {
       this.rightCardShow = false
+      this.dialogVisible = false
     },
     // 删除图片
     removeFile() {
       this.rightCardShow = false
     },
+    handleClose() {
+      this.dialogVisible = false
+    },
     // 点击图片获取详情
     fileDetail(val) {
-      this.rightCardShow = true
+      console.log(val, 'uid')
+      // this.rightCardShow = true
       this.singleData = {}
       this.filedetail = val
       this.singleData = val
+      // window.sessionStorage.setItem('imageUid', val.uid)
+      this.dialogVisible = true
+      this.$store.dispatch('setImageUid', val.uid)
+      // this.showImage = true
     },
     // 保存图片参数
     setFile() {
@@ -183,6 +209,7 @@ export default {
       this.filedetail.title = this.$refs.vForm.formModel.title
       this.filedetail.coverBool = this.$refs.vForm.formModel.coverBool
       this.$message.success('保存成功')
+      this.dialogVisible = false
     },
     differenceFile(articleAttachmentsList, type) {
       let arrResoult = []
@@ -331,10 +358,10 @@ export default {
            }
          }
          .file-img {
-           height: 100px;
-           img{
-             width: auto;
-             height:100%;
+           width: 100%;
+           img {
+             height: 100px !important;
+             width:100px;
            }
          }
          .file-infor {

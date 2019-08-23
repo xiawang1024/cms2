@@ -3,6 +3,7 @@ const webSite = {
     viewType: '0',
     viewTypeShow: false,
     tags: [],
+    imageUid: '',
     contextMenu: {
       id: '0'
     },
@@ -22,6 +23,9 @@ const webSite = {
     },
     SET_TREE_TAGS: (state, tags) => {
       state.tags = tags
+    },
+    SET_IMAGE_UID: (state, uid) => {
+      state.imageUid = uid
     },
     SET_CONTEXT_MENU: (state, menu) => {
       state.contextMenu = menu
@@ -64,6 +68,9 @@ const webSite = {
     },
     setRelationList: ({ commit }, relationList) => {
       commit('SET_RELATION_LIST', relationList)
+    },
+    setImageUid({ commit }, uid) {
+      commit('SET_IMAGE_UID', uid)
     },
   }
 }
