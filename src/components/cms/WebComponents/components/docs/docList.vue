@@ -16,7 +16,7 @@
           <span class="article-id">{{ scope.row.articleId }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="articleTitle" label="标题" min-width="300" show-overflow-tooltip>
+      <el-table-column prop="articleTitle" label="标题" min-width="250" show-overflow-tooltip>
         <template slot-scope="scope">
           <span v-if="checkAuth('cms:article:edit')" class="titleClick" @click="editDoc(scope.row)">{{ scope.row.articleTitle }}</span>
           <span v-else>{{ scope.row.articleTitle }}</span>
@@ -26,15 +26,15 @@
           <i class="iconfont iconlink" title="引用" v-if="scope.row.articleType ==3"/>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="查看" width="60">
+      <!-- <el-table-column label="查看" width="50">
         <template slot-scope="scope">
-          <i class="el-icon-view" style="cursor:pointer" @click="openWindow(scope.row.outLink)"/>
+          <i class="el-icon-share" style="cursor:pointer" @click.stop="openWindow(scope.row.articleId)"/>
         </template>
       </el-table-column> -->
 
       <el-table-column label="预览" width="50">
         <template slot-scope="scope">
-          <i class="el-icon-view" style="cursor:pointer" @click="openReview(scope.row)" title="预览"/>
+          <i class="el-icon-view" style="cursor:pointer" @click.stop="openReview(scope.row)" title="预览"/>
         </template>
       </el-table-column>
       <el-table-column prop="articleType" label="类型" width="50">
@@ -105,7 +105,7 @@
 </template>
 
 <script>
-import { deleteDocument, topDocument, untopDocument, articalSort} from '@/api/cms/article'
+import { deleteDocument, topDocument, untopDocument, articalSort, articleUrl} from '@/api/cms/article'
 import reviewDialog from './review'
 import stepDialog from './step'
 import Sortable from 'sortablejs'
@@ -376,9 +376,20 @@ export default {
     /**
      * 查看预览
      */
-    openWindow(link) {
+    openWindow(id) {
       // window.location.href = link
-      window.open(link)
+      // window.open(link)
+      return new Promise((resolve, reject) => {
+        articleUrl(id)
+          .then((response) => {
+            // this.$emit('handelSuccess')
+            // this.$message.success('删除成功')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     },
     editDoc(row) {
       const select = { id: '1', label: '新建文档', docId: row.articleId, articleType: row.articleType, pageNum: this.pageNum, pageSize: this.pageSize}

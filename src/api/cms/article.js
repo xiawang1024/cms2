@@ -316,3 +316,10 @@ export function picCoverHandel(articleId, data) {
     data
   })
 }
+// 查看文章链接
+export function articleUrl(articleId) {
+  return request({
+    url: `/cms/article/visiturl/${articleId}`,
+    method: 'get'
+  })
+}
