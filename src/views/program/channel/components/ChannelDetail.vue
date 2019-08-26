@@ -24,7 +24,7 @@
           <el-input v-model="postForm.showOrder" maxlength="10" placeholder="请输入数字"/>
         </el-form-item>
         <el-form-item style="margin-bottom: 40px;" label="关联文章id" prop="articleId">
-          <el-input v-model="postForm.articleId" maxlength="10" placeholder="请输入文章ID"/>
+          <el-input v-model="postForm.articleId" maxlength="64" placeholder="请输入文章ID"/>
         </el-form-item>
         <el-form-item style="margin-bottom: 40px;">
           <MDinput type="tel" v-model="channelHotline" :maxlength="100" name="name">
