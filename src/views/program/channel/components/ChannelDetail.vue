@@ -49,13 +49,13 @@
             <el-radio label="0">关闭</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item style="margin-bottom: 40px;" prop="streams">
-          <MDinput v-model="postForm.streams" :maxlength="100" name="name" required>
+        <el-form-item style="margin-bottom: 40px;">
+          <MDinput v-model="postForm.streams" :maxlength="100" name="name">
             <label class="material-label-lighting">频率直播地址</label>
           </MDinput>
         </el-form-item>
-        <el-form-item style="margin-bottom: 40px;" prop="videoStreams">
-          <MDinput v-model="postForm.videoStreams" :maxlength="100" name="name" required>
+        <el-form-item style="margin-bottom: 40px;">
+          <MDinput v-model="postForm.videoStreams" :maxlength="100" name="name">
             <label class="material-label-lighting">频率视频直播地址</label>
           </MDinput>
         </el-form-item>
@@ -193,9 +193,7 @@ export default {
       rules: {
         channelName: [{ required: true, message: '频率名称为必填项', trigger: 'blur' }],
         showOrder: [{ required: true, message: '排序为必填项', trigger: 'blur' }, { validator: validateOrderNumber, trigger: 'blur' }],
-        secondName: [{ required: false, trigger: 'blur' }, { validator: validateLetters, trigger: 'blur' }],
-        streams: [{ required: true, message: '频率直播地址为必填项', trigger: 'blur'}, { validator: validateSourceUri, trigger: 'blur' }],
-        videoStreams: [{ required: true, message: '频率视频直播地址为必填项', trigger: 'blur'}, {validator: validateSourceUri, trigger: 'blur' }]
+        secondName: [{ required: false, trigger: 'blur' }, { validator: validateLetters, trigger: 'blur' }]
       }
     }
   },

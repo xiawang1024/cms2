@@ -194,7 +194,7 @@ export default {
       handleAvatarSuccess(res, file) {//文件上传成功
         // this.imageUrl = URL.createObjectURL(file.raw);
         this.$message({
-          message: '导入成功',
+          message: '成功导入' + res.result + '条数据',
           type: 'success'
         });
       },
