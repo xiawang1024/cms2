@@ -67,85 +67,85 @@ export default {
         hiddenFlag: '0',
         topFlag: '1'
       },
-      formSettings: [
-        {
-          items: [
-            {
-              label: '正文标题',
-              name: 'articleTitle',
-              type: 'text',
-              placeholder: '请输入正文标题',
-              required: true,
-              maxlength: 10
-            },
-            {
-              label: '首页标题',
-              name: 'contentTitle',
-              type: 'text',
-              placeholder: '请输入首页标题',
-              maxlength: 10,
-              required: true
-            },
-            {
-              label: '文档来源',
-              name: 'articleOrigin',
-              type: 'select',
-              placeholder: '请选择',
-              options: [
-                {
-                  label: '1',
-                  value: '123'
-                }
-              ]
-            },{
-              label:'文档作者',
-              name: 'articleAuthor',
-              type:'text',
-              placeholder: '请输入文档作者'
-            },{
-              label: '关键字',
-              name: 'seoKeywords',
-              type: 'text',
-              placeholder: '请输入关键字',
-            },{
-              label: '摘要',
-              name: 'seoDescription',
-              type: 'textarea',
-              placeholder: '请输入摘要'
-            },{
-              label: '标签',
-              name: 'tag',
-              type: 'checkbox',
-              options: []
-            },{
-              label:'点击量',
-              name: 'clickNum',
-              type:'number',
-              placeholder: '请输入点击量'
-            },{
-              label:'创建时间',
-              name:'createTime',
-              type:'date',
-              placeholder: '请选择'
-            },
-            {
-              label: '设置',
-              name: 'set',
-              type: 'slot',
-            },
-            {
-              label: '排序号',
-              name: 'seqNo',
-              type: 'number'
-            },
-            {
-              label: '',
-              name: 'btn',
-              type: 'slot'
-            },
-          ]
-        }
-      ],
+      // formSettings: [
+      //   {
+      //     items: [
+      //       {
+      //         label: '正文标题',
+      //         name: 'articleTitle',
+      //         type: 'text',
+      //         placeholder: '请输入正文标题',
+      //         required: true,
+      //         maxlength: 10
+      //       },
+      //       {
+      //         label: '首页标题',
+      //         name: 'contentTitle',
+      //         type: 'text',
+      //         placeholder: '请输入首页标题',
+      //         maxlength: 10,
+      //         required: true
+      //       },
+      //       {
+      //         label: '文档来源',
+      //         name: 'articleOrigin',
+      //         type: 'select',
+      //         placeholder: '请选择',
+      //         options: [
+      //           {
+      //             label: '1',
+      //             value: '123'
+      //           }
+      //         ]
+      //       },{
+      //         label:'文档作者',
+      //         name: 'articleAuthor',
+      //         type:'text',
+      //         placeholder: '请输入文档作者'
+      //       },{
+      //         label: '关键字',
+      //         name: 'seoKeywords',
+      //         type: 'text',
+      //         placeholder: '请输入关键字',
+      //       },{
+      //         label: '摘要',
+      //         name: 'seoDescription',
+      //         type: 'textarea',
+      //         placeholder: '请输入摘要'
+      //       },{
+      //         label: '标签',
+      //         name: 'tag',
+      //         type: 'checkbox',
+      //         options: []
+      //       },{
+      //         label:'点击量',
+      //         name: 'clickNum',
+      //         type:'number',
+      //         placeholder: '请输入点击量'
+      //       },{
+      //         label:'创建时间',
+      //         name:'createTime',
+      //         type:'date',
+      //         placeholder: '请选择'
+      //       },
+      //       {
+      //         label: '设置',
+      //         name: 'set',
+      //         type: 'slot',
+      //       },
+      //       {
+      //         label: '排序号',
+      //         name: 'seqNo',
+      //         type: 'number'
+      //       },
+      //       {
+      //         label: '',
+      //         name: 'btn',
+      //         type: 'slot'
+      //       },
+      //     ]
+      //   }
+      // ],
       formData: {},
       isLoading: false
     }

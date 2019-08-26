@@ -1,6 +1,6 @@
 <template>
   <div class="reproduce-wrap">
-    <v-form ref="form" :form-settings="reproduceSetting" :form-data="formData" label-width="80px" :show-button="false">
+    <v-form ref="form" :form-settings="linkSetting" :form-data="formData" label-width="80px" :show-button="false">
       <template slot="set">
         <div class="set">
           <el-checkbox true-label="1" false-label="0" v-model="adddocSet.topFlag">置顶</el-checkbox>
@@ -38,12 +38,12 @@ export default {
       },
       type: Array
     },
-    reproduceSetting: {
+    linkSetting: {
       default: ()=> {
         return []
       },
       type: Array
-    }
+    },
   },
   data() {
     return {
@@ -77,7 +77,7 @@ export default {
     }
   },
   mounted() {
-    this.formData =  this.docInfor
+    console.log('mounted')
     this.formData =  this.docInfor
     let showTags = []
     if(this.docInfor.tagIdsList) {
@@ -148,7 +148,7 @@ export default {
     getSubmitData() {
       let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
       // resoultObj.channelId = this.channelId
-      resoultObj.articleType = 4
+      resoultObj.articleType = 5
       resoultObj.seoKeywords = ''
       resoultObj.articleAuthor = ''
       resoultObj.seoDescription = ''
@@ -182,7 +182,7 @@ export default {
         let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
         resoultObj.channelId = this.channelId
         resoultObj.articleStatus = publishType
-        resoultObj.articleType = 4
+        resoultObj.articleType = 5
         resoultObj.seoKeywords = ''
         resoultObj.articleAuthor = ''
         resoultObj.seoDescription = ''
@@ -219,6 +219,7 @@ export default {
         } else {
           if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
             resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+           
           } else {
             resoultObj.articleAttachmentsList = []
           }

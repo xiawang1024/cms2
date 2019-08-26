@@ -901,7 +901,7 @@ export default {
     },
     // 更新表单校验规则
     updateRule() {
-      console.log(this.formSettings, "form");
+      console.log(this.formSettings, "updaterule");
       let tmpRules = {};
       this.formSettings.forEach(settingItem => {
         settingItem.items.forEach(item => {
