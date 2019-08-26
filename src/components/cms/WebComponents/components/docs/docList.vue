@@ -26,6 +26,7 @@
           <i class="iconfont iconlink" title="引用" v-if="scope.row.articleType ==3"/>
         </template>
       </el-table-column>
+      
       <!-- <el-table-column label="查看" width="50">
         <template slot-scope="scope">
           <i class="el-icon-share" style="cursor:pointer" @click.stop="openWindow(scope.row.articleId)"/>
