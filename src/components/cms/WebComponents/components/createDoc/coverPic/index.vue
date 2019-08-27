@@ -34,8 +34,8 @@
       </v-form>
     </el-dialog>
     <div class="upload-btn">
-      <el-button type = "primary" size="small" @click = "savePic('0')" v-if="!contextMenu.docId">存草稿</el-button>
-      <el-button type = "primary" size="small" @click = "savePic('11')" v-if="!contextMenu.docId">保存并发布</el-button>
+      <el-button type = "primary" size="mini" @click = "savePic('0')" v-if="!contextMenu.docId">存草稿</el-button>
+      <el-button type = "primary" size="mini" @click = "savePic('11')" v-if="!contextMenu.docId">保存并发布</el-button>
       <el-button type = "primary" size="mini" @click="savePic" v-if="contextMenu.docId">保存封面</el-button>
     </div>
   </div>
