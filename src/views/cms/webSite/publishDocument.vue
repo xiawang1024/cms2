@@ -39,7 +39,7 @@ import splitPane from 'vue-splitpane'
 import Tree from '@/components/cms/Tree'
 import WebComponents from '@/components/cms/WebComponents'
 import { mapGetters } from 'vuex'
-// import { columnList } from '@/api/cms/columnManage'
+import { recycleBin } from '@/api/cms/article'
 import mixins from '@/components/cms/mixins'
 import store from 'store'
 export default {
@@ -71,6 +71,7 @@ export default {
     this.tableData = this.columnAll.length ? this.columnAll : store.get('columnsAll')
     this.$store.dispatch('toggleSideBar')
     this.barSet()
+    this.recycleBin()
   },
   // TODO:webSiteViewType
   beforeRouteEnter(to, from, next) {
@@ -91,6 +92,17 @@ export default {
   },
   methods: {
     resize() {
+    },
+    recycleBin() {
+      return new Promise((resolve, reject) => {
+        recycleBin()
+          .then((response) => {
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     },
     barSet() {
       if(this.tableData.length) {

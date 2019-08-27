@@ -102,7 +102,13 @@ export function quoteTo(articleId,channelId) {
     method: 'get'
   })
 }
-
+// 获取回收站栏目id
+export function recycleBin() {
+  return request({
+    url: '/cms/channel/findrecyclerootchannelid',
+    method: 'get'
+  })
+}
 // 引用文章详情
 export function documentQuoteInfor(id) {
   return request({
