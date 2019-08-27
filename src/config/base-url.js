@@ -10,14 +10,10 @@ let SIMPLE_MERGE_URL = 'http://fupload.test.dianzhenkeji.com'
 if (process.env.NODE_ENV) {
   if (process.env.NODE_ENV == 'development') {
     BASE_URL = ' http://gw.test.dianzhenkeji.com' // 测试地址
-    // BASE_URL = ' http://192.168.7.55:8093' // 测试地址
     UP_URL = 'http://fupload.test.dianzhenkeji.com/basefile/upload?fileRefId='
     DOWN_URL = 'http://cmsres.test.dianzhenkeji.com'
     SIMPLE_UPLOAD_URL = 'http://fupload.test.dianzhenkeji.com/chunk/chunk'
     SIMPLE_MERGE_URL = 'http://fupload.test.dianzhenkeji.com'
-    // BASE_URL = 'http://gw.dianzhenkeji.com' // 正式地址
-    // UP_URL = 'http://fupload.dianzhenkeji.com/basefile/upload?fileRefId='
-    // DOWN_URL = 'http://cmsres.dianzhenkeji.com'
   } else if (process.env.NODE_ENV == 'production') {
     BASE_URL = 'http://gw.dianzhenkeji.com' // 正式地址
     UP_URL = 'http://fupload.dianzhenkeji.com/basefile/upload?fileRefId='

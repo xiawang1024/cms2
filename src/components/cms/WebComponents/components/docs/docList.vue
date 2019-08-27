@@ -27,11 +27,11 @@
         </template>
       </el-table-column>
       
-      <!-- <el-table-column label="查看" width="50">
+      <el-table-column label="查看" width="50">
         <template slot-scope="scope">
           <i class="el-icon-share" style="cursor:pointer" @click.stop="openWindow(scope.row.articleId)"/>
         </template>
-      </el-table-column> -->
+      </el-table-column>
 
       <el-table-column label="预览" width="50">
         <template slot-scope="scope">
@@ -378,13 +378,14 @@ export default {
      * 查看预览
      */
     openWindow(id) {
-      // window.location.href = link
-      // window.open(link)
       return new Promise((resolve, reject) => {
         articleUrl(id)
           .then((response) => {
-            // this.$emit('handelSuccess')
-            // this.$message.success('删除成功')
+            if(response.data.result) {
+              window.open('http://' + response.data.result)
+            } else {
+              this.$message.warning('该文章暂无链接')
+            }
             resolve()
           })
           .catch((error) => {
