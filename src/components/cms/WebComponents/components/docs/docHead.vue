@@ -103,7 +103,7 @@ import {
   statusOptions
 } from './mockData.js'
 import handelDialog from './handelDialog'
-import { deleteDocumentMore, cancelDocumentMore, publishDocumentMore } from '@/api/cms/article'
+import { cancelDocumentMore, publishDocumentMore, moveTo } from '@/api/cms/article'
 import { mapGetters } from 'vuex'
 export default {
   name: 'DocHead',
@@ -144,7 +144,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['treeTags'])
+    ...mapGetters(['treeTags', 'recycleCnannelId'])
   },
   watch: {
     sourceList(val) {
@@ -236,7 +236,6 @@ export default {
           break
         case '4':
           this.title = '删除'
-          // this.dialogVisible = true
           this.deleteMore(this.documentIds.join(','))
           break
         case '5':
@@ -288,13 +287,25 @@ export default {
           })
       })
     },
-    // 删除多个
+    // 删除多个(改成移动接口)
     deleteMore(id) {
+      // return new Promise((resolve, reject) => {
+      //   deleteDocumentMore({articleIds: id})
+      //     .then((response) => {
+      //       this.$message.success('删除成功')
+      //       this.$emit('handelSuccess')
+      //       resolve()
+      //     })
+      //     .catch((error) => {
+      //       reject(error)
+      //     })
+      // })
       return new Promise((resolve, reject) => {
-        deleteDocumentMore({articleIds: id})
+        moveTo(id, this.recycleCnannelId)
           .then((response) => {
             this.$message.success('删除成功')
             this.$emit('handelSuccess')
+            // this.$emit('handelSuccess')
             resolve()
           })
           .catch((error) => {

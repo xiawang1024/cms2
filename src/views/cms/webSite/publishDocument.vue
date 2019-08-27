@@ -97,6 +97,7 @@ export default {
       return new Promise((resolve, reject) => {
         recycleBin()
           .then((response) => {
+            this.$store.dispatch('setRecycleChannelId', response.data.result)
             resolve()
           })
           .catch((error) => {
