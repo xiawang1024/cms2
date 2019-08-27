@@ -3,6 +3,7 @@ import request from '@/utils/request'
 import axios from 'axios'
 import { Message } from 'element-ui'
 import { download } from '@/utils/common'
+import baseUrl from "@/config/base-url";
 export function fetchSensitiveList(word, pageNo, pageSize) {
   let selectWord = word ? word : ''
   return request({
@@ -60,7 +61,7 @@ function postAjax (accessToken) {
   axios({
     // baseURL: baseUrl || '/',
     method: 'get',
-    url: 'http://gw.test.dianzhenkeji.com/news-comment/template.xlsx',
+    url: baseUrl.BASE_URL + '/news-comment/template.xlsx',
     responseType: 'blob',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
