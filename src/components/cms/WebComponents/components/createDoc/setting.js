@@ -197,6 +197,7 @@ export const imagesSeting = [
         type: 'select',
         placeholder: '请选择',
         required: true,
+        filterable: true,
         options: []
       },{
         label:'文档作者',
@@ -310,6 +311,7 @@ export const reproduceSetting = [
         type: 'select',
         placeholder: '请选择',
         required: true,
+        filterable: true,
         options: []
       },
       {
@@ -395,6 +397,7 @@ export const articleLinkSetting = [
         type: 'select',
         placeholder: '请选择',
         required: true,
+        filterable: true,
         options: []
       },
       {

@@ -116,6 +116,7 @@
                 :clearable="true"
                 :disabled="item.disabled"
                 :multiple="!!item.multiple"
+                :filterable="item.filterable"
                 @change="(item.events&&item.events.change)?$emit(item.events.change, formModel[item.name]):null"
               >
                 <template v-if="item.options">

@@ -154,6 +154,7 @@ export default {
               type: 'select',
               placeholder: '请选择',
               required: true,
+              filterable: true,
               options: []
             },
             {
