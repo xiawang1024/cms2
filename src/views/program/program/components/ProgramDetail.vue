@@ -146,8 +146,27 @@
                
           </el-row>
           <el-form-item class="submit-btn">
-            <el-button type="success" @click="addItem">新增一项</el-button>
+            <el-row class="padding-10-0">
+              <el-button type="info" @click="addItem">新增一项</el-button>
+              <el-upload
+              class="inline-block"
+              :action="uploadUrl()"
+              :headers="headers"
+              :data="programListUpload"
+              name="file"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload"
+              :on-error="imgUploadError">
+              <el-button type="success">{{ $t('table.batchAdd') }}</el-button>
+              </el-upload>
+            </el-row>
           </el-form-item>
+           <div slot="tip" class="el-upload__tip">
+             仅能上传Excel文件，且大小不超过500KB.<br>
+             当天最后一个节目开始时间须在24:00之前
+             先创建模板，选择编辑后方可导入
+           </div>
         </div>
         <!-- 节目单end -->
 
@@ -168,6 +187,7 @@ import { findColumnList } from '@/api/program/column'
 import { fetchProgram, createProgram } from '@/api/program/program'
 import MDinput from '@/components/MDinput'
 import Vue from 'vue'
+import baseUrl from '@/config/base-url'
 
 
 
@@ -256,6 +276,12 @@ export default {
           
       },
       loading: false,
+      headers: {
+        'Authorization': 'bearer ' + this.$store.getters.token.access_token
+      },
+     programListUpload: {
+       'programUploadId' : ''
+     },
       switchstate: false,
       range: '',           // 范围
       channelOptions: [],
@@ -349,7 +375,10 @@ export default {
       // this.postForm.startTime = 1554220800 *1000
       this.loading = true
       fetchProgram(id).then(response => {
-        this.postForm = response.data.result
+        this.postForm = response.data.result;
+        this.programListUpload.programUploadId=response.data.result.programlistId
+        console.log( this.programListUpload.programUploadId,'sad');
+        
         this.weekSet = this.postForm.weekset.split(',')
         this.$set(this.postForm, 'startTime', response.data.result.starttime*1000)  //动态赋值 临时解决时间控件回显不能编辑的问题
         if(this.postForm.endtime != 0){
@@ -477,7 +506,41 @@ export default {
     },
     back() {
       this.$router.go(-1)
-    }
+    },
+    uploadUrl() {
+        var url = baseUrl.BASE_URL + "/system/program/addBatch" // 文件服务地址
+        return url
+    },
+    beforeAvatarUpload(file) {//文件上传之前调用做一些拦截限制
+        const isExcel = 
+        file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+        file.type === 'application/vnd.ms-excel'
+        const isLt500KB = file.size / 1024 / 500 < 1
+        const isEdit = this.isEdit
+ 
+        if (!isExcel) {
+          this.$message.error('上传文件只能是xls/xlsx格式!');
+        }
+        if (!isLt500KB) {
+          this.$message.error('上传文件大小不能超过 500KB!')
+        }
+        if(!isEdit) {
+          this.$message.error('必须先创建模板，再编辑导入！')
+        }
+        return isExcel && isLt500KB && isEdit;
+      },
+      handleAvatarSuccess(res, file) {//文件上传成功
+        // this.imageUrl = URL.createObjectURL(file.raw);
+        this.$message({
+          message: '成功导入' + res.result + '条数据，请继续编辑',
+          type: 'success'
+        });
+        const id = this.$route.params && this.$route.params.id
+        this.fetchData(id)
+      },
+      imgUploadError(err, file, fileList){//文件上传失败调用
+        this.$message.error('导入失败!')
+      }
   }
 }
 </script>
@@ -554,5 +617,11 @@ export default {
   .submit-btn{
     text-align: center;
     margin-left: -60px;
+  }
+  .el-upload__tip {
+    color: red
+  }
+  .inline-block {
+    display: inline-block;
   }
 </style>
