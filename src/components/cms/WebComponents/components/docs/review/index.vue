@@ -67,6 +67,7 @@
 </template>
 <script>
 import { documentInfor } from '@/api/cms/articleCheck'
+import { documentQuoteInfor } from '@/api/cms/article'
 import Aplayer from 'vue-aplayer'
 export default {
   components: {
@@ -77,9 +78,11 @@ export default {
       default: false,
       type: Boolean
     },
-    articleId: {
-      default: '',
-      type: String
+    article: {
+      type: Object,
+      default: () => {
+        return {}
+      }
     }
   },
   data() {
@@ -102,7 +105,11 @@ export default {
   watch: {
     dialogVisible(val) {
       if(val) {
-        this.getDocumentInfor(this.articleId)
+        if(this.article.articleType == 3) {
+          this.getQuoteDocumentInfor(this.article.articleId)
+        } else {
+          this.getDocumentInfor(this.article.articleId)
+        }
       }
     }
   },
@@ -110,30 +117,6 @@ export default {
     articleTypeChange() {
 
     },
-    //  {
-    //         label: '无图样式',
-    //         value: 0
-    //       },
-    //       {
-    //         label: '单图样式',
-    //         value: 1
-    //       },
-    //       {
-    //         label: '大图样式',
-    //         value: 4
-    //       },
-    //       {
-    //         label: '三图样式',
-    //         value: 6
-    //       },
-    //       {
-    //         label: '视频样式',
-    //         value: 8
-    //       },
-    //       {
-    //         label: '专题样式',
-    //         value: 9
-    //       }
     openLink(val) {
       window.open(val)
     },
@@ -180,6 +163,24 @@ export default {
           })
       })
     },
+    getQuoteDocumentInfor(id) {
+      console.log(id)
+      return new Promise((resolve, reject) => {
+        documentQuoteInfor(id)
+          .then((response) => {
+            this.documentInfor = response.data.result
+            this.imageList = this.differenceFile(response.data.result.articleAttachmentsList, 'IMG')
+            this.videolist = this.differenceFile(response.data.result.articleAttachmentsList, 'VIDEO')
+            this.audioList = this.differenceFile(response.data.result.articleAttachmentsList, 'AUDIO')
+            this.coverImage = this.getCover(response.data.result.coverImagesList)
+            console.log(this.coverImage, '123')
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+    }
   }
 }
 </script>

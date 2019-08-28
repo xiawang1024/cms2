@@ -100,7 +100,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <review-dialog :dialog-visible.sync="dialogVisible" :article-id="documentInfor.articleId"/>
+    <review-dialog :dialog-visible.sync="dialogVisible" :article="documentInfor"/>
     <step-dialog :dialog-visible.sync="stepVisible" :process-data="processData"/>
     
   </div>

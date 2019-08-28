@@ -77,9 +77,11 @@ export default {
       default: false,
       type: Boolean
     },
-    articleId: {
-      default: '',
-      type: String
+    article: {
+      type: Object,
+      default: ()=> {
+        return {}
+      }
     }
   },
   data() {
