@@ -28,11 +28,10 @@
 </template>
 <script>
 import { createSensitive, updateSensitive, deleteSensitive, downloadExcel } from "@/api/cms/sensitiveWord";
-import { messageList } from "@/api/cms/pushMessage";
+import { messageList, appList } from "@/api/cms/pushMessage";
 import Pagination from '@/common/Pagination'
 import baseUrl from "@/config/base-url";
 import addMessage from './addMessage'
-
 // import { download } from '@/utils/common'
 export default {
   components: {
@@ -102,6 +101,7 @@ export default {
   },
   mounted() {
     this.getMessageList()
+    this.getAppList()
   },
   methods: {
     goBack() {
@@ -141,6 +141,20 @@ export default {
       this.searchData.pageSize = this.pageSize
       return new Promise((resolve, reject) => {
         messageList(this.searchData).then(async res => {
+          this.total = res.data.result.total
+          this.tableData = res.data.result.records
+          // 结束
+          resolve()
+        })
+          .catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+      })
+    },
+    getAppList() {
+      return new Promise((resolve, reject) => {
+        appList(this.searchData).then(async res => {
           this.total = res.data.result.total
           this.tableData = res.data.result.records
           // 结束
