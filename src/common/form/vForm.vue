@@ -41,6 +41,7 @@
                 :placeholder="item.placeholder"
                 :disabled="item.disabled"
                 :maxlength="item.maxlength"
+                :show-word-limit="item.showWordLimit"
               >
                 <template
                   v-if="item.append"
@@ -1344,6 +1345,11 @@ export default {
 .v-form {
   .save-btn{
     margin-bottom:30px;
+  }
+  .el-input__count {
+    .el-input__count-inner{
+      height:29px !important;
+    }
   }
   .imageHandel {
     margin-top: 85px;

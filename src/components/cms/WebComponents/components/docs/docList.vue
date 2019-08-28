@@ -49,7 +49,7 @@
       </el-table-column>
       <el-table-column prop="articleStatus" label="状态" width="80">
         <template slot-scope="scope">
-          <div class="docunmnt-status" @click.stop="reviewStep(scope.row)">
+          <div class="docunmnt-status">
             <span v-if="scope.row.articleStatus == 0" style="color:#909399">新稿</span>
             <span v-if="scope.row.articleStatus == 1" style="color:#3498db">提交审核</span>
             <span v-if="scope.row.articleStatus == 2" style="color:#f67a61">审核未通过</span>
@@ -88,8 +88,9 @@
       </el-table-column>
       <el-table-column prop="createUser" label="撰稿人" width="100" show-overflow-tooltip/>
       <el-table-column prop="clickNum" label="点击" min-width="100"/>
-      <el-table-column fixed="right" label="操作" width="150">
+      <el-table-column fixed="right" label="操作" width="200">
         <template slot-scope="scope">
+          <el-button type="text" size="small" @click.stop="checkProcess(scope.row)">审核进度</el-button>
           <el-button :disabled="scope.row.articleStatus == 1" v-if="checkAuth('cms:article:stick') && scope.row.topFlag == 1" type="text" size="small" @click.stop="setUntop(scope.row.articleId)">取消置顶</el-button>
           <el-button :disabled="scope.row.articleStatus == 1" v-if="checkAuth('cms:article:stick') && scope.row.topFlag !== 1" type="text" size="small" @click.stop="setTop(scope.row.articleId)">置顶</el-button>
           <el-button :disabled="scope.row.articleStatus == 1" v-if="checkAuth('cms:article:edit')" type="text" size="small" @click.stop="editDoc(scope.row)">编辑</el-button>
@@ -99,14 +100,15 @@
         </template>
       </el-table-column>
     </el-table>
-    <review-dialog :dialog-visible.sync="dialogVisible" :document-infor="documentInfor"/>
-    <step-dialog :dialog-visible.sync="stepVisible" :document-infor="documentInfor"/>
+    <review-dialog :dialog-visible.sync="dialogVisible" :article-id="documentInfor.articleId"/>
+    <step-dialog :dialog-visible.sync="stepVisible" :process-data="processData"/>
     
   </div>
 </template>
 
 <script>
 import { deleteDocument, topDocument, untopDocument, articalSort, articleUrl} from '@/api/cms/article'
+import { getProcess  } from '@/api/cms/articleCheck'
 import reviewDialog from './review'
 import stepDialog from './step'
 import Sortable from 'sortablejs'
@@ -146,6 +148,7 @@ export default {
       oldList: [],
       newList: [],
       stepVisible: false,
+      processData: []
     }
   },
   computed: {
@@ -163,10 +166,20 @@ export default {
   },
   methods: {
     // 查看审核进度
-    reviewStep(row) {
-      // console.log(row)
-      // this.documentInfor = row
-      // this.stepVisible = true
+    checkProcess(row) {
+      return new Promise((resolve, reject) => {
+        getProcess({businessId: row.articleId})
+          .then((response) => {
+            this.stepVisible = true
+            this.processData = response.data.result
+            // this.tableData = response.data.result.content
+            // this.totalCount = response.data.result.total
+            resolve()
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
     },
     // 文章排序
     articalSort(data) {

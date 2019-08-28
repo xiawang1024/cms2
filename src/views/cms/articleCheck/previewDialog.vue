@@ -2,39 +2,76 @@
   <el-dialog
     title="文章详情"
     :visible.sync="dialogVisible"
-    width="60%"
+    width="80%"
     class="check-preview1-dialog"
-    :before-close="handleClose">
-    <div v-if="documentInfor.articleId">
-      <h3>{{ documentInfor.articleTitle }}</h3>
-      <div>
-        {{ documentInfor.createTime }}
-        <span v-if="documentInfor.createUser">{{ documentInfor.createUser }}</span>
-      </div>
-      <div v-if="documentInfor.articleType =='1'">
-        <el-row :gutter="20" >
-          <el-col :span="6" v-for="(ele, index) in imageList" :key="index">
-            <div class="image-list">
-              <img :src="ele.url" alt="">
+    :before-close="handleClose"
+    :close-on-click-modal="false"
+  >
+    <div class="acticel-preview">
+      <div class="article-title">{{ documentInfor.articleTitle }}</div>
+      <div class="article">
+        <!-- {{ documentInfor.createTime }}
+        <span v-if="documentInfor.createUser">{{ documentInfor.createUser }}</span> -->
+        <el-row :gutter="20">
+          <el-col :span="19">
+            <div class="article-content-left">
+              <video :src="videolist[0].url" controls="controls" width="100%" height="400px" v-if="videolist.length"/>
+              <img :src="coverImage.url" alt="" v-else class="cover-img">
+              <!-- <audio :src="videolist[0].url" controls="controls" width="100%" height="400px" v-if="videolist.length"/> -->
+              <aplayer 
+                autoplay :music="{
+                  title: audioList[0].name,
+                  artist: audioList[0].title,
+                  src: audioList[0].url,
+                  pic: 'https://cn-east-17-aplayer-35525609.oss.dogecdn.com/secretbase.jpg'
+                }"
+                v-if="audioList.length"
+              />
+              <div class="article-content" v-html="documentInfor.contentBody"/>
+            </div>
+          </el-col>
+          <el-col :span="5">
+            <!-- <div class="article-content-right">
+              <div class="seoDescription">
+                <div class="seoDescription-title">摘要</div>
+                <div class="seoDescription-content">
+                  <span v-if="documentInfor.seoDescription">{{ documentInfor.seoDescription }}</span>
+                  <span v-else>暂无</span>
+                </div>
+              </div>
+            </div> -->
+            <div class="article-content-right">
+              <div class="other">
+                <div>关键字：{{ documentInfor.seoKeywords }}</div>
+                <div>来源：{{ documentInfor.articleOrigin }}</div>
+                <div>作者：{{ documentInfor.articleAuthor }}</div>
+                <div>摘要：{{ documentInfor.seoDescription }}</div>
+                <div>点击量：{{ documentInfor.clickNum }}</div>
+                <div>发布时间：{{ documentInfor.createTime }}</div>
+                <div>设置：{{ documentInfor.topFlag ==1 ? '置顶' : '' }} {{ documentInfor.hiddenFlag ==1 ? '隐身' : '' }} </div>
+                <div>提取码：{{ documentInfor.extractCode }}</div>
+                <div>排序号：{{ documentInfor.seqNo }}</div>
+                <div>展现形式：{{ articleType[documentInfor.articleShowStyle] }}</div>
+                <div v-if="documentInfor.extFieldsList && documentInfor.extFieldsList.length">
+                  <div v-for="(ele, index) in documentInfor.extFieldsList" :key="index">
+                    {{ ele.label }}:{{ ele.fieldValue }}
+                  </div>
+                </div>
+              </div>
             </div>
           </el-col>
         </el-row>
       </div>
-      <div v-if="documentInfor.articleType =='3'">
-        <!-- <span>转载地址 </span>
-        <a :href="documentInfor.linkTo">{{ documentInfor.linkTo }}</a> -->
-        转载地址
-        <div class="link-to">
-          <span size="small" class="link-url" @click="openLink(documentInfor.linkTo)">{{ documentInfor.linkTo }}</span>
-        </div>
-      </div>
-      <div v-html="documentInfor.contentBody"/>
     </div>
   </el-dialog>
 </template>
 <script>
 import { documentInfor } from '@/api/cms/articleCheck'
+import Aplayer from 'vue-aplayer'
 export default {
+  components: {
+    Aplayer
+  },
   props: {
     dialogVisible: {
       default: false,
@@ -48,7 +85,18 @@ export default {
   data() {
     return {
       documentInfor: {},
-      imageList: []
+      imageList: [],
+      videolist: [],
+      audioList: [],
+      coverImage: {},
+      articleType: {
+        0: '无图样式',
+        1: '单图样式',
+        4: '大图样式',
+        6: '三图样式',
+        8: '视频样式',
+        9: '专题样式'
+      }
     }
   },
   watch: {
@@ -59,6 +107,33 @@ export default {
     }
   },
   methods: {
+    articleTypeChange() {
+
+    },
+    //  {
+    //         label: '无图样式',
+    //         value: 0
+    //       },
+    //       {
+    //         label: '单图样式',
+    //         value: 1
+    //       },
+    //       {
+    //         label: '大图样式',
+    //         value: 4
+    //       },
+    //       {
+    //         label: '三图样式',
+    //         value: 6
+    //       },
+    //       {
+    //         label: '视频样式',
+    //         value: 8
+    //       },
+    //       {
+    //         label: '专题样式',
+    //         value: 9
+    //       }
     openLink(val) {
       window.open(val)
     },
@@ -71,6 +146,20 @@ export default {
       }
       return arrResoult
     },
+    getCover(imgList) {
+      if(imgList && imgList.length) {
+        for(let i=0; i<imgList.length; i++) {
+          if(imgList[i].coverBool) {
+            return imgList[i]
+          }
+          if(i >= imgList.length - 1) {
+            return {}
+          }
+        }
+      } else {
+        return {}
+      }
+    },
     handleClose() {
       this.$emit('update:dialogVisible', false)
     },
@@ -80,6 +169,10 @@ export default {
           .then((response) => {
             this.documentInfor = response.data.result
             this.imageList = this.differenceFile(response.data.result.articleAttachmentsList, 'IMG')
+            this.videolist = this.differenceFile(response.data.result.articleAttachmentsList, 'VIDEO')
+            this.audioList = this.differenceFile(response.data.result.articleAttachmentsList, 'AUDIO')
+            this.coverImage = this.getCover(response.data.result.coverImagesList)
+            console.log(this.coverImage, '123')
             resolve()
           })
           .catch((error) => {
@@ -110,6 +203,69 @@ export default {
       width:auto;
       img{
         height:100%;
+      }
+    }
+    .article{
+      .el-col-19 {
+        min-height: 200px;
+      }
+    }
+    .article-title{
+      color: #333;
+      font-size: 30px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 40px;
+      margin-top: 40px;
+      width:100%;
+    }
+    .aplayer{
+      margin:0;
+    }
+    .aplayer-body{
+      .aplayer-pic{
+        background-color: #0076ee !important;
+      }
+    }
+    .article-content{
+      img{
+        max-width: 100%;
+      }
+
+    }
+    .article-content-right{
+        width: 100%;
+        height: auto;
+        background: #f2f4f7;
+        margin-bottom: 25px;
+        padding: 0 20px;
+      .seoDescription{
+        .seoDescription-title{
+          font-size: 18px;
+          color: #999;
+          display: block;
+          border-bottom: 1px solid #dbdbdb;
+          padding: 18px 0;
+        }
+        .seoDescription-content{
+          font-size: 15px;
+          color: #666;
+          padding: 10px 0 20px 0;
+          line-height: 30px;
+        }
+      }
+      .other{
+        margin-top:30px;
+        font-size: 15px;
+        color: #666;
+        padding: 10px 0 20px 0;
+        line-height: 30px;
+      }
+    }
+    .article-content-left{
+      .cover-img{
+         width:100%;
+         height:auto;
       }
     }
   }
