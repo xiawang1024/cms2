@@ -27,7 +27,7 @@ export function validateUpperCase(str) {
 
 /* 大小写字母*/
 export function validateAlphabets(str) {
-  const reg = /^[A-Za-z0-9]+$/
+  const reg = /^[A-Za-z0-9|@|\.]+$/
   return reg.test(str)
 }
 

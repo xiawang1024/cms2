@@ -185,10 +185,10 @@ export default {
           class_name: '听电视'
         }, {
           class_id: 11,
-          calss_name: '电视'
+          class_name: '电视'
         }, {
           class_id: 12,
-          calss_name: '网络直播'
+          class_name: '网络直播'
         }],
       upLoadData: {
         fileRefId: 'program-channel'
