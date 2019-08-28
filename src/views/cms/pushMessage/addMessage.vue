@@ -1,19 +1,26 @@
 <template>
   <div class="push-form">
-    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" label-width="110px" :btn-loading = "isLoading" @typeChange="typeChange">
+    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" label-width="110px" :btn-loading = "isLoading" @newsChange="newsChange" @rangeChange="rangeChange">
       <template slot="news">
         <el-button type="primary" size="mini" @click="chooseArticle">请选择</el-button>
         <span v-if="choosedArticle.articleId" class="choosed-article">(已选文章：{{ choosedArticle.articleTitle }})</span>
       </template>
+      <template slot="range">
+        <el-button type="primary" size="mini" @click="choosePeople">请选择人员</el-button>
+      </template>
     </v-form>
     <choose-article :dialog-visible.sync = "dialogVisible" @getChoosed = "getChoosed"/>
+    <people-dialog :dialog-visible.sync = "showPeople"/>
   </div>
 </template>
 <script>
 import chooseArticle from './chooseArticle'
+import peopleDialog from './peopleDialog'
+import { fetchDictAllByDictName } from "@/api/cms/dict";
 export default {
   components: {
-    chooseArticle
+    chooseArticle,
+    peopleDialog
   },
   data() {
     return {
@@ -27,6 +34,9 @@ export default {
               placeholder: '请选择',
               required: true,
               value: 'whole',
+              events: {
+                change: 'rangeChange'
+              },
               options: [
                 {
                   label: '全部用户',
@@ -40,14 +50,14 @@ export default {
             },
             {
               label: '',
-              name: 'people',
+              name: 'range',
               type: 'slot',
               placeholder: '请输入url',
               hidden: true,
               required: true,
               rule: [
                 {
-                  validator: this.peopleArticle,
+                  validator: this.checkPeople,
                   trigger: 'blur',
                   required: true
                 }
@@ -58,6 +68,7 @@ export default {
               name: 'app',
               type: 'select',
               placeholder: '请选择',
+              required: true,
               options: [
               ]
             },
@@ -68,7 +79,7 @@ export default {
               placeholder: '请选择',
               required: true,
               events: {
-                change: 'typeChange'
+                change: 'newsChange'
               },
               options: [
                 {
@@ -127,15 +138,38 @@ export default {
       formData: {},
       isLoading: false,
       dialogVisible: false,
-      choosedArticle: {}
+      choosedArticle: {},
+      sourceData: [],
+      showPeople: false
     }
   },
   methods: {
+    choosePeople() {
+      this.showPeople = true
+    },
+    fetchDict() {
+      return new Promise((resolve, reject) => {
+        fetchDictAllByDictName('文稿来源')
+          .then(response => {
+            if(response.data.result.details && response.data.result.details.length) {
+              this.sourceData = response.data.result.details.map((ele) => {
+                return {
+                  id: ele.dictDetailId,
+                  label: ele.dictDetailName
+                }
+              })
+            }
+            resolve();
+          })
+          .catch(error => {
+            reject(error)
+          });
+      });
+    },
     submitSave() {
 
     },
     getChoosed(val) {
-      console.log(val, 'val')
       this.choosedArticle = val
     },
     chooseArticle() {
@@ -147,16 +181,32 @@ export default {
       }
       callback()
     },
+    checkPeople(rule, value, callback) {
+      if(!this.choosedArticle.articleId) {
+        return callback(new Error('请选择人员'))
+      }
+      callback()
+    },
     // 新闻类型改变时
-    typeChange(val) {
+    newsChange(val) {
       if(val === 'url') {
-        this.formSettings[0].items[3].hidden = false
-        this.formSettings[0].items[4].hidden = true
-      } else if(val === 'news') {
-        this.formSettings[0].items[3].hidden = true
         this.formSettings[0].items[4].hidden = false
+        this.formSettings[0].items[5].hidden = true
+      } else if(val === 'news') {
+        this.formSettings[0].items[4].hidden = true
+        this.formSettings[0].items[5].hidden = false
       } else {
-        this.formSettings[0].items[3].hidden = true
+        this.formSettings[0].items[4].hidden = true
+        this.formSettings[0].items[5].hidden = true
+      }
+      this.$refs.vform.updateRule()
+    },
+    rangeChange(val) {
+      if(val === 'whole') {
+        this.formSettings[0].items[1].hidden = true
+      } else if(val === 'some') {
+        this.formSettings[0].items[1].hidden = false
+      } else {
         this.formSettings[0].items[4].hidden = true
       }
       this.$refs.vform.updateRule()

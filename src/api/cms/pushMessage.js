@@ -17,7 +17,7 @@ export function fetchSwitchsList(objectId, pageNo, pageSize) {
 
 export function messageList(data) {
   return request({
-    url: '/push-service/msg/push/list',
+    url: '/msg/push/list',
     method: 'post',
     data
   })
