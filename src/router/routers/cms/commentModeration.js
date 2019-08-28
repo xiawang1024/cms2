@@ -38,7 +38,7 @@ const commentModeration = {
       path: 'sensitiveWord',
       component: () => import(`@/${path}/sensitiveWord`),
       name: 'sensitiveWord',
-      meta: { title: 'sensitiveWord', icon: 'sensitive', role: 'cms', }
+      meta: { title: 'sensitiveWord', icon: 'sensitive', role: 'cms:sensitiveWord', }
     },
     {
       /**
@@ -47,7 +47,7 @@ const commentModeration = {
       path: 'userExtend',
       component: () => import(`@/${path}/userSwitch`),
       name: 'userSwitch',
-      meta: { title: 'userExtend', icon: 'extend', role: 'cms', }
+      meta: { title: 'userExtend', icon: 'extend', role: 'cms:commentCheckSet', }
     }
   ]
 }
