@@ -138,6 +138,8 @@ export default {
       });
     },
     searchItem(searchData) {
+      this.searchData.page = 1
+      this.searchData.limit = 20
       this.searchData.type = searchData.type
       this.searchData.content = searchData.content
       this.getList()
