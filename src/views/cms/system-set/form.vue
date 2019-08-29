@@ -228,7 +228,7 @@ import {
   getRuler,
   getCloumRule,
   getFullRuleSend,
-  currentuser,
+  // currentuser,
   testRequest,
   saveRequest,
   wxTestRequest,
@@ -350,10 +350,11 @@ export default {
     }
   },
   created() {
+    this.initInfo()
     //获取全部已有规则
     this.getFullRule();
     //获取当前用户信息
-    this.getcurrentuser();
+    // this.getcurrentuser();
 
     //获取栏目列表信息
     var _this = this;
@@ -373,24 +374,29 @@ export default {
   },
 
   methods: {
+    initInfo(){
+      let userInfo=JSON.parse(localStorage.getItem('BaseInfor'));
+      this.clientLicenseId=userInfo.clientLicenseId;
+      this.userName=userInfo.userName;
+    },
     /** 选择栏目
      */
 
-    getcurrentuser() {
-      var _this = this;
-      return new Promise((resolve, reject) => {
-        currentuser()
-          .then(response => {
-            // console.log(response)
-            _this.clientLicenseId = response.data.result.clientLicenseId;
-            _this.userName = response.data.result.userName;
-            resolve();
-          })
-          .catch(reject => {
-            console.log(reject);
-          });
-      });
-    },
+    // getcurrentuser() {
+    //   var _this = this;
+    //   return new Promise((resolve, reject) => {
+    //     currentuser()
+    //       .then(response => {
+    //         // console.log(response)
+    //         _this.clientLicenseId = response.data.result.clientLicenseId;
+    //         _this.userName = response.data.result.userName;
+    //         resolve();
+    //       })
+    //       .catch(reject => {
+    //         console.log(reject);
+    //       });
+    //   });
+    // },
 
     /** 选择栏目
      */
@@ -499,7 +505,7 @@ export default {
       this.fullRule = {};
       var _this = this;
       return new Promise((resolve, reject) => {
-        getFullRuleSend({})
+        getFullRuleSend(this.clientLicenseId)
           .then(response => {
             if (response.data.status == "success") {
               _this.fullRule = response.data.data;
