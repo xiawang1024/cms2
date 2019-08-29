@@ -6,7 +6,7 @@
         <span v-if="choosedArticle.articleId" class="choosed-article">(已选文章：{{ choosedArticle.articleTitle }})</span>
       </template>
       <template slot="range">
-        <el-button type="primary" size="mini" @click="choosePeople">请选择人员</el-button>
+        <el-button type="primary" size="mini" @click="choosePeople">请选择/查看人员</el-button>
       </template>
     </v-form>
     <choose-article :dialog-visible.sync = "dialogVisible" @getChoosed = "getChoosed"/>
@@ -68,7 +68,7 @@ export default {
               name: 'app',
               type: 'select',
               placeholder: '请选择',
-              required: true,
+              // required: true,
               options: [
               ]
             },
