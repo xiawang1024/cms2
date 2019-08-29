@@ -32,6 +32,7 @@ import { messageList, appList } from "@/api/cms/pushMessage";
 import Pagination from '@/common/Pagination'
 import baseUrl from "@/config/base-url";
 import addMessage from './addMessage'
+import { searchSetting } from './setting'
 // import { download } from '@/utils/common'
 export default {
   components: {
@@ -42,42 +43,10 @@ export default {
     return {
       dialogVisible: false,
       dialogTitle: '新增',
-      formSettings: [
-        {
-          items: [
-            {
-              label: '敏感词',
-              name: 'word',
-              type: 'text',
-              valueType: 'string',
-              required: true,
-              placeholder: '请输入敏感词'
-            }
-          ]
-        }
-      ],
       formData: {},
       isLoading: false,
       handelType: 'add',
-      searchSettings: [{
-        label: '消息标题',
-        name: 'word',
-        type: 'text',
-        placeholder: '请输入消息标题',
-        visible: true
-      }, {
-        label: '发布人员',
-        name: 'word2',
-        type: 'select',
-        placeholder: '请选择',
-        visible: true,
-        options: []
-      }, {
-        label: '发布时间',
-        name: 'word3',
-        type: 'date',
-        placeholder: '请选择'
-      }],
+      searchSettings: searchSetting,
       searchData: {
       },
       page: 1,

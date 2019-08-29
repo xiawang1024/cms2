@@ -1,173 +1,101 @@
 <template>
   <div class="push-form">
     <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" label-width="110px" :btn-loading = "isLoading" @newsChange="newsChange" @rangeChange="rangeChange">
-      <template slot="news">
+      <template slot="newsChoosed">
         <el-button type="primary" size="mini" @click="chooseArticle">请选择</el-button>
         <span v-if="choosedArticle.articleId" class="choosed-article">(已选文章：{{ choosedArticle.articleTitle }})</span>
       </template>
-      <template slot="range">
+      <template slot="bindPeople">
         <el-button type="primary" size="mini" @click="choosePeople">请选择/查看人员</el-button>
       </template>
     </v-form>
     <choose-article :dialog-visible.sync = "dialogVisible" @getChoosed = "getChoosed"/>
-    <people-dialog :dialog-visible.sync = "showPeople"/>
+    <people-dialog :dialog-visible.sync = "showPeople" :bind-list = "bindList" @sendPeople="getPeople"/>
   </div>
 </template>
 <script>
 import chooseArticle from './chooseArticle'
 import peopleDialog from './peopleDialog'
-import { fetchDictAllByDictName } from "@/api/cms/dict";
+import { formSettings } from './setting'
+import { appList, bindUserList } from "@/api/cms/pushMessage";
 export default {
   components: {
     chooseArticle,
     peopleDialog
   },
   data() {
+    formSettings[0].items[1].rule = [
+      {
+        validator: this.checkPeople,
+        trigger: 'blur',
+        required: true
+      }
+    ]
+    formSettings[0].items[5].rule = [
+      {
+        validator: this.checkArticle,
+        trigger: 'blur',
+        required: true
+      }
+    ]
     return {
-      formSettings: [
-        {
-          items: [
-            {
-              label: '发布范围',
-              name: 'publishType',
-              type: 'select',
-              placeholder: '请选择',
-              required: true,
-              value: 'whole',
-              events: {
-                change: 'rangeChange'
-              },
-              options: [
-                {
-                  label: '全部用户',
-                  value: 'whole'
-                },
-                 {
-                  label: '部分用户',
-                  value: 'some'
-                }
-              ]
-            },
-            {
-              label: '',
-              name: 'range',
-              type: 'slot',
-              placeholder: '请输入url',
-              hidden: true,
-              required: true,
-              rule: [
-                {
-                  validator: this.checkPeople,
-                  trigger: 'blur',
-                  required: true
-                }
-              ]
-            },
-            {
-              label: '客户端',
-              name: 'app',
-              type: 'select',
-              placeholder: '请选择',
-              // required: true,
-              options: [
-              ]
-            },
-            {
-              label: '类型',
-              name: 'newsType',
-              type: 'select',
-              placeholder: '请选择',
-              required: true,
-              events: {
-                change: 'newsChange'
-              },
-              options: [
-                {
-                  label: '新闻',
-                  value: 'news'
-                },
-                 {
-                  label: '其他',
-                  value: 'url'
-                }
-              ]
-            },
-            {
-              label: 'url',
-              name: 'url',
-              type: 'text',
-              valueType: 'string',
-              placeholder: '请输入url',
-              hidden: true,
-              required: true,
-            },
-            {
-              label: '',
-              name: 'news',
-              type: 'slot',
-              valueType: 'string',
-              placeholder: '请输入url',
-              hidden: true,
-              required: true,
-              rule: [
-                {
-                  validator: this.checkArticle,
-                  trigger: 'blur',
-                  required: true
-                }
-              ]
-            },
-            {
-              label: 'APP推送标题',
-              name: 'word',
-              type: 'text',
-              valueType: 'string',
-              required: true,
-              placeholder: '请输入APP推送标题'
-            },
-            {
-              label: '内容模板',
-              name: 'template',
-              type: 'textarea',
-              required: true,
-              placeholder: '请输入内容模板'
-            },
-          ]
-        }
-      ],
+      formSettings: formSettings,
       formData: {},
       isLoading: false,
       dialogVisible: false,
       choosedArticle: {},
       sourceData: [],
-      showPeople: false
+      showPeople: false,
+      bindList: [],
+      choosedPeople: []
     }
   },
+  mounted() {
+    this.getAppList()
+    this.getBindUser()
+  },
   methods: {
+    getPeople(list) {
+      this.choosedPeople = list
+    },
+    getBindUser() {
+      return new Promise((resolve, reject) => {
+        bindUserList().then(async res => {
+          this.bindList = res.data.result
+          resolve()
+        })
+          .catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+      })
+    },
+    getAppList() {
+      return new Promise((resolve, reject) => {
+        appList().then(async res => {
+          if(res.data.result) {
+            this.formSettings[0].items[2].options = res.data.result.map((ele) => {
+              return {
+                label: ele.appName,
+                value: ele.appId
+              }
+            })
+          } else {
+            this.formSettings[0].items[2].options = []
+          }
+          resolve()
+        })
+          .catch(err => {
+            console.log('err: ', err)
+            reject(err)
+          })
+      })
+    },
     choosePeople() {
       this.showPeople = true
     },
-    fetchDict() {
-      return new Promise((resolve, reject) => {
-        fetchDictAllByDictName('文稿来源')
-          .then(response => {
-            if(response.data.result.details && response.data.result.details.length) {
-              this.sourceData = response.data.result.details.map((ele) => {
-                return {
-                  id: ele.dictDetailId,
-                  label: ele.dictDetailName
-                }
-              })
-            }
-            resolve();
-          })
-          .catch(error => {
-            reject(error)
-          });
-      });
-    },
-    submitSave() {
-
+    submitSave(val) {
+      console.log(val)
     },
     getChoosed(val) {
       this.choosedArticle = val
@@ -182,7 +110,7 @@ export default {
       callback()
     },
     checkPeople(rule, value, callback) {
-      if(!this.choosedArticle.articleId) {
+      if(!this.choosedPeople.length) {
         return callback(new Error('请选择人员'))
       }
       callback()
@@ -202,9 +130,9 @@ export default {
       this.$refs.vform.updateRule()
     },
     rangeChange(val) {
-      if(val === 'whole') {
+      if(val === true) {
         this.formSettings[0].items[1].hidden = true
-      } else if(val === 'some') {
+      } else if(val === false) {
         this.formSettings[0].items[1].hidden = false
       } else {
         this.formSettings[0].items[4].hidden = true

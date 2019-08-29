@@ -1,51 +1,37 @@
 import request from '@/utils/request'
 
-export function fetchSwitchsList(objectId, pageNo, pageSize) {
-  let selectObjectId = objectId ? objectId : ''
-  return request({
-    url: '/news-comment/switches/select-page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&objectId=' + selectObjectId,
-    method: 'get',
-  })
-}
-
-// export function getSwitch(id) {
-//   return request({
-//     url: '/news-comment/sensitive-words/' + id,
-//     method: 'get'
-//   })
-// }
-
 export function messageList(data) {
   return request({
-    url: '/push-service/internal/msg/push/list',
+    url: '/hnradio-message-service/push/list',
     method: 'post',
     data
   })
 }
 export function appList(data) {
   return request({
-    url: '/push-service/appInfo/list',
+    url: '/hnradio-push-service/external/appInfo/list',
     method: 'post',
     data
   })
 }
-export function importSensitive(data) {
+export function userList(data) {
   return request({
-    url: '/news-comment/sensitive-words/import-excel',
+    url: '/hnradio-message-service/push/listBinding',
     method: 'post',
     data
   })
 }
-export function updateSwitch(data) {
+export function bindUserList(data) {
   return request({
-    url: '/news-comment/switches/update',
-    method: 'put',
+    url: '/hnradio-message-service/push/listBinding',
+    method: 'post',
     data
   })
 }
-export function deleteSwitch(id) {
+export function addPush(data) {
   return request({
-    url: `/news-comment/switches/${id}`,
-    method: 'delete'
+    url: '/hnradio-push-service/push/add',
+    method: 'post',
+    data
   })
 }
