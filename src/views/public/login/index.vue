@@ -48,18 +48,20 @@
         </el-form-item>
 
         <el-button
+          v-if="envType === 'production'"
           :loading="loading"
           type="primary"
           style="width:100%;margin-bottom:30px;"
           @click.native.prevent="handleGoogleLogin"
         >{{ login.googleLoginIn }}</el-button>
 
-        <!-- <el-button
+        <el-button
+          v-if="envType === 'development'"
           :loading="loading"
           type="primary"
           style="width:100%;margin-bottom:30px;"
           @click.native.prevent="handleLogin"
-        >{{ login.logIn }}</el-button> -->
+        >{{ login.logIn }}</el-button>
       </el-form>
     </div>
 
@@ -112,7 +114,8 @@
         dialogGoogleBindingQrCodeBase64: '',
         dialogGoogleDoubleCheckVisible: false,
         dialogGoogleInputSecondCheckkey: '',
-        forward:''
+        forward:'',
+        envType: ''
       }
     },
     watch: {
@@ -132,6 +135,7 @@
     created() {
       // enter键触发
       this.keyupSubmit()
+      this.envType = process.env.NODE_ENV
     },
     methods: {
       // enter 健触发
