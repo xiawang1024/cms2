@@ -385,6 +385,7 @@ export const articleLinkSetting = [
         type: 'text',
         placeholder: '请输入正文标题',
         maxlength: 80,
+        showWordLimit: true,
         required: true
       },
       {
@@ -393,6 +394,7 @@ export const articleLinkSetting = [
         type: 'text',
         placeholder: '请输入首页标题',
         maxlength: 80,
+        showWordLimit: true,
         required: true
       },
       {

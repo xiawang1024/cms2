@@ -11,8 +11,8 @@
       </template>
     </v-form>
     <div class="reproduce-btn">
-      <el-button type = "primary" size="mini" @click = "save('docContentForm', '0')">存草稿</el-button>
-      <el-button type = "primary" size="mini" @click = "save('docContentForm', '11')">保存并发布</el-button>
+      <el-button :disabled="Boolean(contextMenu.docId) && (docInfor.articleStatus ==1) && (baseInfor.userName !== docInfor.createUser)" type = "primary" size="mini" @click = "save('docContentForm', '0')">存草稿</el-button>
+      <el-button :disabled="Boolean(contextMenu.docId) && (docInfor.articleStatus ==1) && (baseInfor.userName !== docInfor.createUser)" type = "primary" size="mini" @click = "save('docContentForm', '11')">保存并发布</el-button>
     </div>
   </div>
 </template>
@@ -57,7 +57,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['contextMenu', 'getDocInformation'])
+    ...mapGetters(['contextMenu', 'getDocInformation']),
+     baseInfor() {
+      return store.get('BaseInfor') 
+    }
   },
   watch: {
     docInfor(val) {
