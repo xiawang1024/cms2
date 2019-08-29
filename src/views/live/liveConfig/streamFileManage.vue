@@ -98,11 +98,13 @@ export default {
       url: "", //文件路径
       loading: false,
       activeName: "0",
-      childrenNode: []
+      childrenNode: [],
+      currentUser:'',
     };
   },
   created() {
     this.requestTableValue();
+    this.currentUser=JSON.parse(localStorage.getItem('BaseInfor')).userName;
   },
   mounted() {
     
@@ -237,6 +239,7 @@ export default {
         item.order = index;
         item.filepath = this.url;
         item.fileId = this.rowId;
+        item.operator=this.currentUser;
       
       });
       //保存数据格式

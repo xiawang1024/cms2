@@ -18,9 +18,8 @@ export function getCloumRule(data) {
 
 export function getFullRuleSend(data) {
     return request({
-      url: '/content-grab/newslist/getallrule',
+      url: '/content-grab/newslist/getallrule?clientLicenseId='+data,
       method: 'get',
-      data:QS.stringify(data)
     })
 }
 //测试接口
