@@ -1,6 +1,6 @@
 <template>
   <div class="reproduce-wrap">
-    <v-form ref="form" :form-settings="reproduceSetting" :form-data="formData" label-width="80px" :show-button="false">
+    <v-form ref="form" :form-settings="linkSetting" :form-data="formData" label-width="80px" :show-button="false">
       <template slot="set">
         <div class="set">
           <el-checkbox true-label="1" false-label="0" v-model="adddocSet.topFlag">置顶</el-checkbox>
@@ -11,18 +11,14 @@
       </template>
     </v-form>
     <div class="reproduce-btn">
-   
-      <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
-      <!-- <el-button type = "primary" size="mini" @click = "save('docContentForm', '0', 'saveOnly')">保存</el-button> -->
-      <el-button :disabled="Boolean(contextMenu.docId) && (docInfor.articleStatus ==1) && (baseInfor.userName !== docInfor.createUser)" type = "primary" size="mini" @click = "save('docContentForm', '0')">存草稿</el-button>
-      <el-button :disabled="Boolean(contextMenu.docId) && (docInfor.articleStatus ==1) && (baseInfor.userName !== docInfor.createUser)" type = "primary" size="mini" @click = "save('docContentForm', '11')">保存并发布</el-button>
+      <el-button type = "primary" size="mini" @click = "save('docContentForm', '0')">存草稿</el-button>
+      <el-button type = "primary" size="mini" @click = "save('docContentForm', '11')">保存并发布</el-button>
     </div>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import { createDocument, editDocument } from '@/api/cms/article'
-import store from 'store'
 export default {
   name: 'Reproduce',
   props: {
@@ -42,12 +38,12 @@ export default {
       },
       type: Array
     },
-    reproduceSetting: {
+    linkSetting: {
       default: ()=> {
         return []
       },
       type: Array
-    }
+    },
   },
   data() {
     return {
@@ -61,10 +57,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['contextMenu', 'getDocInformation']),
-     baseInfor() {
-      return store.get('BaseInfor') 
-    }
+    ...mapGetters(['contextMenu', 'getDocInformation'])
   },
   watch: {
     docInfor(val) {
@@ -84,7 +77,7 @@ export default {
     }
   },
   mounted() {
-    this.formData =  this.docInfor
+    console.log('mounted')
     this.formData =  this.docInfor
     let showTags = []
     if(this.docInfor.tagIdsList) {
@@ -155,7 +148,7 @@ export default {
     getSubmitData() {
       let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
       // resoultObj.channelId = this.channelId
-      resoultObj.articleType = 4
+      resoultObj.articleType = 5
       resoultObj.seoKeywords = ''
       resoultObj.articleAuthor = ''
       resoultObj.seoDescription = ''
@@ -189,7 +182,7 @@ export default {
         let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet)
         resoultObj.channelId = this.channelId
         resoultObj.articleStatus = publishType
-        resoultObj.articleType = 4
+        resoultObj.articleType = 5
         resoultObj.seoKeywords = ''
         resoultObj.articleAuthor = ''
         resoultObj.seoDescription = ''
@@ -226,6 +219,7 @@ export default {
         } else {
           if(this.getDocInformation.attachmentsList && this.getDocInformation.attachmentsList.length) {
             resoultObj.articleAttachmentsList = this.getDocInformation.attachmentsList
+           
           } else {
             resoultObj.articleAttachmentsList = []
           }

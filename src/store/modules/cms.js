@@ -12,7 +12,8 @@ const webSite = {
       attachmentsList: [],
       relationList: '',
       coverImagesList: []
-    }
+    },
+    recycleChannelId: ''
   },
   mutations: {
     SET_VIEW_TYPE: (state, type) => {
@@ -41,7 +42,10 @@ const webSite = {
     },
     SET_RELATION_LIST: (state, relationList) => {
       state.docInformation.relationList = relationList
-    }
+    },
+    SET_RECYCLE_CHANNELID: (state, recyleChannelId) => {
+      state.recycleChannelId = recyleChannelId
+    },
   },
   actions: {
     setViewType({ commit }, type) {
@@ -72,6 +76,9 @@ const webSite = {
     setImageUid({ commit }, uid) {
       commit('SET_IMAGE_UID', uid)
     },
+    setRecycleChannelId: ({ commit }, recycleChannelId) => {
+      commit('SET_RECYCLE_CHANNELID', recycleChannelId)
+    }
   }
 }
 

@@ -45,6 +45,7 @@
           <span v-if="scope.row.articleType == 2">拼条</span>
           <span v-if="scope.row.articleType == 3">引用</span>
           <span v-if="scope.row.articleType == 4">转载</span>
+          <span v-if="scope.row.articleType == 5">外链</span>
         </template>
       </el-table-column>
       <el-table-column prop="articleStatus" label="状态" width="80">

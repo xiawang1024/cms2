@@ -117,6 +117,7 @@
                 :clearable="true"
                 :disabled="item.disabled"
                 :multiple="!!item.multiple"
+                :filterable="item.filterable"
                 @change="(item.events&&item.events.change)?$emit(item.events.change, formModel[item.name]):null"
               >
                 <template v-if="item.options">
@@ -904,7 +905,7 @@ export default {
     },
     // 更新表单校验规则
     updateRule() {
-      console.log(this.formSettings, "form");
+      console.log(this.formSettings, "updaterule");
       let tmpRules = {};
       this.formSettings.forEach(settingItem => {
         settingItem.items.forEach(item => {

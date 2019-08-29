@@ -24,6 +24,7 @@
     <images ref="images" :extends-list="extendsList" :images-setting="imagesSeting" :tag-list="tagList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 1"/>
     <splicing ref="splicing" :channel-id = "channelId" :doc-infor="docInfor" :tag-list = "tagList" v-if="typeForm.articleType == 2"/>
     <reproduce ref="reproduce" :channel-id = "channelId" :doc-infor="docInfor" :reproduce-setting="reproduceSetting" :tag-list = "tagList" v-if="typeForm.articleType == 4"/>
+    <article-link ref="articleLink" :channel-id = "channelId" :doc-infor="docInfor" :link-setting="articleLinkSetting" :tag-list = "tagList" v-if="typeForm.articleType == 5"/>
     <!-- <quote v-if="typeForm.articleType == 3"></quote> -->
   </div>
 </template>
@@ -32,15 +33,16 @@ import imageText from './imageText'
 import images from './images.vue'
 import splicing from './splicing.vue'
 import reproduce from './reproduce.vue'
+import articleLink from './articleLink'
 import quote from './quote'
 import { columnInfor } from '@/api/cms/columnManage'
 import { documentInfor, documentQuoteInfor } from '@/api/cms/article'
 import { fetchDictByDictName } from "@/api/cms/dict"
-import {otherSettings, imagesSeting, reproduceSetting, defultItems} from './setting.js'
+import {otherSettings, imagesSeting, reproduceSetting, defultItems, articleLinkSetting} from './setting.js'
 import { mapGetters } from 'vuex'
 export default {
   name: 'BasicContent',
-  components: { imageText, images, splicing, reproduce, quote },
+  components: { imageText, images, splicing, reproduce, quote,  articleLink },
   props: {
    activeName: {
      default: '',
@@ -74,10 +76,14 @@ export default {
         },{
           value: 4,
           label: '转载'
+        },{
+          value: 5,
+          label: '外链'
         }],
         otherSettings: otherSettings,
         imagesSeting: imagesSeting,
         reproduceSetting: reproduceSetting,
+        articleLinkSetting: articleLinkSetting,
         sourceList: []
     }
   },
@@ -99,6 +105,9 @@ export default {
       }
       if(oldVal == 'basicContent' && this.typeForm.articleType == 4) {
         this.$store.dispatch('setBaseInfor', this.$refs.reproduce.getSubmitData())
+      }
+      if(oldVal == 'basicContent' && this.typeForm.articleType == 5) {
+        this.$store.dispatch('setBaseInfor', this.$refs.articleLink.getSubmitData())
       }
     }
   },
@@ -176,6 +185,7 @@ export default {
             _this.otherSettings[0].items[0].options = _this.tagList
             _this.imagesSeting[0].items[6].options = _this.tagList
             _this.reproduceSetting[0].items[4].options = _this.tagList
+            _this.articleLinkSetting[0].items[4].options = _this.tagList
             this.$nextTick(() => {
               _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList)
               if(_this.contextMenu.articleType == 3) {
@@ -189,10 +199,12 @@ export default {
               _this.otherSettings[0].items[0].hidden = true
               _this.imagesSeting[0].items[6].hidden = true
               _this.reproduceSetting[0].items[4].hidden = true
+              _this.articleLinkSetting[0].items[4].hidden = true
             } else {
               _this.otherSettings[0].items[0].hidden = false
               _this.imagesSeting[0].items[6].hidden = false
               _this.reproduceSetting[0].items[4].hidden = false
+              _this.articleLinkSetting[0].items[4].hidden = false
             }
             if(_this.contextMenu.docId) {
               if(_this.contextMenu.articleType == 3) {
@@ -275,6 +287,7 @@ export default {
               })
               _this.imagesSeting[0].items[2].options = _this.sourceList
               _this.reproduceSetting[0].items[2].options = _this.sourceList
+              _this.articleLinkSetting[0].items[2].options = _this.sourceList
             }
             resolve();
           })

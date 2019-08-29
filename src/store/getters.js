@@ -39,7 +39,9 @@ const cms = {
   treeTags: (state) => state.cms.tags,
   contextMenu: (state) => state.cms.contextMenu,
   getDocInformation: (state) => state.cms.docInformation,
-  imageUid: (state) => state.cms.imageUid
+  imageUid: (state) => state.cms.imageUid,
+  recycleCnannelId: (state) => state.cms.recycleChannelId
+
 }
 /**
  * newCommand
