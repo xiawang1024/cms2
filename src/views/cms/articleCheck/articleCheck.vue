@@ -41,7 +41,7 @@
     <pagination :total="totalCount" @sizeChange="sizeChange" @pageChange="pageChange"/>
     <process-dialog :dialog-visible.sync="showProcess" :process-data="processData"/>
     <check-dialog :dialog-visible.sync="showCheck" :row-data="rowData" @handelSuccess="getCheckList"/>
-    <preview-dialog :dialog-visible.sync="showPreview" :article-id="articleId"/>
+    <preview-dialog :dialog-visible.sync="showPreview" :article="article"/>
   </div>
 </template>
 
@@ -53,7 +53,8 @@ import Pagination from '@/common/Pagination'
 import mixins from '@/components/cms/mixins'
 import processDialog from './processDialog'
 import checkDialog from './checkDialog'
-import previewDialog from './previewDialog'
+//import previewDialog from './previewDialog'
+import previewDialog from '@/components/cms/WebComponents/components/docs/review'
 export default {
   name: 'ArticleCheck',
   components: {
@@ -75,7 +76,7 @@ export default {
       showPreview: false,
       processData: [],
       rowData: {},
-      articleId: ''
+      article: {}
     }
   },
   watch:{
@@ -131,7 +132,7 @@ export default {
     },
     preview(row) {
       this.showPreview = true
-      this.articleId = row.articleId
+      this.article = row
     },
     check(row) {
       this.showCheck = true

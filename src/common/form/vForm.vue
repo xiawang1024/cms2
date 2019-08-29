@@ -41,6 +41,7 @@
                 :placeholder="item.placeholder"
                 :disabled="item.disabled"
                 :maxlength="item.maxlength"
+                :show-word-limit="item.showWordLimit"
               >
                 <template
                   v-if="item.append"
@@ -280,7 +281,7 @@
               tip: 提示文字，可以是String或者Array
              -->
             <template v-else-if="item.type=='img'">
-              <el-upload
+              <define-upload
                 :class="{'has-text-input': item.hasTextInput}"
                 :action="upURL"
                 :file-list="formModel[item.name]"
@@ -350,7 +351,7 @@
                     <!-- <el-input v-for="(uploadTextItem, uploadTextIndex) in imgUploadText[item.name]" :key="uploadTextIndex" v-model="imgUploadText[item.name][uploadTextIndex]" placeholder="输入图片描述"/> -->
                   </div>
                 </div>
-              </el-upload>
+              </define-upload>
             </template>
             <!-- 文件上传 -->
             <template v-else-if="item.type=='file'">
@@ -600,12 +601,14 @@ import { hashCode } from "@/utils/common.js";
 import request from '@/utils/request'
 // import {uploadByPieces} from './lib/utils'
 import { needMerge } from "@/api/simpleUpload.js";
+import defineUpload from './upload'
 export default {
   name: "VForm",
 
   components: {
     // websiteSelect,
     // citySelect
+    defineUpload
   },
 
   props: {
@@ -1344,6 +1347,11 @@ export default {
 .v-form {
   .save-btn{
     margin-bottom:30px;
+  }
+  .el-input__count {
+    .el-input__count-inner{
+      height:29px !important;
+    }
   }
   .imageHandel {
     margin-top: 85px;

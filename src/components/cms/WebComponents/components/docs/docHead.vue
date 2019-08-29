@@ -13,6 +13,7 @@
             v-for="item of currentDoc"
             :key="item.id"
             :command="item.id"
+            :disabled="!checkAuth('cms:article:delete') && (item.id=='4')"
           >{{ item.label }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -152,8 +153,6 @@ export default {
   },
   methods: {
     checkAuth (authKey) {
-      // console.log(this.$store.getters.authorities, '111111111')
-      // console.log（）
       if (this.$store.getters.authorities.indexOf(authKey) === -1) {
         return false
       } else {

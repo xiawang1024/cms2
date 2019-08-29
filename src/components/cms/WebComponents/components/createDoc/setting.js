@@ -181,6 +181,7 @@ export const imagesSeting = [
         type: 'text',
         placeholder: '请输入正文标题',
         maxlength: 80,
+        showWordLimit: true,
         required: true
       },
       {
@@ -189,6 +190,7 @@ export const imagesSeting = [
         type: 'text',
         placeholder: '请输入首页标题',
         maxlength: 80,
+        showWordLimit: true,
         required: true
       },
       {
@@ -294,6 +296,7 @@ export const reproduceSetting = [
         type: 'text',
         placeholder: '请输入正文标题',
         maxlength: 80,
+        showWordLimit: true,
         required: true
       },
       {
@@ -301,6 +304,7 @@ export const reproduceSetting = [
         name: 'contentTitle',
         type: 'text',
         placeholder: '请输入首页标题',
+        showWordLimit: true,
         maxlength: 80,
         required: true
       },
