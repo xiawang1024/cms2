@@ -9,20 +9,20 @@
     <el-table :data="tableData" style="width: 100%" highlight-current-row >
       <el-table-column prop="title" label="推送标题" min-width="150" show-overflow-tooltip/>
       <el-table-column prop="title" label="推送内容" min-width="150" show-overflow-tooltip/>
-      <el-table-column prop="msgType" label="类型" min-width="150" show-overflow-tooltip>
+      <el-table-column prop="msgType" label="类型" width="100" show-overflow-tooltip>
         <template slot-scope="scope">
           <span>{{ pushType[scope.row.msgType] }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="createdAt" label="发布时间" min-width="150" show-overflow-tooltip>
+      <el-table-column prop="createdAt" label="发布时间" width="180" show-overflow-tooltip>
         <template slot-scope="scope">
           <span>{{ scope.row.createdAt | timeFilter }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="tenantId" label="发布人员" min-width="150" show-overflow-tooltip/>
+      <el-table-column prop="operatorId" label="发布人员" width="150" show-overflow-tooltip/>
       <!-- <el-table-column prop="createTime" label="送达" min-width="150" show-overflow-tooltip/>
       <el-table-column prop="createTime" label="失败" min-width="150" show-overflow-tooltip/> -->
-      <el-table-column prop="viewedDeviceCount" label="打开率" min-width="150" show-overflow-tooltip>
+      <el-table-column prop="viewedDeviceCount" label="打开率" width="150" show-overflow-tooltip>
         <template slot-scope="scope">
           <span>{{ scope.row.viewedDeviceCount }}%</span>
         </template>
@@ -39,12 +39,11 @@
   </div>
 </template>
 <script>
-import { createSensitive, updateSensitive, deleteSensitive, downloadExcel } from "@/api/cms/sensitiveWord";
 import { messageList, appList } from "@/api/cms/pushMessage";
 import Pagination from '@/common/Pagination'
-import baseUrl from "@/config/base-url";
 import addMessage from './addMessage'
 import { searchSetting } from './setting'
+import { handleDate } from '@/utils/date-filter'
 // import { download } from '@/utils/common'
 export default {
   components: {
@@ -53,11 +52,6 @@ export default {
   },
   data () {
     return {
-      dialogVisible: false,
-      dialogTitle: '新增',
-      formData: {},
-      isLoading: false,
-      handelType: 'add',
       searchSettings: searchSetting,
       searchData: {
       },
@@ -74,16 +68,6 @@ export default {
       }
     }
   },
-  computed: {
-    importUrl() {
-      return  `${baseUrl.BASE_URL}/news-comment/sensitive-words/import-excel`
-    },
-    uploadHeaders() {
-      return {
-        Authorization: 'bearer ' + this.$store.getters.token.access_token
-      }
-    }
-  },
   mounted() {
     this.getMessageList()
     this.getAppList()
@@ -92,27 +76,6 @@ export default {
     goBack() {
       this.showAdd = false
       this.getMessageList()
-    },
-    downModel() {
-      downloadExcel('bearer ' + this.$store.getters.token.access_token)
-    },
-    uploadSuccess() {
-      this.$message.success('批量导入成功')
-      this.getMessageList()
-    },
-    beforeAvatarUpload(file) {
-      let isXls
-      if (file.name) {
-        isXls = file.name.split('.')[file.name.split('.').length -1]
-      }
-      if ((isXls !== 'xls') && (isXls !== 'xlsx')) {
-        this.$message.warning('导入文件只能是.xls 或 .xlsx 格式')
-        return false
-      }
-      return isXls
-    },
-    onError() {
-
     },
     sizeChange(val) {
       this.pageSize = val
@@ -127,7 +90,6 @@ export default {
       this.searchData.pageSize = this.pageSize
       return new Promise((resolve, reject) => {
         messageList(this.searchData).then(async res => {
-          console.log(res.data.result.content)
           this.total = parseInt(res.data.result.totalElements)
           this.tableData = res.data.result.content
           // 结束
@@ -154,76 +116,17 @@ export default {
       })
     },
     searchItem(data) {
+      this.page = 1
       this.searchData = data
+      if (this.searchData.publistTime && this.searchData.publistTime.length) {
+        this.searchData.startTime = handleDate(this.searchData.publistTime[0], 'day')
+        this.searchData.endTime = handleDate(this.searchData.publistTime[1], 'day')
+      }
+      delete this.searchData.publistTime
       this.getMessageList()
     },
     handel() {
       this.showAdd = true
-    },
-    handleDelete(row) {
-      this.$confirm('确定删除该敏感词吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        return new Promise((resolve, reject) => {
-          deleteSensitive(row.sensitiveId)
-            .then(response => {
-              this.$message.success('删除成功')
-              this.getMessageList()
-              resolve()
-            })
-            .catch(error => {
-              reject(error)
-            })
-      })
-        // this.$message({
-        //   type: 'success',
-        //   message: '删除成功!'
-        // });
-      }).catch(() => {     
-      })
-    },
-    submitSave(data) {
-      this.isLoading = true
-      if(this.handelType === 'add') {
-        this.addSensitive(data)
-      } else {
-        this.editSensitive(data, this.formData.sensitiveId)
-      }
-    },
-    editSensitive(data, id) {
-      data.sensitiveId = id
-      return new Promise((resolve, reject) => {
-        updateSensitive(data)
-          .then(response => {
-            this.$message.success('编辑成功')
-            this.dialogVisible = false
-            this.isLoading = false
-            this.getMessageList()
-            resolve()
-          })
-          .catch(error => {
-            this.isLoading = false
-            reject(error)
-          })
-      })
-    },
-    addSensitive(data) {
-      return new Promise((resolve, reject) => {
-        createSensitive(data)
-          .then(response => {
-            this.$message.success('添加成功')
-            this.dialogVisible = false
-            this.isLoading = false
-            this.getMessageList()
-            resolve()
-          })
-          .catch(error => {
-            this.isLoading = false
-            reject(error)
-          })
-      })
     }
   }
 }

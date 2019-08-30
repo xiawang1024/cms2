@@ -1,20 +1,20 @@
 export const searchSetting = [{
   label: '消息标题',
-  name: 'word',
+  name: 'title',
   type: 'text',
   placeholder: '请输入消息标题',
   visible: true
 }, {
   label: '发布人员',
-  name: 'word2',
-  type: 'select',
-  placeholder: '请选择',
+  name: 'operatorId',
+  type: 'text',
+  placeholder: '请输入发布人员',
   visible: true,
   options: []
 }, {
   label: '发布时间',
-  name: 'word3',
-  type: 'date',
+  name: 'publistTime',
+  type: 'daterange',
   placeholder: '请选择'
 }]
 export const formSettings = [

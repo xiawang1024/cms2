@@ -99,6 +99,7 @@ export default {
       this.showPeople = true
     },
     submitSave(val) {
+      this.isLoading = true
       let params = JSON.parse(JSON.stringify(val))
       delete params.bindPeople
       delete params.newsChoosed
@@ -120,10 +121,12 @@ export default {
           }
           this.$message.success('添加成功')
           this.$emit('goBack')
+          this.isLoading = false
           resolve()
         })
         .catch(err => {
           console.log('err: ', err)
+          this.isLoading = false
           reject(err)
         })
       })
