@@ -17,7 +17,7 @@
 import chooseArticle from './chooseArticle'
 import peopleDialog from './peopleDialog'
 import { formSettings } from './setting'
-import { appList, bindUserList } from "@/api/cms/pushMessage";
+import { appList, bindUserList, addPush } from "@/api/cms/pushMessage";
 export default {
   components: {
     chooseArticle,
@@ -53,6 +53,9 @@ export default {
   mounted() {
     this.getAppList()
     this.getBindUser()
+    this.formSettings[0].items[4].hidden = true
+    this.formSettings[0].items[5].hidden = true
+    this.formSettings[0].items[1].hidden = true
   },
   methods: {
     getPeople(list) {
@@ -95,7 +98,33 @@ export default {
       this.showPeople = true
     },
     submitSave(val) {
-      console.log(val)
+      // console.log(val)
+      // console.log(this.choosedArticle)
+      // console.log(this.choosedPeople)
+      let params = JSON.parse(JSON.stringify(val))
+      delete params.bindPeople
+      delete params.newsChoosed
+      if(!params.isToAll) {
+        params.userIds = this.choosedPeople.map((ele) => {
+          return ele.userId
+        })
+      } else {
+        params.userIds = []
+      }
+      if(params.msgType !== 'URL') {
+        params.target = this.choosedArticle.articleId
+      }
+      return new Promise((resolve, reject) => {
+        addPush(params).then(async res => {
+          this.$message.success('添加成功')
+          this.$emit('goBack')
+          resolve()
+        })
+        .catch(err => {
+          console.log('err: ', err)
+          reject(err)
+        })
+      })
     },
     getChoosed(val) {
       this.choosedArticle = val
@@ -117,10 +146,10 @@ export default {
     },
     // 新闻类型改变时
     newsChange(val) {
-      if(val === 'url') {
+      if(val === 'URL') {
         this.formSettings[0].items[4].hidden = false
         this.formSettings[0].items[5].hidden = true
-      } else if(val === 'news') {
+      } else if(val && val !== 'URL') {
         this.formSettings[0].items[4].hidden = true
         this.formSettings[0].items[5].hidden = false
       } else {
@@ -130,12 +159,12 @@ export default {
       this.$refs.vform.updateRule()
     },
     rangeChange(val) {
-      if(val === true) {
+      if(val === '1') {
         this.formSettings[0].items[1].hidden = true
-      } else if(val === false) {
+      } else if(val === '0') {
         this.formSettings[0].items[1].hidden = false
       } else {
-        this.formSettings[0].items[4].hidden = true
+        this.formSettings[0].items[1].hidden = trues
       }
       this.$refs.vform.updateRule()
     }

@@ -26,18 +26,18 @@ export const formSettings = [
         type: 'select',
         placeholder: '请选择',
         required: true,
-        value: true,
+        value: '1',
         events: {
           change: 'rangeChange'
         },
         options: [
           {
             label: '全部用户',
-            value: true
+            value: '1'
           },
            {
             label: '部分用户',
-            value: false
+            value: '0'
           }
         ]
       },
@@ -71,11 +71,19 @@ export const formSettings = [
         options: [
           {
             label: '新闻',
-            value: 'news'
+            value: 'NEWS'
+          },
+          {
+            label: '直播',
+            value: 'LIVE'
+          },
+          {
+            label: '视频',
+            value: 'VIDEO'
           },
            {
             label: 'url',
-            value: 'url'
+            value: 'URL'
           }
         ]
       },

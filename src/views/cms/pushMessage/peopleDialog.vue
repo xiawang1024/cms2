@@ -16,11 +16,11 @@
         <el-table-column
           prop="nickname"
           label="姓名"
-          width="180"/>
+        />
         <el-table-column
           prop="registrationId"
           label="注册id"
-          width="180"/>
+        />
       </el-table>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" @click="$emit('update:dialogVisible', false)">取消</el-button>
@@ -56,6 +56,7 @@ export default {
       this.$emit('update:dialogVisible', false)
     },
     save() {
+      this.$emit('update:dialogVisible', false)
       this.$emit('sendPeople', this.multipleSelection)
     }
   }

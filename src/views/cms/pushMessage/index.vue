@@ -7,21 +7,24 @@
       <el-button size="mini" type="primary" @click="handel('add')">群发消息</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%" highlight-current-row >
-      <el-table-column prop="word" label="敏感词" min-width="150" show-overflow-tooltip/>
-      <el-table-column prop="createTime" label="创建日期" min-width="150" show-overflow-tooltip/>
-      <el-table-column label="操作" fixed="right" width="150">
+      <el-table-column prop="title" label="推送标题" min-width="150" show-overflow-tooltip/>
+      <el-table-column prop="msgType" label="类型" min-width="150" show-overflow-tooltip>
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handel('edit', scope.row)">修改</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
+          <span>{{ pushType[scope.row.msgType] }}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="createdAt" label="发布时间" min-width="150" show-overflow-tooltip/>
+      <el-table-column prop="operatorId" label="发布人员" min-width="150" show-overflow-tooltip/>
+      <el-table-column prop="createTime" label="送达" min-width="150" show-overflow-tooltip/>
+      <el-table-column prop="createTime" label="失败" min-width="150" show-overflow-tooltip/>
+      <el-table-column prop="createTime" label="打开率" min-width="150" show-overflow-tooltip/>
     </el-table>
     <pagination :total="total" @sizeChange="sizeChange" @pageChange="pageChange"/>
-    <v-page :visible.sync="showAdd" @goBack="goBack">
+    <v-page :visible.sync="showAdd">
       <h3 slot="title">app消息推送</h3>
       <template slot="content">
         <!-- 详情页组件 -->
-        <add-message/>
+        <add-message @goBack="goBack"/>
       </template>
     </v-page>
   </div>
@@ -53,9 +56,13 @@ export default {
       pageSize: 10,
       total: 0,
       tableData: [],
-
-
-      showAdd: false
+      showAdd: false,
+      pushType: {
+        'NEWS': '新闻',
+        'LIVE': '直播',
+        'VIDEO': '视频',
+        'URL': 'ULR',
+      }
     }
   },
   computed: {
@@ -74,7 +81,8 @@ export default {
   },
   methods: {
     goBack() {
-
+      this.showAdd = false
+      this.getMessageList()
     },
     downModel() {
       downloadExcel('bearer ' + this.$store.getters.token.access_token)
@@ -110,8 +118,9 @@ export default {
       this.searchData.pageSize = this.pageSize
       return new Promise((resolve, reject) => {
         messageList(this.searchData).then(async res => {
-          this.total = res.data.result.total
-          this.tableData = res.data.result.records
+          console.log(res.data.result.content)
+          this.total = parseInt(res.data.result.totalElements)
+          this.tableData = res.data.result.content
           // 结束
           resolve()
         })
