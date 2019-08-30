@@ -7,6 +7,7 @@
       </template>
       <template slot="bindPeople">
         <el-button type="primary" size="mini" @click="choosePeople">请选择/查看人员</el-button>
+        <span v-if="choosedPeople.length" class="choosed-article">（已选{{ choosedPeople.length }}人）</span>
       </template>
     </v-form>
     <choose-article :dialog-visible.sync = "dialogVisible" @getChoosed = "getChoosed"/>
@@ -98,9 +99,6 @@ export default {
       this.showPeople = true
     },
     submitSave(val) {
-      // console.log(val)
-      // console.log(this.choosedArticle)
-      // console.log(this.choosedPeople)
       let params = JSON.parse(JSON.stringify(val))
       delete params.bindPeople
       delete params.newsChoosed
@@ -116,6 +114,10 @@ export default {
       }
       return new Promise((resolve, reject) => {
         addPush(params).then(async res => {
+          if(res.data.code !== 0) {
+            this.$message.warning(res.data.msg)
+            reject(err)
+          }
           this.$message.success('添加成功')
           this.$emit('goBack')
           resolve()

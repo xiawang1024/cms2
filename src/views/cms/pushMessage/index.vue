@@ -8,16 +8,25 @@
     </div>
     <el-table :data="tableData" style="width: 100%" highlight-current-row >
       <el-table-column prop="title" label="推送标题" min-width="150" show-overflow-tooltip/>
+      <el-table-column prop="title" label="推送内容" min-width="150" show-overflow-tooltip/>
       <el-table-column prop="msgType" label="类型" min-width="150" show-overflow-tooltip>
         <template slot-scope="scope">
           <span>{{ pushType[scope.row.msgType] }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="createdAt" label="发布时间" min-width="150" show-overflow-tooltip/>
-      <el-table-column prop="operatorId" label="发布人员" min-width="150" show-overflow-tooltip/>
-      <el-table-column prop="createTime" label="送达" min-width="150" show-overflow-tooltip/>
-      <el-table-column prop="createTime" label="失败" min-width="150" show-overflow-tooltip/>
-      <el-table-column prop="createTime" label="打开率" min-width="150" show-overflow-tooltip/>
+      <el-table-column prop="createdAt" label="发布时间" min-width="150" show-overflow-tooltip>
+        <template slot-scope="scope">
+          <span>{{ scope.row.createdAt | timeFilter }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="tenantId" label="发布人员" min-width="150" show-overflow-tooltip/>
+      <!-- <el-table-column prop="createTime" label="送达" min-width="150" show-overflow-tooltip/>
+      <el-table-column prop="createTime" label="失败" min-width="150" show-overflow-tooltip/> -->
+      <el-table-column prop="viewedDeviceCount" label="打开率" min-width="150" show-overflow-tooltip>
+        <template slot-scope="scope">
+          <span>{{ scope.row.viewedDeviceCount }}%</span>
+        </template>
+      </el-table-column>
     </el-table>
     <pagination :total="total" @sizeChange="sizeChange" @pageChange="pageChange"/>
     <v-page :visible.sync="showAdd">
