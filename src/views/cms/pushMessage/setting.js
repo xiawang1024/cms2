@@ -118,7 +118,8 @@ export const formSettings = [
         name: 'content',
         type: 'textarea',
         required: true,
-        placeholder: '请输入内容模板'
+        placeholder: '请输入内容模板',
+        showWords: true
       },
     ]
   }
