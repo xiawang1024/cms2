@@ -18,7 +18,7 @@
 import chooseArticle from './chooseArticle'
 import peopleDialog from './peopleDialog'
 import { formSettings } from './setting'
-import { appList, bindUserList, addPush } from "@/api/cms/pushMessage";
+import { appList, bindUserList } from "@/api/cms/pushMessage";
 export default {
   components: {
     chooseArticle,
@@ -99,37 +99,37 @@ export default {
       this.showPeople = true
     },
     submitSave(val) {
-      this.isLoading = true
-      let params = JSON.parse(JSON.stringify(val))
-      delete params.bindPeople
-      delete params.newsChoosed
-      if(!params.isToAll) {
-        params.userIds = this.choosedPeople.map((ele) => {
-          return ele.userId
-        })
-      } else {
-        params.userIds = []
-      }
-      if(params.msgType !== 'URL') {
-        params.target = this.choosedArticle.articleId
-      }
-      return new Promise((resolve, reject) => {
-        addPush(params).then(async res => {
-          if(res.data.code !== 0) {
-            this.$message.warning(res.data.msg)
-            reject(err)
-          }
-          this.$message.success('添加成功')
-          this.$emit('goBack')
-          this.isLoading = false
-          resolve()
-        })
-        .catch(err => {
-          console.log('err: ', err)
-          this.isLoading = false
-          reject(err)
-        })
-      })
+      // this.isLoading = true
+      // let params = JSON.parse(JSON.stringify(val))
+      // delete params.bindPeople
+      // delete params.newsChoosed
+      // if(!params.isToAll) {
+      //   params.userIds = this.choosedPeople.map((ele) => {
+      //     return ele.userId
+      //   })
+      // } else {
+      //   params.userIds = []
+      // }
+      // if(params.msgType !== 'URL') {
+      //   params.target = this.choosedArticle.articleId
+      // }
+      // return new Promise((resolve, reject) => {
+      //   addPush(params).then(async res => {
+      //     if(res.data.code !== 0) {
+      //       this.$message.warning(res.data.msg)
+      //       reject(err)
+      //     }
+      //     this.$message.success('添加成功')
+      //     this.$emit('goBack')
+      //     this.isLoading = false
+      //     resolve()
+      //   })
+      //   .catch(err => {
+      //     console.log('err: ', err)
+      //     this.isLoading = false
+      //     reject(err)
+      //   })
+      // })
     },
     getChoosed(val) {
       this.choosedArticle = val
