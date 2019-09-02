@@ -12,7 +12,8 @@ export const otherSettings = [
         label: '点击量',
         name: 'clickNum',
         type: 'number',
-        placeholder: '请输入点击量'
+        placeholder: '请输入点击量',
+        value: 0
       },
       {
         label: '发布时间',
@@ -119,7 +120,8 @@ export const defultItems = [
     label: '点击量',
     name: 'clickNum',
     type: 'number',
-    placeholder: '请输入点击量'
+    placeholder: '请输入点击量',
+    value: 0
   },
   {
     label: '发布时间',
@@ -227,7 +229,8 @@ export const imagesSeting = [
         label:'点击量',
         name: 'clickNum',
         type:'number',
-        placeholder: '请输入点击量'
+        placeholder: '请输入点击量',
+        value: 0
       },{
         label:'发布时间',
         name:'publishTime',

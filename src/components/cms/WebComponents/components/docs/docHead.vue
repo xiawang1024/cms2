@@ -42,10 +42,10 @@
         size="mini"
       >
         <el-option
-          v-for="item in sourceList"
-          :key="item.value"
+          v-for="(item,index) in sourceList"
+          :key="index"
           :label="item.label"
-          :value="item.value"
+          :value="item.label"
         />
       </el-select>
       <el-select
