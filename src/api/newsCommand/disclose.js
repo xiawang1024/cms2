@@ -77,4 +77,11 @@ export function discloseInfor(id) {
 }
 
 
+//添加操作记录
 
+export function addOprate(data) {
+  return request({
+    url: `/cmsnews/operateRecord/saveOperateRecord?operateId=${data.discloseId}&operateReply=${data.description}`,
+    method: 'post'
+  })
+}

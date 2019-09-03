@@ -10,7 +10,7 @@
       <el-col :span="12">
         <el-container class="elcontainer">
           <!-- <el-header class="elheader">爆料详情</el-header> -->
-          <el-main class="elmain1">
+          <el-main class="elmain1 elrow">
             <div class="biaoge">
               <el-row>
                 <el-col :span="5">
@@ -70,7 +70,7 @@
               </el-row>
             </div>
           </el-main>
-          <el-main class="elmain2">
+          <el-main class="elmain2 elrow">
             <div class="biaoge">
               <el-row>
                 <el-col :span="5">
@@ -134,7 +134,32 @@
         </div>
       </el-col>
     </el-row>
-    
+    <el-row style="paddingLeft:20px;paddingBottom:20px;">
+      <el-col :span="2" >
+        <el-button size="mini" type="primary" @click="handleAdd">添加</el-button>
+      </el-col>
+      
+    </el-row>
+    <el-row>
+      
+      <el-col :span="12" class="noborder">
+        <div style="height: 300px; paddingLeft:40px;">
+          <el-steps direction="vertical" :active="stepList.length" finish-status="success" v-if="stepList" >
+            <el-step :title="item.operateReply" :description="item.operateTime" v-for="(item,index) in stepList" :key="index"/>
+          </el-steps>
+        </div>
+      </el-col>
+    </el-row>
+    <el-dialog :visible.sync="dialogVisible" title="添加操作记录" >
+      <v-form
+        ref="vform"
+        :form-settings="formSettings"
+        :form-data="addData"
+        @save="submitSave"
+        label-width="80px"
+        :btn-loading="isLoading"
+      />
+    </el-dialog>
     <!-- <div>{{discloseClassify}}</div> -->
   </div>
 </template>
@@ -143,7 +168,8 @@
 import {
   amendDiscloseState,
   discloseClassify,
-  discloseInfor
+  discloseInfor,
+  addOprate
 } from "@/api/newsCommand/disclose.js";
 export default {
   name: "DisclosDetails",
@@ -153,7 +179,24 @@ export default {
       searchlist: [],
       auditStatus: 0,
       discloseId: "",
-      formImgVide: {}
+      formImgVide: {},
+      stepList:[],
+      formSettings:[
+        {
+           items: [
+            {
+              label: "描述",
+              name: "description",
+              type: "text",
+              required: true,
+              placeholder: "请输入描述"
+            }]
+        }
+      ],
+      addData:[],
+      dialogVisible:false,
+
+
     };
   },
   computed: {
@@ -164,6 +207,41 @@ export default {
     this.discloseInfor(this.discloseId);
   },
   methods: {
+    handleAdd(){
+      //显示对会话框
+      this.dialogVisible=true;
+    },
+    submitSave(val){
+      var _this=this;
+      //提交操作记录
+      let data={
+        ...val,
+        discloseId:this.discloseId
+      }
+      return new Promise((resolve,reject)=>{
+        addOprate(data)
+        .then(res=>{
+          if(res.data.code==0){
+             this.$message({
+            type:'success',
+            message:'成功'
+          })
+          }else{
+            this.$message({
+            type:'error',
+            message:res.data.msg
+          })
+          }
+          _this.dialogVisible=false;
+          _this.discloseInfor(_this.discloseId);
+         resolve();
+        })
+        .catch(err=>{
+          reject(err)
+        })
+      })
+
+    },
     gotoListPage(context) {
       context.$store
         .dispatch("delView", this.$route)
@@ -202,6 +280,7 @@ export default {
             _this.auditStatus = _this.formData.auditStatus;
             _this.discloseClassify();
             _this.amendState();
+            _this.stepList=response.data.result.list;
             if (response.data.result.videoUrl) {
               _this.formImgVide = response.data.result.videoUrl;
             }
@@ -304,13 +383,13 @@ export default {
     box-sizing: border-box;
     padding: 15px;
   }
-  .el-row {
+  .elrow .el-row {
     border: 1px solid rgba(228, 228, 228, 1);
     border-bottom: none;
     height: 50px;
     line-height: 50px;
   }
-  .el-row:last-child {
+  .elrow .el-row:last-child {
     border-bottom: 1px solid rgba(228, 228, 228, 1);
   }
   .elcontainer {
