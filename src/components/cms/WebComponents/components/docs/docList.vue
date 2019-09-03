@@ -97,7 +97,7 @@
           <el-button :disabled="scope.row.articleStatus == 1" v-if="checkAuth('cms:article:edit')" type="text" size="small" @click.stop="editDoc(scope.row)">编辑</el-button>
           <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">撤销</el-button>
           <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">审核</el-button> -->
-          <el-button :disabled="scope.row.articleStatus == 1" v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">删除</el-button>
+          <el-button :disabled="scope.row.articleStatus == 1" v-if="checkAuth('cms:article:deleteReal')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -162,8 +162,8 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      console.log(this.checkAuth('cms:article:drag'), 'drag')
-      if(this.checkAuth('cms:article:drag')) {
+      console.log(this.checkAuth('cms:article:nodrag'), 'nodrag')
+      if(!this.checkAuth('cms:article:nodrag')) {
         this.setSort()
       }
     })
