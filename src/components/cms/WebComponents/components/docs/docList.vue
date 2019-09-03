@@ -162,7 +162,10 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.setSort()
+      console.log(this.checkAuth('cms:article:drag'), 'drag')
+      if(this.checkAuth('cms:article:drag')) {
+        this.setSort()
+      }
     })
   },
   methods: {
