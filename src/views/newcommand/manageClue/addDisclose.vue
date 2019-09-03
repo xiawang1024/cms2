@@ -1,42 +1,59 @@
 <template>
   <div class="addbaoliao">
-    <v-form
-      ref="vform"
-      :form-data="formData"
-      :form-settings="formSettings"
-      @save="submitSave"
-      :btn-loading="isLoading"
-    >
-      <template slot="isScale">
-        <div>
-          <el-checkbox v-model="imageSetting.isScaleChecked">是否缩放</el-checkbox>
-          <el-input
-            v-if="imageSetting.isScaleChecked"
-            v-model="imageSetting.width"
-            style="width:10em"
-            type="number"
-            maxlength="3"
-            step="10"
-            max="100"
-            min="0"
-          >
-            <template slot="prepend">宽</template>
-          </el-input>
-          <el-input
-            v-if="imageSetting.isScaleChecked"
-            v-model="imageSetting.height"
-            style="width:10em"
-            type="number"
-            maxlength="3"
-            step="10"
-            max="100"
-            min="0"
-          >
-            <template slot="prepend">高</template>
-          </el-input>
+    <el-row>
+      <el-col :span="12">
+        <v-form
+          ref="vform"
+          :form-data="formData"
+          :form-settings="formSettings"
+          @save="submitSave"
+          :btn-loading="isLoading"
+        >
+          <template slot="isScale">
+            <div>
+              <el-checkbox v-model="imageSetting.isScaleChecked">是否缩放</el-checkbox>
+              <el-input
+                v-if="imageSetting.isScaleChecked"
+                v-model="imageSetting.width"
+                style="width:10em"
+                type="number"
+                maxlength="3"
+                step="10"
+                max="100"
+                min="0"
+              >
+                <template slot="prepend">宽</template>
+              </el-input>
+              <el-input
+                v-if="imageSetting.isScaleChecked"
+                v-model="imageSetting.height"
+                style="width:10em"
+                type="number"
+                maxlength="3"
+                step="10"
+                max="100"
+                min="0"
+              >
+                <template slot="prepend">高</template>
+              </el-input>
+            </div>
+          </template>
+        </v-form>
+      </el-col>
+      <el-col :span="12">
+        <div class="videoUrl" v-if="formImgVide">
+          <div class="img-wrap-list" v-for="(item,index) in formImgVide" :key="index">
+            <div class="video-wrap">
+              <video v-if="item.dataFlag == false" controls="controls" :src="item.dataUrl" />
+              <img v-if="item.dataFlag==true" :src="item.dataUrl" alt >
+            </div>
+          </div>
         </div>
-      </template>
-    </v-form>
+      </el-col>
+    </el-row>
+    
+    
+
   </div>
 </template>
 <script>
@@ -53,6 +70,7 @@ export default {
     return {
       formData: {},
       discloseId: "",
+      formImgVide:'',
       formSettings: [
         {
           items: [
@@ -255,10 +273,14 @@ export default {
     },
     // 爆料详情
     discloseInfor(res) {
+      var _this=this;
       return new Promise((resolve, reject) => {
         discloseInfor(res)
           .then(response => {
             this.formData = response.data.result;
+            if (response.data.result.videoUrl) {
+              _this.formImgVide = response.data.result.videoUrl;
+            }
             resolve();
           })
           .catch(error => {
@@ -377,4 +399,29 @@ export default {
 //   margin-top: 50px;
 // }
 //  .el-form-item__label{width:200px!important;}
+
+.videoUrl {
+  width: 700px;
+  height: 100%;
+  overflow: hidden;
+}
+.videoUrl .img-wrap-list {
+  width: 47%;
+  height: 300px;
+  overflow: hidden;
+  display: inline-block;
+  margin-bottom: 30px;
+  margin-right: 20px;
+}
+.videoUrl .img-wrap-list .video-wrap,
+.img-wrap {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+.videoUrl .img-wrap-list .video-wrap video,
+img {
+  width: 100%;
+  height: 100%;
+}
 </style>

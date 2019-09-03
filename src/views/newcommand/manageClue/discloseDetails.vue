@@ -6,152 +6,135 @@
         <el-button size="mini" @click="godiscloselist" icon="el-icon-back" type="primary">返回</el-button>
       </div>
     </div>-->
-    <el-container class="elcontainer">
-      <!-- <el-header class="elheader">爆料详情</el-header> -->
-      <el-main class="elmain1">
-        <div class="biaoge">
-          <el-row>
-            <el-col :span="5">
-              <div class="leftdiv">爆料ID</div>
-            </el-col>
-            <el-col :span="19">
-              <div class="rightdiv">{{ formData.id }}</div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="5">
-              <div class="leftdiv">爆料标题</div>
-            </el-col>
-            <el-col :span="19">
-              <div class="rightdiv">{{ formData.breakingName }}</div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="5">
-              <div class="leftdiv">线索来源</div>
-            </el-col>
-            <el-col :span="19">
-              <div class="rightdiv">热线电话</div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="5">
-              <div class="leftdiv">爆料分类</div>
-            </el-col>
-            <el-col :span="19">
-              <div class="rightdiv">{{ formData.breakingType }}</div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="5">
-              <div class="leftdiv">爆料人</div>
-            </el-col>
-            <el-col :span="19">
-              <div class="rightdiv">{{ formData.breakingPeople }}</div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="5">
-              <div class="leftdiv">爆料人联系方式</div>
-            </el-col>
-            <el-col :span="19">
-              <div class="rightdiv">{{ formData.breakingPhone }}</div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="5">
-              <div class="leftdiv">爆料内容</div>
-            </el-col>
-            <el-col :span="19">
-              <div class="rightdiv">{{ formData.breakingDescribe }}</div>
-            </el-col>
-          </el-row>
-        </div>
-      </el-main>
-      <el-main class="elmain2">
-        <div class="biaoge">
-          <el-row>
-            <el-col :span="5">
-              <div class="leftdiv">处理状态</div>
-            </el-col>
-            <el-col :span="19">
-              <div :class="[formData.auditStatus==1?'colgreen':'colred','rightdiv']">{{ formData.auditStatus01 }}</div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="5">
-              <div class="leftdiv">爆料时间</div>
-            </el-col>
-            <el-col :span="19">
-              <div class="rightdiv">{{ formData.breakingTime }}</div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="5">
-              <div class="leftdiv">处理人</div>
-            </el-col>
-            <el-col :span="19">
-              <div class="rightdiv">{{ formData.breakingPeople }}</div>
-            </el-col>
-          </el-row>
-          <el-row v-if="formData.refuseReasons">
-            <el-col :span="5">
-              <div class="leftdiv">处理理由</div>
-            </el-col>
-            <el-col :span="19">
-              <div class="rightdiv">{{ formData.refuseReasons }}</div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="5">
-              <div class="leftdiv">备注</div>
-            </el-col>
-            <el-col :span="19">
-              <div class="rightdiv">{{ formData.note }}</div>
-            </el-col>
-          </el-row>
-        </div>
-
-      </el-main>
-      <div
-        class="videoUrl"
-        v-if="formImgVide"
-      >
-        <div
-          class="img-wrap-list"
-          v-for="(item,index) in formImgVide"
-          :key="index"
-        >
-          <div class="video-wrap">
-            <video
-              v-if="item.dataFlag == false"
-              controls="controls"
-              :src="item.dataUrl"
-            />
-            <img
-              v-if="item.dataFlag==true"
-              :src="item.dataUrl"
-              alt=""
-            >
+    <el-row class="noborder">
+      <el-col :span="12">
+        <el-container class="elcontainer">
+          <!-- <el-header class="elheader">爆料详情</el-header> -->
+          <el-main class="elmain1">
+            <div class="biaoge">
+              <el-row>
+                <el-col :span="5">
+                  <div class="leftdiv">爆料ID</div>
+                </el-col>
+                <el-col :span="19">
+                  <div class="rightdiv">{{ formData.id }}</div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <div class="leftdiv">爆料标题</div>
+                </el-col>
+                <el-col :span="19">
+                  <div class="rightdiv">{{ formData.breakingName }}</div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <div class="leftdiv">线索来源</div>
+                </el-col>
+                <el-col :span="19">
+                  <div class="rightdiv">热线电话</div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <div class="leftdiv">爆料分类</div>
+                </el-col>
+                <el-col :span="19">
+                  <div class="rightdiv">{{ formData.breakingType }}</div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <div class="leftdiv">爆料人</div>
+                </el-col>
+                <el-col :span="19">
+                  <div class="rightdiv">{{ formData.breakingPeople }}</div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <div class="leftdiv">爆料人联系方式</div>
+                </el-col>
+                <el-col :span="19">
+                  <div class="rightdiv">{{ formData.breakingPhone }}</div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <div class="leftdiv">爆料内容</div>
+                </el-col>
+                <el-col :span="19">
+                  <div class="rightdiv">{{ formData.breakingDescribe }}</div>
+                </el-col>
+              </el-row>
+            </div>
+          </el-main>
+          <el-main class="elmain2">
+            <div class="biaoge">
+              <el-row>
+                <el-col :span="5">
+                  <div class="leftdiv">处理状态</div>
+                </el-col>
+                <el-col :span="19">
+                  <div
+                    :class="[formData.auditStatus==1?'colgreen':'colred','rightdiv']"
+                  >{{ formData.auditStatus01 }}</div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <div class="leftdiv">爆料时间</div>
+                </el-col>
+                <el-col :span="19">
+                  <div class="rightdiv">{{ formData.breakingTime }}</div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <div class="leftdiv">处理人</div>
+                </el-col>
+                <el-col :span="19">
+                  <div class="rightdiv">{{ formData.breakingPeople }}</div>
+                </el-col>
+              </el-row>
+              <el-row v-if="formData.refuseReasons">
+                <el-col :span="5">
+                  <div class="leftdiv">处理理由</div>
+                </el-col>
+                <el-col :span="19">
+                  <div class="rightdiv">{{ formData.refuseReasons }}</div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="5">
+                  <div class="leftdiv">备注</div>
+                </el-col>
+                <el-col :span="19">
+                  <div class="rightdiv">{{ formData.note }}</div>
+                </el-col>
+              </el-row>
+            </div>
+          </el-main>
+      
+          <el-main v-if="auditStatus==0" class="elmain3">
+            <el-button size="small" @click="amendDiscloseStateBtn(1)" type="primary">审核通过</el-button>
+            <el-button size="small" @click="amendDiscloseStateBtn(2)" type="danger">审核拒绝</el-button>
+          </el-main>
+        </el-container>
+      </el-col>
+      <el-col :span="12" class="noborder " >
+        <div class="videoUrl" v-if="formImgVide">
+          <div class="img-wrap-list" v-for="(item,index) in formImgVide" :key="index">
+            <div class="video-wrap">
+              <video v-if="item.dataFlag == false" controls="controls" :src="item.dataUrl" />
+              <img v-if="item.dataFlag==true" :src="item.dataUrl" alt >
+            </div>
           </div>
         </div>
-      </div>
-      <el-main
-        v-if="auditStatus==0"
-        class="elmain3"
-      >
-        <el-button
-          size="small"
-          @click="amendDiscloseStateBtn(1)"
-          type="primary"
-        >审核通过</el-button>
-        <el-button
-          size="small"
-          @click="amendDiscloseStateBtn(2)"
-          type="danger"
-        >审核拒绝</el-button>
-      </el-main>
-    </el-container>
+      </el-col>
+    </el-row>
+    
     <!-- <div>{{discloseClassify}}</div> -->
   </div>
 </template>
@@ -216,7 +199,6 @@ export default {
         discloseInfor(res)
           .then(response => {
             _this.formData = response.data.result;
-
             _this.auditStatus = _this.formData.auditStatus;
             _this.discloseClassify();
             _this.amendState();
@@ -307,6 +289,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .disclisedetails {
+
   .leftdiv {
     text-align: right;
     box-sizing: border-box;
@@ -398,6 +381,11 @@ export default {
   .colred {
     color: #f56c6c;
   }
+  .noborder{
+    border:none !important;
+    border-bottom: none;
+    min-width: 700px;
+  }
 }
 // .videoUrl {
 //   display: flex;
@@ -411,6 +399,7 @@ export default {
   width: 700px;
   height: 100%;
   overflow: hidden;
+  margin-top: 20px;
 }
 .videoUrl .img-wrap-list {
   width: 47%;
