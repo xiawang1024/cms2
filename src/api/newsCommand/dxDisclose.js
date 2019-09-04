@@ -1,10 +1,16 @@
 import request from '@/utils/request'
 import QS from "qs"
+// const Cpath='http://172.20.5.2:58021'
+const Cpath=''
 //查询爆料列表
 
+
+/**
+ * 查询审核状态0 :大象爆料 ，1： 拍客
+ *  */ 
 export function discloseList(params) {
   return request({
-    url: '/cmsnews/breakingNews/queryBreakingNews',
+    url: '/dxnews/breakingNews/queryBreakingNews',
     method: 'post',
     params:params
   })
@@ -16,7 +22,7 @@ export function discloseList(params) {
  *  */ 
 export function discloseState(num) {
   return request({
-    url: '/cmsnews/breakingNews/getAuditStatusCount?auditStatus='+num,
+    url: Cpath +'/dxnews/breakingNews/getAuditStatusCount?auditStatus='+num,
     method: 'get',
   })
 }
@@ -26,7 +32,7 @@ export function discloseState(num) {
  *  */ 
 export function amendDiscloseState(params) {
   return request({
-    url: '/cmsnews/breakingNews/updateAuditStatus',
+    url: Cpath +'/dxnews/breakingNews/updateAuditStatus',
     method: 'post',
     params:params
   })
@@ -34,27 +40,23 @@ export function amendDiscloseState(params) {
 // 爆料分类列表
 export function discloseClassify() {
   return request({
-    url: '/cmsnews/auditConfig/findBreakeingType',
+    url: Cpath +'/dxnews/auditConfig/findBreakeingType',
     method: 'post',
   })
 }
 // 修改爆料
 export function editDisclose(queryObj) {
   return request({
-    url: '/cmsnews/breakingNews/updteBareakingNews',
+    url: Cpath +'/dxnews/breakingNews/updteBareakingNews',
     method: 'post',
     headers:{'Content-Type':'application/x-www-form-urlencoded'},
     data:QS.stringify(queryObj)
   })
 }
-
-/**
- * 爆料公开 0：不公开 1：公开
- *  */
 //add爆料
 export function createDisclose(data) {
   return request({
-    url: '/cmsnews/breakingNews/saveBreakingNews',
+    url: Cpath +'/dxnews/breakingNews/saveBreakingNews',
     method: 'post',
     headers:{'Content-Type':'application/x-www-form-urlencoded'},
     data:QS.stringify(data)
@@ -64,7 +66,7 @@ export function createDisclose(data) {
 //删除爆料
 export function deleteDisclose(id) {
   return request({
-    url: '/cmsnews/breakingNews/deleteBreakingNews'+id,
+    url: Cpath +'/dxnews/breakingNews/deleteBreakingNews'+id,
     method: 'post',
    
   })
@@ -75,7 +77,7 @@ export function deleteDisclose(id) {
 // 获取爆料详情
 export function discloseInfor(id) {
   return request({
-    url: '/cmsnews/breakingNews/getBreakingNewsById?id=' + id,
+    url: Cpath +'/dxnews/breakingNews/getBreakingNewsById?id=' + id,
     method: 'get'
   })
 }
@@ -85,7 +87,7 @@ export function discloseInfor(id) {
 
 export function addOprate(data) {
   return request({
-    url: `/cmsnews/operateRecord/saveOperateRecord?operateId=${data.discloseId}&operateReply=${data.description}&remindFlag=${data.remindFlag}`,
+    url: Cpath +`/dxnews/operateRecord/saveOperateRecord?operateId=${data.discloseId}&operateReply=${data.description}`,
     method: 'post'
   })
 }

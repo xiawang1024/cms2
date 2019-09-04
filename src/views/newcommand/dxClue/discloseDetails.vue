@@ -173,6 +173,7 @@
         :form-data="addData"
         @save="submitSave"
         label-width="80px"
+        :btn-loading="isLoading"
       />
     </el-dialog>
     <!-- <div>{{discloseClassify}}</div> -->
@@ -185,7 +186,7 @@ import {
   discloseClassify,
   discloseInfor,
   addOprate
-} from "@/api/newsCommand/disclose.js";
+} from "@/api/newsCommand/dxDisclose.js";
 export default {
   name: "DisclosDetails",
   data() {
@@ -220,7 +221,7 @@ export default {
           ]
         }
       ],
-      addData: {},
+      addData: [],
       dialogVisible: false
     };
   },
@@ -234,7 +235,6 @@ export default {
   methods: {
     handleAdd() {
       //显示对会话框
-
       this.dialogVisible = true;
     },
     submitSave(val) {
@@ -275,12 +275,12 @@ export default {
           if (context.isActive(context.$route)) {
             const latestView = visitedViews.slice(-1)[0];
             if (latestView) {
-              if (latestView.path == "/newCommand/manageClue/discloseList") {
+              if (latestView.path == "/newCommand/dxClue/discloseList") {
                 context.$router.push(latestView);
               } else {
                 this.$router.replace({
                   path:
-                    "/newCommand/manageClue/discloseList?time=" +
+                    "/newCommand/dxClue/discloseList?time=" +
                     new Date().getTime()
                 });
               }
