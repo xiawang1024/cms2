@@ -152,7 +152,7 @@ export default {
     //------新闻指挥---------------------
     manageClue: '爆料管理',
     dxClue:'大象新闻',
-    discloseList: '爆料列表',
+    discloseList: '都市爆料',
     dxClueList: '大象爆料',
     addDisclose: '添加修改爆料',
     discloseDetails:'爆料详情',
