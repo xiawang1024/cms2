@@ -457,7 +457,7 @@ export default {
         breakingName: "",
         startTime: "",
         endTime: "",
-        auditStatus: null,
+        auditStatus: this.uplistdata.auditStatus,
         pageNo: this.pageNum,
         pageSize: this.pageSize
       };
@@ -469,7 +469,7 @@ export default {
         breakingName: "",
         startTime: "",
         endTime: "",
-        auditStatus: null,
+        auditStatus:this.uplistdata.auditStatus,
         pageNo: this.pageNum,
         pageSize: this.pageSize
       };
