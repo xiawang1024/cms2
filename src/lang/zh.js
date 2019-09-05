@@ -151,7 +151,9 @@ export default {
     createProgram: '创建节目单',
     //------新闻指挥---------------------
     manageClue: '爆料管理',
-    discloseList: '爆料列表',
+    dxClue:'大象新闻',
+    discloseList: '都市爆料',
+    dxClueList: '大象爆料',
     addDisclose: '添加修改爆料',
     discloseDetails:'爆料详情',
     hotNews: '热点新闻',

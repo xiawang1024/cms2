@@ -165,7 +165,7 @@ import {
   discloseList,
   discloseState,
   discloseClassify
-} from "@/api/newsCommand/disclose.js";
+} from "@/api/newsCommand/dxDisclose.js";
 import { deleteColumn } from "@/api/cms/columnManage";
 import mixins from "@/components/cms/mixins";
 
@@ -311,7 +311,7 @@ export default {
     reloadlist() {
       this.activeClass0 = 0;
       this.$router.replace({
-        path: "/newCommand/manageClue/discloseList?time=" + new Date().getTime()
+        path: "/newCommand/dxClue/discloseList?time=" + new Date().getTime()
       });
     },
     checkAuth(authKey) {
@@ -469,7 +469,7 @@ export default {
         breakingName: "",
         startTime: "",
         endTime: "",
-        auditStatus:this.uplistdata.auditStatus,
+        auditStatus: this.uplistdata.auditStatus,
         pageNo: this.pageNum,
         pageSize: this.pageSize
       };
@@ -479,7 +479,7 @@ export default {
       if (handelType == "addDisclose" || handelType == "columnAddEdit") {
         this.$router.push({
           path:
-            "/newCommand/manageClue/addDisclose?Disclose=" +
+            "/newCommand/dxClue/addDisclose?Disclose=" +
             handelType +
             "&discloseId=" +
             id
@@ -490,7 +490,7 @@ export default {
       ) {
         this.$router.push({
           path:
-            "/newCommand/manageClue/discloseDetails?Disclose=" +
+            "/newCommand/dxClue/discloseDetails?Disclose=" +
             handelType +
             "&discloseId=" +
             id

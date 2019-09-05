@@ -51,9 +51,6 @@
         </div>
       </el-col>
     </el-row>
-    
-    
-
   </div>
 </template>
 <script>
@@ -63,14 +60,14 @@ import {
   editDisclose,
   discloseInfor,
   discloseClassify
-} from "@/api/newsCommand/disclose.js";
+} from "@/api/newsCommand/dxDisclose.js";
 export default {
   name: "ColumnHandel",
   data() {
     return {
       formData: {},
       discloseId: "",
-      formImgVide:'',
+      formImgVide: "",
       formSettings: [
         {
           items: [
@@ -89,94 +86,18 @@ export default {
               placeholder: "请选择分类",
               options: [
                 {
-                  label: "交通事故111",
-                  value: "1",
+                  label: "大象爆料",
+                  value: 0,
+                  typeName: "大象爆料",
+                  numberNo: 0,
+                  id: "0"
+                },
+                {
+                  label: "拍客",
+                  value: 1,
+                  typeName: "拍客",
                   numberNo: 1,
                   id: "1"
-                },
-                {
-                  label: "天气气候",
-                  value: "2",
-                  numberNo: 2,
-                  id: "2"
-                },
-                {
-                  label: "消费投诉",
-                  value: "3",
-                  numberNo: 3,
-                  id: "3"
-                },
-                {
-                  label: "经济纠纷",
-                  value: "4",
-                  numberNo: 4,
-                  id: "4"
-                },
-                {
-                  label: "求助信息",
-                  value: "5",
-                  numberNo: 5,
-                  id: "5"
-                },
-                {
-                  label: "食品安全",
-                  value: "6",
-                  numberNo: 6,
-                  id: "6"
-                },
-                {
-                  label: "寻人寻物",
-                  value: "7",
-                  numberNo: 7,
-                  id: "7"
-                },
-                {
-                  label: "劳务投诉",
-                  value: "8",
-                  numberNo: 8,
-                  id: "8"
-                },
-                {
-                  label: "环保投诉",
-                  value: "9",
-                  numberNo: 9,
-                  id: "9"
-                },
-                {
-                  label: "医疗投诉",
-                  value: "10",
-                  numberNo: 10,
-                  id: "10"
-                },
-                {
-                  label: "房产投诉",
-                  value: "11",
-                  numberNo: 11,
-                  id: "11"
-                },
-                {
-                  label: "噪音投诉",
-                  value: "12",
-                  numberNo: 12,
-                  id: "12"
-                },
-                {
-                  label: "土地纠纷",
-                  value: "13",
-                  numberNo: 13,
-                  id: "13"
-                },
-                {
-                  label: "行政执法",
-                  value: "14",
-                  numberNo: 14,
-                  id: "14"
-                },
-                {
-                  label: "教育投诉",
-                  value: "15",
-                  numberNo: 15,
-                  id: "15"
                 }
               ]
             },
@@ -204,18 +125,19 @@ export default {
               type: "datetime",
               value: new Date()
             },
-            { 
+            {
               label: "是否公开",
               name: "publicFlag",
               type: "radio",
-              value:1,
-              options:[
+              value: 1,
+              options: [
                 {
-                  label:'不公开',
-                  value:0
-                },{
-                  label:'公开',
-                  value:1
+                  label: "不公开",
+                  value: 0
+                },
+                {
+                  label: "公开",
+                  value: 1
                 }
               ]
             }
@@ -288,7 +210,7 @@ export default {
     },
     // 爆料详情
     discloseInfor(res) {
-      var _this=this;
+      var _this = this;
       return new Promise((resolve, reject) => {
         discloseInfor(res)
           .then(response => {
@@ -310,12 +232,12 @@ export default {
           if (context.isActive(context.$route)) {
             const latestView = visitedViews.slice(-1)[0];
             if (latestView) {
-              if (latestView.path == "/newCommand/manageClue/discloseList") {
+              if (latestView.path == "/newCommand/dxClue/discloseList") {
                 context.$router.push(latestView);
               } else {
                 this.$router.replace({
                   path:
-                    "/newCommand/manageClue/discloseList?time=" +
+                    "/newCommand/dxClue/discloseList?time=" +
                     new Date().getTime()
                 });
               }
@@ -354,7 +276,7 @@ export default {
         this.add0(seconds)
       );
     },
-    
+
     submitSave(formData1) {
       let _this = this;
       formData1.breakingTime = this.timeFormat(formData1.breakingTime);
