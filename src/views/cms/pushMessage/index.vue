@@ -28,7 +28,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination :total="total" @sizeChange="sizeChange" @pageChange="pageChange"/>
+    <pagination :total="total" @sizeChange="sizeChange" @pageChange="pageChange" ref="pagination"/>
     <v-page :visible.sync="showAdd">
       <h3 slot="title">app消息推送</h3>
       <template slot="content">
@@ -116,6 +116,7 @@ export default {
       })
     },
     searchItem(data) {
+      this.$refs.pagination.currentPage = 1
       this.page = 1
       this.searchData = data
       if (this.searchData.publistTime && this.searchData.publistTime.length) {
