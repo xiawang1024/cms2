@@ -102,6 +102,10 @@ export const otherSettings = [
           {
             label: '专题样式',
             value: 9
+          },
+          {
+            label: '直播样式',
+            value: 10
           }
         ]
       },
@@ -170,6 +174,10 @@ export const defultItems = [
       {
         label: '专题样式',
         value: 9
+      },
+      {
+        label: '直播样式',
+        value: 10
       }
     ]
   }
@@ -279,6 +287,10 @@ export const imagesSeting = [
           {
             label: '专题样式',
             value: 9
+          },
+          {
+            label: '直播样式',
+            value: 10
           }
         ]
       },
@@ -373,6 +385,10 @@ export const reproduceSetting = [
           {
             label: '专题样式',
             value: 9
+          },
+          {
+            label: '直播样式',
+            value: 10
           }
         ]
       },
@@ -461,6 +477,10 @@ export const articleLinkSetting = [
           {
             label: '专题样式',
             value: 9
+          },
+          {
+            label: '直播样式',
+            value: 10
           }
         ]
       },
