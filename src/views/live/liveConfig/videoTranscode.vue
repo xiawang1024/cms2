@@ -32,7 +32,6 @@
           <el-button
             size="mini"
             type="danger"
-            :disabled="true"
             @click="handleDelete(scope.$index, scope.row)"
           >删除</el-button>
         </template>
@@ -65,7 +64,7 @@
   </div>
 </template>
 <script>
-import { streamfile, addTranscode } from "@/api/live/videoTranscode.js";
+import { streamfile, addTranscode,deleteTranscode } from "@/api/live/videoTranscode.js";
 export default {
   name: "VideoTranscode",
   data() {
@@ -114,7 +113,7 @@ export default {
               name: "audioCode",
               type: "radio",
               required: true,
-              value:'Acc',
+              value: "Acc",
               options: [
                 {
                   label: "Acc",
@@ -124,7 +123,7 @@ export default {
                   label: "mp3",
                   value: "mp3"
                 },
-                
+
                 {
                   label: "静音",
                   value: "静音"
@@ -137,7 +136,7 @@ export default {
               name: "audioBitRate",
               type: "radio",
               required: true,
-              value:128,
+              value: 128,
               options: [
                 {
                   label: "128Kbps",
@@ -289,7 +288,7 @@ export default {
               required: true,
               limit: 1,
               hidden: false,
-              acceptFile: { accept: "video/mp4" }
+              acceptFile: { accept: [".mp4", ".rmvb", ".mkv", ".wmv", ".flv"] }
             },
             {
               label: "上传资源",
@@ -298,7 +297,9 @@ export default {
               required: true,
               limit: 1,
               hidden: true,
-              acceptFile: { accept: "audio/mp3" }
+              acceptFile: {
+                accept: ['.mp3','.wmv','.acc' ]
+              }
             }
           ]
         }
@@ -479,6 +480,43 @@ export default {
         this.formSettings[0].items[8].hidden = true;
         this.$refs.vform.updateForm();
       }
+    },
+    handleDelete(index,row){
+      var _this=this;
+       this.$confirm("此操作将永久删除该资源, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+       new Promise((resolve,reject)=>{
+        deleteTranscode(row.id)
+        .then(res=>{
+          if(res.data.code==0){
+            this.$message({
+              type:'success',
+              message:res.data.msg
+            })
+            _this.initTable();
+          }else{
+               this.$message({
+              type:'error',
+              message:res.data.msg
+            })
+            }
+        })
+        .catch(err=>{
+          reject(err)
+        })
+      })
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+      
     }
   }
 };
@@ -496,7 +534,7 @@ export default {
 .colorWarning {
   color: #e6a23c;
 }
-.colorInfo{
-  color: #409EFF;
+.colorInfo {
+  color: #409eff;
 }
 </style>

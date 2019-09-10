@@ -27,3 +27,14 @@ export function addTranscode(data) {
       data
     });
   }
+
+  //删除转码资源
+ 
+  export function deleteTranscode(id) {
+    return request({
+      url:
+        Cpath +
+        `/transcoding/deletebyid?id=${id}`,
+      method: "delete",
+    });
+  }
