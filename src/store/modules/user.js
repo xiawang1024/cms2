@@ -168,11 +168,11 @@ const user = {
             // commit('SET_TOKEN', '')
             commit("SET_CURRENT_INFOR", res.data.result);
             setBaseInfor(res.data.result);
-            if (state.skipUrl) {
+            // if (state.skipUrl) {
               //设置cookie
               let userIdJWT = res.data.result.userIdJWT;
               setCookie(state,"userId",userIdJWT, 7);
-            }
+            // }
 
             // removeAuth()
             resolve();
@@ -266,8 +266,9 @@ const user = {
     },
 
     // 前端 登出
-    FedLogOut({ commit }) {
+    FedLogOut({ commit,state }) {
       return new Promise(resolve => {
+        setCookie(state,"userId",'', 0);
         commit("SET_TOKEN", "");
         commit("SET_SYS_TYPE", "");
         commit("SET_AUTHORITIES", []);
