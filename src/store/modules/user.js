@@ -168,11 +168,11 @@ const user = {
             // commit('SET_TOKEN', '')
             commit("SET_CURRENT_INFOR", res.data.result);
             setBaseInfor(res.data.result);
-            if (state.skipUrl) {
+            // if (state.skipUrl) {
               //设置cookie
               let userIdJWT = res.data.result.userIdJWT;
               setCookie(state,"userId",userIdJWT, 7);
-            }
+            // }
 
             // removeAuth()
             resolve();
@@ -257,6 +257,7 @@ const user = {
             commit("SET_AUTHORITIES", []);
             commit("SET_SYS_TYPE", "");
             removeAuth();
+            setCookie(state,"userId",'', 0);
             resolve();
           })
           .catch(error => {

@@ -122,6 +122,9 @@ localStorage.removeItem('BaseInfor');
 localStorage.removeItem('columnsAllOrigin');
 localStorage.removeItem('columnsAll');
 //保存过之后页面跳转
+if(state.skipUrl){
 location.href='http://'+state.skipUrl
 
+}
+  
 }
