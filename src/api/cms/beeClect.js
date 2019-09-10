@@ -76,3 +76,30 @@ export function currentuser(data) {
   })
 }
 
+//开启爬虫
+export function startBee() {
+  return request({
+    url:'/content-grab/newslist/contentGrabSaveCache',
+    method: 'get',
+    timeout: 20000
+  })
+}
+
+
+//清理库存
+export function clearStore() {
+  return request({
+    url:'/content-grab/newslist/delte',
+    method: 'get',
+    timeout: 20000
+  })
+}
+
+//上传文档
+export function  saveCms() {
+  return request({
+    url:'/content-grab/newslist/SaveCms',
+    method: 'get',
+    timeout: 20000
+  })
+}

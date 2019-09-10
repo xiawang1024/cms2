@@ -175,7 +175,18 @@
             </div>
           </ul>
           <ul class="bottom">
-            <h4>已有规则列表：</h4>
+            <el-row>
+              <el-col :span="2"><h4>已有规则列表：</h4></el-col>
+              <el-col :span="2">
+                <el-button size="mini" type="primary" @click="handleStart">开启爬虫</el-button>
+              </el-col>
+              <el-col :span="2">
+                <el-button size="mini" type="primary" @click="handleClear">清除库存</el-button>
+              </el-col>
+              <el-col :span="2">
+                <el-button size="mini" type="primary" @click="handleSave">上传文档</el-button>
+              </el-col>
+            </el-row>
             <el-row :gutter="20">
               <el-col v-for="(item,index) in fullRule" :span="6" :key="item.id">
                 <div
@@ -228,11 +239,14 @@ import {
   getRuler,
   getCloumRule,
   getFullRuleSend,
-  // currentuser,
   testRequest,
   saveRequest,
   wxTestRequest,
-  wxSaveRequest
+  wxSaveRequest,
+  startBee,
+  clearStore,
+  saveCms,
+
 } from "@/api/cms/beeClect.js";
 export default {
   name: "Form",
@@ -353,8 +367,6 @@ export default {
     this.initInfo()
     //获取全部已有规则
     this.getFullRule();
-    //获取当前用户信息
-    // this.getcurrentuser();
 
     //获取栏目列表信息
     var _this = this;
@@ -379,24 +391,6 @@ export default {
       this.clientLicenseId=userInfo.clientLicenseId;
       this.userName=userInfo.userName;
     },
-    /** 选择栏目
-     */
-
-    // getcurrentuser() {
-    //   var _this = this;
-    //   return new Promise((resolve, reject) => {
-    //     currentuser()
-    //       .then(response => {
-    //         // console.log(response)
-    //         _this.clientLicenseId = response.data.result.clientLicenseId;
-    //         _this.userName = response.data.result.userName;
-    //         resolve();
-    //       })
-    //       .catch(reject => {
-    //         console.log(reject);
-    //       });
-    //   });
-    // },
 
     /** 选择栏目
      */
@@ -696,6 +690,92 @@ export default {
       this.selectCloum = "";
       this.selectRule = "";
     },
+
+    // 开启爬虫
+
+    handleStart(){
+        return new Promise((resolve,reject)=>{
+          startBee()
+          .then(res=>{
+            if(res.data.code==0){
+              this.$message({
+                type:'success',
+                message:res.data.msg
+              })
+            }else{
+                this.$message({
+                type:'error',
+                message:res.data.msg
+              })
+            }
+          })
+          .catch(err=>{
+            reject(err)
+          })
+        })
+    },
+
+    //清除库存
+
+    handleClear(){
+       this.$confirm("此操作将永久清除库存, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+       new Promise((resolve,reject)=>{
+        clearStore()
+        .then(res=>{
+          if(res.data.code==0){
+            this.$message({
+              type:'success',
+              message:res.data.msg
+            })
+          }else{
+               this.$message({
+              type:'error',
+              message:res.data.msg
+            })
+            }
+        })
+        .catch(err=>{
+          reject(err)
+        })
+      })
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+      
+    },
+    //上传文档
+
+    handleSave(){
+        return new Promise((resolve,reject)=>{
+          saveCms()
+          .then(res=>{
+            if(res.data.code==0){
+              this.$message({
+                type:'success',
+                message:res.data.msg
+              })
+            }else{
+                this.$message({
+                type:'error',
+                message:res.data.msg
+              })
+            }
+          })
+          .catch(err=>{
+            reject(err)
+          })
+        })
+    },
+
     wxcheck() {
       if (
         this.wxData.wechatCertification == "" ||
