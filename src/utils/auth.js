@@ -117,10 +117,10 @@ let expires = "expires="+d.toGMTString();
 let domain='domain=.dianzhenkeji.com'
 document.cookie = cname + "=" + cvalue+";" + expires+';'+domain+';path=/'
 //清除localstorage信息，再次登录避免进入
-localStorage.removeItem('hnDt_token');
-localStorage.removeItem('BaseInfor');
-localStorage.removeItem('columnsAllOrigin');
-localStorage.removeItem('columnsAll');
+// localStorage.removeItem('hnDt_token');
+// localStorage.removeItem('BaseInfor');
+// localStorage.removeItem('columnsAllOrigin');
+// localStorage.removeItem('columnsAll');
 //保存过之后页面跳转
 if(state.skipUrl){
 location.href='http://'+state.skipUrl
