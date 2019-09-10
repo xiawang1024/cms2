@@ -14,8 +14,8 @@
       <el-table-column prop="resolution" width="80" label="分辨率" />
       <el-table-column prop="videoCode" width="80" label="视频编码" />
       <el-table-column prop="audioCode" width="80" label="音频编码" />
-      <el-table-column prop="creatUser" width="100" label="创建人" />
-      <el-table-column prop="creatTime" width="180" label="创建时间" />
+      <el-table-column prop="createUser" width="100" label="创建人" />
+      <el-table-column prop="createTime" width="180" label="创建时间" />
       <el-table-column prop="updateTime" width="180" label="更新时间" />
       <el-table-column prop="state" width="120" label="转码状态">
         <template slot-scope="scope">
@@ -79,8 +79,8 @@ export default {
           // audioCode: "string",
           // fileType: 0,
           // clientLicenseId: "string",
-          // creatTime: "string",
-          // creatUser: "string",
+          // createTime: "string",
+          // createUser: "string",
           // id: "string",
           // inputFilePath: "string",
           // outputFilePath: "string",
@@ -374,7 +374,7 @@ export default {
       (data.clientLicenseId = JSON.parse(
         localStorage.getItem("BaseInfor")
       ).clientLicenseId),
-        (data.creatUser = JSON.parse(
+        (data.createUser = JSON.parse(
           localStorage.getItem("BaseInfor")
         ).userName);
       data.fileType = val.fileType;
