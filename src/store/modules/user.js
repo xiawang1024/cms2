@@ -2,9 +2,18 @@
  * 用户相关
  */
 
-import { loginByUsername, logout, getUserInfo, userCurrent } from "@/api/login";
-import { columnListAll } from "@/api/cms/columnManage";
-import { UserCurrent } from "@/api/user/user";
+import {
+  loginByUsername,
+  logout,
+  getUserInfo,
+  userCurrent
+} from "@/api/login";
+import {
+  columnListAll
+} from "@/api/cms/columnManage";
+import {
+  UserCurrent
+} from "@/api/user/user";
 import {
   getAuth,
   setAuth,
@@ -14,7 +23,9 @@ import {
   setColumnAllOrigin,
   setCookie
 } from "@/utils/auth";
-import { sha1 } from "@/utils/index";
+// import {
+//   sha1
+// } from "@/utils/index";
 import router from "@/router";
 // 获取当前用户
 // var getCurrentInfor = function() {
@@ -31,16 +42,16 @@ import router from "@/router";
 // }
 var toTree = data => {
   // 删除 所有 children,以防止多次调用
-  data.forEach(function(item) {
+  data.forEach(function (item) {
     delete item.children;
   });
   // 将数据存储为 以 id 为 KEY 的 map 索引数据列
   var map = {};
-  data.forEach(function(item) {
+  data.forEach(function (item) {
     map[item.channelId] = item;
   });
   var val = [];
-  data.forEach(function(item) {
+  data.forEach(function (item) {
     item.label = item.channelName;
     item.id = item.channelId;
     item.value = item.channelId;
@@ -69,8 +80,7 @@ const user = {
   state: {
     token: getAuth(),
     name: "",
-    avatar:
-      "http://www.hndt.com/podcast/976/1131/res/EEghUGNE.jpg?1511506999379",
+    avatar: "http://www.hndt.com/podcast/976/1131/res/EEghUGNE.jpg?1511506999379",
     authorities: [],
     // sysList: ['0', '1', '2', '3','4'],
     sysList: [],
@@ -133,12 +143,16 @@ const user = {
 
   actions: {
     // 站点名称
-    SetSiteName({ commit }, siteName) {
+    SetSiteName({
+      commit
+    }, siteName) {
       console.log(siteName);
       commit("SET_SITE_NAME", siteName);
     },
     // 用户名登录
-    LoginByUsername({ commit }, userInfo) {
+    LoginByUsername({
+      commit
+    }, userInfo) {
       const username = userInfo.username.trim();
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password)
@@ -160,7 +174,10 @@ const user = {
       });
     },
     // 获取当前登陆用户信息
-    GetCurrentInfor({ commit, state }) {
+    GetCurrentInfor({
+      commit,
+      state
+    }) {
       setBaseInfor({});
       return new Promise((resolve, reject) => {
         userCurrent(state.token)
@@ -169,9 +186,9 @@ const user = {
             commit("SET_CURRENT_INFOR", res.data.result);
             setBaseInfor(res.data.result);
             // if (state.skipUrl) {
-              //设置cookie
-              let userIdJWT = res.data.result.userIdJWT;
-              setCookie(state,"userId",userIdJWT, 7);
+            //设置cookie
+            let userIdJWT = res.data.result.userIdJWT;
+            setCookie(state, "userId", userIdJWT, 7);
             // }
 
             // removeAuth()
@@ -183,7 +200,10 @@ const user = {
       });
     },
     // 获取登陆用户全部栏目
-    GetColumnAll({ commit, state }) {
+    GetColumnAll({
+      commit,
+      state
+    }) {
       setColumnAll([]);
       return new Promise((resolve, reject) => {
         columnListAll({}, 1, 1000)
@@ -200,7 +220,10 @@ const user = {
       });
     },
     // 获取用户信息
-    GetUserInfo({ commit, state }) {
+    GetUserInfo({
+      commit,
+      state
+    }) {
       let getSysList = [];
       return new Promise((resolve, reject) => {
         getUserInfo(state.token)
@@ -230,9 +253,9 @@ const user = {
             getSysList = defaultSysList.filter(item => {
               return data.user_authorities.permissionCodeList.includes(item);
             });
-            let resSysList = window.sessionStorage.getItem("sysType")
-              ? window.sessionStorage.getItem("sysType")
-              : getSysList[0];
+            let resSysList = window.sessionStorage.getItem("sysType") ?
+              window.sessionStorage.getItem("sysType") :
+              getSysList[0];
             commit("SET_SYS_LIST", getSysList);
             commit("SET_SYS_TYPE", resSysList);
             // this.$store.dispatch('selectSysType', `${sysType}`)
@@ -249,7 +272,10 @@ const user = {
     },
 
     // 登出
-    LogOut({ commit, state }) {
+    LogOut({
+      commit,
+      state
+    }) {
       return new Promise((resolve, reject) => {
         logout(state.token)
           .then(() => {
@@ -266,9 +292,12 @@ const user = {
     },
 
     // 前端 登出
-    FedLogOut({ commit,state }) {
+    FedLogOut({
+      commit,
+      state
+    }) {
       return new Promise(resolve => {
-        setCookie(state,"userId",'', 0);
+        setCookie(state, "userId", '', 0);
         commit("SET_TOKEN", "");
         commit("SET_SYS_TYPE", "");
         commit("SET_AUTHORITIES", []);
@@ -278,7 +307,10 @@ const user = {
     },
 
     // 动态修改权限
-    ChangeRoles({ commit, dispatch }, authority) {
+    ChangeRoles({
+      commit,
+      dispatch
+    }, authority) {
       return new Promise(resolve => {
         commit("SET_TOKEN", authority);
         setAuth(authority);
@@ -296,11 +328,20 @@ const user = {
     /**
      * 选择子系统，动态修改路由
      */
-    selectSysType({ commit, dispatch, getters, state }, sysType) {
+    selectSysType({
+      commit,
+      dispatch,
+      getters,
+      state
+    }, sysType) {
       commit("SET_SYS_TYPE", sysType);
-      router.push({ path: "/" });
+      router.push({
+        path: "/"
+      });
       dispatch("delAllViews"); // 清除tagViews
-      dispatch("GenerateRoutes", { authorities: getters.authorities }).then(
+      dispatch("GenerateRoutes", {
+        authorities: getters.authorities
+      }).then(
         () => {
           /**
            * 更新动态路由
@@ -318,24 +359,25 @@ const user = {
                 // 20190319 互动中心的访问，跳转到外部地址
                 let Base64 = require("js-base64").Base64; //还是require
                 let nameBase64 = Base64.encodeURI(res.data.result.userName); //还是那些操作
-                let timestamp = new Date().getTime();
-                let token =
-                  "/api/manager/login.do?name=" +
-                  nameBase64 +
-                  "&id=" +
-                  res.data.result.userId +
-                  "&time=" +
-                  timestamp +
-                  "&appID=3a155aaea71de649f2de2171da173280&secret=d875465ae925eac87354bab6f053967137521e90";
-                let url =
-                  "http://hudong.hndt.com/h5/hd/api/manager/login.do?name=" +
-                  nameBase64 +
-                  "&id=" +
-                  res.data.result.userId +
-                  "&time=" +
-                  timestamp +
-                  "&appID=3a155aaea71de649f2de2171da173280&token=" +
-                  sha1(token);
+                // let timestamp = new Date().getTime();
+                // let token =
+                //   "/api/manager/login.do?name=" +
+                //   nameBase64 +
+                //   "&id=" +
+                //   res.data.result.userId +
+                //   "&time=" +
+                //   timestamp +
+                //   "&appID=3a155aaea71de649f2de2171da173280&secret=d875465ae925eac87354bab6f053967137521e90";
+                // let url =
+                //   "http://hudong.hndt.com/h5/hd/api/manager/login.do?name=" +
+                //   nameBase64 +
+                //   "&id=" +
+                //   res.data.result.userId +
+                //   "&time=" +
+                //   timestamp +
+                //   "&appID=3a155aaea71de649f2de2171da173280&token=" +
+                //   sha1(token);
+                let url = 'http://weizan.dianzhenkeji.com'
                 console.log(nameBase64, url);
                 redirectUrl = url;
                 window.open(redirectUrl);
