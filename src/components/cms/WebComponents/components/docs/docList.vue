@@ -35,11 +35,7 @@
             v-if="documentHasImg(scope.row.articleAttachmentsList)"
           />
           <i class="el-icon-top" title="置顶" v-if="scope.row.topFlag == 1" />
-          <i
-            class="iconfont iconlink"
-            :title="scope.row.referArticleParentChannelNames ? '引用自：' + scope.row.referArticleParentChannelNames : '引用'"
-            v-if="scope.row.articleType ==3"
-          />
+          <i class="iconfont iconlink" title="引用" v-if="scope.row.articleType ==3" />
         </template>
       </el-table-column>
 
@@ -65,12 +61,16 @@
       </el-table-column>
       <el-table-column prop="articleType" label="类型" width="50">
         <template slot-scope="scope">
-          <span v-if="scope.row.articleType == 0">图文</span>
-          <span v-if="scope.row.articleType == 1">图集</span>
-          <span v-if="scope.row.articleType == 2">拼条</span>
-          <span v-if="scope.row.articleType == 3">引用</span>
-          <span v-if="scope.row.articleType == 4">转载</span>
-          <span v-if="scope.row.articleType == 5">外链</span>
+          <span v-if="scope.row.articleType == 0" style="cursor:default">图文</span>
+          <span v-if="scope.row.articleType == 1" style="cursor:default">图集</span>
+          <span v-if="scope.row.articleType == 2" style="cursor:default">拼条</span>
+          <span
+            v-if="scope.row.articleType == 3"
+            :title="scope.row.referArticleParentChannelNames ? '引用自：' + scope.row.referArticleParentChannelNames : ''"
+            style="cursor:default"
+          >引用</span>
+          <span v-if="scope.row.articleType == 4" style="cursor:default">转载</span>
+          <span v-if="scope.row.articleType == 5" style="cursor:default">外链</span>
         </template>
       </el-table-column>
       <el-table-column prop="articleStatus" label="状态" width="80">
