@@ -79,7 +79,7 @@
         />
       </el-select>
       <el-input
-        v-model="searchData.articleTitle"
+        v-model="searchData.articleTitleLike"
         class="input-text"
         placeholder="请输入内容"
         size="mini"
@@ -136,7 +136,7 @@ export default {
         articleOrigin: '',
         articleType: '',
         articleStatus: '',
-        articleTitle: '',
+        articleTitleLike: '',
       },
       centerDialogVisible: false,
       dialogVisible: false,
