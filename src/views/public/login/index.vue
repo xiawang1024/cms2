@@ -47,19 +47,19 @@
           </span>
         </el-form-item>
         
-        <!-- <el-button
-          :loading="loading"
-          type="primary"
-          style="width:100%;margin-bottom:30px;"
-          @click.native.prevent="handleGoogleLogin"
-        >{{ login.googleLoginIn }}</el-button> -->
-
         <el-button
           :loading="loading"
           type="primary"
           style="width:100%;margin-bottom:30px;"
+          @click.native.prevent="handleGoogleLogin"
+        >{{ login.googleLoginIn }}</el-button>
+
+        <!-- <el-button
+          :loading="loading"
+          type="primary"
+          style="width:100%;margin-bottom:30px;"
           @click.native.prevent="handleLogin"
-        >{{ login.logIn }}</el-button>
+        >{{ login.logIn }}</el-button> -->
       </el-form>
     </div>
 
