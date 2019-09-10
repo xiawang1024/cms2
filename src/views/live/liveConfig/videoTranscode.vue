@@ -26,9 +26,19 @@
         </template>
       </el-table-column>
       <el-table-column prop="inputFilePath" label="输入地址" show-overflow-tooltip />
-      <el-table-column prop="outputFilePath" label="输出地址" show-overflow-tooltip />
+      <el-table-column prop="outputFilePath" label="输出地址" show-overflow-tooltip >
+        <template slot-scope="scope">
+          <span v-if="scope.row.state==3">{{ scope.row.outputFilePath }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="180">
         <template slot-scope="scope">
+          <el-button
+            v-show="scope.row.state==2"
+            size="mini"
+            type="warning"
+            @click="handleRecover(scope.$index, scope.row)"
+          >重试</el-button>
           <el-button
             size="mini"
             type="danger"
@@ -64,7 +74,7 @@
   </div>
 </template>
 <script>
-import { streamfile, addTranscode,deleteTranscode } from "@/api/live/videoTranscode.js";
+import { streamfile, addTranscode,deleteTranscode,retranscode } from "@/api/live/videoTranscode.js";
 export default {
   name: "VideoTranscode",
   data() {
@@ -517,6 +527,31 @@ export default {
           });
         });
       
+    },
+    handleRecover(index,row){
+      var _this=this;
+      return new Promise((resolve,reject)=>{
+        retranscode(row.id)
+        .then(res=>{
+          if(res.data.code==0){
+            this.$message({
+            type:'success',
+            message:res.data.msg
+          })
+          _this.initTable();
+          }else{
+            this.$message({
+            type:'erorr',
+            message:res.data.msg
+          })
+          }
+          
+        })
+        .catch(err=>{
+          reject(err)
+        })
+
+      })
     }
   }
 };

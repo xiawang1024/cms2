@@ -38,3 +38,13 @@ export function addTranscode(data) {
       method: "delete",
     });
   }
+
+  //重试转码
+  export function retranscode(id) {
+    return request({
+      url:
+        Cpath +
+        `/transcoding/updatebyid?id=${id}`,
+      method: "get",
+    });
+  }
