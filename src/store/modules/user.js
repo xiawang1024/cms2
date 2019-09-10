@@ -257,7 +257,6 @@ const user = {
             commit("SET_AUTHORITIES", []);
             commit("SET_SYS_TYPE", "");
             removeAuth();
-            setCookie(state,"userId",'', 0);
             resolve();
           })
           .catch(error => {
@@ -267,8 +266,9 @@ const user = {
     },
 
     // 前端 登出
-    FedLogOut({ commit }) {
+    FedLogOut({ commit,state }) {
       return new Promise(resolve => {
+        setCookie(state,"userId",'', 0);
         commit("SET_TOKEN", "");
         commit("SET_SYS_TYPE", "");
         commit("SET_AUTHORITIES", []);
