@@ -218,6 +218,12 @@ export default {
                   value:1
                 }
               ]
+            }, { 
+              label: "上传",
+              name: "videoUrl",
+              type: "file",
+              // acceptFile:{accept:['.mp4','.jpg','.png','.jpeg']}
+
             }
           ]
         }
@@ -295,6 +301,13 @@ export default {
             this.formData = response.data.result;
             if (response.data.result.videoUrl) {
               _this.formImgVide = response.data.result.videoUrl;
+              //数据回显
+              _this.formData.videoUrl.forEach((item,index)=>{
+                item.url=item.dataUrl
+
+                item.name=item.dataUrl.split("/").reverse()[0]
+              })
+              console.log( _this.formData.videoUrl,'回显数据')
             }
             resolve();
           })
@@ -361,14 +374,23 @@ export default {
       this.tijiaodata = formData1;
       this.isLoading = true;
       if (this.isEdit) {
+        
+
         return new Promise((resolve, reject) => {
           let newformData1 = formData1;
           newformData1.id = _this.discloseId;
           newformData1.newsOrigin = _this.formData.newsOrigin;
+          //处理修改后的数据格式
+           let data=JSON.parse((JSON.stringify(newformData1)))
+          data.videoUrl.forEach((item,index)=>{
+           let boliaoUrl=item.url;
+            data.videoUrl[index]={};
+            data['videoUrl[' + index +'].dataUrl'] = boliaoUrl;
+          })
           // let hnrToken = JSON.parse(localStorage.getItem("hnDt_token"));
           // hnrToken = hnrToken.access_token;
           // newformData1.hnrToken = hnrToken;
-          editDisclose(newformData1)
+          editDisclose(data)
             .then(response => {
               _this.$message({
                 showClose: true,
@@ -383,12 +405,20 @@ export default {
             });
         });
       } else {
+          //处理保存数据url 格式为后台格式
+          let data=JSON.parse((JSON.stringify(formData1)))
+          data.videoUrl.forEach((item,index)=>{
+           let boliaoUrl=item.url;
+            data.videoUrl[index]={};
+            data['videoUrl[' + index +'].dataUrl'] = boliaoUrl;
+          })
+
         return new Promise((resolve, reject) => {
           // let hnrToken = JSON.parse(localStorage.getItem("hnDt_token"));
           // hnrToken = hnrToken.access_token;
           // formData1.hnrToken = hnrToken;
-          formData1.newsOrigin = 0;
-          createDisclose(formData1)
+          data.newsOrigin = 0;
+          createDisclose(data)
             .then(response => {
               _this.$message({
                 showClose: true,
