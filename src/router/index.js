@@ -64,7 +64,9 @@ import manuscriptClue from './routers/newCommand/manuscriptClue'
 import fileClue from './routers/newCommand/fileClue'
 import liveClue from './routers/newCommand/liveClue'
 import operationRecord from './routers/newCommand/operationRecord'
-const newscommandRouterMap = [manageClue,dxClue,commandDispatch,manuscriptClue,fileClue,liveClue,operationRecord]
+import classifyManage from './routers/newCommand/classifyManage'
+
+const newscommandRouterMap = [manageClue,dxClue,commandDispatch,manuscriptClue,fileClue,liveClue,operationRecord,classifyManage]
 
 /**
  * 直播

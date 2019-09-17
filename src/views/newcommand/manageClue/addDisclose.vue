@@ -239,6 +239,17 @@ export default {
       tijiaodata: ""
     };
   },
+  created(){
+    //赋值
+    let arr=this.$store.state.newCommand.clssifyList
+    arr.forEach((item,index)=>{
+      arr[index].label=item.typeName;
+      arr[index].value=item.numberNo;
+
+    })
+    this.formSettings[0].items[1].options=arr;
+    
+  },
   mounted() {
     this.discloseClassify();
     if (this.$route.query.Disclose == "addDisclose") {
@@ -250,6 +261,11 @@ export default {
       this.discloseId = this.$route.query.discloseId;
       this.discloseInfor(this.discloseId);
     }
+
+    console.log(this.$store.state.newCommand.clssifyList,
+    'list')
+    console.log(this.$refs.$el,'asdf')
+    this.$refs.$el.updateForm();
   },
   methods: {
     // 添加爆料
