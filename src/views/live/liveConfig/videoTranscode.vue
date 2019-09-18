@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-col :span="2">
-        <el-button size="mini" type="primary" @click="handleUpload">上传</el-button>
+        <el-button size="mini" disabled="true" type="primary" @click="handleUpload">上传</el-button>
       </el-col>
     </el-row>
     <el-table :data="tableValue" row-key="id">
@@ -46,6 +46,7 @@
             @click="handleReview(scope.$index, scope.row)"
           >预览</el-button>
           <el-button
+            disabled="true"
             size="mini"
             type="danger"
             @click="handleDelete(scope.$index, scope.row)"
