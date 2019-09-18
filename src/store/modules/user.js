@@ -240,7 +240,7 @@ const user = {
                 data.user_authorities.permissionCodeList
               );
             } else {
-              reject("getInfo: authorities must be a non-null array !");
+              reject("该用户未分配用户角色 !");
             }
             /**
              * 子系统列表
