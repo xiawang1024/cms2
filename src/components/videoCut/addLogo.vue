@@ -72,8 +72,8 @@ export default {
         let Img = new Image();
         Img.src = value;
         Img.onload = function() {
-          if (Img.width != 240 && Img.height != 70) {
-            callback(new Error("请上传240*70 像素的logo!"));
+          if (Img.width != 357 && Img.height != 90) {
+            callback(new Error("请上传357*90 像素的logo!"));
           } else {
             callback();
           }
@@ -92,7 +92,7 @@ export default {
       uprules: [
         {
           required: true,
-          message: "请上传一张240*70 像素的png格式图片",
+          message: "请上传一张357*90 像素的png格式图片",
           trigger: "blur"
         },
         { validator: sizeCheck, trigger: "blur" }
@@ -177,8 +177,8 @@ export default {
   text-align: center;
 }
 .avatar {
-  width: 120px;
-  height: 70px;
+  width: 357px;
+  height: 90px;
   display: block;
 }
 </style>

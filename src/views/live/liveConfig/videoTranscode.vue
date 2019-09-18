@@ -38,7 +38,13 @@
             size="mini"
             type="warning"
             @click="handleRecover(scope.$index, scope.row)"
-          >重试</el-button>
+          >重新转码</el-button>
+          <el-button
+            v-show="scope.row.state==3"
+            size="mini"
+            type="success"
+            @click="handleReview(scope.$index, scope.row)"
+          >预览</el-button>
           <el-button
             size="mini"
             type="danger"
@@ -71,6 +77,13 @@
         @selectChanges="selectChanges"
       />
     </el-dialog>
+    <el-dialog :visible.sync="dialogVideo" title="视频预览">
+      <el-row>
+        <el-col :span="24">
+          <video style="width:100%" :src="videoSource" controls/>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -80,6 +93,8 @@ export default {
   data() {
     return {
       tableValue: [],
+      videoSource:'',
+      dialogVideo:false,
       pageNo: 1,
       pageSize: 10,
       totalCount: 0,
@@ -123,20 +138,15 @@ export default {
               name: "audioCode",
               type: "radio",
               required: true,
-              value: "Acc",
+              value: "acc",
               options: [
                 {
-                  label: "Acc",
-                  value: "Acc"
+                  label: "acc",
+                  value: "acc"
                 },
                 {
                   label: "mp3",
                   value: "mp3"
-                },
-
-                {
-                  label: "静音",
-                  value: "静音"
                 }
               ],
               hidden: true
@@ -186,11 +196,11 @@ export default {
               name: "template",
               type: "checkbox",
               required: true,
-              value: ["720P", 1800, "H264", "ACC"],
+              value: ["hd720", 1800, "H264", "acc"],
               options: [
                 {
-                  label: "分辨率 720P",
-                  value: "720P",
+                  label: "分辨率 hd720",
+                  value: "hd720",
                   disabled: true
                 },
                 {
@@ -204,8 +214,8 @@ export default {
                   disabled: true
                 },
                 {
-                  label: "音频编码 ACC",
-                  value: "ACC",
+                  label: "音频编码 acc",
+                  value: "acc",
                   disabled: true
                 }
               ],
@@ -222,12 +232,12 @@ export default {
                   value: "原视频"
                 },
                 {
-                  label: "720P",
-                  value: "720P"
+                  label: "hd720",
+                  value: "hd720"
                 },
                 {
-                  label: "480P",
-                  value: "480P"
+                  label: "hd480",
+                  value: "hd480"
                 }
               ],
               hidden: true
@@ -281,8 +291,8 @@ export default {
                   value: "mp3"
                 },
                 {
-                  label: "Acc",
-                  value: "Acc"
+                  label: "acc",
+                  value: "acc"
                 },
                 {
                   label: "静音",
@@ -399,7 +409,12 @@ export default {
         });
         return false;
       }
-
+      if(data.audioCode=='静音'){
+        data.audioCode='';
+      }
+      if(data.resolution=='原视频'){
+        data.resolution='';
+      }
       return new Promise((resolve, reject) => {
         addTranscode(data)
           .then(res => {
@@ -552,6 +567,11 @@ export default {
         })
 
       })
+    },
+    handleReview(index,row){
+        this.dialogVideo=true;
+        this.videoSource=row.outputFilePath;
+
     }
   }
 };
