@@ -11,7 +11,7 @@ const classifyManage = {
     icon: "manageClue",
     role: "newsCommand:baoliao"
   },
-  hidden: true,
+  // hidden: true,
   name: "classifyManage",
   children: [
     {
@@ -26,7 +26,7 @@ const classifyManage = {
         icon: "discloseList",
         role: "newsCommand:baoliao"
       },
-      hidden: true,
+      // hidden: true,
 
     }
   ]

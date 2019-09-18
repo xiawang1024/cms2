@@ -47,6 +47,21 @@
         @click="columnAddEdit('addDisclose','')"
         size="mini"
       >添加爆料</el-button>
+      <el-button
+        type="primary"
+        v-if="checkAuth('newcommond:baoliao:add')"
+        @click="handleSeparate(1)"
+        size="mini"
+        :disabled="!multipleSelection.length>0"
+      >批量公开</el-button>
+      <el-button
+        type="primary"
+        v-if="checkAuth('newcommond:baoliao:add')"
+        @click="handleSeparate(0)"
+        size="mini"
+        :disabled="!multipleSelection.length>0"
+
+      >批量不公开</el-button>
     </div>
     <el-table
       ref="multipleTable"
@@ -54,8 +69,11 @@
       :data="tableData"
       style="width: 100%"
       size="mini"
+      @selection-change="handleSelectionChange"
     >
-      >
+      <el-table-column
+        type="selection"
+        width="55"/>
       <el-table-column
         min-width="300"
         align="left"
@@ -109,6 +127,24 @@
             class="colred"
             v-if="scope.row.auditStatus == 2"
           >已拒绝</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        min-width="100"
+        align="left"
+        prop="zzjgFlag"
+        label="对机构"
+      >
+        <template slot-scope="scope">
+          
+          <span
+            class="colgreen"
+            v-if="scope.row.zzjgFlag == 1"
+          >公开</span>
+          <span
+            class="colred"
+            v-if="scope.row.zzjgFlag == 0"
+          >不公开</span>
         </template>
       </el-table-column>·
       <el-table-column
@@ -164,7 +200,8 @@
 import {
   discloseList,
   discloseState,
-  discloseClassify
+  discloseClassify,
+  batchQueryUser
 } from "@/api/newsCommand/disclose.js";
 import { deleteColumn } from "@/api/cms/columnManage";
 import mixins from "@/components/cms/mixins";
@@ -175,6 +212,7 @@ export default {
   data() {
     return {
       allchoose: false,
+      multipleSelection:[],
       options1: [
         {
           value: "选项1",
@@ -498,6 +536,41 @@ export default {
             id
         });
       }
+    },
+     handleSelectionChange(val) {
+        this.multipleSelection = val;
+        console.log(val,'val')
+      },
+    handleSeparate(val){
+      //0 不公开   1 公开
+      let url='';
+        this.multipleSelection.forEach((item,index)=>{
+          url=url+'userIdList='+item.id+'&'
+        })
+      let data={
+        list:url,
+        zzjgFlag:val
+      }
+    
+        return new Promise((resolve,reject)=>{
+          batchQueryUser(data)
+          .then(res=>{
+            if(res.data.code==0){
+            this.$message.success(res.data.result)
+            this.columnList();
+            }else{
+            this.$message.error(res.data.result)
+
+            }
+            resolve();
+            })
+            .catch(err=>{
+              reject(err)
+            })
+        })
+      
+
+
     }
   }
 };
