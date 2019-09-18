@@ -35,12 +35,12 @@
         <el-form-item label="角标位置" prop="logoDistance">
           <template>
             <el-radio v-model="ruleForm.logoDistance" label="noLogo">无</el-radio>
-            <el-radio v-model="ruleForm.logoDistance" label="10:10">左上</el-radio>
-            <el-radio v-model="ruleForm.logoDistance" label="main_w-overlay_w-10:10">右上</el-radio>
-            <el-radio v-model="ruleForm.logoDistance" label="10:main_h-overlay_h-10">左下</el-radio>
+            <el-radio v-model="ruleForm.logoDistance" label="80:50">左上</el-radio>
+            <el-radio v-model="ruleForm.logoDistance" label="main_w-overlay_w-80:50">右上</el-radio>
+            <el-radio v-model="ruleForm.logoDistance" label="80:main_h-overlay_h-50">左下</el-radio>
             <el-radio
               v-model="ruleForm.logoDistance"
-              label="main_w-overlay_w-10:main_h-overlay_h-10"
+              label="main_w-overlay_w-80:main_h-overlay_h-50"
             >右下</el-radio>
           </template>
         </el-form-item>
@@ -91,8 +91,8 @@ export default {
         let Img = new Image();
         Img.src = value;
         Img.onload = function() {
-          if (Img.width != 120 && Img.height != 70) {
-            callback(new Error("请上传120*70像素的logo!"));
+          if (Img.width != 357 && Img.height != 90) {
+            callback(new Error("请上传357*90像素的logo!"));
           } else {
             callback();
           }
@@ -117,7 +117,7 @@ export default {
         userName: "",
         streamPwd: "",
         relayStreamUrl: "",
-        logoDistance: "10:10",
+        logoDistance: "80:50",
         relayTitle: "",
         relayDetails: "",
         logoPath: ""
@@ -141,7 +141,7 @@ export default {
       uprules: [
         {
           required: true,
-          message: "请上传一张120*70 像素的png格式图片",
+          message: "请上传一张357*90 像素的png格式图片",
           trigger: "blur"
         },
         { validator: sizeCheck, trigger: "blur" }
@@ -274,8 +274,8 @@ export default {
   text-align: center;
 }
 .avatar {
-  width: 120px;
-  height: 70px;
+  width: 357px;
+  height: 90px;
   display: block;
 }
 </style>
