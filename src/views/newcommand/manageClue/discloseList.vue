@@ -45,7 +45,7 @@
         type="primary"
         v-if="checkAuth('newcommond:baoliao:add')"
         @click="columnAddEdit('addDisclose','')"
-        size="small"
+        size="mini"
       >添加爆料</el-button>
     </div>
     <el-table
@@ -305,6 +305,8 @@ export default {
     this.discloseState(0);
     this.discloseState(1);
     this.discloseState(2);
+    //把分类保存在公共状态，便于添加时调用
+    this.$store.dispatch('getClassifyList')
   },
   created() {},
   methods: {

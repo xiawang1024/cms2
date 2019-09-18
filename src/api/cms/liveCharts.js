@@ -182,4 +182,27 @@ export function articleTrend(channelId) {
 
   }
   
+
+    //以租户维度统计作者文章点击量（）
+    export function clickArticleStatisticsByWriter() {
+      return request({
+        url:Cpath+`/cms/article/querystatisticsclickgroupwithwriterbytenantid`,
+        method: "post"
+      });
   
+    }
+  //  以作者维度统计时间区间文章点击量（）
+   export function writerArticleStatisticsByTime(data) {
+    return request({
+      url:Cpath+`/cms/article/queryarticleclickbytenantidandwriterandtime?writer=${data.writer}&sortBy=actualClickNumInt&beginTime=${data.beginTime}&endTime=${data.endTime}`,
+      method: "post"
+    });
+  }
+   //以作者维度统计时间区间文章点击量（）
+  //  export function writerArticleStatisticsByTime(data) {
+  //   return request({
+  //     url:Cpath+`/cms/article/queryarticleclickbytenantidandwriterandtime?writer=${data.writer}&sortBy=actualClickNumInt`,
+  //     method: "post"
+  //   });
+
+  // }

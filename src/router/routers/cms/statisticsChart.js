@@ -66,6 +66,27 @@ const statisticsChart = {
         meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms:articleByTenantId', }
         // meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms', }
       },
+      {
+        /**
+         * 租户下文章点击量统计（按租户）
+         */
+        path: 'ArticleClickStaticByTenantId',
+        component: () => import(`@/${path}/ArticleClickStaticByTenantId`),
+        name: 'ArticleClickStaticByTenantId',
+        meta: { title: 'ArticleClickStaticByTenantId', icon: 'commonManuscript', role: 'cms:articleByTenantId', }
+        // meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms', }
+      },
+      {
+        /**
+         * 记者文章点击量统计（按时间）
+         */
+        path: 'writerStaticDetail',
+        component: () => import(`@/${path}/writerStaticDetail`),
+        name: 'writerStaticDetail',
+        meta: { title: 'writerStaticDetail', icon: 'commonManuscript', role: 'cms:articleByTenantId' },
+        // meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms', }
+        hidden:true
+      },
       
    
   ]

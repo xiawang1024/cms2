@@ -87,98 +87,7 @@ export default {
               type: "select",
               required: true,
               placeholder: "请选择分类",
-              options: [
-                {
-                  label: "交通事故111",
-                  value: "1",
-                  numberNo: 1,
-                  id: "1"
-                },
-                {
-                  label: "天气气候",
-                  value: "2",
-                  numberNo: 2,
-                  id: "2"
-                },
-                {
-                  label: "消费投诉",
-                  value: "3",
-                  numberNo: 3,
-                  id: "3"
-                },
-                {
-                  label: "经济纠纷",
-                  value: "4",
-                  numberNo: 4,
-                  id: "4"
-                },
-                {
-                  label: "求助信息",
-                  value: "5",
-                  numberNo: 5,
-                  id: "5"
-                },
-                {
-                  label: "食品安全",
-                  value: "6",
-                  numberNo: 6,
-                  id: "6"
-                },
-                {
-                  label: "寻人寻物",
-                  value: "7",
-                  numberNo: 7,
-                  id: "7"
-                },
-                {
-                  label: "劳务投诉",
-                  value: "8",
-                  numberNo: 8,
-                  id: "8"
-                },
-                {
-                  label: "环保投诉",
-                  value: "9",
-                  numberNo: 9,
-                  id: "9"
-                },
-                {
-                  label: "医疗投诉",
-                  value: "10",
-                  numberNo: 10,
-                  id: "10"
-                },
-                {
-                  label: "房产投诉",
-                  value: "11",
-                  numberNo: 11,
-                  id: "11"
-                },
-                {
-                  label: "噪音投诉",
-                  value: "12",
-                  numberNo: 12,
-                  id: "12"
-                },
-                {
-                  label: "土地纠纷",
-                  value: "13",
-                  numberNo: 13,
-                  id: "13"
-                },
-                {
-                  label: "行政执法",
-                  value: "14",
-                  numberNo: 14,
-                  id: "14"
-                },
-                {
-                  label: "教育投诉",
-                  value: "15",
-                  numberNo: 15,
-                  id: "15"
-                }
-              ]
+              options: []
             },
             {
               label: "爆料人：",
@@ -218,6 +127,12 @@ export default {
                   value:1
                 }
               ]
+            }, { 
+              label: "上传",
+              name: "videoUrl",
+              type: "file",
+              // acceptFile:{accept:['.mp4','.jpg','.png','.jpeg']}
+
             }
           ]
         }
@@ -233,6 +148,10 @@ export default {
       tijiaodata: ""
     };
   },
+  created(){
+   this.initVform();
+    
+  },
   mounted() {
     this.discloseClassify();
     if (this.$route.query.Disclose == "addDisclose") {
@@ -244,8 +163,26 @@ export default {
       this.discloseId = this.$route.query.discloseId;
       this.discloseInfor(this.discloseId);
     }
+
+  
+    this.$nextTick(()=>{
+      this.$refs.vform.updateForm();
+    })  
+   
   },
   methods: {
+    //初始化表单数据
+    initVform(){
+    //赋值
+    let arr=this.$store.state.newCommand.clssifyList
+    arr.forEach((item,index)=>{
+      arr[index].label=item.typeName;
+      arr[index].value=item.numberNo;
+
+    })
+
+    this.formSettings[0].items[1].options=arr;
+    },
     // 添加爆料
     CreateDisclose(res) {
       return new Promise((resolve, reject) => {
@@ -295,6 +232,13 @@ export default {
             this.formData = response.data.result;
             if (response.data.result.videoUrl) {
               _this.formImgVide = response.data.result.videoUrl;
+              //数据回显
+              _this.formData.videoUrl.forEach((item,index)=>{
+                item.url=item.dataUrl
+
+                item.name=item.dataUrl.split("/").reverse()[0]
+              })
+              console.log( _this.formData.videoUrl,'回显数据')
             }
             resolve();
           })
@@ -361,14 +305,23 @@ export default {
       this.tijiaodata = formData1;
       this.isLoading = true;
       if (this.isEdit) {
+        
+
         return new Promise((resolve, reject) => {
           let newformData1 = formData1;
           newformData1.id = _this.discloseId;
           newformData1.newsOrigin = _this.formData.newsOrigin;
+          //处理修改后的数据格式
+           let data=JSON.parse((JSON.stringify(newformData1)))
+          data.videoUrl.forEach((item,index)=>{
+           let boliaoUrl=item.url;
+            data.videoUrl[index]={};
+            data['videoUrl[' + index +'].dataUrl'] = boliaoUrl;
+          })
           // let hnrToken = JSON.parse(localStorage.getItem("hnDt_token"));
           // hnrToken = hnrToken.access_token;
           // newformData1.hnrToken = hnrToken;
-          editDisclose(newformData1)
+          editDisclose(data)
             .then(response => {
               _this.$message({
                 showClose: true,
@@ -383,12 +336,20 @@ export default {
             });
         });
       } else {
+          //处理保存数据url 格式为后台格式
+          let data=JSON.parse((JSON.stringify(formData1)))
+          data.videoUrl.forEach((item,index)=>{
+           let boliaoUrl=item.url;
+            data.videoUrl[index]={};
+            data['videoUrl[' + index +'].dataUrl'] = boliaoUrl;
+          })
+
         return new Promise((resolve, reject) => {
           // let hnrToken = JSON.parse(localStorage.getItem("hnDt_token"));
           // hnrToken = hnrToken.access_token;
           // formData1.hnrToken = hnrToken;
-          formData1.newsOrigin = 0;
-          createDisclose(formData1)
+          data.newsOrigin = 0;
+          createDisclose(data)
             .then(response => {
               _this.$message({
                 showClose: true,

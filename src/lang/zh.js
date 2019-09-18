@@ -100,6 +100,8 @@ export default {
     ArticleStatisticsByTenantId :'全站发稿量统计',
     ArticleStatisticsByChanel:'频道发稿量统计',
     ArticleStatisticsByAuthor:'作者发稿量统计',
+    ArticleClickStaticByTenantId:'文章点击量统计',
+    writerStaticDetail:'作者文章点击量',
     systemStatus: '系统状态',
     logs: '日志',
     backTask: '后台任务',
@@ -169,6 +171,7 @@ export default {
     liveList: '直播列表',
     connectionList: '通话列表',
     operationsRecord: '操作记录',
+    classifyManage:'爆料分类管理',
     //-------直播------------------------------
     streamFileManage:'录制文件管理',
     directStream:'直播流管理',
