@@ -18,8 +18,8 @@ const classifyManage = {
       /**
        * 大象新闻列表
        */
-      path: 'classifyManage',
-      component: () => import(`@/${path}/classifyManage`),
+      path: 'breakingType',
+      component: () => import(`@/${path}/breakingType`),
       name: 'classifyManage',
       meta: {
         title: 'classifyManage',
