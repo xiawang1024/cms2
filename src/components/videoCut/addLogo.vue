@@ -17,26 +17,33 @@
         element-loading-background="rgba(255, 255, 255, 0.7)"
         align="center"
       >
-        <el-upload
-          ref="logoupload"
-          class="avatar-uploader"
-          :action="action"
-          :show-file-list="false"
-          :on-success="handleSuccess"
-          :before-upload="beforeAvatarUpload"
+        <el-form-item
+          label="logo"
+          prop="logoPath"
+          :rules="uprules"
         >
-          <img v-if="ruleForm.logoPath" :src="ruleForm.logoPath" class="avatar" >
-          <i v-else class="el-icon-plus avatar-uploader-icon" />
-        </el-upload>
+          <el-upload
+            ref="logoupload"
+            class="avatar-uploader"
+            :action="action"
+            :show-file-list="false"
+            :on-success="handleSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <img v-if="ruleForm.logoPath" :src="ruleForm.logoPath" class="avatar" >
+            <i v-else class="el-icon-plus avatar-uploader-icon" />
+          </el-upload>
+        </el-form-item>
+       
 
         <el-form-item label="角标位置" prop="logoDistance">
           <template>
-            <el-radio v-model="ruleForm.logoDistance" label="10:10">左上</el-radio>
-            <el-radio v-model="ruleForm.logoDistance" label="main_w-overlay_w-10:10">右上</el-radio>
-            <el-radio v-model="ruleForm.logoDistance" label="10:main_h-overlay_h-10">左下</el-radio>
+            <el-radio v-model="ruleForm.logoDistance" label="80:50">左上</el-radio>
+            <el-radio v-model="ruleForm.logoDistance" label="main_w-overlay_w-80:50">右上</el-radio>
+            <el-radio v-model="ruleForm.logoDistance" label="80:main_h-overlay_h-50">左下</el-radio>
             <el-radio
               v-model="ruleForm.logoDistance"
-              label="main_w-overlay_w-10:main_h-overlay_h-10"
+              label="main_w-overlay_w-80:main_h-overlay_h-50"
             >右下</el-radio>
           </template>
         </el-form-item>
@@ -65,8 +72,8 @@ export default {
         let Img = new Image();
         Img.src = value;
         Img.onload = function() {
-          if (Img.width != 120 && Img.height != 70) {
-            callback(new Error("请上传120*70像素的logo!"));
+          if (Img.width != 240 && Img.height != 70) {
+            callback(new Error("请上传240*70 像素的logo!"));
           } else {
             callback();
           }
@@ -78,14 +85,14 @@ export default {
 
     return {
       ruleForm: {
-        logoDistance: "10:10",
+        logoDistance: "80:50",
         logoPath: ""
       },
       action: baseUrl.BASE_URL + "/live-stream/relaystream/addfile",
       uprules: [
         {
           required: true,
-          message: "请上传一张120*70 像素的png格式图片",
+          message: "请上传一张240*70 像素的png格式图片",
           trigger: "blur"
         },
         { validator: sizeCheck, trigger: "blur" }
