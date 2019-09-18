@@ -54,7 +54,6 @@ const newCommand = {
  * live
  */
 const live = {
-  discloseClassifys: (state) => state.live.discloseClassifys,
 
 }
 const getters = {

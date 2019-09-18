@@ -87,98 +87,7 @@ export default {
               type: "select",
               required: true,
               placeholder: "请选择分类",
-              options: [
-                {
-                  label: "交通事故111",
-                  value: "1",
-                  numberNo: 1,
-                  id: "1"
-                },
-                {
-                  label: "天气气候",
-                  value: "2",
-                  numberNo: 2,
-                  id: "2"
-                },
-                {
-                  label: "消费投诉",
-                  value: "3",
-                  numberNo: 3,
-                  id: "3"
-                },
-                {
-                  label: "经济纠纷",
-                  value: "4",
-                  numberNo: 4,
-                  id: "4"
-                },
-                {
-                  label: "求助信息",
-                  value: "5",
-                  numberNo: 5,
-                  id: "5"
-                },
-                {
-                  label: "食品安全",
-                  value: "6",
-                  numberNo: 6,
-                  id: "6"
-                },
-                {
-                  label: "寻人寻物",
-                  value: "7",
-                  numberNo: 7,
-                  id: "7"
-                },
-                {
-                  label: "劳务投诉",
-                  value: "8",
-                  numberNo: 8,
-                  id: "8"
-                },
-                {
-                  label: "环保投诉",
-                  value: "9",
-                  numberNo: 9,
-                  id: "9"
-                },
-                {
-                  label: "医疗投诉",
-                  value: "10",
-                  numberNo: 10,
-                  id: "10"
-                },
-                {
-                  label: "房产投诉",
-                  value: "11",
-                  numberNo: 11,
-                  id: "11"
-                },
-                {
-                  label: "噪音投诉",
-                  value: "12",
-                  numberNo: 12,
-                  id: "12"
-                },
-                {
-                  label: "土地纠纷",
-                  value: "13",
-                  numberNo: 13,
-                  id: "13"
-                },
-                {
-                  label: "行政执法",
-                  value: "14",
-                  numberNo: 14,
-                  id: "14"
-                },
-                {
-                  label: "教育投诉",
-                  value: "15",
-                  numberNo: 15,
-                  id: "15"
-                }
-              ]
+              options: []
             },
             {
               label: "爆料人：",
@@ -240,14 +149,7 @@ export default {
     };
   },
   created(){
-    //赋值
-    let arr=this.$store.state.newCommand.clssifyList
-    arr.forEach((item,index)=>{
-      arr[index].label=item.typeName;
-      arr[index].value=item.numberNo;
-
-    })
-    this.formSettings[0].items[1].options=arr;
+   this.initVform();
     
   },
   mounted() {
@@ -262,12 +164,25 @@ export default {
       this.discloseInfor(this.discloseId);
     }
 
-    console.log(this.$store.state.newCommand.clssifyList,
-    'list')
-    console.log(this.$refs.$el,'asdf')
-    this.$refs.$el.updateForm();
+  
+    this.$nextTick(()=>{
+      this.$refs.vform.updateForm();
+    })  
+   
   },
   methods: {
+    //初始化表单数据
+    initVform(){
+    //赋值
+    let arr=this.$store.state.newCommand.clssifyList
+    arr.forEach((item,index)=>{
+      arr[index].label=item.typeName;
+      arr[index].value=item.numberNo;
+
+    })
+
+    this.formSettings[0].items[1].options=arr;
+    },
     // 添加爆料
     CreateDisclose(res) {
       return new Promise((resolve, reject) => {

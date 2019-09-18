@@ -118,7 +118,7 @@ export default {
                 this.$message.success(res.data.result);
                 this.initTable();
                  //及时更新公共状态中的分类
-                 this.$store.dispatch('getClassifyList')
+                //  this.$store.dispatch('getClassifyList')
               } else {
                 this.$message.error(res.data.result);
               }
@@ -136,7 +136,7 @@ export default {
                 this.$message.success(res.data.result);
                 this.initTable();
                  //及时更新公共状态中的分类
-                 this.$store.dispatch('getClassifyList')
+                //  this.$store.dispatch('getClassifyList')
               } else {
                 this.$message.error(res.data.result);
               }
