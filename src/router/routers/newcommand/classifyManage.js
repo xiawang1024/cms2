@@ -1,37 +1,38 @@
-import Layout from '@/views/layout/Layout'
-import {
-  newcommandPath
-} from '@/router/routers/config'
+import Layout from "@/views/layout/Layout";
+import { newcommandPath } from "@/router/routers/config";
 // 组件所在位置
-const path = `views/${newcommandPath}/classifyManage`
+const path = `views/${newcommandPath}/classifyManage`;
 // TODO:左侧菜单 线索管理
 const classifyManage = {
   path: `/${newcommandPath}/classifyManage`,
   component: Layout,
   meta: {
-    title: 'classifyManage',
-    icon: 'manageClue',
-    role: 'newsCommand:baoliao'
+    title: "classifyManage",
+    icon: "manageClue",
+    role: "newsCommand:baoliao"
   },
-  name: 'classifyManage',
-  children: [{
+  hidden: true,
+  name: "classifyManage",
+  children: [
+    {
       /**
-       * 大象新闻列表
+       * 分类管理
        */
-      path: 'breakingType',
+      path: "breakingType",
       component: () => import(`@/${path}/breakingType`),
-      name: 'classifyManage',
+      name: "classifyManage",
       meta: {
-        title: 'classifyManage',
-        icon: 'discloseList',
-        role: 'newsCommand:baoliao'
-      }
+        title: "classifyManage",
+        icon: "discloseList",
+        role: "newsCommand:baoliao"
+      },
+      hidden: true,
+
     }
   ]
-}
-export default classifyManage
-  /**
+};
+export default classifyManage;
+/**
 {
    *
    */
- 

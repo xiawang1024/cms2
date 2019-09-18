@@ -73,7 +73,7 @@ const statisticsChart = {
         path: 'ArticleClickStaticByTenantId',
         component: () => import(`@/${path}/ArticleClickStaticByTenantId`),
         name: 'ArticleClickStaticByTenantId',
-        meta: { title: 'ArticleClickStaticByTenantId', icon: 'commonManuscript', role: 'cms:articleByTenantId', }
+        meta: { title: 'ArticleClickStaticByTenantId', icon: 'commonManuscript', role: 'cms:articleClickByTenantId', }
         // meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms', }
       },
       {
@@ -83,7 +83,7 @@ const statisticsChart = {
         path: 'writerStaticDetail',
         component: () => import(`@/${path}/writerStaticDetail`),
         name: 'writerStaticDetail',
-        meta: { title: 'writerStaticDetail', icon: 'commonManuscript', role: 'cms:articleByTenantId' },
+        meta: { title: 'writerStaticDetail', icon: 'commonManuscript', role: 'cms:articleClickByAuthor' },
         // meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms', }
         hidden:true
       },
