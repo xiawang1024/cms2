@@ -47,7 +47,7 @@
           type="primary"
           style="width:100%;margin-bottom:30px;"
           @click.native.prevent="handleGoogleLogin"
-        >{{ login.googleLoginIn }}</el-button> -->
+        >{{ login.googleLoginIn }}</el-button>
 
         <el-button
           v-if="envType === 'development'"
