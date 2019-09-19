@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-col :span="2">
-        <el-button size="mini" disabled="true" type="primary" @click="handleUpload">上传</el-button>
+        <el-button size="mini" type="primary" @click="handleUpload">上传</el-button>
       </el-col>
     </el-row>
     <el-table :data="tableValue" row-key="id">
@@ -46,7 +46,7 @@
             @click="handleReview(scope.$index, scope.row)"
           >预览</el-button>
           <el-button
-            disabled="true"
+           
             size="mini"
             type="danger"
             @click="handleDelete(scope.$index, scope.row)"
@@ -89,6 +89,8 @@
 </template>
 <script>
 import { streamfile, addTranscode,deleteTranscode,retranscode } from "@/api/live/videoTranscode.js";
+import baseUrl from "@/config/base-url";
+
 export default {
   name: "VideoTranscode",
   data() {
@@ -402,7 +404,10 @@ export default {
 
       //未获得文件地址拦截操作
       if (val.inputFilePath[0].url) {
-        data.inputFilePath = val.inputFilePath[0].url;
+        //截掉url域名
+        let url=val.inputFilePath[0].url;
+        data.inputFilePath = url.split( baseUrl.DOWN_URL)[1];
+
       } else {
         this.$message({
           type: "error",
