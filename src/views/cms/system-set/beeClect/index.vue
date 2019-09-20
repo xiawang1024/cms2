@@ -2,11 +2,11 @@
 
 <template>
   <div>
-    <el-tabs v-model="activeName" class="formBox">
+    <el-tabs v-model="activeName">
       <el-tab-pane label="抓取PC端信息规则" name="first">
         <div class="formbody">
           <el-row>
-            <ul class="forminfo">
+            <ul>
               <div class="left">
                 <el-row>
                   <el-col :span="6">
@@ -16,7 +16,6 @@
                     <el-select
                       size="small"
                       v-model="selectCloum"
-                      class="dfinput"
                       style="opacity:1"
                       placeholder="--请选择栏目--"
                       @change="handleCloum"
@@ -39,7 +38,6 @@
                     <el-select
                       size="small"
                       v-model="selectRule"
-                      class="dfinput"
                       style="opacity:1"
                       placeholder="--请选择规则--"
                       @change="handleRule"
@@ -68,7 +66,6 @@
                       :rules="[{required:true}]"
                       v-model="res.newsListUrl"
                       type="text"
-                      class="dfinput"
                     />
                   </el-col>
                 </el-row>
@@ -85,7 +82,6 @@
                       name="newslisturlrule"
                       v-model="res.newsListUrlRule"
                       type="text"
-                      class="dfinput"
                     />
                   </el-col>
                 </el-row>
@@ -103,7 +99,6 @@
                       name="newslisttitle"
                       v-model="res.newsListTitle"
                       type="text"
-                      class="dfinput"
                     />
                   </el-col>
                 </el-row>
@@ -115,13 +110,7 @@
                     </label>
                   </el-col>
                   <el-col :span="16">
-                    <el-input
-                      size="small"
-                      name="titleurl"
-                      v-model="res.titleUrl"
-                      type="text"
-                      class="dfinput"
-                    />
+                    <el-input size="small" name="titleurl" v-model="res.titleUrl" type="text" />
                   </el-col>
                 </el-row>
                 <el-row>
@@ -137,7 +126,6 @@
                       name="newslistrule"
                       v-model="res.newsListRule"
                       type="text"
-                      class="dfinput"
                     />
                   </el-col>
                 </el-row>
@@ -149,13 +137,7 @@
                     </label>
                   </el-col>
                   <el-col :span="16">
-                    <el-input
-                      size="small"
-                      name="newsrule"
-                      v-model="res.newsRule"
-                      type="text"
-                      class="dfinput"
-                    />
+                    <el-input size="small" name="newsrule" v-model="res.newsRule" type="text" />
                   </el-col>
                 </el-row>
                 <el-row>
@@ -166,13 +148,7 @@
                     </label>
                   </el-col>
                   <el-col :span="16">
-                    <el-input
-                      size="small"
-                      name="titlerule"
-                      v-model="res.titleRule"
-                      type="text"
-                      class="dfinput"
-                    />
+                    <el-input size="small" name="titlerule" v-model="res.titleRule" type="text" />
                   </el-col>
                 </el-row>
                 <el-row>
@@ -188,7 +164,6 @@
                       name="contentrule"
                       v-model="res.contentRule"
                       type="text"
-                      class="dfinput"
                     />
                   </el-col>
                 </el-row>
@@ -200,15 +175,8 @@
                     </label>
                   </el-col>
                   <el-col :span="16">
-                    <el-input
-                      size="small"
-                      name="contentrule"
-                      v-model="res.creatTime"
-                      type="text"
-                      class="dfinput"
-                    />
+                    <el-input size="small" name="contentrule" v-model="res.creatTime" type="text" />
                   </el-col>
-                  
                 </el-row>
                 <el-row>
                   <el-col :span="6">
@@ -218,60 +186,47 @@
                     </label>
                   </el-col>
                   <el-col :span="16">
-                    <el-input
-                      size="small"
-                      name="Encoding"
-                      v-model="res.encoding"
-                      type="text"
-                      class="dfinput"
-                    />
+                    <el-input size="small" name="Encoding" v-model="res.encoding" type="text" />
                   </el-col>
-                  
                 </el-row>
                 <el-row>
                   <el-col :span="6">
                     <label>来源标签</label>
                   </el-col>
                   <el-col :span="16">
-                    <el-input
-                      size="small"
-                      name="formrule"
-                      v-model="res.formRule"
-                      type="text"
-                      class="dfinput"
-                    />
+                    <el-input size="small" name="formrule" v-model="res.formRule" type="text" />
                   </el-col>
-                 
                 </el-row>
                 <el-row>
-                  <el-col :span="6"> <label>备注来源</label></el-col>
+                  <el-col :span="6">
+                    <label>备注来源</label>
+                  </el-col>
                   <el-col :span="16">
                     <el-input
                       size="small"
                       name="formStandby"
                       v-model="res.formStandby"
                       type="text"
-                      class="dfinput"
                     />
                   </el-col>
-                  
                 </el-row>
                 <el-row>
-                  <el-col :span="6"> <label>关键词</label></el-col>
+                  <el-col :span="6">
+                    <label>关键词</label>
+                  </el-col>
                   <el-col :span="16">
                     <el-input
                       size="small"
                       name="keyWord"
                       v-model="res.keyWord"
                       type="text"
-                      class="dfinput"
                       placeholder="请最多输入五个关键词，以 ；隔开"
                     />
                   </el-col>
                 </el-row>
                 <li>
                   <el-row>
-                    <el-col :span="14"/>
+                    <el-col :span="14" />
                     <el-col :span="8">
                       <el-button size="mini" type="primary" @click="test">测试</el-button>
                       <el-button size="mini" type="primary" @click="save">保存</el-button>
@@ -326,7 +281,6 @@
               <el-col :span="24" style="marginTop:20px;">
                 <h4>
                   <label for>已有规则列表：</label>
-
                   <el-button size="mini" type="primary" @click="handleStart">开启爬虫</el-button>
                   <el-button size="mini" type="primary" @click="handleClear">清除库存</el-button>
                   <el-button size="mini" type="primary" @click="handleSave">上传文档</el-button>
@@ -354,7 +308,7 @@
 </template>
   <script>
 import { columnList } from "@/api/cms/columnManage.js";
-// import wxClect from './wxClect'
+// import wxClect from "./wxClect";
 import {
   getRuler,
   getCloumRule,
@@ -368,7 +322,7 @@ import {
 } from "@/api/cms/beeClect.js";
 export default {
   name: "Form",
-  //   components:{wxClect},
+  // components: { wxClect },
   data() {
     return {
       clientLicenseId: "",
@@ -395,7 +349,6 @@ export default {
         keyWord: ""
       },
       testData: {},
-      loading: false,
       fullRule: {},
       checkRuleId: "",
       toggle: "",
@@ -631,8 +584,6 @@ export default {
       let flag = this.check();
       let mykeyWord = this.handlekeyWord(this.res.keyWord);
       if (flag && mykeyWord) {
-        this.loading = true;
-
         var sendData = {
           column: this.res.clumnId,
           newslisturl: this.res.newsListUrl,
@@ -657,16 +608,13 @@ export default {
           testRequest(sendData)
             .then(response => {
               if (response.data.status == "success") {
-                _this.loading = false;
                 _this.testData = response.data.data;
               } else {
-                _this.loading = false;
                 _this.$message.error(response.data.data);
               }
               resolve();
             })
             .catch(err => {
-              _this.loading = false;
               reject(err);
             });
         });
@@ -680,7 +628,6 @@ export default {
       let flag = this.check();
       let mykeyWord = this.handlekeyWord(this.res.keyWord);
       if (flag && mykeyWord) {
-        this.loading = true;
         var sendData = {
           id: this.res.id,
           column: this.res.clumnId,
@@ -705,7 +652,6 @@ export default {
         return new Promise((resolve, reject) => {
           saveRequest(sendData)
             .then(response => {
-              _this.loading = false;
               if (response.data.status == "success") {
                 this.$message({
                   type: "success",
@@ -730,7 +676,6 @@ export default {
       let flag = this.check();
       let mykeyWord = this.handlekeyWord(this.res.keyWord);
       if (flag && mykeyWord) {
-        this.loading = true;
         var sendData = {
           id: "",
           column: this.res.clumnId,
@@ -754,7 +699,6 @@ export default {
         return new Promise((resolve, reject) => {
           saveRequest(sendData)
             .then(response => {
-              _this.loading = false;
               if (response.data.status == "success") {
                 this.$message({
                   type: "success",
@@ -904,7 +848,7 @@ label {
 
 .el-col {
   border-radius: 4px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 .bg-purple-dark {
   background: #99a9bf;
