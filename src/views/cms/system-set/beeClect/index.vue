@@ -148,7 +148,7 @@
                       <span class="redTip">*</span>
                     </label>
                   </el-col>
-                  <el-col span="16">
+                  <el-col :span="16">
                     <el-input
                       size="small"
                       name="newsrule"
@@ -622,7 +622,6 @@ export default {
           });
           return false;
         }
-        console.log(mykeyWord);
         return mykeyWord;
       } else {
         return true;
@@ -756,7 +755,6 @@ export default {
           saveRequest(sendData)
             .then(response => {
               _this.loading = false;
-              // console.log(response.data)
               if (response.data.status == "success") {
                 this.$message({
                   type: "success",
@@ -786,7 +784,6 @@ export default {
       var _this = this;
       return new Promise((resolve, reject) => {
         getRuleById(clumnId).then(res => {
-          console.log(res.data, "aaaaa");
           if (res.data.status == "success") {
             //对规则赋值回显
             _this.selectCloum = res.data.data.clumnId;
@@ -832,7 +829,6 @@ export default {
           new Promise((resolve, reject) => {
             clearStore()
               .then(res => {
-                console.log(res, "res");
                 if (res.data.data == "success") {
                   this.$message({
                     type: "success",
