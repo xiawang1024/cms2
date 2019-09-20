@@ -1,5 +1,4 @@
-export const currentDoc = [
-  {
+export const currentDoc = [{
     id: '1',
     label: '发布'
   },
@@ -30,8 +29,7 @@ export const currentDoc = [
 ]
 
 
-export const currentColumn = [
-  {
+export const currentColumn = [{
     id: '1',
     label: '栏目首页'
   },
@@ -81,48 +79,106 @@ export const currentColumn = [
   // }
 ]
 
-export const fromOptions = [
-  { id: '1', label: '河南电台新媒体中心' },
-  { id: '2', label: '信息广播' },
-  { id: '3', label: '乐龄1056' },
-  { id: '4', label: 'My Radio' },
-  { id: '5', label: '河南人民广播电台' },
-  { id: '6', label: '河南电台' },
-  { id: '7', label: '河南广电全媒体' },
-  { id: '8', label: '娱乐976' },
-  { id: '9', label: '河南新闻广播' },
-  { id: '10', label: '映象网' },
-  { id: '11', label: '大河报' },
-  { id: '12', label: '大象融媒东方今报' },
-  { id: '13', label: '中国网' },
-  { id: '14', label: '大豫网' },
-  { id: '15', label: '声势传媒' },
-  { id: '16', label: '东方今报' },
-  { id: '17', label: '国家新闻出版广电总局官网' },
-  { id: '18', label: '河南戏公众微信号' },
-  { id: '19', label: '首都传媒经济研究基地' },
-  { id: '20', label: '华商晨报' }
+export const fromOptions = [{
+    id: '1',
+    label: '河南电台新媒体中心'
+  },
+  {
+    id: '2',
+    label: '信息广播'
+  },
+  {
+    id: '3',
+    label: '乐龄1056'
+  },
+  {
+    id: '4',
+    label: 'My Radio'
+  },
+  {
+    id: '5',
+    label: '河南人民广播电台'
+  },
+  {
+    id: '6',
+    label: '河南电台'
+  },
+  {
+    id: '7',
+    label: '河南广电全媒体'
+  },
+  {
+    id: '8',
+    label: '娱乐976'
+  },
+  {
+    id: '9',
+    label: '河南新闻广播'
+  },
+  {
+    id: '10',
+    label: '映象网'
+  },
+  {
+    id: '11',
+    label: '大河报'
+  },
+  {
+    id: '12',
+    label: '大象融媒东方今报'
+  },
+  {
+    id: '13',
+    label: '中国网'
+  },
+  {
+    id: '14',
+    label: '大豫网'
+  },
+  {
+    id: '15',
+    label: '声势传媒'
+  },
+  {
+    id: '16',
+    label: '东方今报'
+  },
+  {
+    id: '17',
+    label: '国家新闻出版广电总局官网'
+  },
+  {
+    id: '18',
+    label: '河南戏公众微信号'
+  },
+  {
+    id: '19',
+    label: '首都传媒经济研究基地'
+  },
+  {
+    id: '20',
+    label: '华商晨报'
+  }
 ]
 
-export const typeOptions = [
-  {
-    id: 0,
+export const typeOptions = [{
+    value: 0,
     label: '图文'
   },
   {
-    id: 1,
+    value: 1,
     label: '图集'
   },
   {
-    id: 2,
+    value: 2,
     label: '拼条'
   },
   {
-    id: 3,
+    value: 3,
     label: '引用'
   },
   {
-    id: 4,
+    value: 4,
     label: '转载'
   },
   // {
@@ -131,39 +187,37 @@ export const typeOptions = [
   // }
 ]
 
-export const statusOptions = [
-  {
-    id: '0',
+export const statusOptions = [{
+    value: '0',
     label: '新稿'
   },
   {
-    id: '1',
+    value: '1',
     label: '提交审核'
   },
   {
-    id: '2',
+    value: '2',
     label: '审核未通过'
   },
   {
-    id: '3',
+    value: '3',
     label: '已撤'
   },
   {
-    id: '4',
+    value: '4',
     label: '已删'
   },
   {
-    id: '11',
+    value: '11',
     label: '已发布'
   },
   {
-    id: '10',
+    value: '10',
     label: '待发布'
   }
 ]
 
-export const DocList = [
-  {
+export const DocList = [{
     id: '1506',
     title: '2019年-2020年度中原福塔户外广告牌招标公告',
     outLink: 'http://www.hndt.com',

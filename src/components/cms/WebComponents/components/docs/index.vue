@@ -94,7 +94,7 @@ export default {
               _this.sourceList = response.data.result.details.map(ele => {
                 return {
                   label: ele.dictDetailName,
-                  value: ele.dictDetailId
+                  value: ele.dictDetailName
                 };
               });
             }
