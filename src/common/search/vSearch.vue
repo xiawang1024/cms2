@@ -23,7 +23,7 @@
           <el-form-item :label="item.label" :prop="item.name" style="max-width: 440px;">
             <!-- 文本框 -->
             <template v-if="item.type=='text'">
-              <el-input v-model.trim="formModel[item.name]" :placeholder="item.placeholder" />
+              <el-input v-model="formModel[item.name]" :placeholder="item.placeholder" />
             </template>
             <!-- 下拉框 -->
             <template v-else-if="item.type=='select'">
