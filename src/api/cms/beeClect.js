@@ -42,11 +42,10 @@ export function saveRequest(data) {
 }
 
 //根据id获取全部规则信息接口
-export function getRuleById(data) {
+export function getRuleById(id) {
   return request({
-    url: '/content-grab/newslist/saverule',
-    method: 'post',
-    data:QS.stringify(data)
+    url: '/content-grab/newslist/getAllRuleById?ruleid='+id,
+    method: 'post'
   })
 }
 //微信测试接口
@@ -59,20 +58,11 @@ export function wxTestRequest(id) {
 }
 
 //微信保存
-
 export function wxSaveRequest(number,name) {
   return request({
     url: '/content-grab/wechatarticle/saveWechatRule?number='+number+"&name="+name,
     method: 'post',
     
-  })
-}
-
-export function currentuser(data) {
-  return request({
-    url:'/userb/user/currentuser',
-    method: 'get',
-    data
   })
 }
 

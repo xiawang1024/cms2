@@ -8,162 +8,271 @@
           <el-row>
             <ul class="forminfo">
               <div class="left">
-                <li>
-                  <label>栏目</label>
-                  <el-select
-                    v-model="selectCloum"
-                    class="dfinput"
-                    style="opacity:1"
-                    placeholder="--请选择栏目--"
-                  >
-                    <el-option
-                      v-for="item in content"
-                      :value="item.channelId"
-                      :key="item.channelId"
-                      :label="item.channelName"
-                      class="cloumoption"
+                <el-row>
+                  <el-col :span="6">
+                    <label>栏目</label>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-select
+                      size="small"
+                      v-model="selectCloum"
+                      class="dfinput"
+                      style="opacity:1"
+                      placeholder="--请选择栏目--"
+                      @change="handleCloum"
+                    >
+                      <el-option
+                        v-for="item in content"
+                        :value="item.channelId"
+                        :key="item.channelId"
+                        :label="item.channelName"
+                        class="cloumoption"
+                      />
+                    </el-select>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6">
+                    <label>已有规则</label>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-select
+                      size="small"
+                      v-model="selectRule"
+                      class="dfinput"
+                      style="opacity:1"
+                      placeholder="--请选择规则--"
+                      @change="handleRule"
+                    >
+                      <el-option
+                        v-for="item in ruleContent"
+                        :value="item.id"
+                        :key="item.channelId"
+                        :label="selectCloumName+' / Ruler '+item.id "
+                        class="cloumoption"
+                      />
+                    </el-select>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6">
+                    <label>
+                      列表页面URL
+                      <span class="redTip">*</span>
+                    </label>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-input
+                      size="small"
+                      name="newslisturl"
+                      :rules="[{required:true}]"
+                      v-model="res.newsListUrl"
+                      type="text"
+                      class="dfinput"
                     />
-                  </el-select>
-                </li>
-                <li>
-                  <label>已有规则</label>
-                  <el-select
-                    v-model="selectRule"
-                    class="dfinput"
-                    style="opacity:1"
-                    placeholder="--请选择规则--"
-                  >
-                    <el-option
-                      v-for="item in ruleContent"
-                      :value="item.id"
-                      :key="item.channelId"
-                      :label="selectCloumName+' / Ruler '+item.id "
-                      class="cloumoption"
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6">
+                    <label>
+                      列表页面URL规则
+                      <span class="redTip">*</span>
+                    </label>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-input
+                      size="small"
+                      name="newslisturlrule"
+                      v-model="res.newsListUrlRule"
+                      type="text"
+                      class="dfinput"
                     />
-                  </el-select>
-                </li>
-                <li>
-                  <label>
-                    列表页面URL
-                    <span class="redTip">*</span>
-                  </label>
-                  <el-input
-                    name="newslisturl"
-                    :rules="[{required:true}]"
-                    v-model="res.newsListUrl"
-                    type="text"
-                    class="dfinput"
-                  />
-                </li>
-                <li>
-                  <label>
-                    列表页面URL规则
-                    <span class="redTip">*</span>
-                  </label>
-                  <el-input
-                    name="newslisturlrule"
-                    v-model="res.newsListUrlRule"
-                    type="text"
-                    class="dfinput"
-                  />
-                </li>
-                <li>
-                  <label>
-                    列表标题规则
-                    <span class="redTip">*</span>
-                  </label>
-                  <el-input
-                    name="newslisttitle"
-                    v-model="res.newsListTitle"
-                    type="text"
-                    class="dfinput"
-                  />
-                </li>
-                <li>
-                  <label>
-                    列表标题链接规则
-                    <span class="redTip">*</span>
-                  </label>
-                  <el-input name="titleurl" v-model="res.titleUrl" type="text" class="dfinput" />
-                </li>
-                <li>
-                  <label>
-                    列表规则
-                    <span class="redTip">*</span>
-                  </label>
-                  <el-input
-                    name="newslistrule"
-                    v-model="res.newsListRule"
-                    type="text"
-                    class="dfinput"
-                  />
-                </li>
-                <li>
-                  <label>
-                    详情页面规则
-                    <span class="redTip">*</span>
-                  </label>
-                  <el-input name="newsrule" v-model="res.newsRule" type="text" class="dfinput" />
-                </li>
-                <li>
-                  <label>
-                    标题标签
-                    <span class="redTip">*</span>
-                  </label>
-                  <el-input name="titlerule" v-model="res.titleRule" type="text" class="dfinput" />
-                </li>
-                <li>
-                  <label>
-                    正文标签
-                    <span class="redTip">*</span>
-                  </label>
-                  <el-input
-                    name="contentrule"
-                    v-model="res.contentRule"
-                    type="text"
-                    class="dfinput"
-                  />
-                </li>
-                <li>
-                  <label>
-                    发布时间
-                    <span class="redTip">*</span>
-                  </label>
-                  <el-input name="contentrule" v-model="res.creatTime" type="text" class="dfinput" />
-                </li>
-                <li>
-                  <label>
-                    编码
-                    <span class="redTip">*</span>
-                  </label>
-                  <el-input name="Encoding" v-model="res.encoding" type="text" class="dfinput" />
-                </li>
-                <li>
-                  <label>来源标签</label>
-                  <el-input name="formrule" v-model="res.formRule" type="text" class="dfinput" />
-                </li>
-                <li>
-                  <label>备注来源</label>
-                  <el-input
-                    name="formStandby"
-                    v-model="res.formStandby"
-                    type="text"
-                    class="dfinput"
-                  />
-                </li>
-                <li>
-                  <label>关键词</label>
-                  <el-input
-                    name="keyWord"
-                    v-model="res.keyWord"
-                    type="text"
-                    class="dfinput"
-                    placeholder="请最多输入五个关键词，以 ；隔开"
-                  />
-                </li>
+                  </el-col>
+                </el-row>
+
+                <el-row>
+                  <el-col :span="6">
+                    <label>
+                      列表标题规则
+                      <span class="redTip">*</span>
+                    </label>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-input
+                      size="small"
+                      name="newslisttitle"
+                      v-model="res.newsListTitle"
+                      type="text"
+                      class="dfinput"
+                    />
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6">
+                    <label>
+                      列表标题链接规则
+                      <span class="redTip">*</span>
+                    </label>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-input
+                      size="small"
+                      name="titleurl"
+                      v-model="res.titleUrl"
+                      type="text"
+                      class="dfinput"
+                    />
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6">
+                    <label>
+                      列表规则
+                      <span class="redTip">*</span>
+                    </label>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-input
+                      size="small"
+                      name="newslistrule"
+                      v-model="res.newsListRule"
+                      type="text"
+                      class="dfinput"
+                    />
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6">
+                    <label>
+                      详情页面规则
+                      <span class="redTip">*</span>
+                    </label>
+                  </el-col>
+                  <el-col span="16">
+                    <el-input
+                      size="small"
+                      name="newsrule"
+                      v-model="res.newsRule"
+                      type="text"
+                      class="dfinput"
+                    />
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6">
+                    <label>
+                      标题标签
+                      <span class="redTip">*</span>
+                    </label>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-input
+                      size="small"
+                      name="titlerule"
+                      v-model="res.titleRule"
+                      type="text"
+                      class="dfinput"
+                    />
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6">
+                    <label>
+                      正文标签
+                      <span class="redTip">*</span>
+                    </label>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-input
+                      size="small"
+                      name="contentrule"
+                      v-model="res.contentRule"
+                      type="text"
+                      class="dfinput"
+                    />
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6">
+                    <label>
+                      发布时间
+                      <span class="redTip">*</span>
+                    </label>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-input
+                      size="small"
+                      name="contentrule"
+                      v-model="res.creatTime"
+                      type="text"
+                      class="dfinput"
+                    />
+                  </el-col>
+                  
+                </el-row>
+                <el-row>
+                  <el-col :span="6">
+                    <label>
+                      编码
+                      <span class="redTip">*</span>
+                    </label>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-input
+                      size="small"
+                      name="Encoding"
+                      v-model="res.encoding"
+                      type="text"
+                      class="dfinput"
+                    />
+                  </el-col>
+                  
+                </el-row>
+                <el-row>
+                  <el-col :span="6">
+                    <label>来源标签</label>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-input
+                      size="small"
+                      name="formrule"
+                      v-model="res.formRule"
+                      type="text"
+                      class="dfinput"
+                    />
+                  </el-col>
+                 
+                </el-row>
+                <el-row>
+                  <el-col :span="6"> <label>备注来源</label></el-col>
+                  <el-col :span="16">
+                    <el-input
+                      size="small"
+                      name="formStandby"
+                      v-model="res.formStandby"
+                      type="text"
+                      class="dfinput"
+                    />
+                  </el-col>
+                  
+                </el-row>
+                <el-row>
+                  <el-col :span="6"> <label>关键词</label></el-col>
+                  <el-col :span="16">
+                    <el-input
+                      size="small"
+                      name="keyWord"
+                      v-model="res.keyWord"
+                      type="text"
+                      class="dfinput"
+                      placeholder="请最多输入五个关键词，以 ；隔开"
+                    />
+                  </el-col>
+                </el-row>
                 <li>
                   <el-row>
-                    <el-col :span="12" :offset="10">
+                    <el-col :span="14"/>
+                    <el-col :span="8">
                       <el-button size="mini" type="primary" @click="test">测试</el-button>
                       <el-button size="mini" type="primary" @click="save">保存</el-button>
                       <el-button size="mini" type="primary" @click="saveAs">另存</el-button>
@@ -172,22 +281,43 @@
                 </li>
               </div>
               <div class="right">
-                <li class="smiltextinput">
-                  <label>标题：</label>
-                  <el-input type="text" v-model="testData.title" />
-                </li>
-                <li class="smiltextinput">
-                  <label>发布时间：</label>
-                  <el-input type="text" v-model="testData.creatTime" />
-                </li>
-                <li class="smiltextinput">
-                  <label>来源：</label>
-                  <el-input type="text" v-model="testData.form" />
-                </li>
-                <li class="topaside">
-                  <label>正文：</label>
-                  <el-input type="textarea" v-model="testData.content" class="bigtextarea" />
-                </li>
+                <el-row>
+                  <el-col :span="6">
+                    <label>标题：</label>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-input size="small" type="text" v-model="testData.title" />
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6">
+                    <label>发布时间：</label>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-input size="small" type="text" v-model="testData.creatTime" />
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6">
+                    <label>来源：</label>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-input size="small" type="text" v-model="testData.form" />
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6">
+                    <label>正文：</label>
+                  </el-col>
+                  <el-col :span="16">
+                    <el-input
+                      size="small"
+                      type="textarea"
+                      v-model="testData.content"
+                      class="bigtextarea"
+                    />
+                  </el-col>
+                </el-row>
               </div>
             </ul>
           </el-row>
@@ -195,7 +325,8 @@
             <el-row>
               <el-col :span="24" style="marginTop:20px;">
                 <h4>
-                  已有规则列表：
+                  <label for>已有规则列表：</label>
+
                   <el-button size="mini" type="primary" @click="handleStart">开启爬虫</el-button>
                   <el-button size="mini" type="primary" @click="handleClear">清除库存</el-button>
                   <el-button size="mini" type="primary" @click="handleSave">上传文档</el-button>
@@ -232,7 +363,8 @@ import {
   saveRequest,
   startBee,
   clearStore,
-  saveCms
+  saveCms,
+  getRuleById
 } from "@/api/cms/beeClect.js";
 export default {
   name: "Form",
@@ -289,60 +421,12 @@ export default {
     };
   },
   watch: {
-    /**
-     *选择栏目
-     **/
-
     selectCloum() {
-      var _this = this;
-      this.ruleContent = [];
-      this.res = {
-        id: "",
-        clumnId: "",
-        newsListUrl: "",
-        newsListUrlRule: "",
-        newsListTitle: "",
-        titleUrl: "",
-        newsListRule: "",
-        newsRule: "",
-        titleRule: "",
-        contentRule: "",
-        creatTime: "",
-        formRule: "",
-        encoding: "",
-        formStandby: "",
-        keyWord: ""
-      };
-      this.testData = {};
-      this.selectCloumName = "";
       for (let i = 0; i < this.content.length; i++) {
-        if (_this.content[i].channelId == _this.selectCloum) {
-          _this.selectCloumName = _this.content[i].channelName;
+        if (this.content[i].channelId == this.selectCloum) {
+          this.selectCloumName = this.content[i].channelName;
         }
       }
-      this.getRule();
-    },
-    /**
-     *选择规则
-     **/
-
-    selectRule() {
-      this.res = {};
-      var _this = this;
-      return new Promise((resolve, reject) => {
-        getRuler({ ruleid: _this.selectRule })
-          .then(response => {
-            if (response.data.status == "success") {
-              _this.res = response.data.data;
-            } else {
-              _this.res = _this.saveRes;
-            }
-            resolve();
-          })
-          .catch(err => {
-            reject(err);
-          });
-      });
     }
   },
   created() {
@@ -351,7 +435,6 @@ export default {
     this.getFullRule();
     this.getColumnList();
   },
-
   methods: {
     initInfo() {
       let userInfo = JSON.parse(localStorage.getItem("BaseInfor"));
@@ -375,8 +458,55 @@ export default {
       });
     },
 
-    /** 选择栏目
-     */
+    handleCloum() {
+      /**
+       *选择栏目
+       **/
+
+      this.ruleContent = [];
+      this.res = {
+        id: "",
+        clumnId: "",
+        newsListUrl: "",
+        newsListUrlRule: "",
+        newsListTitle: "",
+        titleUrl: "",
+        newsListRule: "",
+        newsRule: "",
+        titleRule: "",
+        contentRule: "",
+        creatTime: "",
+        formRule: "",
+        encoding: "",
+        formStandby: "",
+        keyWord: ""
+      };
+      this.testData = {};
+
+      this.getRule();
+    },
+    //选择规则
+    handleRule() {
+      /**
+       *选择规则
+       **/
+      this.res = {};
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        getRuler({ ruleid: _this.selectRule })
+          .then(response => {
+            if (response.data.status == "success") {
+              _this.res = response.data.data;
+            } else {
+              _this.res = _this.saveRes;
+            }
+            resolve();
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
 
     getRule() {
       var _this = this;
@@ -386,23 +516,6 @@ export default {
           .then(response => {
             if (response.data.status == "success") {
               _this.ruleContent = response.data.data;
-              this.res = {
-                clumnId: _this.selectCloum,
-                id: "",
-                newsListUrl: "",
-                newsListUrlRule: "",
-                newsListTitle: "",
-                titleUrl: "",
-                newsListRule: "",
-                newsRule: "",
-                titleRule: "",
-                contentRule: "",
-                creatTime: "",
-                formRule: "",
-                encoding: "",
-                formStandby: "",
-                keyWord: ""
-              };
             } else {
               if (_this.selectCloum == "") {
                 _this.res = _this.saveRes;
@@ -427,6 +540,7 @@ export default {
                 this.$message.error(response.data.data);
               }
             }
+            resolve();
           })
           .catch(err => {
             reject(err);
@@ -548,13 +662,13 @@ export default {
                 _this.testData = response.data.data;
               } else {
                 _this.loading = false;
-                // alert("请求失败");
+                _this.$message.error(response.data.data);
               }
               resolve();
             })
-            .catch(reject => {
+            .catch(err => {
               _this.loading = false;
-              // alert(reject);
+              reject(err);
             });
         });
       }
@@ -664,6 +778,22 @@ export default {
       this.saveRes = this.res;
       this.selectCloum = "";
       this.selectRule = "";
+      this.ruleContent = "";
+      this.getRuleInfo(this.res.id);
+    },
+    //根据已有规则获取全部信息
+    getRuleInfo(clumnId) {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        getRuleById(clumnId).then(res => {
+          console.log(res.data, "aaaaa");
+          if (res.data.status == "success") {
+            //对规则赋值回显
+            _this.selectCloum = res.data.data.clumnId;
+            _this.getRule().then((_this.selectRule = res.data.data.id));
+          }
+        });
+      });
     },
 
     // 开启爬虫
@@ -760,32 +890,22 @@ export default {
 }
 .right {
   float: left;
-  width: 530px;
+  width: 550px;
 }
 label {
-  display: inline-block;
-  width: 125px;
-  height: 34px;
   font-size: 14px;
-}
-.dfinput {
-  width: 347px;
-  height: 34px;
-  margin: 8px 0;
-  font-size: 14px;
+  color: #909399;
+  font-weight: 700;
 }
 .cloumoption {
   text-indent: 1em;
 }
 
 /deep/.el-textarea__inner {
-  width: 526px;
+  width: 100%;
   min-height: 400px !important;
 }
-.topaside {
-  margin-top: 5px;
-  overflow: hidden;
-}
+
 .el-col {
   border-radius: 4px;
   margin-bottom: 5px;
