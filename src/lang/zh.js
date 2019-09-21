@@ -102,6 +102,7 @@ export default {
     ArticleStatisticsByAuthor:'作者发稿量统计',
     ArticleClickStaticByTenantId:'文章点击量统计',
     writerStaticDetail:'作者文章点击量',
+    dxDocument:'大象发稿统计',
     systemStatus: '系统状态',
     logs: '日志',
     backTask: '后台任务',
