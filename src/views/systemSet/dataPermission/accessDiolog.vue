@@ -18,11 +18,8 @@
   </div>
 </template>
 <script>
-import {
-  setDataAccess,
-  getDataAccess,
-  setDataAccessMutip
-} from "@/api/cms/dataAccess";
+// import { setDataAccess, getDataAccess,setDataAccessMutip } from '@/api/cms/dataAccess'
+import { setDataAccess, getDataAccess } from "@/api/cms/dataPermission";
 export default {
   props: {
     dialogVisible: {
@@ -75,9 +72,14 @@ export default {
       return new Promise((resolve, reject) => {
         getDataAccess(userId)
           .then(response => {
-            this.defaultCheck = response.data.result.channelIdList
-              ? response.data.result.channelIdList
-              : [];
+            if (response.data.result) {
+              this.defaultCheck = response.data.result.map(ele => {
+                return ele.value;
+              });
+              console.log(this.defaultCheck, "this.defaultCheck");
+            } else {
+              this.defaultCheck = [];
+            }
             resolve();
           })
           .catch(error => {
@@ -103,10 +105,11 @@ export default {
       }
     },
     singleHandel() {
+      console.log(this.$refs.tree.getCheckedNodes());
       let params = {
         userId: this.userInfor.userId,
-        channelIdList: this.$refs.tree.getCheckedNodes().map(ele => {
-          return ele.channelId;
+        userAttributeDetails: this.$refs.tree.getCheckedNodes().map(ele => {
+          return ele.value;
         })
       };
       return new Promise((resolve, reject) => {
@@ -115,7 +118,6 @@ export default {
             this.$message.success("操作成功");
             this.$emit("update:dialogVisible", false);
             this.$emit("handelSuccess");
-            this.$store.dispatch("GetColumnAll");
             resolve();
           })
           .catch(error => {
@@ -136,7 +138,6 @@ export default {
             this.$message.success("操作成功");
             this.$emit("update:dialogVisible", false);
             this.$emit("handelSuccess");
-            this.$store.dispatch("GetColumnAll");
             resolve();
           })
           .catch(error => {

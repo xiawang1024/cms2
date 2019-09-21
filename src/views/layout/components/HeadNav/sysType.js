@@ -1,5 +1,4 @@
-const sysType = [
-  {
+const sysType = [{
     type: 'cms',
     value: 'CMS'
   },
@@ -22,6 +21,10 @@ const sysType = [
   {
     type: 'live',
     value: '流媒体'
+  },
+  {
+    type: 'systemSet',
+    value: '系统设置 '
   }
 ]
 // {

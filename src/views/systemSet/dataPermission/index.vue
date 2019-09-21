@@ -1,22 +1,16 @@
 <template>
-  <div class="permissionGroup-container">
+  <div class="data-permission">
     <div class="v-search-header">
       <v-search :search-settings="searchSettings" @search="search" />
     </div>
-    <div class="top-bar">
+    <!-- <div class="top-bar">
       <el-button
         type="primary"
         size="mini"
         :disabled="!multipleSelection.length"
         @click="togetherHandel('column')"
-      >批量栏目权限</el-button>
-      <el-button
-        type="success"
-        size="mini"
-        :disabled="!multipleSelection.length"
-        @click="togetherHandel('source')"
-      >批量来源权限</el-button>
-    </div>
+      >批量权限设置</el-button>
+    </div>-->
     <el-table
       :data="tableData"
       style="width: 100%"
@@ -24,7 +18,7 @@
       ref="multipleTable"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" />
+      <!-- <el-table-column type="selection" width="55" /> -->
       <el-table-column prop="userCode" label="用户编码" />
       <el-table-column prop="userName" label="用户名" />
       <el-table-column prop="enableFlag" label="用户状态">
@@ -33,10 +27,10 @@
           <span v-else>禁用</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="220">
+      <el-table-column label="操作" width="100">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleAlter(scope.row)">栏目权限</el-button>
-          <el-button size="mini" type="success" @click="handleSource(scope.row)">来源权限</el-button>
+          <el-button size="mini" type="primary" @click="handleAlter(scope.row)">权限设置</el-button>
+          <!-- <el-button size="mini" type="success" @click="handleSource(scope.row)">来源权限</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -48,36 +42,25 @@
       :multiple-selection="multipleSelection"
       @handelSuccess="handelSuccess"
     />
-    <source-dialog
-      :dialog-visible.sync="showSource"
-      :tree-data="sourceData"
-      :user-infor="userInfor"
-      :multiple-selection="multipleSelection"
-      @handelSuccess="handelSuccess"
-    />
   </div>
 </template>
 <script>
 import accessDialog from "./accessDiolog";
-import sourceDialog from "./sourceDialog";
 import { UserList } from "@/api/user/user";
-import { columnListAny } from "@/api/cms/columnManage";
+import { getDataPermission } from "@/api/cms/dataPermission";
 import Pagination from "@/common/Pagination";
 import mixins from "@/components/cms/mixins";
-import { fetchDictAllByDictName } from "@/api/cms/dict";
 export default {
   name: "PermissionGroup",
   components: {
     accessDialog,
-    Pagination,
-    sourceDialog
+    Pagination
   },
   mixins: [mixins],
   data() {
     return {
       tableData: [],
       showAccess: false,
-      showSource: false,
       page: 1,
       pageSize: 10,
       searchSettings: [
@@ -95,15 +78,13 @@ export default {
       total: 0,
       treeData: [],
       userInfor: {},
-      sourceData: [],
       //多选
       multipleSelection: []
     };
   },
   mounted() {
     this.getUserList();
-    this.columnSearchList();
-    this.fetchDict();
+    this.getPermissionList();
   },
   methods: {
     // 批量处理
@@ -111,7 +92,7 @@ export default {
       if (type == "column") {
         this.handleAlter({});
       } else {
-        this.handleSource({});
+        // this.handleSource({});
       }
     },
     handleSelectionChange(val) {
@@ -133,58 +114,12 @@ export default {
       this.page = 1;
       this.getUserList();
     },
-    handleAdd() {
-      this.$router.push({
-        path: "/personAndAuthor/permissionGroupEdit",
-        query: {
-          isAdd: true
-        }
-      });
-    },
     change(row) {
       console.log(row.id);
-    },
-    handleSource(row) {
-      this.showSource = true;
-      this.userInfor = row;
     },
     handleAlter(row) {
       this.showAccess = true;
       this.userInfor = row;
-    },
-    handleDelete(index, row) {},
-    // 获取文稿来源
-    fetchDict() {
-      return new Promise((resolve, reject) => {
-        fetchDictAllByDictName("文稿来源")
-          .then(response => {
-            // dictObj = response.data.result;
-            // if (!_this.dictObj.details) {
-            //   _this.dictObj.details = []
-            // }
-            // this.treeData  = [
-            //   {
-            //     id: 1,
-            //     label: '一级 1',
-            //   }
-            // ]
-            if (
-              response.data.result.details &&
-              response.data.result.details.length
-            ) {
-              this.sourceData = response.data.result.details.map(ele => {
-                return {
-                  id: ele.dictDetailId,
-                  label: ele.dictDetailName
-                };
-              });
-            }
-            resolve();
-          })
-          .catch(error => {
-            reject(error);
-          });
-      });
     },
     getUserList() {
       return new Promise((resolve, reject) => {
@@ -201,15 +136,19 @@ export default {
           });
       });
     },
-    columnSearchList() {
+    getPermissionList() {
       return new Promise((resolve, reject) => {
-        columnListAny({}, 1, 1000)
+        getDataPermission()
           .then(response => {
             // this.$nextTick(() => {
             //   // _this.searchSettings[0].options = _this.toTree(response.data.result.content)
             // })
-            this.treeData = this.toTree(response.data.result.content);
-            console.log(this.treeData, " this.treeData ");
+            // this.treeData = this.toTree(response.data.result.content);
+            response.data.result.forEach(ele => {
+              ele.label = ele.display;
+              ele.id = ele.value;
+            });
+            this.treeData = response.data.result;
             resolve();
           })
           .catch(error => {
@@ -222,7 +161,7 @@ export default {
 </script>
 
 <style lang="scss">
-.permissionGroup-container {
+.data-permission {
   .top-bar {
     margin-top: 10px;
   }

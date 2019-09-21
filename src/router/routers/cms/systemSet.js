@@ -1,5 +1,7 @@
 import Layout from '@/views/layout/Layout'
-import { cmsPath } from '../config'
+import {
+  cmsPath
+} from '../config'
 const path = `views/${cmsPath}/system-set`
 // TODO:左侧菜单 系统设置
 const systemSet = {
@@ -11,8 +13,7 @@ const systemSet = {
     icon: 'systemSet',
     role: 'cms:systemset'
   },
-  children: [
-    {
+  children: [{
       /**
        * 站点设置
        */
@@ -32,7 +33,11 @@ const systemSet = {
       path: 'docSource',
       component: () => import(`@/${path}/docSource`),
       name: 'DocSource',
-      meta: { title: 'docSource', icon: 'docSource', role: 'cms:docSource' }
+      meta: {
+        title: 'docSource',
+        icon: 'docSource',
+        role: 'cms:docSource'
+      }
     },
     {
       /**
@@ -41,7 +46,11 @@ const systemSet = {
       path: 'sourceClass',
       component: () => import(`@/${path}/sourceClass`),
       name: 'SourceClass',
-      meta: { title: 'sourceClass', icon: 'docSource', role: 'cms' }
+      meta: {
+        title: 'sourceClass',
+        icon: 'docSource',
+        role: 'cms'
+      }
     },
     {
       /**
@@ -50,7 +59,11 @@ const systemSet = {
       path: 'platformSet',
       component: () => import(`@/${path}/platformSet`),
       name: 'platformSet',
-      meta: { title: 'platformSet', icon: 'platformSet', role: 'cms:platformSet' }
+      meta: {
+        title: 'platformSet',
+        icon: 'platformSet',
+        role: 'cms:platformSet'
+      }
     },
     {
       /**
@@ -59,7 +72,11 @@ const systemSet = {
       path: 'columnTypeSet',
       component: () => import(`@/${path}/columnTypeSet`),
       name: 'columnTypeSet',
-      meta: { title: 'columnTypeSet', icon: 'docSource', role: 'cms:columnTypeSet' }
+      meta: {
+        title: 'columnTypeSet',
+        icon: 'docSource',
+        role: 'cms:columnTypeSet'
+      }
     },
     {
       /**
@@ -68,7 +85,11 @@ const systemSet = {
       path: 'temManager',
       component: () => import(`@/${path}/temManager`),
       name: 'temManager',
-      meta: { title: 'temManager', icon: 'temManager', role: 'cms:template' }
+      meta: {
+        title: 'temManager',
+        icon: 'temManager',
+        role: 'cms:template'
+      }
     },
     {
       /**
@@ -77,7 +98,11 @@ const systemSet = {
       path: 'temEdit',
       component: () => import(`@/${path}/temEdit`),
       name: 'temEdit',
-      meta: { title: 'temEdit', icon: 'temEdit', role: 'cms' },
+      meta: {
+        title: 'temEdit',
+        icon: 'temEdit',
+        role: 'cms'
+      },
       hidden: true
     },
     {
@@ -87,7 +112,11 @@ const systemSet = {
       path: 'sourceManage',
       component: () => import(`@/${path}/sourceManage`),
       name: 'sourceManage',
-      meta: { title: 'sourceManage', icon: 'sourceManage', role: 'cms:sourceManage' }
+      meta: {
+        title: 'sourceManage',
+        icon: 'sourceManage',
+        role: 'cms:sourceManage'
+      }
     },
     {
       /**
@@ -96,7 +125,11 @@ const systemSet = {
       path: 'comComponent',
       component: () => import(`@/${path}/comComponent`),
       name: 'comComponent',
-      meta: { title: 'comComponent', icon: 'comComponent', role: 'cms:component' }
+      meta: {
+        title: 'comComponent',
+        icon: 'comComponent',
+        role: 'cms:component'
+      }
     },
     {
       /**
@@ -105,7 +138,11 @@ const systemSet = {
       path: 'componentEdit',
       component: () => import(`@/${path}/componentEdit`),
       name: 'componentEdit',
-      meta: { title: 'componentEdit', icon: 'componentEdit', role: 'cms' },
+      meta: {
+        title: 'componentEdit',
+        icon: 'componentEdit',
+        role: 'cms'
+      },
       hidden: true
     },
     // {
@@ -124,7 +161,11 @@ const systemSet = {
       path: 'helpDocEdit',
       component: () => import(`@/${path}/helpDocEdit`),
       name: 'helpDocEdit',
-      meta: { title: 'helpDocEdit', icon: 'helpDocEdit', role: 'cms' },
+      meta: {
+        title: 'helpDocEdit',
+        icon: 'helpDocEdit',
+        role: 'cms'
+      },
       hidden: true
     },
     {
@@ -134,7 +175,11 @@ const systemSet = {
       path: 'collection',
       component: () => import(`@/${path}/form`),
       name: 'collection',
-      meta: { title: 'collection', icon: 'bee', role: 'cms:bee' },
+      meta: {
+        title: 'collection',
+        icon: 'bee',
+        role: 'cms:bee'
+      },
     },
     {
       /**
@@ -143,8 +188,12 @@ const systemSet = {
       path: 'KvGroupController',
       component: () => import(`@/${path}/KvGroupController`),
       name: 'KvGroupController',
-      meta: { title: 'KvGroupController', icon: 'kvGroup', role: 'cms:KvGroupController' },
-      
+      meta: {
+        title: 'KvGroupController',
+        icon: 'kvGroup',
+        role: 'cms:KvGroupController'
+      },
+
     },
     {
       /**
@@ -153,7 +202,11 @@ const systemSet = {
       path: 'Kvdetail',
       component: () => import(`@/${path}/Kvdetail`),
       name: 'Kvdetail',
-      meta: { title: 'Kvdetail', icon: 'kvGroup', role: 'cms' },
+      meta: {
+        title: 'Kvdetail',
+        icon: 'kvGroup',
+        role: 'cms'
+      },
       hidden: true
     },
     {
@@ -163,8 +216,12 @@ const systemSet = {
       path: 'appConfig',
       component: () => import(`@/${path}/appConfig`),
       name: 'appConfig',
-      meta: { title: 'appConfig', icon: 'appConfig', role: 'cms' },
-      
+      meta: {
+        title: 'appConfig',
+        icon: 'appConfig',
+        role: 'cms'
+      },
+
     },
     {
       /**
@@ -173,11 +230,15 @@ const systemSet = {
       path: 'appTabList',
       component: () => import(`@/${path}/appTabList`),
       name: 'appTabList',
-      meta: { title: 'appTabList', icon: 'appConfig', role: 'cms' },
-      hidden:true
-      
+      meta: {
+        title: 'appTabList',
+        icon: 'appConfig',
+        role: 'cms'
+      },
+      hidden: true
+
     },
-    
+
     {
       /**
        * app顶部列表
@@ -185,9 +246,13 @@ const systemSet = {
       path: 'appTopList',
       component: () => import(`@/${path}/appTopList`),
       name: 'appTopList',
-      meta: { title: 'appTopList', icon: 'appConfig', role: 'cms' },
-      hidden:true
-      
+      meta: {
+        title: 'appTopList',
+        icon: 'appConfig',
+        role: 'cms'
+      },
+      hidden: true
+
     },
     {
       /**
@@ -196,12 +261,14 @@ const systemSet = {
       path: 'appPages',
       component: () => import(`@/${path}/appPages`),
       name: 'appPages',
-      meta: { title: 'appPages', icon: 'appConfig', role: 'cms' },
-      hidden:true
-      
-    },
-    
-    
+      meta: {
+        title: 'appPages',
+        icon: 'appConfig',
+        role: 'cms'
+      },
+      hidden: true
+
+    }
   ]
 }
 
