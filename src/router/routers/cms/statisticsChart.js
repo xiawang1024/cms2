@@ -94,8 +94,8 @@ const statisticsChart = {
         path: 'dxDocument',
         component: () => import(`@/${path}/dxDocument`),
         name: 'dxDocument',
-        // meta: { title: 'dxDocument', icon: '32-elephant', role: 'cms:dxDocumentStatistics' },
-        meta: { title: 'dxDocument', icon: '32-elephant', role: 'cms', }
+        meta: { title: 'dxDocument', icon: '32-elephant', role: 'cms:dxDocumentStatistics' },
+        // meta: { title: 'dxDocument', icon: '32-elephant', role: 'cms', }
        
       },
       

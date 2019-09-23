@@ -36,7 +36,7 @@ export default {
           name: "columnId",
           type: "cascader",
           visible: "true",
-          value:'1122394277494788096', //默认大象号ID  1122394277494788096
+          value:['1122394277494788096'], //默认大象号ID  1122394277494788096
           changeOnSelect: true,
           options: []
         },
@@ -90,17 +90,29 @@ export default {
     this.searchSettings[0].options = this.columnAll.length
       ? this.columnAll
       : store.get("columnsAll");
-    console.log(store, "store");
-   this.searchItem({quckTime:7});
+
+   this.searchItem({quckTime:7,columnId:this.searchSettings[0].value});
 
   },
   methods: {
     searchItem(val) {
+
+
+      //拦截重复时间
+      if(val.quckTime&&val.beginTime||val.quckTime&&val.endTime){
+           this.$message.error("请正确选择时间区间");
+       return false;
+      }
+      if(val.columnId[0]==undefined){
+           this.$message.error("请选择栏目");
+        return false;
+      }
       this.timeDeail(val);
       console.log(this.beginTime, this.endTime,val, "time");
-      this.initTableList(val.columnId?val.columnId.reverse()[0]:null)
+      this.initTableList(val.columnId.reverse()[0])
     },
     timeDeail(val) {
+      
       if (val.quckTime) {
         //快捷
         this.endTime = dayjs().format("YYYY-MM-DD HH:mm:ss");
@@ -133,7 +145,7 @@ export default {
       let data = {
         beginTime: this.beginTime,
         endTime: this.endTime,
-        channelId:val||'1161447048013287424'
+        channelId:val
       };
       return new Promise((resolve, reject) => {
         getdxDocumentStatistics(data)
