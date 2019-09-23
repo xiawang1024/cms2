@@ -12,18 +12,18 @@
     </div>
 
     <el-table :data="tableData" style="width: 100%" stripe>
-      <el-table-column label="大象号" prop="title" />
-      <el-table-column label="ID序号" width="200" prop="actualClickNumInt" />
-      <el-table-column label="标题" width="200" prop="templateClickNumInt" />
-      <el-table-column label="类型" width="250" prop="createDate" />
-      <el-table-column label="发布时间" width="250" prop="createDate" />
-      <el-table-column label="撰稿人" width="250" prop="createDate" />
-      <el-table-column label="点击" width="250" prop="createDate" />
+      <el-table-column label="来源" prop="origin" width="150" />
+      <el-table-column label="ID序号" width="200" prop="id" />
+      <el-table-column label="标题" prop="title" />
+      <el-table-column label="类型" width="80" prop="articleShowStyle" />
+      <el-table-column label="发布时间" width="200" prop="publishDate" />
+      <el-table-column label="撰稿人" width="100" prop="author" />
+      <el-table-column label="点击" width="200" prop="clickNumInt" />
     </el-table>
   </div>
 </template>
 <script>
-// import { getdxDocumentStatistics } from "@/api/cms/liveCharts";
+import { getdxDocumentStatistics } from "@/api/cms/liveCharts";
 import dayjs from "dayjs";
 import store from "store";
 import { mapGetters } from "vuex";
@@ -36,6 +36,7 @@ export default {
           name: "columnId",
           type: "cascader",
           visible: "true",
+          value:'1122394277494788096', //默认大象号ID  1122394277494788096
           changeOnSelect: true,
           options: []
         },
@@ -44,6 +45,7 @@ export default {
           name: "quckTime",
           type: "select",
           visible: true,
+          value:'7',
           options: [
             { label: "7天", value: "7" },
             {
@@ -82,17 +84,21 @@ export default {
       this.searchSettings[0].options = val;
     }
   },
-  created() {},
+  created() {
+  },
   mounted() {
     this.searchSettings[0].options = this.columnAll.length
       ? this.columnAll
       : store.get("columnsAll");
     console.log(store, "store");
+   this.searchItem({quckTime:7});
+
   },
   methods: {
     searchItem(val) {
       this.timeDeail(val);
-      console.log(this.beginTime, this.endTime, "time");
+      console.log(this.beginTime, this.endTime,val, "time");
+      this.initTableList(val.columnId?val.columnId.reverse()[0]:null)
     },
     timeDeail(val) {
       if (val.quckTime) {
@@ -123,10 +129,11 @@ export default {
     },
 
     //查询请求
-    initTableList() {
+    initTableList(val) {
       let data = {
         beginTime: this.beginTime,
-        endTime: this.endTime
+        endTime: this.endTime,
+        channelId:val||'1161447048013287424'
       };
       return new Promise((resolve, reject) => {
         getdxDocumentStatistics(data)
@@ -148,7 +155,7 @@ export default {
     handleDownload() {
       import("@/vendor/Export2Excel").then(excel => {
         const tHeader = [
-          "大象号",
+          "来源",
           "ID序号",
           "标题",
           "类型",
@@ -157,11 +164,13 @@ export default {
           "点击"
         ];
         const filterVal = [
-          "writer",
+          "origin",
+          "id",
           "title",
-          "actualClickNumInt",
-          "templateClickNumInt",
-          "createDate"
+          "articleShowStyle",
+          "publishDate",
+          "author",
+          "clickNumInt"
         ];
         const list = this.tableData;
         const data = this.formatJson(filterVal, list);
