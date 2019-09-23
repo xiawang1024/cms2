@@ -128,3 +128,14 @@ export function distributeDelete(id){
   })
 }
 
+//中断拉转直播
+export function interruptRelay(id) {
+  return request({
+    url: Cpath + `/relaystream/interruptRelay?id=${id}`,
+    method: "get",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+

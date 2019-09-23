@@ -56,6 +56,11 @@
           <span v-else class="colorSuccess">{{ scope.row.relayType }}</span>
         </template>
       </el-table-column>
+      <el-table-column>
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="handleBreak(scope.$index,scope.row)">中断</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <!-- 分页 -->
     <el-pagination
@@ -76,12 +81,12 @@
 <script>
 import {
   childrenStreamAdressfile,
-  rebroadcastList
+  rebroadcastList,
+  interruptRelay
 } from "@/api/live/steamAdressManage.js";
 import addRebroadcast from "@/views/live/liveConfig/addRebroadcast.vue";
 export default {
   components: { addRebroadcast },
-
   data() {
     //  var pictureControl = (rule, value, callback) => {
     //    var _this=this;
@@ -215,6 +220,38 @@ export default {
       this.dialogFormVisible = false;
       console.log(this.dialogFormVisible,'dialogFormVisible')
 
+    },
+    handleBreak(index,row){
+      console.log(row.id);
+      var _this=this;
+       this.$confirm("此操作将中断拉转直播, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+         new Promise((resolve,reject)=>{
+        interruptRelay(row.id)
+        .then(res=>{
+          if(res.data.code==0){
+            _this.$message.success(res.data.msg)
+          }else{
+            _this.$message.error(res.data.msg)
+          }
+        })
+        .catch(err=>{
+          reject(err)
+        })
+      })
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+      
+     
     }
   }
 };
