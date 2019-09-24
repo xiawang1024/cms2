@@ -57,7 +57,7 @@ export default {
         {
           label: "开始时间",
           name: "beginTime",
-          visible: false,
+          visible: true,
           options: [],
           type: "date",
           changeOnSelect: true
@@ -65,7 +65,7 @@ export default {
         {
           label: "结束时间",
           name: "endTime",
-          visible: false,
+          visible: true,
           options: [],
           type: "date",
           changeOnSelect: true
