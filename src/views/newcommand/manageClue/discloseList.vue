@@ -49,14 +49,14 @@
       >添加爆料</el-button>
       <el-button
         type="primary"
-        v-if="checkAuth('newcommond:baoliao:add')"
+        v-if="checkAuth('newcommond:baoliao:public')"
         @click="handleSeparate(1)"
         size="mini"
         :disabled="!multipleSelection.length>0"
       >批量公开</el-button>
       <el-button
         type="primary"
-        v-if="checkAuth('newcommond:baoliao:add')"
+        v-if="checkAuth('newcommond:baoliao:public')"
         @click="handleSeparate(0)"
         size="mini"
         :disabled="!multipleSelection.length>0"

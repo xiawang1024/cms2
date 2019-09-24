@@ -11,7 +11,7 @@ const dxClue = {
   meta: {
     title: 'dxClue',
     icon: 'manageClue',
-    role: 'newsCommand:baoliao'
+    role: 'newsCommand:dxbaoliao'
   },
   name: 'dxClue',
   children: [{
@@ -24,7 +24,7 @@ const dxClue = {
       meta: {
         title: 'dxClueList',
         icon: 'discloseList',
-        role: 'newsCommand:baoliao'
+        role: 'newsCommand:dxbaoliao'
       }
     },
     {
