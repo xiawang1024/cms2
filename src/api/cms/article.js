@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 //新增
 //查询文章列表
-export function documentList(queryObj, pageNo, pageSize, sortBy='topFlag', order='desc,desc,desc') {
+export function documentList(queryObj, pageNo, pageSize, sortBy = 'topFlag', order = 'desc,desc,desc') {
   return request({
     url: '/cms/article/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + ',seqNo,createTime&order=' + order,
     method: 'post',
@@ -82,21 +82,31 @@ export function publishDocumentMore(data) {
   })
 }
 // 复制到
-export function copyTo(articleId,channelId) {
+export function copyTo(articleId, channelId) {
   return request({
     url: `/cms/article/copys/${articleId}/${channelId}`,
     method: 'get'
   })
 }
 // 移动到
-export function moveTo(articleId,channelId) {
+export function moveTo(articleId, channelId) {
   return request({
     url: `/cms/article/moves/${articleId}/${channelId}`,
     method: 'get'
   })
 }
+// 移动到唯一栏目
+export function moveToSingle(articleId, channelId) {
+  return request({
+    url: `/cms/article/changearticleforchannelid/${articleId}/${channelId}`,
+    method: 'put',
+    loadingConfig: {
+      target: '.el-dialog'
+    }
+  })
+}
 // 引用到
-export function quoteTo(articleId,channelId) {
+export function quoteTo(articleId, channelId) {
   return request({
     url: `/cms/article/refers/${articleId}/${channelId}`,
     method: 'get'
@@ -136,7 +146,9 @@ export function fetchArticle(id) {
   return request({
     url: '/article/detail',
     method: 'get',
-    params: { id }
+    params: {
+      id
+    }
   })
 }
 
@@ -144,7 +156,9 @@ export function fetchPv(pv) {
   return request({
     url: '/article/pv',
     method: 'get',
-    params: { pv }
+    params: {
+      pv
+    }
   })
 }
 
@@ -261,7 +275,7 @@ export function deleteImageList(data) {
   })
 }
 // 文章拖拽
-export function articalSort(data, pageNo, pageSize, sortBy='topFlag', order='desc,desc,desc') {
+export function articalSort(data, pageNo, pageSize, sortBy = 'topFlag', order = 'desc,desc,desc') {
   return request({
     url: '/cms/article/sortwithpageinfo?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + ',seqNo,createTime&order=' + order,
     method: 'post',

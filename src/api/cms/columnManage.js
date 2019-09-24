@@ -51,15 +51,26 @@ export function getRoot() {
   })
 }
 // 根据权限栏目获取
-export function columnList(queryObj, pageNo, pageSize, sortBy='channelLevel') {
+export function columnList(queryObj, pageNo, pageSize, sortBy = 'channelLevel') {
   return request({
     url: '/cms/channel/pagebyuserid?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + "&order=asc,desc",
     method: 'post',
     data: queryObj
   })
 }
+// 根据权限栏目获取
+export function columnListLoading(queryObj, pageNo, pageSize, sortBy = 'channelLevel') {
+  return request({
+    url: '/cms/channel/pagebyuserid?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + "&order=asc,desc",
+    method: 'post',
+    data: queryObj,
+    loadingConfig: {
+      target: '.el-dialog'
+    }
+  })
+}
 // 获取全部栏目
-export function columnListAll(queryObj, pageNo, pageSize, sortBy='channelLevel,seqNo') {
+export function columnListAll(queryObj, pageNo, pageSize, sortBy = 'channelLevel,seqNo') {
   return request({
     url: '/cms/channel/pagebyuserid?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + "&order=asc,desc",
     method: 'post',
@@ -70,7 +81,7 @@ export function columnListAll(queryObj, pageNo, pageSize, sortBy='channelLevel,s
   })
 }
 // 全部栏目获取(不分权限)
-export function columnListAny(queryObj, pageNo, pageSize, sortBy='channelLevel,seqNo,createTime') {
+export function columnListAny(queryObj, pageNo, pageSize, sortBy = 'channelLevel,seqNo,createTime') {
   return request({
     url: '/cms/channel/page?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + "&order=asc,desc,asc",
     method: 'post',
@@ -83,7 +94,7 @@ export function columnListAny(queryObj, pageNo, pageSize, sortBy='channelLevel,s
 // 扩展字段创建
 export function createExtendsWord(channelId, data) {
   return request({
-    url: '/cms/channel/extfield/' +  channelId,
+    url: '/cms/channel/extfield/' + channelId,
     method: 'post',
     data
   })
@@ -91,7 +102,7 @@ export function createExtendsWord(channelId, data) {
 // 扩展字段修改
 export function editExtendsWord(channelId, data) {
   return request({
-    url: '/cms/channel/extfield/' +  channelId,
+    url: '/cms/channel/extfield/' + channelId,
     method: 'put',
     data
   })
@@ -99,7 +110,7 @@ export function editExtendsWord(channelId, data) {
 // 扩展字段删除
 export function deleteExtendsWord(channelId, data) {
   return request({
-    url: '/cms/channel/extfield/' +  channelId,
+    url: '/cms/channel/extfield/' + channelId,
     method: 'delete',
     data
   })
@@ -111,4 +122,3 @@ export function isColumnRepet(channelCode) {
     method: 'get'
   })
 }
-
