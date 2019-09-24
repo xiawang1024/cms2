@@ -1,6 +1,5 @@
 <template>
   <div class="basicContent-wrap">
-    <!-- {{contextMenu}} -->
     <div class="tool-bars clearfix">
       <div v-if="contextMenu.articleType && contextMenu.articleType == 3" class="quote-tille">
         <span>文档类型： 引用</span>
@@ -53,7 +52,7 @@
       :doc-infor="docInfor"
       :reproduce-setting="reproduceSetting"
       :tag-list="tagList"
-      v-if="typeForm.articleType == 4"
+      v-if="typeForm.articleType == 4 && contextMenu.articleType !== 3"
     />
     <article-link
       ref="articleLink"
