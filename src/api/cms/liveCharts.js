@@ -198,11 +198,13 @@ export function articleTrend(channelId) {
       method: "post"
     });
   }
-   //以作者维度统计时间区间文章点击量（）
-  //  export function writerArticleStatisticsByTime(data) {
-  //   return request({
-  //     url:Cpath+`/cms/article/queryarticleclickbytenantidandwriterandtime?writer=${data.writer}&sortBy=actualClickNumInt`,
-  //     method: "post"
-  //   });
+   //频道发稿统计（大象）
+   export function getdxDocumentStatistics(data) {
+    return request({
+      url:Cpath+`/cms/article/queryarticleclickbytenantidandchannelidandtime?channelId=${data.channelId}&sortBy=actualClickNumInt&beginTime=${data.beginTime}&endTime=${data.endTime}`,
+      method: "post"
+    });
 
-  // }
+  }
+
+

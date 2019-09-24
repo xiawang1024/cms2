@@ -14,7 +14,7 @@
       <el-table-column label="标题" prop="title"/>
       <el-table-column label="文章点击量" width="200" prop="actualClickNumInt"/>
       <el-table-column label="分享点击量" width="200" prop="templateClickNumInt"/>
-      <el-table-column label="发稿时间" width="250" prop="createDate"/>
+      <el-table-column label="发布时间" width="250" prop="createDate"/>
     </el-table>
   </div>
 </template>
@@ -29,21 +29,21 @@ export default {
       beginTime: "",
       endTime: "",
       searchSettings: [
-        {
-          label: "时间区间",
-          name: "timeValue",
+         {
+          label: "开始时间",
+          name: "beginTime",
           visible: true,
           options: [],
-          type: "daterange",
+          type: "date",
           changeOnSelect: true,
-          return: {
-            // 日期范围返回值自定义
-            name: {
-              dateStart: "beginTime", // 开始日期字段名
-              dateEnd: "endTime" // 结束日期字段名
-            },
-            format: "YYYY-MM-DD HH:mm:ss" // 返回值格式，
-          }
+        },
+        {
+          label: "结束时间",
+          name: "endTime",
+          visible: true,
+          options: [],
+          type: "date",
+          changeOnSelect: true,
         }
       ]
     };
@@ -51,6 +51,10 @@ export default {
   created() {
     this.initUser();
     this.initTable();
+  },
+  mounted(){
+    this.searchSettings[0].value=this.beginTime;
+    this.searchSettings[1].value=this.endTime;
   },
   methods: {
     initUser() {
@@ -88,11 +92,24 @@ export default {
     },
     searchItem(searchData) {
       console.log(searchData, "searchData");
-      this.searchData = searchData;
-      if (this.searchData.beginTime && this.searchData.endTime) {
-        this.beginTime = this.searchData.beginTime;
-        this.endTime = this.searchData.endTime;
+     
+      if (searchData.beginTime && searchData.endTime) {
+
+        this.beginTime = dayjs(searchData.beginTime).format("YYYY-MM-DD HH:mm:ss");
+        this.endTime = dayjs(searchData.endTime).format("YYYY-MM-DD HH:mm:ss");
+        
+        if(this.beginTime>this.endTime){
+          let time1=this.beginTime;
+          this.beginTime=this.endTime;
+          this.endTime=time1;
+        }
+
         this.initTable();
+      }else if(searchData.beginTime==undefined){
+        this.$message.error('请选择起始时间')
+
+      }else if(searchData.endTime==undefined){
+        this.$message.error('请选择截止时间')
       }
     },
     handleExport() {
@@ -101,7 +118,7 @@ export default {
      handleDownload() {
     //   this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['writer', 'Title', 'actualClickNumInt', 'templateClickNumInt', 'createDate']
+        const tHeader = ['撰稿人', '标题', '文章点击量', '分享点击量', '发布时间']
         const filterVal = ['writer', 'title', 'actualClickNumInt', 'templateClickNumInt', 'createDate']
         const list = this.tableData
         const data = this.formatJson(filterVal, list)
