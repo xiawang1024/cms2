@@ -36,7 +36,8 @@ export default {
           name: "columnId",
           type: "cascader",
           visible: "true",
-          value:['1122394277494788096'], //默认大象号ID  1122394277494788096
+          value:["1161445440512724992",'1161447048013287424'],
+          // value:["1108265560111714304","1126019193184063488"], //默认大象号ID  "1161447048013287424"
           changeOnSelect: true,
           options: []
         },
@@ -108,8 +109,9 @@ export default {
         return false;
       }
       this.timeDeail(val);
-      console.log(this.beginTime, this.endTime,val, "time");
-      this.initTableList(val.columnId.reverse()[0])
+      let columnId=JSON.parse(JSON.stringify(val.columnId))
+      // console.log(this.beginTime, this.endTime,columnId, "time");
+      this.initTableList(columnId.reverse()[0])
     },
     timeDeail(val) {
       
