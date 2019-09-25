@@ -52,14 +52,14 @@
       <el-table-column prop="streamAddress" label="直播流地址" />
       <el-table-column prop="relayType" label="转播状态" >
         <template slot-scope="scope">
-          <span v-if="scope.row.relayType=='已结束'" class="colorDanger">{{ scope.row.relayType }}</span>
-          <span v-else class="colorSuccess">{{ scope.row.relayType }}</span>
+          <span v-if="scope.row.relayType==0" class="colorSuccess">转播中</span>
+          <span v-else >已结束</span>
         </template>
       </el-table-column>
       <el-table-column>
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleBreak(scope.$index,scope.row)" v-show="scope.row.relayType=='转播中'">中断</el-button>
-          <el-button type="danger" size="mini" @click="handleDelete(scope.$index,scope.row)" v-show="scope.row.relayType=='已结束'">删除</el-button>
+          <el-button type="primary" size="mini" @click="handleBreak(scope.$index,scope.row)" v-show="scope.row.relayType==0">中断</el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope.$index,scope.row)" v-show="scope.row.relayType==1">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
