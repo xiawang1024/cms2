@@ -1,5 +1,8 @@
 <template>
   <div class="helpdoc-container">
+    <div class="v-search-header">
+      <v-search :search-settings="searchSettings" @search="searchItem"/>
+    </div>
     <el-table
       :data="tableValue"
       :load="load"
@@ -120,6 +123,13 @@ export default {
       sharIframeContent: "",
       isCopy: "",
       defaultPath: require("@/assets/bgPicture/liveBg.png"),
+      username:'',
+       searchSettings: [{
+        label: '用户名',
+        name: 'username',
+        visible: true,
+        type: 'text'
+      }],
     };
   },
   created() {
@@ -127,13 +137,21 @@ export default {
   },
   mounted() {},
   methods: {
+    searchItem(val){
+      this.username=val.username;
+       this.pageNo=1,
+      this.pageSize=10,
+      this.totalCount=0,
+      this.requestTableValue();
+    },
     requestTableValue() {
       var _this = this;
       let data = {
         pageNo: this.pageNo,
         pageSize: this.pageSize,
         sortBy: this.sortBy,
-        order: this.order
+        order: this.order,
+        username:this.username
       };
       return new Promise((resolve, reject) => {
         managaStreamAddress(data)

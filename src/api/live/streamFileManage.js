@@ -8,7 +8,7 @@ export function streamfile(data) {
   return request({
     url:
       Cpath +
-      `/streamfile/page?pageNo=${data.pageNo}&pageSize=${data.pageSize}&sortBy=${data.sortBy}&order=${data.order}`,
+      `/streamfile/page?pageNo=${data.pageNo}&pageSize=${data.pageSize}&sortBy=${data.sortBy}&order=${data.order}&userName=${data.username}`,
     method: "post"
     // loadingConfig: {
     //   noLoading: true
@@ -49,4 +49,16 @@ export function deleteStreamFile(id) {
   });
 }
 
+//合并视频
 
+
+export function merge(data) {
+  return request({
+    url: Cpath + `/editvideo/merge?prentId=${data.parentId}&username=${data.username}`,
+    method: "post",
+    data:data.childIds,
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
