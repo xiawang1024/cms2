@@ -6,70 +6,74 @@
         <el-tab-pane label="视频转码" name="1" />
       </el-tabs>
     </template>
-    <el-table
-      :data="tableValue"
-      :load="load"
-      lazy
-      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-      row-key="id"
-    >
-      <el-table-column type="index" width="50" />
-      <el-table-column prop="appName" width="150" label="APP名称" />
-      <el-table-column prop="userName" width="120" label="用户名" />
-      <el-table-column prop="recordBeginTime" width="180" :formatter="formatStart" label="录制开始时间" />
-      <el-table-column prop="recordEngTime" width="180" :formatter="formatEnd" label="录制结束时间" />
-      <el-table-column prop="resolution" width="100" label="分辨率" />
-      <el-table-column prop="fileSize" width="120" label="文件大小" :formatter="formatSize" />
-      <el-table-column prop="fileType" width="120" label="编辑状态" >
-        <template slot-scope="scope">
-          <span v-if="scope.row.fileType==0" class="colorSuccess">成功</span>
-          <span v-if="scope.row.fileType==1" class="colorWarning" >编辑中...</span>
-          <span v-if="scope.row.fileType==2" class="colorDanger" >失败</span>
+    <video-transcode v-if="activeName=='1'"/> 
+    <div v-if="activeName=='0'">
+      <el-table
+        :data="tableValue"
+        :load="load"
+        lazy
+        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+        row-key="id"
+      >
+        <el-table-column type="index" width="50" />
+        <el-table-column prop="appName" width="150" label="APP名称" />
+        <el-table-column prop="userName" width="120" label="用户名" />
+        <el-table-column prop="recordBeginTime" width="180" :formatter="formatStart" label="录制开始时间" />
+        <el-table-column prop="recordEngTime" width="180" :formatter="formatEnd" label="录制结束时间" />
+        <el-table-column prop="resolution" width="100" label="分辨率" />
+        <el-table-column prop="fileSize" width="120" label="文件大小" :formatter="formatSize" />
+        <el-table-column prop="fileType" width="120" label="编辑状态" >
+          <template slot-scope="scope">
+            <span v-if="scope.row.fileType==0" class="colorSuccess">成功</span>
+            <span v-if="scope.row.fileType==1" class="colorWarning" >编辑中...</span>
+            <span v-if="scope.row.fileType==2" class="colorDanger" >失败</span>
 
-        </template>
-      </el-table-column>
-      <el-table-column prop="recordLength" width="80" label="录制时长" />
-      <el-table-column prop="filePath" label="文件路径" show-overflow-tooltip />
-      <el-table-column label="操作" width="180">
-        <template slot-scope="scope">
-          <el-button size="mini" type="primary" :disabled="scope.row.filePath==null||scope.row.filePath==''" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)"
-          >删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      class="pagenation"
-      :current-page="pageNo"
-      :page-sizes="[10,30,60,100]"
-      :page-size="pageSize"
-      :total="totalCount"
-      background
-      layout="total, sizes, prev, pager, next, jumper"
-      style="float: right"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
-    <el-dialog
-      title="视频剪辑"
-      :visible.sync="dialogVisible"
-      width="860px"
-      :before-close="moveCutContent"
-    >
-      <videoEdite
-        @cutResult="cutResult"
-        :video_url="video_url"
-        :audio_url="audio_url"
-        v-loading="loading"
-        element-loading-text="上传中..."
-        element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(255, 255, 255, 0.8)"
-        ref="videoCut"
+          </template>
+        </el-table-column>
+        <el-table-column prop="recordLength" width="80" label="录制时长" />
+        <el-table-column prop="filePath" label="文件路径" show-overflow-tooltip />
+        <el-table-column label="操作" width="180">
+          <template slot-scope="scope">
+            <el-button size="mini" type="primary" :disabled="scope.row.filePath==null||scope.row.filePath==''" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)"
+            >删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        class="pagenation"
+        :current-page="pageNo"
+        :page-sizes="[10,30,60,100]"
+        :page-size="pageSize"
+        :total="totalCount"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        style="float: right"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
       />
-    </el-dialog>
+      <el-dialog
+        title="视频剪辑"
+        :visible.sync="dialogVisible"
+        width="860px"
+        :before-close="moveCutContent"
+      >
+        <videoEdite
+          @cutResult="cutResult"
+          :video_url="video_url"
+          :audio_url="audio_url"
+          v-loading="loading"
+          element-loading-text="上传中..."
+          element-loading-spinner="el-icon-loading"
+          element-loading-background="rgba(255, 255, 255, 0.8)"
+          ref="videoCut"
+        />
+      </el-dialog>
+    </div>
+    
   </div>
 </template>
 <script>
@@ -80,9 +84,10 @@ import {
   deleteStreamFile
 } from "@/api/live/streamFileManage.js";
 import videoEdite from "@/components/videoCut/videoEdite.vue";
-  import simplifySecond from '@/utils/videoCut/simplifySecond'
+  import simplifySecond from '@/utils/videoCut/simplifySecond';
+  import videoTranscode from './videoTranscode'
 export default {
-  components: { videoEdite },
+  components: { videoEdite,videoTranscode },
   data() {
     return {
       tableValue: [],

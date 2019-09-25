@@ -4,7 +4,7 @@
   <div>
     <el-tabs v-model="activeName" class="formBox">
       <el-tab-pane label="抓取PC端信息规则" name="first">
-        <div class="formbody" >
+        <div class="formbody">
           <ul class="forminfo">
             <div class="left">
               <li>
@@ -46,7 +46,13 @@
                   列表页面URL
                   <span class="redTip">*</span>
                 </label>
-                <el-input name="newslisturl" :rules="[{required:true}]" v-model="res.newsListUrl" type="text" class="dfinput" />
+                <el-input
+                  name="newslisturl"
+                  :rules="[{required:true}]"
+                  v-model="res.newsListUrl"
+                  type="text"
+                  class="dfinput"
+                />
               </li>
               <li>
                 <label>
@@ -77,7 +83,7 @@
                   列表标题链接规则
                   <span class="redTip">*</span>
                 </label>
-                <el-input name="titleurl" v-model="res.titleUrl" type="text" class="dfinput"/>
+                <el-input name="titleurl" v-model="res.titleUrl" type="text" class="dfinput" />
               </li>
               <li>
                 <label>
@@ -96,47 +102,53 @@
                   详情页面规则
                   <span class="redTip">*</span>
                 </label>
-                <el-input name="newsrule" v-model="res.newsRule" type="text" class="dfinput"/>
+                <el-input name="newsrule" v-model="res.newsRule" type="text" class="dfinput" />
               </li>
               <li>
                 <label>
                   标题标签
                   <span class="redTip">*</span>
                 </label>
-                <el-input name="titlerule" v-model="res.titleRule" type="text" class="dfinput"/>
+                <el-input name="titlerule" v-model="res.titleRule" type="text" class="dfinput" />
               </li>
               <li>
                 <label>
                   正文标签
                   <span class="redTip">*</span>
                 </label>
-                <el-input name="contentrule" v-model="res.contentRule" type="text" class="dfinput"/>
+                <el-input name="contentrule" v-model="res.contentRule" type="text" class="dfinput" />
               </li>
               <li>
                 <label>
                   发布时间
                   <span class="redTip">*</span>
                 </label>
-                <el-input name="contentrule" v-model="res.creatTime" type="text" class="dfinput"/>
+                <el-input name="contentrule" v-model="res.creatTime" type="text" class="dfinput" />
               </li>
               <li>
                 <label>
                   编码
                   <span class="redTip">*</span>
                 </label>
-                <el-input name="Encoding" v-model="res.encoding" type="text" class="dfinput"/>
+                <el-input name="Encoding" v-model="res.encoding" type="text" class="dfinput" />
               </li>
               <li>
                 <label>来源标签</label>
-                <el-input name="formrule" v-model="res.formRule" type="text" class="dfinput"/>
+                <el-input name="formrule" v-model="res.formRule" type="text" class="dfinput" />
               </li>
               <li>
                 <label>备注来源</label>
-                <el-input name="formStandby" v-model="res.formStandby" type="text" class="dfinput"/>
+                <el-input name="formStandby" v-model="res.formStandby" type="text" class="dfinput" />
               </li>
               <li>
                 <label>关键词</label>
-                <el-input name="keyWord" v-model="res.keyWord" type="text" class="dfinput" placeholder="请最多输入五个关键词，以 ；隔开"/>
+                <el-input
+                  name="keyWord"
+                  v-model="res.keyWord"
+                  type="text"
+                  class="dfinput"
+                  placeholder="请最多输入五个关键词，以 ；隔开"
+                />
               </li>
               <li>
                 <label>&nbsp;</label>
@@ -158,24 +170,33 @@
             <div class="right">
               <li class="smiltextinput">
                 <label>标题：</label>
-                <el-input type="text" v-model="testData.title"/>
+                <el-input type="text" v-model="testData.title" />
               </li>
               <li class="smiltextinput">
                 <label>发布时间：</label>
-                <el-input type="text" v-model="testData.creatTime"/>
+                <el-input type="text" v-model="testData.creatTime" />
               </li>
               <li class="smiltextinput">
                 <label>来源：</label>
-                <el-input type="text" v-model="testData.form"/>
+                <el-input type="text" v-model="testData.form" />
               </li>
               <li class="topaside">
                 <label>正文：</label>
-                <el-input type="textarea" v-model="testData.content" class="bigtextarea"/>
+                <el-input type="textarea" v-model="testData.content" class="bigtextarea" />
               </li>
             </div>
           </ul>
           <ul class="bottom">
-            <h4>已有规则列表：</h4>
+            <el-row>
+              <el-col :span="24" style="marginTop:20px;">
+                <h4>
+                  已有规则列表：
+                  <el-button size="mini" type="primary" @click="handleStart">开启爬虫</el-button>
+                  <el-button size="mini" type="primary" @click="handleClear">清除库存</el-button>
+                  <el-button size="mini" type="primary" @click="handleSave">上传文档</el-button>
+                </h4>
+              </el-col>
+            </el-row>
             <el-row :gutter="20">
               <el-col v-for="(item,index) in fullRule" :span="6" :key="item.id">
                 <div
@@ -189,13 +210,13 @@
           </ul>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="抓取公众号信息规则" name="second" >
+      <el-tab-pane label="抓取公众号信息规则" name="second">
         <ul>
           <li>
             <label>微信号</label>
-            <el-input v-model="weChatId" type="text" class="dfinput"/>
+            <el-input v-model="weChatId" type="text" class="dfinput" />
           </li>
-          <li/>
+          <li />
           <li>
             <label>&nbsp;</label>
             <button type="submit" class="loginbtn" @click="wxtest">测试</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -203,19 +224,19 @@
           </li>
           <li>
             <label>微信认证</label>
-            <el-input v-model="wxData.wechatCertification" type="text" class="dfinput"/>
+            <el-input v-model="wxData.wechatCertification" type="text" class="dfinput" />
           </li>
           <li>
             <label>功能介绍</label>
-            <el-input v-model="wxData.wechatFeatures" type="text" class="dfinput"/>
+            <el-input v-model="wxData.wechatFeatures" type="text" class="dfinput" />
           </li>
           <li>
             <label>公众号名称</label>
-            <el-input v-model="wxData.wechatName" type="text" class="dfinput"/>
+            <el-input v-model="wxData.wechatName" type="text" class="dfinput" />
           </li>
           <li>
             <label>页面URL</label>
-            <el-input v-model="wxData.wechatUrl" type="text" class="dfinput"/>
+            <el-input v-model="wxData.wechatUrl" type="text" class="dfinput" />
           </li>
         </ul>
       </el-tab-pane>
@@ -228,11 +249,13 @@ import {
   getRuler,
   getCloumRule,
   getFullRuleSend,
-  // currentuser,
   testRequest,
   saveRequest,
   wxTestRequest,
-  wxSaveRequest
+  wxSaveRequest,
+  startBee,
+  clearStore,
+  saveCms
 } from "@/api/cms/beeClect.js";
 export default {
   name: "Form",
@@ -255,11 +278,11 @@ export default {
         newsRule: "",
         titleRule: "",
         contentRule: "",
-        creatTime:"",
+        creatTime: "",
         formRule: "",
         encoding: "",
         formStandby: "",
-        keyWord:''
+        keyWord: ""
       },
       testData: {},
       loading: false,
@@ -277,11 +300,11 @@ export default {
         newsRule: "",
         titleRule: "",
         contentRule: "",
-        creatTime:"",
+        creatTime: "",
         formRule: "",
         encoding: "",
         formStandby: "",
-        keyWord:''
+        keyWord: ""
       },
       activeName: "first",
       weChatId: "",
@@ -308,11 +331,11 @@ export default {
         newsRule: "",
         titleRule: "",
         contentRule: "",
-        creatTime:'',
+        creatTime: "",
         formRule: "",
         encoding: "",
         formStandby: "",
-        keyWord:''
+        keyWord: ""
       };
       this.testData = {};
       this.selectCloumName = "";
@@ -350,11 +373,9 @@ export default {
     }
   },
   created() {
-    this.initInfo()
+    this.initInfo();
     //获取全部已有规则
     this.getFullRule();
-    //获取当前用户信息
-    // this.getcurrentuser();
 
     //获取栏目列表信息
     var _this = this;
@@ -363,7 +384,7 @@ export default {
         .then(response => {
           _this.$nextTick(() => {
             _this.content = response.data.result.content;
-              console.log(_this.content,'所有栏目')
+            console.log(_this.content, "所有栏目");
           });
           resolve();
         })
@@ -374,29 +395,11 @@ export default {
   },
 
   methods: {
-    initInfo(){
-      let userInfo=JSON.parse(localStorage.getItem('BaseInfor'));
-      this.clientLicenseId=userInfo.clientLicenseId;
-      this.userName=userInfo.userName;
+    initInfo() {
+      let userInfo = JSON.parse(localStorage.getItem("BaseInfor"));
+      this.clientLicenseId = userInfo.clientLicenseId;
+      this.userName = userInfo.userName;
     },
-    /** 选择栏目
-     */
-
-    // getcurrentuser() {
-    //   var _this = this;
-    //   return new Promise((resolve, reject) => {
-    //     currentuser()
-    //       .then(response => {
-    //         // console.log(response)
-    //         _this.clientLicenseId = response.data.result.clientLicenseId;
-    //         _this.userName = response.data.result.userName;
-    //         resolve();
-    //       })
-    //       .catch(reject => {
-    //         console.log(reject);
-    //       });
-    //   });
-    // },
 
     /** 选择栏目
      */
@@ -420,11 +423,11 @@ export default {
                 newsRule: "",
                 titleRule: "",
                 contentRule: "",
-                creatTime:'',
+                creatTime: "",
                 formRule: "",
                 encoding: "",
                 formStandby: "",
-                keyWord:''
+                keyWord: ""
               };
             } else {
               if (_this.selectCloum == "") {
@@ -441,11 +444,11 @@ export default {
                   newsRule: "",
                   titleRule: "",
                   contentRule: "",
-                  creatTime:'',
+                  creatTime: "",
                   formRule: "",
                   encoding: "",
                   formStandby: "",
-                  keyWord:''
+                  keyWord: ""
                 };
                 alert(response.data.data);
               }
@@ -491,7 +494,7 @@ export default {
         alert("正文标签不能为空");
         return false;
       }
-      if ( this.res.creatTime == null||this.res.creatTime.toString() == "" ) {
+      if (this.res.creatTime == null || this.res.creatTime.toString() == "") {
         alert("发布时间不能为空");
         return false;
       }
@@ -519,32 +522,30 @@ export default {
           });
       });
     },
-    handlekeyWord(val){
-      if(val){
-        let mykeyWord=val;
-      mykeyWord=mykeyWord.replace(/；/gi,';');
-      mykeyWord=mykeyWord.replace(/，/gi,';');
-      mykeyWord=mykeyWord.replace(/,/gi,';');
-      if(mykeyWord.split(';').length>5){
-         this.$message({
-          type:'error',
-          message:'请最多输入5个关键词'
-        })
-        return false;
+    handlekeyWord(val) {
+      if (val) {
+        let mykeyWord = val;
+        mykeyWord = mykeyWord.replace(/；/gi, ";");
+        mykeyWord = mykeyWord.replace(/，/gi, ";");
+        mykeyWord = mykeyWord.replace(/,/gi, ";");
+        if (mykeyWord.split(";").length > 5) {
+          this.$message({
+            type: "error",
+            message: "请最多输入5个关键词"
+          });
+          return false;
+        }
+        console.log(mykeyWord);
+        return mykeyWord;
+      } else {
+        return true;
       }
-      console.log(mykeyWord)
-      return mykeyWord
-      }else{
-        return true
-      }
-      
     },
     test() {
       let flag = this.check();
-       let mykeyWord=this.handlekeyWord(this.res.keyWord)
-      if (flag&&mykeyWord) {
+      let mykeyWord = this.handlekeyWord(this.res.keyWord);
+      if (flag && mykeyWord) {
         this.loading = true;
-       
 
         var sendData = {
           column: this.res.clumnId,
@@ -556,14 +557,14 @@ export default {
           newsrule: this.res.newsRule,
           titlerule: this.res.titleRule,
           contentrule: this.res.contentRule,
-          creatTime:this.res.creatTime,
+          creatTime: this.res.creatTime,
           formrule: this.res.formRule,
           encoding: this.res.encoding,
           clientLicenseId: this.clientLicenseId,
           userName: this.userName,
           formStandby: this.res.formStandby,
           //处理空值情况
-          keyWord:mykeyWord==true?'':mykeyWord
+          keyWord: mykeyWord == true ? "" : mykeyWord
         };
         var _this = this;
         return new Promise((resolve, reject) => {
@@ -591,8 +592,8 @@ export default {
         alert("确定要修改这条规则信息吗？");
       }
       let flag = this.check();
-       let mykeyWord=this.handlekeyWord(this.res.keyWord)
-      if (flag&&mykeyWord) {
+      let mykeyWord = this.handlekeyWord(this.res.keyWord);
+      if (flag && mykeyWord) {
         this.loading = true;
         var sendData = {
           id: this.res.id,
@@ -605,13 +606,13 @@ export default {
           newsrule: this.res.newsRule,
           titlerule: this.res.titleRule,
           contentrule: this.res.contentRule,
-          creatTime:this.res.creatTime,
+          creatTime: this.res.creatTime,
           formrule: this.res.formRule,
           encoding: this.res.encoding,
           clientLicenseId: this.clientLicenseId,
           userName: this.userName,
           formStandby: this.res.formStandby,
-          keyWord:mykeyWord==true?'':mykeyWord
+          keyWord: mykeyWord == true ? "" : mykeyWord
         };
         var _this = this;
 
@@ -622,15 +623,15 @@ export default {
               // console.log(response.data)
               if (response.data.status == "success") {
                 this.$message({
-                  type:'success',
-                  message:response.data.data
-                })
+                  type: "success",
+                  message: response.data.data
+                });
                 _this.getRule();
-              }else{
+              } else {
                 this.$message({
-                  type:'error',
-                  message:response.data.data.errMsg
-                })
+                  type: "error",
+                  message: response.data.data.errMsg
+                });
               }
               resolve();
             })
@@ -644,8 +645,8 @@ export default {
     },
     saveAs() {
       let flag = this.check();
-       let mykeyWord=this.handlekeyWord(this.res.keyWord)
-      if (flag&&mykeyWord) {
+      let mykeyWord = this.handlekeyWord(this.res.keyWord);
+      if (flag && mykeyWord) {
         this.loading = true;
         var sendData = {
           id: "",
@@ -658,13 +659,13 @@ export default {
           newsrule: this.res.newsRule,
           titlerule: this.res.titleRule,
           contentrule: this.res.contentRule,
-          creatTime:this.res.creatTime,
+          creatTime: this.res.creatTime,
           formrule: this.res.formRule,
           encoding: this.res.encoding,
           clientLicenseId: this.clientLicenseId,
           userName: this.userName,
           formStandby: this.res.formStandby,
-          keyWord:mykeyWord==true?'':mykeyWord
+          keyWord: mykeyWord == true ? "" : mykeyWord
         };
         var _this = this;
         return new Promise((resolve, reject) => {
@@ -674,9 +675,9 @@ export default {
               // console.log(response.data)
               if (response.data.status == "success") {
                 this.$message({
-                  type:'success',
-                  message:response.data.data
-                })
+                  type: "success",
+                  message: response.data.data
+                });
                 _this.getRule();
               }
               resolve();
@@ -696,6 +697,92 @@ export default {
       this.selectCloum = "";
       this.selectRule = "";
     },
+
+    // 开启爬虫
+
+    handleStart() {
+      return new Promise((resolve, reject) => {
+        startBee()
+          .then(res => {
+            if (res.data.data == "success") {
+              this.$message({
+                type: "success",
+                message: res.data.status
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: res.data.status
+              });
+            }
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
+
+    //清除库存
+
+    handleClear() {
+      this.$confirm("此操作将永久清除库存, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          new Promise((resolve, reject) => {
+            clearStore()
+              .then(res => {
+                console.log(res, "res");
+                if (res.data.data == "success") {
+                  this.$message({
+                    type: "success",
+                    message: res.data.status
+                  });
+                } else {
+                  this.$message({
+                    type: "error",
+                    message: res.data.status
+                  });
+                }
+              })
+              .catch(err => {
+                reject(err);
+              });
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    //上传文档
+
+    handleSave() {
+      return new Promise((resolve, reject) => {
+        saveCms()
+          .then(res => {
+            if (res.data.data == "success") {
+              this.$message({
+                type: "success",
+                message: res.data.status
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: res.data.status
+              });
+            }
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
+
     wxcheck() {
       if (
         this.wxData.wechatCertification == "" ||
@@ -798,7 +885,6 @@ a {
   width: 650px;
 }
 .formBox {
- 
 }
 .formbody {
   position: relative;
@@ -883,7 +969,6 @@ button:active {
   white-space: nowrap;
   line-height: 36px;
   text-indent: 1em;
-
 }
 .active {
   background: #42b983;

@@ -74,7 +74,7 @@
       </el-row>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false" size="mini">取 消</el-button>
+      <el-button @click="returnBack" size="mini">取 消</el-button>
       <el-button type="primary" @click="handleSubmit()" size="mini">保 存</el-button>
     </div>
   </div>
@@ -206,6 +206,9 @@ export default {
     },
     search() {
       console.log('搜索' + this.selectWebSite + '---' + this.searchTem)
+    },
+    returnBack() {
+      this.gotoListPage(this)
     },
     handleSubmit() {
       console.log('添加')

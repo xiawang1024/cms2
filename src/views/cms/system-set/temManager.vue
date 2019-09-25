@@ -21,7 +21,11 @@
     </el-row>
     <el-table :data="temlateList" style="width: 100%">
       <el-table-column prop="templateName" label="模板名称"/>
-      <el-table-column prop="templateType" label="类别"/>
+      <el-table-column prop="templateType" label="类别">
+        <template slot-scope="scope">
+          <span>{{ typeList[scope.row.templateType] }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="channelName" label="所属栏目"/>
       <el-table-column prop="templateFormat" label="适用平台"/>
       <el-table-column prop="templateDescription" label="描述"/>
@@ -51,6 +55,7 @@
 <script>
 import { fetchList } from "@/api/cms/template";
 import ChannelSelect from "@/components/cms/ChannelSelect";
+import { deleteTemplate } from '@/api/cms/template'
 export default {
   name: "TemFormSet",
   components: { ChannelSelect },
@@ -61,7 +66,12 @@ export default {
       searchTemplate: "",
       pageNum: 1, // 分页当前页
       pageSize: 10,
-      totalCount: 0
+      totalCount: 0,
+      typeList: {
+        content: '正文组件',
+        index: '首页组件',
+        list: '列表组件',
+      }
     };
   },
   created: function() {
@@ -112,7 +122,24 @@ export default {
       });
     },
     handleDelete(index, row) {
-      console.log("删除" + row.plat);
+      this.$confirm('确定删除该模板吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        return new Promise((resolve, reject) => {
+          deleteTemplate({templateId: row.templateId})
+            .then(response => {
+               this.$message.success('删除成功')
+               this.fetchList()
+              resolve();
+            })
+            .catch(error => {
+              reject(error);
+            });
+        });
+      }).catch(() => {         
+      })
     },
     // 表格分页处理
     handleSizeChange(val) {

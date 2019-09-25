@@ -12,7 +12,8 @@ export const otherSettings = [
         label: '点击量',
         name: 'clickNum',
         type: 'number',
-        placeholder: '请输入点击量'
+        placeholder: '请输入点击量',
+        value: 0
       },
       {
         label: '发布时间',
@@ -101,6 +102,10 @@ export const otherSettings = [
           {
             label: '专题样式',
             value: 9
+          },
+          {
+            label: '直播样式',
+            value: 10
           }
         ]
       },
@@ -119,7 +124,8 @@ export const defultItems = [
     label: '点击量',
     name: 'clickNum',
     type: 'number',
-    placeholder: '请输入点击量'
+    placeholder: '请输入点击量',
+    value: 0
   },
   {
     label: '发布时间',
@@ -168,6 +174,10 @@ export const defultItems = [
       {
         label: '专题样式',
         value: 9
+      },
+      {
+        label: '直播样式',
+        value: 10
       }
     ]
   }
@@ -227,7 +237,8 @@ export const imagesSeting = [
         label:'点击量',
         name: 'clickNum',
         type:'number',
-        placeholder: '请输入点击量'
+        placeholder: '请输入点击量',
+        value: 0
       },{
         label:'发布时间',
         name:'publishTime',
@@ -276,6 +287,10 @@ export const imagesSeting = [
           {
             label: '专题样式',
             value: 9
+          },
+          {
+            label: '直播样式',
+            value: 10
           }
         ]
       },
@@ -370,6 +385,10 @@ export const reproduceSetting = [
           {
             label: '专题样式',
             value: 9
+          },
+          {
+            label: '直播样式',
+            value: 10
           }
         ]
       },
@@ -458,6 +477,10 @@ export const articleLinkSetting = [
           {
             label: '专题样式',
             value: 9
+          },
+          {
+            label: '直播样式',
+            value: 10
           }
         ]
       },

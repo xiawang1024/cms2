@@ -149,24 +149,24 @@
             <el-row class="padding-10-0">
               <el-button type="info" @click="addItem">新增一项</el-button>
               <el-upload
-              class="inline-block"
-              :action="uploadUrl()"
-              :headers="headers"
-              :data="programListUpload"
-              name="file"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-              :on-error="imgUploadError">
-              <el-button type="success">{{ $t('table.batchAdd') }}</el-button>
+                class="inline-block"
+                :action="uploadUrl()"
+                :headers="headers"
+                :data="programListUpload"
+                name="file"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
+                :on-error="imgUploadError">
+                <el-button type="success">{{ $t('table.batchAdd') }}</el-button>
               </el-upload>
             </el-row>
           </el-form-item>
-           <div slot="tip" class="el-upload__tip">
-             仅能上传Excel文件，且大小不超过500KB.<br>
-             当天最后一个节目开始时间须在24:00之前
-             先创建模板，选择编辑后方可导入
-           </div>
+          <div slot="tip" class="el-upload__tip">
+            仅能上传Excel文件，且大小不超过500KB.<br>
+            当天最后一个节目开始时间须在24:00之前
+            先创建模板，选择编辑后方可导入
+          </div>
         </div>
         <!-- 节目单end -->
 
@@ -545,12 +545,10 @@ export default {
 }
 </script>
 
-<style>
+<style rel="stylesheet/scss" lang="scss" scoped>
 .redItem .el-form-item__label{
   color: red;
 }
-</style>
-<style rel="stylesheet/scss" lang="scss" scoped>
 @import "~@/styles/mixin.scss";
 .createPost-container {
   position: relative;

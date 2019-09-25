@@ -23,7 +23,7 @@ import articleCheck from './routers/cms/articleCheck'
 import commentModeration from './routers/cms/commentModeration'
 import statisticsChart from './routers/cms/statisticsChart'
 // const cmsRouterMap = [webSite, systemSet, personAndAuthor,commentModeration]
-const cmsRouterMap = [webSite, systemSet, personAndAuthor, checkSetting, articleCheck, commentModeration,statisticsChart]
+const cmsRouterMap = [webSite, systemSet, personAndAuthor, checkSetting, articleCheck, commentModeration, statisticsChart]
 
 /**
  * 用户中心系统路由
@@ -66,14 +66,20 @@ import liveClue from './routers/newCommand/liveClue'
 import operationRecord from './routers/newCommand/operationRecord'
 import classifyManage from './routers/newCommand/classifyManage'
 
-const newscommandRouterMap = [manageClue,dxClue,commandDispatch,manuscriptClue,fileClue,liveClue,operationRecord,classifyManage]
+const newscommandRouterMap = [manageClue, dxClue, commandDispatch, manuscriptClue, fileClue, liveClue, operationRecord, classifyManage]
 
 /**
  * 直播
  */
 import livePage from './routers/live/livePage'
-
 const liveRouterMap = [livePage]
+
+/**
+ * 系统设置
+ */
+import dataPermission from './routers/systemSet/dataPermission'
+const systemSetRouterMap = [dataPermission]
+
 /**
  * 路由map
  */
@@ -101,7 +107,12 @@ export const routerMap = [{
   {
     type: 'live',
     route: liveRouterMap
+  },
+  {
+    type: 'systemSet',
+    route: systemSetRouterMap
   }
+
 ]
 
 export default new Router({

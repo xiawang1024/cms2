@@ -254,4 +254,11 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  .tinymce-container{
+    .mce-fullscreen{
+      z-index: 1001;
+    }
+  }
+</style>
 

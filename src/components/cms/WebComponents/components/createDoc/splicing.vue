@@ -84,36 +84,32 @@ export default {
               type: 'select',
               options: [
                 {
-                  label: '正文标题和描述',
+                  label: '无图样式',
                   value: 0
                 },
                 {
-                  label: '左图，右正文标题',
+                  label: '单图样式',
                   value: 1
                 },
                 {
-                  label: '右图，左正文标题',
-                  value: 2
-                },
-                {
-                  label: '一个图片通栏，无标题',
-                  value: 3
-                },
-                {
-                  label: '上正文标题，下一个图片通栏',
+                  label: '大图样式',
                   value: 4
                 },
                 {
-                  label: '上正文标题，下两张图片',
-                  value: 5
-                },
-                {
-                  label: '上正文标题，下三张图片',
+                  label: '三图样式',
                   value: 6
                 },
                 {
-                  label: '上正文标题，下左一张图片，下右描述',
-                  value: 7
+                  label: '视频样式',
+                  value: 8
+                },
+                {
+                  label: '专题样式',
+                  value: 9
+                },
+                {
+                  label: '直播样式',
+                  value: 10
                 }
               ]
             },

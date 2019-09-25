@@ -298,7 +298,7 @@ export default {
         return new Promise((resolve, reject) => {
           // 查询出来用户下属的角色信息
           RolePermissionRelPermissionByRoleId(_this.dialogPermissionManagerRoleId).then(async res => {
-            console.log(res)
+            console.log(res,'resssss')
             _this.$refs.dialogPermissionRef.$refs.tree.setCheckedKeys([])
             if (res.data.result !== null && res.data.result.length > 0) {
               var keys = []

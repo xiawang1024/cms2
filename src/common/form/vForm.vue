@@ -262,6 +262,7 @@
                   v-for="(checkItem, checkIndex) in item.options"
                   :key="checkIndex"
                   :label="checkItem.value"
+                  :disabled="checkItem.disabled"
                 >{{ checkItem.label }}</el-checkbox>
               </el-checkbox-group>
             </template>

@@ -146,6 +146,7 @@ export default {
        // location.reload() // In order to re-instantiate the vue-router object to avoid bugs
         // this.$store.dispatch('selectSysType', '')
         console.log('退出')
+        
         location.reload()
         // router.push({ path: '/login' })
       })

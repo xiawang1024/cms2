@@ -87,6 +87,9 @@ export function RolePerissionRelSave(data) {
 export function RolePermissionRelPermissionByRoleId(roleId) {
   return request({
     url: '/userb/rolepermissionrel/permissiongroupinfobyroleid/' + roleId,
-    method: 'GET'
+    method: 'GET',
+    loadingConfig: {
+      target: '.el-dialog__body'
+    }
   })
 }

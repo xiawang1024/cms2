@@ -37,6 +37,13 @@
           <span v-if="scope.row.logoDistance=='main_w-overlay_w-10:10'">右上</span>
           <span v-if="scope.row.logoDistance=='10:main_h-overlay_h-10'">左下</span>
           <span v-if="scope.row.logoDistance=='main_w-overlay_w-10:main_h-overlay_h-10'">右下</span>
+          <!-- 新旧数据兼容处理 -->
+         
+          <span v-if="scope.row.logoDistance=='80:50'">左上</span>
+          <span v-if="scope.row.logoDistance=='main_w-overlay_w-80:50'">右上</span>
+          <span v-if="scope.row.logoDistance=='80:main_h-overlay_h-50'">左下</span>
+          <span v-if="scope.row.logoDistance=='main_w-overlay_w-80:main_h-overlay_h-50'">右下</span>
+          <!--  处理结束 -->
         </template>
       </el-table-column>
 
