@@ -8,7 +8,6 @@
     <el-table :data="tableValue" row-key="id">
       <el-table-column type="index" width="50" />
       <el-table-column prop="fileType" width="80" label="文件类型" :formatter="typeFormate" />
-      <el-table-column prop="clientLicenseId" width="100" label="所属站点" />
       <el-table-column prop="videoBitRate" width="80" label="视频码率" />
       <el-table-column prop="audioBitRate" width="80" label="音频码率" />
       <el-table-column prop="resolution" width="80" label="分辨率" />
@@ -25,10 +24,9 @@
           <span v-if="scope.row.state==0" class="colorInfo">未转码</span>
         </template>
       </el-table-column>
-      <el-table-column prop="inputFilePath" label="输入地址" show-overflow-tooltip />
-      <el-table-column prop="outputFilePath" label="输出地址" show-overflow-tooltip >
+      <el-table-column prop="outputFilePath" label="视频流地址" show-overflow-tooltip >
         <template slot-scope="scope">
-          <span v-if="scope.row.state==3">{{ scope.row.outputFilePath }}</span>
+          <span v-if="scope.row.state==3">{{ scope.row.outputFilePath|createUrl }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="180">
@@ -93,6 +91,14 @@ import baseUrl from "@/config/base-url";
 
 export default {
   name: "VideoTranscode",
+  filters:{
+    STREAM_URL(val){
+      console.log(val,'asd')
+      let data='';
+      data=baseUrl.STREAM_URL+val+'/index.m3u8';
+      return data
+    }
+  },
   data() {
     return {
       tableValue: [],
@@ -141,11 +147,11 @@ export default {
               name: "audioCode",
               type: "radio",
               required: true,
-              value: "acc",
+              value: "aac",
               options: [
                 {
-                  label: "acc",
-                  value: "acc"
+                  label: "aac",
+                  value: "aac"
                 },
                 {
                   label: "mp3",
@@ -199,7 +205,7 @@ export default {
               name: "template",
               type: "checkbox",
               required: true,
-              value: ["hd720", 1800, "H264", "acc"],
+              value: ["hd720", 1800, "h264", "aac"],
               options: [
                 {
                   label: "分辨率 hd720",
@@ -212,13 +218,13 @@ export default {
                   disabled: true
                 },
                 {
-                  label: "编码 H264",
-                  value: "H264",
+                  label: "编码 h264",
+                  value: "h264",
                   disabled: true
                 },
                 {
-                  label: "音频编码 acc",
-                  value: "acc",
+                  label: "音频编码 aac",
+                  value: "aac",
                   disabled: true
                 }
               ],
@@ -273,8 +279,8 @@ export default {
               required: true,
               options: [
                 {
-                  label: "H264",
-                  value: "H264"
+                  label: "h264",
+                  value: "h264"
                 },
                 {
                   label: "mpeg-4",
@@ -294,8 +300,8 @@ export default {
                   value: "mp3"
                 },
                 {
-                  label: "acc",
-                  value: "acc"
+                  label: "aac",
+                  value: "aac"
                 },
                 {
                   label: "静音",
@@ -321,7 +327,7 @@ export default {
               limit: 1,
               hidden: true,
               acceptFile: {
-                accept: ['.mp3','.wmv','.acc' ]
+                accept: ['.mp3','.wmv','.aac' ]
               }
             }
           ]
