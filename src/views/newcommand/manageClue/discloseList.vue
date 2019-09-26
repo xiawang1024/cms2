@@ -130,23 +130,12 @@
         </template>
       </el-table-column>
       <el-table-column
-        min-width="100"
+        min-width="200"
         align="left"
-        prop="zzjgFlag"
+        prop="zzjgName"
         label="对机构"
-      >
-        <template slot-scope="scope">
-          
-          <span
-            class="colgreen"
-            v-if="scope.row.zzjgFlag == 1"
-          >公开</span>
-          <span
-            class="colred"
-            v-if="scope.row.zzjgFlag == 0"
-          >不公开</span>
-        </template>
-      </el-table-column>·
+        :formatter="viewjg"
+      />
       <el-table-column
         min-width="220"
         align="left"
@@ -193,6 +182,27 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
+    <el-dialog
+      title="对机构"
+      :visible.sync="dialogVisible"
+      width="520px"
+    >
+      <el-row>
+        <el-select style="width:100%" v-model="zzjgName" filterable placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.display"
+            :value="item.value"/>
+        </el-select>
+      </el-row>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="dialogVisible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="handleSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 <script>
@@ -201,7 +211,8 @@ import {
   discloseList,
   discloseState,
   discloseClassify,
-  batchQueryUser
+  batchQueryUser,
+  getZzjgList
 } from "@/api/newsCommand/disclose.js";
 import { deleteColumn } from "@/api/cms/columnManage";
 import mixins from "@/components/cms/mixins";
@@ -211,6 +222,9 @@ export default {
   mixins: [mixins],
   data() {
     return {
+      dialogVisible:false,
+       options:[],
+       zzjgName:'',
       allchoose: false,
       multipleSelection:[],
       options1: [
@@ -344,7 +358,8 @@ export default {
     this.discloseState(1);
     this.discloseState(2);
     //把分类保存在公共状态，便于添加时调用
-    this.$store.dispatch('getClassifyList')
+    this.$store.dispatch('getClassifyList');
+    this.requestGetZzjgList();
   },
   created() {},
   methods: {
@@ -543,20 +558,26 @@ export default {
       },
     handleSeparate(val){
       //0 不公开   1 公开
-      let url='';
+      this.dialogVisible=true;
+    },
+    handleSubmit(){
+
+       let url='';
         this.multipleSelection.forEach((item,index)=>{
           url=url+'userIdList='+item.id+'&'
         })
       let data={
         list:url,
-        zzjgFlag:val
+        zzjgName:this.zzjgName
       }
-    
-        return new Promise((resolve,reject)=>{
+      return new Promise((resolve,reject)=>{
           batchQueryUser(data)
           .then(res=>{
             if(res.data.code==0){
             this.$message.success(res.data.result)
+            this.dialogVisible=false;
+            this.zzjgName='';
+            this.$refs.multipleTable.clearSelection();
             this.columnList();
             }else{
             this.$message.error(res.data.result)
@@ -568,9 +589,32 @@ export default {
               reject(err)
             })
         })
-      
+    },
 
+    //获取机构列表
+    requestGetZzjgList(){
+      return new Promise((resolve,reject)=>{
+      getZzjgList()
+      .then(res=>{
+        if(res.data.code==0){
+          this.options=res.data.result
+        }
+      })
+      .catch(err=>{
+        reject(err)
+      })
 
+      })
+    },
+    viewjg(val){
+      let data='无'
+      this.options.forEach((item,index)=>{
+      if(val.zzjgName==item.value){
+        data=item.display
+      }
+
+      })
+      return data
     }
   }
 };

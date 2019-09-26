@@ -66,7 +66,7 @@ import liveClue from './routers/newCommand/liveClue'
 import operationRecord from './routers/newCommand/operationRecord'
 import classifyManage from './routers/newCommand/classifyManage'
 
-const newscommandRouterMap = [manageClue, dxClue, commandDispatch, manuscriptClue, fileClue, liveClue, operationRecord, classifyManage]
+const newscommandRouterMap = [manageClue, dxClue, commandDispatch, manuscriptClue, fileClue, liveClue, operationRecord, classifyManage,dataPermission]
 
 /**
  * 直播

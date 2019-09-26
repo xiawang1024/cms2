@@ -93,7 +93,16 @@ export function addOprate(data) {
 //批量公开-不公开
 export function batchQueryUser(data){
   return request({
-    url: '/cmsnews/breakingNews/batchQueryUser?'+data.list+'zzjgFlag='+data.zzjgFlag,
+    url: '/cmsnews/breakingNews/batchQueryUser?'+data.list+'zzjgName='+data.zzjgName,
     method: 'get'
   })
 }
+
+//获取机构列表
+export function getZzjgList(){
+  return request({
+    url: '/cmsnews/breakingNews/getZzjgList',
+    method: 'get'
+  })
+}
+

@@ -52,7 +52,7 @@
                   <div class="rightdiv">{{ formData.breakingPeople }}</div>
                 </el-col>
               </el-row>
-              <el-row>
+              <el-row v-if="checkAuth('newcommond:baoliao:phoneNumber')">
                 <el-col :span="5">
                   <div class="leftdiv">爆料人联系方式</div>
                 </el-col>
@@ -230,8 +230,16 @@ export default {
   mounted() {
     this.discloseId = this.$route.query.discloseId;
     this.discloseInfor(this.discloseId);
+   
   },
   methods: {
+     checkAuth(authKey) {
+      if (this.$store.getters.authorities.indexOf(authKey) === -1) {
+        return false;
+      } else {
+        return true;
+      }
+    },
     handleAdd() {
       //显示对会话框
 
