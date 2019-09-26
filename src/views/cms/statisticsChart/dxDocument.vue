@@ -17,7 +17,7 @@
       <el-table-column label="标题" prop="title" />
       <el-table-column label="类型" width="80" prop="articleShowStyle" />
       <el-table-column label="发布时间" width="200" prop="publishDate" />
-      <el-table-column label="撰稿人" width="100" prop="author" />
+      <el-table-column label="编辑" width="100" prop="createUser" />
       <el-table-column label="点击" width="200" prop="clickNumInt" />
     </el-table>
   </div>
@@ -174,7 +174,7 @@ export default {
           "标题",
           "类型",
           "发布时间",
-          "撰稿人",
+          "编辑",
           "点击"
         ];
         const filterVal = [
@@ -183,7 +183,7 @@ export default {
           "title",
           "articleShowStyle",
           "publishDate",
-          "author",
+          "createUser",
           "clickNumInt"
         ];
         const list = this.tableData;
