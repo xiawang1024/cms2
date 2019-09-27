@@ -23,13 +23,14 @@
   </div>
 </template>
 <script>
-import { getdxDocumentStatistics } from "@/api/cms/liveCharts";
+import { getdxDocumentStatistics,downdxDocumentStatistics } from "@/api/cms/liveCharts";
 import dayjs from "dayjs";
 import store from "store";
 import { mapGetters } from "vuex";
 export default {
   data() {
     return {
+      channelId:'1161447048013287424',
       searchSettings: [
         {
           label: "栏目名称",
@@ -109,9 +110,11 @@ export default {
         return false;
       }
       this.timeDeail(val);
-      let columnId=JSON.parse(JSON.stringify(val.columnId))
+      let columnId=JSON.parse(JSON.stringify(val.columnId)).reverse()[0]
+
+      this.channelId=columnId;
       // console.log(this.beginTime, this.endTime,columnId, "time");
-      this.initTableList(columnId.reverse()[0])
+      this.initTableList(columnId)
     },
     timeDeail(val) {
       
@@ -164,51 +167,62 @@ export default {
       });
     },
     handleExport() {
-      this.handleDownload();
+       let data = {
+        beginTime: this.beginTime,
+        endTime: this.endTime,
+        channelId:this.channelId,
+        accessToken:'bearer '+this.$store.getters.token.access_token
+      };
+     
+        downdxDocumentStatistics(data)
+        
+      
     },
-    handleDownload() {
-      import("@/vendor/Export2Excel").then(excel => {
-        const tHeader = [
-          "来源",
-          "ID序号",
-          "标题",
-          "类型",
-          "发布时间",
-          "编辑",
-          "点击"
-        ];
-        const filterVal = [
-          "origin",
-          "id",
-          "title",
-          "articleShowStyle",
-          "publishDate",
-          "createUser",
-          "clickNumInt"
-        ];
-        const list = this.tableData;
-        const data = this.formatJson(filterVal, list);
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: this.filename,
-          autoWidth: this.autoWidth,
-          bookType: this.bookType
-        });
-        this.downloadLoading = false;
-      });
-    },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v =>
-        filterVal.map(j => {
-          if (j === "timestamp") {
-            return parseTime(v[j]);
-          } else {
-            return v[j];
-          }
-        })
-      );
-    }
+
+    //前端下载
+    // handleDownload() {
+    //   import("@/vendor/Export2Excel").then(excel => {
+    //     const tHeader = [
+    //       "来源",
+    //       "ID序号",
+    //       "标题",
+    //       "类型",
+    //       "发布时间",
+    //       "编辑",
+    //       "点击"
+    //     ];
+    //     const filterVal = [
+    //       "origin",
+    //       "id",
+    //       "title",
+    //       "articleShowStyle",
+    //       "publishDate",
+    //       "createUser",
+    //       "clickNumInt"
+    //     ];
+    //     const list = this.tableData;
+    //     const data = this.formatJson(filterVal, list);
+    //     excel.export_json_to_excel({
+    //       header: tHeader,
+    //       data,
+    //       filename: this.filename,
+    //       autoWidth: this.autoWidth,
+    //       bookType: this.bookType
+    //     });
+    //     this.downloadLoading = false;
+    //   });
+    // },
+    // formatJson(filterVal, jsonData) {
+    //   return jsonData.map(v =>
+    //     filterVal.map(j => {
+    //       if (j === "timestamp") {
+    //         return parseTime(v[j]);
+    //       } else {
+    //         return v[j];
+    //       }
+    //     })
+    //   );
+    // }
   }
 };
 </script>
