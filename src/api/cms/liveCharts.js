@@ -1,4 +1,12 @@
 import request from "@/utils/request";
+import axios from 'axios'
+import { Message } from 'element-ui'
+import baseUrl from "@/config/base-url";
+import { download } from '@/utils/common'
+
+
+
+
 // import baseUrl from '@/config/base-url'
 // let Cpath = "http://192.168.7.40:53006";
 
@@ -206,5 +214,31 @@ export function articleTrend(channelId) {
     });
 
   }
+ 
+  //大象发稿文档下载
+  
+  export function downdxDocumentStatistics(data) {
+    postAjax(data)
+  }
+  function postAjax (data) {
+    axios({
+      method: 'get',
+      url: baseUrl.BASE_URL +`/cms/article/queryarticleclickbytenantidandchannelidandtimeexport?channelId=${data.channelId}&sortBy=actualClickNumInt&beginTime=${data.beginTime}&endTime=${data.endTime}`,
+      responseType: 'blob',
+      headers: {
+        // 'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': data.accessToken
+      }
+    })
+      .then(res => {
+        download('template.xlsx', res.data)
+        Message.success('下载成功')
+      })
+      .catch(error => {
+        Message.warning(error.msg ? error.msg : '导出失败')
+      })
+  }
+
+
 
 
