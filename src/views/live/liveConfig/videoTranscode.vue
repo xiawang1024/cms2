@@ -14,9 +14,14 @@
       <el-table-column prop="videoCode" width="80" label="视频编码" />
       <el-table-column prop="audioCode" width="80" label="音频编码" />
       <el-table-column prop="createUser" width="100" label="创建人" />
-      <el-table-column prop="createTime" width="180" label="创建时间" />
-      <el-table-column prop="updateTime" width="180" label="更新时间" />
-      <el-table-column prop="state" width="120" label="转码状态">
+      <el-table-column prop="outputFilePath" label="流地址" show-overflow-tooltip min-width="550">
+        <template slot-scope="scope">
+          <span v-if="scope.row.state==3">{{ scope.row.vodStream|createUrl }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createTime" width="150" label="创建时间" />
+      <el-table-column prop="updateTime" width="150" label="更新时间" />
+      <el-table-column prop="state" width="80" label="转码状态">
         <template slot-scope="scope">
           <span v-if="scope.row.state==3" class="colorSuccess">成功</span>
           <span v-if="scope.row.state==2" class="colorDanger">失败</span>
@@ -24,12 +29,8 @@
           <span v-if="scope.row.state==0" class="colorInfo">未转码</span>
         </template>
       </el-table-column>
-      <el-table-column prop="outputFilePath" label="视频流地址" show-overflow-tooltip >
-        <template slot-scope="scope">
-          <span v-if="scope.row.state==3">{{ scope.row.outputFilePath|createUrl }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" width="180">
+
+      <el-table-column label="操作" width="230" fixed="right">
         <template slot-scope="scope">
           <el-button
             v-show="scope.row.state==2"
@@ -40,15 +41,16 @@
           <el-button
             v-show="scope.row.state==3"
             size="mini"
-            type="success"
+            type="primary"
             @click="handleReview(scope.$index, scope.row)"
           >预览</el-button>
           <el-button
-           
+            v-show="scope.row.state==3"
             size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)"
-          >删除</el-button>
+            type="primary"
+            @click="handleDownload(scope.$index, scope.row)"
+          >下载</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -65,7 +67,7 @@
       @current-change="handleCurrentChange"
     />
 
-    <el-dialog :visible.sync="dialogVisible" title="添加操作记录">
+    <el-dialog :visible.sync="dialogVisible" title="添加">
       <v-form
         ref="vform"
         :form-settings="formSettings"
@@ -76,34 +78,40 @@
         @selectChanges="selectChanges"
       />
     </el-dialog>
-    <el-dialog :visible.sync="dialogVideo" title="视频预览">
+    <el-dialog :visible.sync="dialogVideo" title="预览">
       <el-row>
         <el-col :span="24">
-          <video style="width:100%" :src="videoSource" controls/>
+          <video v-if="viewtype==0" style="width:100%" :src="videoSource" controls />
+          <audio v-if="viewtype==1" style="width:100%" :src="videoSource" controls/>
+          <!-- <audio  src="https://np01-sycdn.kuwo.cn/3591a98480253ad009e6dd93b18d8097/5d8c9807/resource/n2/88/97/2816282324.mp3" controls></audio> -->
+
         </el-col>
       </el-row>
     </el-dialog>
   </div>
 </template>
 <script>
-import { streamfile, addTranscode,deleteTranscode,retranscode } from "@/api/live/videoTranscode.js";
+import {
+  streamfile,
+  addTranscode,
+  deleteTranscode,
+  retranscode
+} from "@/api/live/videoTranscode.js";
 import baseUrl from "@/config/base-url";
-
 export default {
   name: "VideoTranscode",
-  filters:{
-    STREAM_URL(val){
-      console.log(val,'asd')
-      let data='';
-      data=baseUrl.STREAM_URL+val+'/index.m3u8';
-      return data
+  filters: {
+    createUrl(val) {
+      let data = "";
+      data = baseUrl.STREAM_URL + val;
+      return data;
     }
   },
   data() {
     return {
       tableValue: [],
-      videoSource:'',
-      dialogVideo:false,
+      videoSource: "",
+      dialogVideo: false,
       pageNo: 1,
       pageSize: 10,
       totalCount: 0,
@@ -213,7 +221,7 @@ export default {
                   disabled: true
                 },
                 {
-                  label: "码率 128Kbps",
+                  label: "码率 1800Kbps",
                   value: 1800,
                   disabled: true
                 },
@@ -284,7 +292,7 @@ export default {
                 },
                 {
                   label: "mpeg-4",
-                  value: "mpeg-4"
+                  value: "mpeg4"
                 }
               ],
               hidden: true
@@ -322,27 +330,43 @@ export default {
             {
               label: "上传资源",
               name: "inputFilePath",
-              type: "simpleVideo",
+              type: "audio",
               required: true,
               limit: 1,
               hidden: true,
               acceptFile: {
-                accept: ['.mp3','.wmv','.aac' ]
+                accept: [".mp3", ".wmv", ".aac"]
               }
+            },
+
+            {
+              label: "标题",
+              name: "resourceTitle",
+              type: "text",
+              required: true
             }
           ]
         }
       ],
-      formData: {}
+      formData: {},
+      clientLicenseId: "",
+      viewtype:'',
     };
   },
   created() {
+    this.clientLicenseId = JSON.parse(
+      localStorage.getItem("BaseInfor")
+    ).clientLicenseId;
     this.initTable();
   },
   methods: {
     initTable() {
       return new Promise((resolve, reject) => {
-        streamfile({ pageNo: this.pageNo, pageSize: this.pageSize })
+        streamfile({
+          pageNo: this.pageNo,
+          pageSize: this.pageSize,
+          tanentId: this.clientLicenseId
+        })
           .then(res => {
             console.log(res, "res");
             if (res.data.code == 0) {
@@ -406,14 +430,14 @@ export default {
         (data.createUser = JSON.parse(
           localStorage.getItem("BaseInfor")
         ).userName);
+      data.title = val.resourceTitle;
       data.fileType = val.fileType;
 
       //未获得文件地址拦截操作
       if (val.inputFilePath[0].url) {
         //截掉url域名
-        let url=val.inputFilePath[0].url;
-        data.inputFilePath = url.split( baseUrl.DOWN_URL)[1];
-
+        let url = val.inputFilePath[0].url;
+        data.inputFilePath = url.split(baseUrl.DOWN_URL)[1];
       } else {
         this.$message({
           type: "error",
@@ -421,11 +445,11 @@ export default {
         });
         return false;
       }
-      if(data.audioCode=='静音'){
-        data.audioCode='';
+      if (data.audioCode == "静音") {
+        data.audioCode = "";
       }
-      if(data.resolution=='原视频'){
-        data.resolution='';
+      if (data.resolution == "原视频") {
+        data.resolution = "";
       }
       return new Promise((resolve, reject) => {
         addTranscode(data)
@@ -518,34 +542,34 @@ export default {
         this.$refs.vform.updateForm();
       }
     },
-    handleDelete(index,row){
-      var _this=this;
-       this.$confirm("此操作将永久删除该资源, 是否继续?", "提示", {
+    handleDelete(index, row) {
+      var _this = this;
+      this.$confirm("此操作将永久删除该资源, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-       new Promise((resolve,reject)=>{
-        deleteTranscode(row.id)
-        .then(res=>{
-          if(res.data.code==0){
-            this.$message({
-              type:'success',
-              message:res.data.msg
-            })
-            _this.initTable();
-          }else{
-               this.$message({
-              type:'error',
-              message:res.data.msg
-            })
-            }
-        })
-        .catch(err=>{
-          reject(err)
-        })
-      })
+          new Promise((resolve, reject) => {
+            deleteTranscode(row.id)
+              .then(res => {
+                if (res.data.code == 0) {
+                  this.$message({
+                    type: "success",
+                    message: res.data.msg
+                  });
+                  _this.initTable();
+                } else {
+                  this.$message({
+                    type: "error",
+                    message: res.data.msg
+                  });
+                }
+              })
+              .catch(err => {
+                reject(err);
+              });
+          });
         })
         .catch(() => {
           this.$message({
@@ -553,37 +577,48 @@ export default {
             message: "已取消删除"
           });
         });
-      
     },
-    handleRecover(index,row){
-      var _this=this;
-      return new Promise((resolve,reject)=>{
+    handleRecover(index, row) {
+      var _this = this;
+      return new Promise((resolve, reject) => {
         retranscode(row.id)
-        .then(res=>{
-          if(res.data.code==0){
-            this.$message({
-            type:'success',
-            message:res.data.msg
+          .then(res => {
+            if (res.data.code == 0) {
+              this.$message({
+                type: "success",
+                message: res.data.msg
+              });
+              _this.initTable();
+            } else {
+              this.$message({
+                type: "erorr",
+                message: res.data.msg
+              });
+            }
           })
-          _this.initTable();
-          }else{
-            this.$message({
-            type:'erorr',
-            message:res.data.msg
-          })
-          }
-          
-        })
-        .catch(err=>{
-          reject(err)
-        })
-
-      })
+          .catch(err => {
+            reject(err);
+          });
+      });
     },
-    handleReview(index,row){
-        this.dialogVideo=true;
-        this.videoSource=row.outputFilePath;
+    //预览
+    handleReview(index, row) {
+      this.dialogVideo = true;
+      this.viewtype=row.fileType;
+      this.videoSource = baseUrl.STREAM_URL + "/transdownload" + row.outputFilePath;
+    },
+    handleCopy(index, row) {
 
+    },
+    handleDownload(index, row) {
+      let downUrl = (baseUrl.STREAM_URL + "/transdownload" + row.outputFilePath).toString();
+      let FileSaver = require("file-saver");
+      if (row.fileType == 0) {
+        FileSaver.saveAs(downUrl, "video.mp4");
+      }
+      if (row.fileType == 1) {
+        FileSaver.saveAs(downUrl, "audio.mp3");
+      }
     }
   }
 };

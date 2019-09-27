@@ -11,7 +11,7 @@ export function streamfile(data) {
       Cpath +
       `/transcoding/page?pageNo=${data.pageNo}&pageSize=${
         data.pageSize
-      }`,
+      }&tanentId=${data.tanentId}`,
     method: "get"
   });
 }
