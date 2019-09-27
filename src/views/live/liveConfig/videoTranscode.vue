@@ -8,13 +8,14 @@
     <el-table :data="tableValue" row-key="id">
       <el-table-column type="index" width="50" />
       <el-table-column prop="fileType" width="80" label="文件类型" :formatter="typeFormate" />
+      <el-table-column prop="title" width="80" label="标题" />
       <el-table-column prop="videoBitRate" width="80" label="视频码率" />
       <el-table-column prop="audioBitRate" width="80" label="音频码率" />
       <el-table-column prop="resolution" width="80" label="分辨率" />
       <el-table-column prop="videoCode" width="80" label="视频编码" />
       <el-table-column prop="audioCode" width="80" label="音频编码" />
       <el-table-column prop="createUser" width="100" label="创建人" />
-      <el-table-column prop="outputFilePath" label="流地址" show-overflow-tooltip min-width="550">
+      <el-table-column prop="vodStream" label="流地址" show-overflow-tooltip min-width="550">
         <template slot-scope="scope">
           <span v-if="scope.row.state==3">{{ scope.row.vodStream|createUrl }}</span>
         </template>
@@ -43,7 +44,7 @@
             size="mini"
             type="primary"
             @click="handleReview(scope.$index, scope.row)"
-          >预览</el-button>
+          >播放</el-button>
           <el-button
             v-show="scope.row.state==3"
             size="mini"
@@ -102,8 +103,11 @@ export default {
   name: "VideoTranscode",
   filters: {
     createUrl(val) {
-      let data = "";
+      let data = "无";
+      if(val!=null){
       data = baseUrl.STREAM_URL + val;
+
+      } 
       return data;
     }
   },
@@ -612,12 +616,13 @@ export default {
     },
     handleDownload(index, row) {
       let downUrl = (baseUrl.STREAM_URL + "/transdownload" + row.outputFilePath).toString();
+      let saveTitle=row.title||new Date().getTime()
       let FileSaver = require("file-saver");
       if (row.fileType == 0) {
-        FileSaver.saveAs(downUrl, "video.mp4");
+        FileSaver.saveAs(downUrl, saveTitle+".mp4");
       }
       if (row.fileType == 1) {
-        FileSaver.saveAs(downUrl, "audio.mp3");
+        FileSaver.saveAs(downUrl, saveTitle+".mp3");
       }
     }
   }
