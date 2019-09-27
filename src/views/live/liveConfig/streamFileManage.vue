@@ -8,14 +8,27 @@
     </template>
     <video-transcode v-if="activeName=='1'"/> 
     <div v-if="activeName=='0'">
+      <div class="v-search-header">
+        <v-search :search-settings="searchSettings" @search="searchItem"/>
+      </div>
+      <el-row>
+        <el-col :span="24">
+          <el-button type="primary" size="mini" @click="handleClect" :disabled="multipleSelection.length<1">合并</el-button>
+        </el-col> 
+      </el-row>
       <el-table
         :data="tableValue"
         :load="load"
         lazy
         :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
         row-key="id"
+        @selection-change="handleSelectionChange"
+        ref="selecteVideo"
       >
         <el-table-column type="index" width="50" />
+        <el-table-column
+          type="selection"
+          width="55"/>
         <el-table-column prop="appName" width="150" label="APP名称" />
         <el-table-column prop="userName" width="120" label="用户名" />
         <el-table-column prop="recordBeginTime" width="180" :formatter="formatStart" label="录制开始时间" />
@@ -72,6 +85,20 @@
           ref="videoCut"
         />
       </el-dialog>
+
+      <el-dialog
+        title="视频合并"
+        :visible.sync="mergeVisible"
+        width="860px"
+        :before-close="handleClose"
+      >
+        <video-merge
+          ref="mergedialog"
+          @handleMerge="handleMerge"
+          :multiple-selection="multipleSelection"
+        />
+      </el-dialog>
+      
     </div>
     
   </div>
@@ -81,13 +108,16 @@ import {
   streamfile,
   editeStreamfile,
   childrenStreamfile,
-  deleteStreamFile
+  deleteStreamFile,
+  merge
 } from "@/api/live/streamFileManage.js";
 import videoEdite from "@/components/videoCut/videoEdite.vue";
+import videoMerge from "@/components/videoMerge/merge.vue";
+
   import simplifySecond from '@/utils/videoCut/simplifySecond';
   import videoTranscode from './videoTranscode'
 export default {
-  components: { videoEdite,videoTranscode },
+  components: { videoEdite,videoTranscode,videoMerge },
   data() {
     return {
       tableValue: [],
@@ -105,6 +135,15 @@ export default {
       activeName: "0",
       childrenNode: [],
       currentUser:'',
+       searchSettings: [{
+        label: '用户名',
+        name: 'username',
+        visible: true,
+        type: 'text'
+      }],
+      multipleSelection:[],
+      mergeVisible:false,
+      username:'',
     };
   },
   created() {
@@ -115,13 +154,22 @@ export default {
     
   },
   methods: {
+     searchItem(val){
+       console.log(val,'val')
+      this.username=val.username;
+       this.pageNo=1,
+      this.pageSize=10,
+      this.totalCount=0,
+      this.requestTableValue();
+    },
     requestTableValue() {
       var _this = this;
       let data = {
         pageNo: this.pageNo,
         pageSize: this.pageSize,
         sortBy: this.sortBy,
-        order: this.order
+        order: this.order,
+        username:this.username  
       };
       return new Promise((resolve, reject) => {
         streamfile(data)
@@ -322,7 +370,57 @@ export default {
         this.$refs.videoCut.playReset();
         done();
         //关闭对话框
-    }
+    },
+    handleMerge(arr){
+      let childIds=[];
+      let parentId='';
+        arr.forEach((item,index)=>{
+          childIds.push(item.id)
+        })
+         if(arr){
+        parentId=arr[0].parentId||arr[0].id
+        }
+        
+      let data={
+        parentId:parentId,
+        username:this.currentUser,
+        childIds:childIds
+      }
+      return new Promise((resolve,reject)=>{
+        merge(data)
+        .then(res=>{
+          if(res.data.code==0){
+            this.$message.success(res.data.msg)
+            this.mergeVisible=false;
+            this.requestTableValue();
+
+          }else{
+            this.$message.error(res.data.msg)
+          }
+          resolve();
+        })
+        .catch(err=>{
+          reject(err)
+        })
+      })
+    },
+     handleSelectionChange(val) {
+        this.multipleSelection = val;
+       
+      },
+      handleClect(){
+        this.mergeVisible=true;
+      },
+      handleClose(done){
+       
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.$refs.selecteVideo.clearSelection();
+            done();
+          })
+          .catch(_ => {});
+        
+      }
   }
 };
 </script>

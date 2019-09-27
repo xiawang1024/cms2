@@ -52,8 +52,14 @@
       <el-table-column prop="streamAddress" label="直播流地址" />
       <el-table-column prop="relayType" label="转播状态" >
         <template slot-scope="scope">
-          <span v-if="scope.row.relayType=='已结束'" class="colorDanger">{{ scope.row.relayType }}</span>
-          <span v-else class="colorSuccess">{{ scope.row.relayType }}</span>
+          <span v-if="scope.row.relayType==0" class="colorSuccess">转播中</span>
+          <span v-else >已结束</span>
+        </template>
+      </el-table-column>
+      <el-table-column>
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="handleBreak(scope.$index,scope.row)" v-show="scope.row.relayType==0">中断</el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope.$index,scope.row)" v-show="scope.row.relayType==1">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -76,12 +82,13 @@
 <script>
 import {
   childrenStreamAdressfile,
-  rebroadcastList
+  rebroadcastList,
+  interruptRelay,
+  deletRelay
 } from "@/api/live/steamAdressManage.js";
 import addRebroadcast from "@/views/live/liveConfig/addRebroadcast.vue";
 export default {
   components: { addRebroadcast },
-
   data() {
     //  var pictureControl = (rule, value, callback) => {
     //    var _this=this;
@@ -151,7 +158,38 @@ export default {
       });
     },
     
-    handleDelete() {},
+    handleDelete(index,row) {
+       var _this=this;
+       this.$confirm("确定删除?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+         new Promise((resolve,reject)=>{
+        deletRelay(row.id)
+        .then(res=>{
+          if(res.data.code==0){
+            _this.$message.success(res.data.msg)
+            _this.requestRebroadCast();
+          }else{
+            _this.$message.error(res.data.msg)
+          }
+        })
+        .catch(err=>{
+          reject(err)
+        })
+      })
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+      
+     
+    },
 
     //时间格式化
     formatStart(row) {
@@ -215,6 +253,39 @@ export default {
       this.dialogFormVisible = false;
       console.log(this.dialogFormVisible,'dialogFormVisible')
 
+    },
+    handleBreak(index,row){
+      console.log(row.id);
+      var _this=this;
+       this.$confirm("此操作将中断拉转直播, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+         new Promise((resolve,reject)=>{
+        interruptRelay(row.id)
+        .then(res=>{
+          if(res.data.code==0){
+            _this.$message.success(res.data.msg)
+            _this.requestRebroadCast();
+          }else{
+            _this.$message.error(res.data.msg)
+          }
+        })
+        .catch(err=>{
+          reject(err)
+        })
+      })
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+      
+     
     }
   }
 };

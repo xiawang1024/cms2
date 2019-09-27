@@ -8,7 +8,7 @@ export function managaStreamAddress(data) {
         Cpath +
         `/streamaddress/page?pageNo=${data.pageNo}&pageSize=${data.pageSize}&sortBy=${
           data.sortBy
-        }&order=${data.order}`,
+        }&order=${data.order}&username=${data.username}`,
       method: "post"
       // loadingConfig: {
       //   noLoading: true
@@ -128,3 +128,24 @@ export function distributeDelete(id){
   })
 }
 
+//中断拉转直播
+export function interruptRelay(id) {
+  return request({
+    url: Cpath + `/relaystream/interruptRelay?id=${id}`,
+    method: "get",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+
+//删除已结束的拉转直播
+export function deletRelay(id) {
+  return request({
+    url: Cpath + `/relaystream/deletRelay?id=${id}`,
+    method: "delete",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}

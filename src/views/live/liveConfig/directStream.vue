@@ -14,7 +14,12 @@
       <el-table-column prop="endTime" :formatter="formatEndTime" label="结束时间"/>
       <el-table-column prop="pushTime" :formatter="formatPushTime" label="推送时间"/>
       <el-table-column prop="streamType" label="视频流类型" :formatter="formatStreamType"/>
-      
+      <el-table-column prop="saveFile" label="流文件" >
+        <template slot-scope="scope">
+          <span v-if="scope.row.saveFile==0" class="colorSuccess">生成</span>
+          <span v-if="scope.row.saveFile==1" class="colorInfo">已暂停</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="isTranscoding" label="点播流" >
         <template slot-scope="scope">
           <div >
@@ -23,31 +28,43 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" min-width="200">
         <template slot-scope="scope">
+          <el-button
+            v-show="scope.row.streamType=='0'&&scope.row.saveFile==1"
+            size="mini"
+            type="primary"
+            @click="handleStreamCreateFile(scope.$index, scope.row)"
+          >生成文件</el-button>
+          <el-button
+            v-show="scope.row.streamType=='0'&&scope.row.saveFile==0"
+            size="mini"
+            type="primary"
+            @click="handleStreamPause(scope.$index, scope.row)"
+          >暂停</el-button>
           <el-button
             v-show="scope.row.streamType=='0'&&scope.row.isTranscoding!='false'"
             size="mini"
-            type="success"
+            type="primary"
             @click="handleStreamForbid(scope.$index, scope.row)"
           >禁用</el-button>
           <el-button
             v-show="scope.row.streamType=='0'&&scope.row.isTranscoding=='false'"
             size="mini"
-            type="success"
+            type="primary"
             @click="handleStreamStart(scope.$index, scope.row)"
           >启用</el-button>
 
           <el-button
             v-show="scope.row.streamType=='1'"
             size="mini"
-            type="success"
+            type="primary"
             @click="handleForbid(scope.$index, scope.row)"
           >禁用</el-button>
           <el-button
             v-show="scope.row.streamType=='2'"
             size="mini"
-            type="success"
+            type="primary"
             @click="handleUnForbid(scope.$index, scope.row)"
           >解禁</el-button>
           <!-- <el-button size="mini" type="prime" disabled="true"  @click="handlePush(scope.$index, scope.row)">开始推流</el-button>
@@ -77,7 +94,9 @@ import {
     deleteStream,
     undisableStream,
     stopTranscoding,
-    startTranscoding
+    startTranscoding,
+    savefilestart,
+    savefilestop
   //   startPushStream,
   //   endPushStream
 } from "@/api/live/flowManagement.js";
@@ -319,7 +338,6 @@ export default {
       }
       return data;
     },
-
     //分页处理
     handleSizeChange(val) {
       this.pageSize = val;
@@ -388,7 +406,62 @@ export default {
           reject(error);
         })
       })
+  },
+  handleStreamCreateFile(index,row){
+    var _this=this;
+      return new Promise((resolve,reject)=>{
+        savefilestart(row.id)
+        .then(response=>{
+          if(response.data.code==0){
+            this.$message({
+          type:'success',
+          message:response.data.msg
+        })
+        _this.requestTableValue();
+
+          }else{
+            this.$message({
+          type:'error',
+          message:response.data.msg
+        })
+          }
+        
+        resolve();
+        })
+        .catch(error=>{
+
+          reject(error);
+        })
+      })
+  },
+  handleStreamPause(index,row){
+    var _this=this;
+      return new Promise((resolve,reject)=>{
+        savefilestop(row.id)
+        .then(response=>{
+          if(response.data.code==0){
+            this.$message({
+          type:'success',
+          message:response.data.msg
+        })
+        _this.requestTableValue();
+
+          }else{
+            this.$message({
+          type:'error',
+          message:response.data.msg
+        })
+          }
+        
+        resolve();
+        })
+        .catch(error=>{
+
+          reject(error);
+        })
+      })
   }
+
   }
 };
 </script>
@@ -398,5 +471,14 @@ export default {
 }
 .pagenation{
   margin: 30px 0;
+}
+.colorSuccess {
+  color: #67c23a;
+}
+.colorDanger {
+  color: #f56c6c;
+}
+.colorInfo {
+  color: #409eff;
 }
 </style>

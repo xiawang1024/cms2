@@ -103,3 +103,28 @@ export function startTranscoding(id) {
     }
   });
 }
+
+//开始生成流文件
+export function savefilestart(id) {
+  return request({
+    url:
+      Cpath +
+      `/stream/savefilestart?id=${id}`,
+    method: "post",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+//暂停生成流文件
+export function savefilestop(id) {
+  return request({
+    url:
+      Cpath +
+      `/stream/savefilestop?id=${id}`,
+    method: "post",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
