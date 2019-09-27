@@ -56,7 +56,7 @@
           <span v-else >已结束</span>
         </template>
       </el-table-column>
-      <el-table-column>
+      <el-table-column prop="relayType" label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleBreak(scope.$index,scope.row)" v-show="scope.row.relayType==0">中断</el-button>
           <el-button type="danger" size="mini" @click="handleDelete(scope.$index,scope.row)" v-show="scope.row.relayType==1">删除</el-button>

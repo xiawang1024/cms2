@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="v-search-header">
+      <v-search :search-settings="searchSettings" @search="searchItem"/>
+    </div>
     <el-row>
       <el-col :span="2">
         <el-button size="mini" type="primary" @click="handleUpload">上传</el-button>
@@ -113,6 +116,55 @@ export default {
   },
   data() {
     return {
+       searchSettings: [{
+        label: '转码状态',
+        name: 'state',
+        visible: true,
+       type: 'select',
+        options:[
+          {
+            label:'成功',
+            value:3
+          },
+           {
+            label:'失败',
+            value:2
+          },
+           {
+            label:'转码中',
+            value:1
+          },
+           {
+            label:'未转码',
+            value:0
+          }
+        ]
+      },{
+        label: '标题',
+        name: 'title',
+        visible: true,
+        type: 'text'
+      },{
+        label: '创建者',
+        name: 'createUser',
+        visible: true,
+        type: 'text'
+      },{
+        label: '文件类型',
+        name: 'fileType',
+        visible: true,
+        type: 'select',
+        options:[
+          {
+            label:'视频',
+            value:0
+          },
+           {
+            label:'音频',
+            value:1
+          }
+        ]
+      }],
       tableValue: [],
       videoSource: "",
       dialogVideo: false,
@@ -329,7 +381,7 @@ export default {
               required: true,
               limit: 1,
               hidden: false,
-              acceptFile: { accept: [".mp4", ".rmvb", ".mkv", ".wmv", ".flv"] }
+              acceptFile: { accept: [".mp4", ".rmvb", ".mkv", ".wmv", ".flv",".mov"] }
             },
             {
               label: "上传资源",
@@ -355,6 +407,10 @@ export default {
       formData: {},
       clientLicenseId: "",
       viewtype:'',
+        fileType:'',
+          createUser:'',
+          title:'',
+          state:''
     };
   },
   created() {
@@ -369,7 +425,11 @@ export default {
         streamfile({
           pageNo: this.pageNo,
           pageSize: this.pageSize,
-          tanentId: this.clientLicenseId
+          tanentId: this.clientLicenseId,
+          fileType:this.fileType,
+          createUser:this.createUser,
+          title:this.title,
+          state:this.state
         })
           .then(res => {
             console.log(res, "res");
@@ -624,7 +684,18 @@ export default {
       if (row.fileType == 1) {
         FileSaver.saveAs(downUrl, saveTitle+".mp3");
       }
-    }
+    },
+    searchItem(val){
+      this.username=val.username;
+       this.pageNo=1,
+      this.pageSize=10,
+      this.totalCount=0,
+      this.fileType=val.fileType==undefined?'':val.fileType,
+          this.createUser=val.createUser||'',
+          this.title=val.title||'',
+          this.state=val.state==undefined?'':val.state
+      this.initTable();
+    },
   }
 };
 </script>

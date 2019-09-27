@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row class="title">
+    <el-row class="mergetitle">
       <el-col :span="24">
         <el-button type="primary" size="mini" @click="handleMove(0)" :disabled="radio<=0">前移</el-button>
         <el-button type="primary" size="mini" @click="handleMove(1)" :disabled="radio==multipleSelection.length-1">后移</el-button>
@@ -102,8 +102,8 @@ export default {
     }
 }
 </script>
-<style lang="scss">
-    .title{
+<style lang="scss" scoped>
+    .mergetitle{
         margin-bottom: 20px;
     }
     .square{

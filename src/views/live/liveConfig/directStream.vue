@@ -14,12 +14,12 @@
       <el-table-column prop="endTime" :formatter="formatEndTime" label="结束时间"/>
       <el-table-column prop="pushTime" :formatter="formatPushTime" label="推送时间"/>
       <el-table-column prop="streamType" label="视频流类型" :formatter="formatStreamType"/>
-      <el-table-column prop="saveFile" label="流文件" >
+      <!-- <el-table-column prop="saveFile" label="流文件" >
         <template slot-scope="scope">
           <span v-if="scope.row.saveFile==0" class="colorSuccess">生成</span>
           <span v-if="scope.row.saveFile==1" class="colorInfo">已暂停</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="isTranscoding" label="点播流" >
         <template slot-scope="scope">
           <div >
@@ -30,7 +30,7 @@
       </el-table-column>
       <el-table-column label="操作" min-width="200">
         <template slot-scope="scope">
-          <el-button
+          <!-- <el-button
             v-show="scope.row.streamType=='0'&&scope.row.saveFile==1"
             size="mini"
             type="primary"
@@ -41,7 +41,7 @@
             size="mini"
             type="primary"
             @click="handleStreamPause(scope.$index, scope.row)"
-          >暂停</el-button>
+          >暂停</el-button> -->
           <el-button
             v-show="scope.row.streamType=='0'&&scope.row.isTranscoding!='false'"
             size="mini"
