@@ -28,26 +28,26 @@
           <el-button
             v-show="scope.row.streamType=='0'&&scope.row.isTranscoding!='false'"
             size="mini"
-            type="success"
+            type="primary"
             @click="handleStreamForbid(scope.$index, scope.row)"
           >禁用</el-button>
           <el-button
             v-show="scope.row.streamType=='0'&&scope.row.isTranscoding=='false'"
             size="mini"
-            type="success"
+            type="primary"
             @click="handleStreamStart(scope.$index, scope.row)"
           >启用</el-button>
 
           <el-button
             v-show="scope.row.streamType=='1'"
             size="mini"
-            type="success"
+            type="primary"
             @click="handleForbid(scope.$index, scope.row)"
           >禁用</el-button>
           <el-button
             v-show="scope.row.streamType=='2'"
             size="mini"
-            type="success"
+            type="primary"
             @click="handleUnForbid(scope.$index, scope.row)"
           >解禁</el-button>
           <!-- <el-button size="mini" type="prime" disabled="true"  @click="handlePush(scope.$index, scope.row)">开始推流</el-button>
