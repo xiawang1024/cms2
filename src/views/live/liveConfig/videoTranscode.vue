@@ -25,12 +25,13 @@
       </el-table-column>
       <el-table-column prop="createTime" width="150" label="创建时间" />
       <el-table-column prop="updateTime" width="150" label="更新时间" />
-      <el-table-column prop="state" width="80" label="转码状态">
+      <el-table-column prop="state" width="120" label="转码状态">
         <template slot-scope="scope">
           <span v-if="scope.row.state==3" class="colorSuccess">成功</span>
           <span v-if="scope.row.state==2" class="colorDanger">失败</span>
           <span v-if="scope.row.state==1" class="colorWarning">转码中...</span>
-          <span v-if="scope.row.state==0" class="colorInfo">未转码</span>
+          <span v-if="scope.row.state==0" class="colorInfo">待转码</span>
+          <span v-if="scope.row.state==-1" class="colorInfo">源文件不存在</span>
         </template>
       </el-table-column>
 
@@ -82,11 +83,13 @@
         @selectChanges="selectChanges"
       />
     </el-dialog>
-    <el-dialog :visible.sync="dialogVideo" title="预览">
+    <el-dialog :visible.sync="dialogVideo" title="预览"
+               :before-close="handleShutdown"
+    >
       <el-row>
         <el-col :span="24">
-          <video v-if="viewtype==0" style="width:100%" :src="videoSource" controls />
-          <audio v-if="viewtype==1" style="width:100%" :src="videoSource" controls/>
+          <video ref="viewVideo" v-if="viewtype==0" style="width:100%" :src="videoSource" controls />
+          <audio ref="viewAudio" v-if="viewtype==1" style="width:100%" :src="videoSource" controls/>
           <!-- <audio  src="https://np01-sycdn.kuwo.cn/3591a98480253ad009e6dd93b18d8097/5d8c9807/resource/n2/88/97/2816282324.mp3" controls></audio> -->
 
         </el-col>
@@ -381,20 +384,19 @@ export default {
               required: true,
               limit: 1,
               hidden: false,
-              acceptFile: { accept: [".mp4", ".rmvb", ".mkv", ".wmv", ".flv",".mov"] }
+              acceptFile: { accept: [".mp4", ".rmvb", ".mkv", ".wmv", ".flv",".mov",".avi",".swf",".mod"] }
             },
             {
               label: "上传资源",
-              name: "inputFilePath",
-              type: "audio",
+              name: "auidoFilePath",
+              type: "simpleVideo",
               required: true,
               limit: 1,
               hidden: true,
               acceptFile: {
-                accept: [".mp3", ".wmv", ".aac"]
+                accept: ['.cda','.wav','.aac','.mp3']
               }
             },
-
             {
               label: "标题",
               name: "resourceTitle",
@@ -484,9 +486,31 @@ export default {
           data.videoCode = val.videoCode;
           data.audioCode = val.VaudioCode;
         }
+        if (val.inputFilePath[0].url) {
+        //截掉url域名
+        let url = val.inputFilePath[0].url;
+        data.inputFilePath = url.split(baseUrl.DOWN_URL)[1];
+      } else {
+        this.$message({
+          type: "error",
+          message: "请在文件上传结束后进行操作"
+        });
+        return false;
+      }
       } else if (val.fileType == 1) {
         data.audioCode = val.audioCode;
         data.audioBitRate = val.audioBitRate;
+        if (val.auidoFilePath[0].url) {
+        //截掉url域名
+        let url = val.auidoFilePath[0].url;
+        data.auidoFilePath = url.split(baseUrl.DOWN_URL)[1];
+      } else {
+        this.$message({
+          type: "error",
+          message: "请在文件上传结束后进行操作"
+        });
+        return false;
+      }
       }
       (data.clientLicenseId = JSON.parse(
         localStorage.getItem("BaseInfor")
@@ -498,17 +522,7 @@ export default {
       data.fileType = val.fileType;
 
       //未获得文件地址拦截操作
-      if (val.inputFilePath[0].url) {
-        //截掉url域名
-        let url = val.inputFilePath[0].url;
-        data.inputFilePath = url.split(baseUrl.DOWN_URL)[1];
-      } else {
-        this.$message({
-          type: "error",
-          message: "请在文件上传结束后进行操作"
-        });
-        return false;
-      }
+      
       if (data.audioCode == "静音") {
         data.audioCode = "";
       }
@@ -696,6 +710,18 @@ export default {
           this.state=val.state==undefined?'':val.state
       this.initTable();
     },
+    handleShutdown(done){
+      if(this.viewtype==0){
+       this.$refs.viewVideo.pause();
+
+      } 
+      if(this.viewtype==1){
+       this.$refs.viewAudio.pause();
+
+      }
+       done();
+    
+    }
   }
 };
 </script>
