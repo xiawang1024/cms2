@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="v-search"
-    @keyup.enter.stop="onEnter"
-  >
+  <div class="v-search" @keyup.enter.stop="onEnter">
     <el-form
       v-if="formModel"
       :inline="false"
@@ -15,24 +12,18 @@
       <el-row :gutter="10">
         <el-col
           :md="8"
-          :sm="12"
-          :xs="24"
+          :sm="8"
+          :xs="12"
+          :lg="6"
           v-for="(item, index) in searchSettings"
           :key="index"
           v-show="item.visible || showAll"
           v-if="item.hide?false:true"
         >
-          <el-form-item
-            :label="item.label"
-            :prop="item.name"
-            style="max-width: 440px;"
-          >
+          <el-form-item :label="item.label" :prop="item.name" style="max-width: 440px;">
             <!-- 文本框 -->
             <template v-if="item.type=='text'">
-              <el-input
-                v-model.trim="formModel[item.name]"
-                :placeholder="item.placeholder"
-              />
+              <el-input v-model="formModel[item.name]" :placeholder="item.placeholder" />
             </template>
             <!-- 下拉框 -->
             <template v-else-if="item.type=='select'">
@@ -53,14 +44,8 @@
                   />
                 </template>
                 <template v-else>
-                  <el-option
-                    label="是"
-                    value="1"
-                  />
-                  <el-option
-                    label="否"
-                    value="0"
-                  />
+                  <el-option label="是" value="1" />
+                  <el-option label="否" value="0" />
                 </template>
               </el-select>
             </template>
@@ -104,7 +89,7 @@
                 type="month"
                 :placeholder="item.placeholder || '选择日期'"
                 :value-format="item.valueFormat"
-                clear-icon=""
+                clear-icon
               />
             </template>
             <!-- 带输入建议文本框 -->
@@ -124,7 +109,7 @@
               enableAuth: 是否使用城市权限控制，默认 false
               enableOtherCity: 是否带有“其他”选项，默认 false
               enableAllCity: 是否显示“全部”选项（当有该权限时），默认 true
-               -->
+              -->
               <city-select
                 v-model="formModel[item.name]"
                 :placeholder="item.placeholder"
@@ -255,47 +240,18 @@
             </template>
             <!-- slot自定义内容 -->
             <template v-else-if="item.type=='slot'">
-              <slot
-                :name="item.name"
-                :model="formModel"
-              />
+              <slot :name="item.name" :model="formModel" />
             </template>
           </el-form-item>
         </el-col>
-        <el-col
-          :md="8"
-          :sm="12"
-          :xs="24"
-          style="float:right"
-        >
-          <el-form-item
-            label-width="0"
-            style="text-align:right"
-          >
-            <el-button
-              type="primary"
-              @click="onSearch"
-              size="mini"
-            >搜索</el-button>
-            <el-button
-              @click="onReset"
-              v-if="!hideReset"
-              size="mini"
-            >重置</el-button>
-            <el-button
-              type="text"
-              @click="handleShowAll"
-              v-if="invisibleItemCount"
-            >
+        <el-col :md="8" :sm="12" :xs="24" :lg="6" style="float:right">
+          <el-form-item label-width="0" style="text-align:right">
+            <el-button type="primary" @click="onSearch" size="mini">搜索</el-button>
+            <el-button @click="onReset" v-if="!hideReset" size="mini">重置</el-button>
+            <el-button type="text" @click="handleShowAll" v-if="invisibleItemCount">
               {{ showAll ? "简单搜索" : "高级搜索" }}
-              <i
-                v-if="showAll"
-                class="el-icon-arrow-up"
-              />
-              <i
-                v-else
-                class="el-icon-arrow-down"
-              />
+              <i v-if="showAll" class="el-icon-arrow-up" />
+              <i v-else class="el-icon-arrow-down" />
             </el-button>
           </el-form-item>
         </el-col>

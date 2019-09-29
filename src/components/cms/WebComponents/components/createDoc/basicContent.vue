@@ -1,6 +1,5 @@
 <template>
   <div class="basicContent-wrap">
-    <!-- {{contextMenu}} -->
     <div class="tool-bars clearfix">
       <div v-if="contextMenu.articleType && contextMenu.articleType == 3" class="quote-tille">
         <span>文档类型： 引用</span>
@@ -15,45 +14,89 @@
               v-for="item in options"
               :key="item.value"
               :label="item.label"
-              :value="item.value"/>
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
       </el-form>
     </div>
-    <imageText ref="imageText" :extends-list="extendsList" :other-settings="otherSettings" :tag-list="tagList" :source-list="sourceList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 0 || contextMenu.articleType == 3"/>
-    <images ref="images" :extends-list="extendsList" :images-setting="imagesSeting" :tag-list="tagList" :channel-id="channelId" :doc-infor="docInfor" v-if="typeForm.articleType == 1"/>
-    <splicing ref="splicing" :channel-id = "channelId" :doc-infor="docInfor" :tag-list = "tagList" v-if="typeForm.articleType == 2"/>
-    <reproduce ref="reproduce" :channel-id = "channelId" :doc-infor="docInfor" :reproduce-setting="reproduceSetting" :tag-list = "tagList" v-if="typeForm.articleType == 4"/>
-    <article-link ref="articleLink" :channel-id = "channelId" :doc-infor="docInfor" :link-setting="articleLinkSetting" :tag-list = "tagList" v-if="typeForm.articleType == 5"/>
+    <imageText
+      ref="imageText"
+      :extends-list="extendsList"
+      :other-settings="otherSettings"
+      :tag-list="tagList"
+      :source-list="sourceList"
+      :channel-id="channelId"
+      :doc-infor="docInfor"
+      v-if="typeForm.articleType == 0 || contextMenu.articleType == 3"
+    />
+    <images
+      ref="images"
+      :extends-list="extendsList"
+      :images-setting="imagesSeting"
+      :tag-list="tagList"
+      :channel-id="channelId"
+      :doc-infor="docInfor"
+      v-if="typeForm.articleType == 1"
+    />
+    <splicing
+      ref="splicing"
+      :channel-id="channelId"
+      :doc-infor="docInfor"
+      :tag-list="tagList"
+      v-if="typeForm.articleType == 2"
+    />
+    <reproduce
+      ref="reproduce"
+      :channel-id="channelId"
+      :doc-infor="docInfor"
+      :reproduce-setting="reproduceSetting"
+      :tag-list="tagList"
+      v-if="typeForm.articleType == 4 && contextMenu.articleType !== 3"
+    />
+    <article-link
+      ref="articleLink"
+      :channel-id="channelId"
+      :doc-infor="docInfor"
+      :link-setting="articleLinkSetting"
+      :tag-list="tagList"
+      v-if="typeForm.articleType == 5"
+    />
     <!-- <quote v-if="typeForm.articleType == 3"></quote> -->
   </div>
 </template>
 <script>
-import imageText from './imageText'
-import images from './images.vue'
-import splicing from './splicing.vue'
-import reproduce from './reproduce.vue'
-import articleLink from './articleLink'
-import quote from './quote'
-import { columnInfor } from '@/api/cms/columnManage'
-import { documentInfor, documentQuoteInfor } from '@/api/cms/article'
-import { fetchDictByDictName } from "@/api/cms/dict"
-import {otherSettings, imagesSeting, reproduceSetting, defultItems, articleLinkSetting} from './setting.js'
-import { mapGetters } from 'vuex'
+import imageText from "./imageText";
+import images from "./images.vue";
+import splicing from "./splicing.vue";
+import reproduce from "./reproduce.vue";
+import articleLink from "./articleLink";
+import quote from "./quote";
+import { columnInfor } from "@/api/cms/columnManage";
+import { documentInfor, documentQuoteInfor } from "@/api/cms/article";
+import { fetchDictByDictName } from "@/api/cms/dict";
+import {
+  otherSettings,
+  imagesSeting,
+  reproduceSetting,
+  defultItems,
+  articleLinkSetting
+} from "./setting.js";
+import { mapGetters } from "vuex";
 export default {
-  name: 'BasicContent',
-  components: { imageText, images, splicing, reproduce, quote,  articleLink },
+  name: "BasicContent",
+  components: { imageText, images, splicing, reproduce, quote, articleLink },
   props: {
-   activeName: {
-     default: '',
-     type: String
-   },
-  //  propInformation: {
-  //    default: ()=> {
-  //      return {}
-  //    },
-  //    type: Object
-  //  }
+    activeName: {
+      default: "",
+      type: String
+    }
+    //  propInformation: {
+    //    default: ()=> {
+    //      return {}
+    //    },
+    //    type: Object
+    //  }
   },
   data() {
     return {
@@ -62,232 +105,278 @@ export default {
       },
       extendsList: [],
       tagList: [],
-      channelId: '',
+      channelId: "",
       docInfor: {},
-      options: [{
+      options: [
+        {
           value: 0,
-          label: '图文'
-        }, {
+          label: "图文"
+        },
+        {
           value: 1,
-          label: '图集'
-        }, {
+          label: "图集"
+        },
+        {
           value: 2,
-          label: '拼条'
-        },{
+          label: "拼条"
+        },
+        {
           value: 4,
-          label: '转载'
-        },{
+          label: "转载"
+        },
+        {
           value: 5,
-          label: '外链'
-        }],
-        otherSettings: otherSettings,
-        imagesSeting: imagesSeting,
-        reproduceSetting: reproduceSetting,
-        articleLinkSetting: articleLinkSetting,
-        sourceList: []
-    }
+          label: "外链"
+        }
+      ],
+      otherSettings: otherSettings,
+      imagesSeting: imagesSeting,
+      reproduceSetting: reproduceSetting,
+      articleLinkSetting: articleLinkSetting,
+      sourceList: []
+    };
   },
+  // JSON.parse(localStorage.getItem("BaseInfor")).userId
   computed: {
-    ...mapGetters(['treeTags', 'contextMenu'])
+    ...mapGetters(["treeTags", "contextMenu"])
   },
   watch: {
     // 存储文章信息
     activeName(val, oldVal) {
-      console.log(oldVal, '3333')
-      if(oldVal == 'basicContent' && this.typeForm.articleType == 0) {
-        this.$store.dispatch('setBaseInfor', this.$refs.imageText.getSubmitData())
+      console.log(oldVal, "3333");
+      if (oldVal == "basicContent" && this.typeForm.articleType == 0) {
+        this.$store.dispatch(
+          "setBaseInfor",
+          this.$refs.imageText.getSubmitData()
+        );
       }
-      if(oldVal == 'basicContent' && this.typeForm.articleType == 1) {
-        this.$store.dispatch('setBaseInfor', this.$refs.images.getSubmitData())
+      if (oldVal == "basicContent" && this.typeForm.articleType == 1) {
+        this.$store.dispatch("setBaseInfor", this.$refs.images.getSubmitData());
       }
-      if(oldVal == 'basicContent' && this.typeForm.articleType == 2) {
-        this.$store.dispatch('setBaseInfor', this.$refs.splicing.getSubmitData())
+      if (oldVal == "basicContent" && this.typeForm.articleType == 2) {
+        this.$store.dispatch(
+          "setBaseInfor",
+          this.$refs.splicing.getSubmitData()
+        );
       }
-      if(oldVal == 'basicContent' && this.typeForm.articleType == 4) {
-        this.$store.dispatch('setBaseInfor', this.$refs.reproduce.getSubmitData())
+      if (oldVal == "basicContent" && this.typeForm.articleType == 4) {
+        this.$store.dispatch(
+          "setBaseInfor",
+          this.$refs.reproduce.getSubmitData()
+        );
       }
-      if(oldVal == 'basicContent' && this.typeForm.articleType == 5) {
-        this.$store.dispatch('setBaseInfor', this.$refs.articleLink.getSubmitData())
+      if (oldVal == "basicContent" && this.typeForm.articleType == 5) {
+        this.$store.dispatch(
+          "setBaseInfor",
+          this.$refs.articleLink.getSubmitData()
+        );
       }
     }
   },
   created() {
     // 获取栏目详情
-    this.getColumnInfor(this.treeTags[this.treeTags.length - 1].id)
-    this.channelId = this.treeTags[this.treeTags.length - 1].id
-    this.fetchDict()
+    this.getColumnInfor(this.treeTags[this.treeTags.length - 1].id);
+    this.channelId = this.treeTags[this.treeTags.length - 1].id;
+    this.fetchDict();
+    console.log(this.otherSettings[0].items[5], "otherSettings");
+    if (
+      JSON.parse(localStorage.getItem("BaseInfor")).clientLicenseId == "DXNews"
+    ) {
+      this.otherSettings[0].items[5].required = true;
+    }
   },
   mounted() {
-    if(this.contextMenu.articleType == 3) {
-      this.otherSettings[0].items.forEach((ele) => {
-        ele.disabled = true
-      })
+    if (this.contextMenu.articleType == 3) {
+      this.otherSettings[0].items.forEach(ele => {
+        ele.disabled = true;
+      });
     } else {
-      this.otherSettings[0].items.forEach((ele) => {
-        ele.disabled = false
-      })
+      this.otherSettings[0].items.forEach(ele => {
+        ele.disabled = false;
+      });
     }
   },
   methods: {
     handleSave() {},
     handleSaveAddRelease() {},
     goBack() {
-      this.$store.dispatch('setContextMenu', {
-        id: '0',
-        label: ''
-      })
+      this.$store.dispatch("setContextMenu", {
+        id: "0",
+        label: ""
+      });
     },
     typeChange(val) {
-      console.log(val)
+      console.log(val);
     },
     datachange(type) {
-      switch(type) {
-        case '1':
-          return 'text'
-        case '2':
-          return 'datetime'
-        case '3':
-          return 'number'
-        default: ''
+      switch (type) {
+        case "1":
+          return "text";
+        case "2":
+          return "datetime";
+        case "3":
+          return "number";
+        default:
+          "";
       }
     },
     // 获取栏目详情
     getColumnInfor(id) {
       // 设置默认值， 防止扩展字段重复添加
-      this.otherSettings[0].items = defultItems
-      var _this = this
+      this.otherSettings[0].items = defultItems;
+      var _this = this;
       return new Promise((resolve, reject) => {
         columnInfor(id)
-          .then((response) => {
-            if(response.data.result.extFieldsList) {
-              _this.extendsList = response.data.result.extFieldsList.map((ele) => {
-                return {
-                  label: ele.label,
-                  name: ele.label,
-                  type: _this.datachange(ele.type),
-                  required: ele.required,
-                  placeholder: '请输入',
-                  value: ele.defaultValue,
-                  // disabled: ele.defaultValue ? true : false
+          .then(response => {
+            if (response.data.result.extFieldsList) {
+              _this.extendsList = response.data.result.extFieldsList.map(
+                ele => {
+                  return {
+                    label: ele.label,
+                    name: ele.label,
+                    type: _this.datachange(ele.type),
+                    required: ele.required,
+                    placeholder: "请输入",
+                    value: ele.defaultValue
+                    // disabled: ele.defaultValue ? true : false
+                  };
                 }
-              })
+              );
             }
-            if(response.data.result.tagRule) {
-              Object.keys(response.data.result.tagRule).forEach((ele) => {
-                if(response.data.result.tagRule[ele]) {
+            if (response.data.result.tagRule) {
+              Object.keys(response.data.result.tagRule).forEach(ele => {
+                if (response.data.result.tagRule[ele]) {
                   _this.tagList.push({
                     label: response.data.result.tagRule[ele],
                     value: ele
-                  })
+                  });
                 }
-              })
+              });
             }
-            _this.otherSettings[0].items[0].options = _this.tagList
-            _this.imagesSeting[0].items[6].options = _this.tagList
-            _this.reproduceSetting[0].items[4].options = _this.tagList
-            _this.articleLinkSetting[0].items[4].options = _this.tagList
+            _this.otherSettings[0].items[0].options = _this.tagList;
+            _this.imagesSeting[0].items[6].options = _this.tagList;
+            _this.reproduceSetting[0].items[4].options = _this.tagList;
+            _this.articleLinkSetting[0].items[4].options = _this.tagList;
             this.$nextTick(() => {
-              _this.otherSettings[0].items = _this.otherSettings[0].items.concat(_this.extendsList)
-              if(_this.contextMenu.articleType == 3) {
-                this.otherSettings[0].items.forEach((ele) => {
-                  ele.disabled = true
-                })
+              _this.otherSettings[0].items = _this.otherSettings[0].items.concat(
+                _this.extendsList
+              );
+              if (_this.contextMenu.articleType == 3) {
+                this.otherSettings[0].items.forEach(ele => {
+                  ele.disabled = true;
+                });
               }
-            })
+            });
             //未设置标签字段时标签不显示
-            if(!_this.tagList.length) {
-              _this.otherSettings[0].items[0].hidden = true
-              _this.imagesSeting[0].items[6].hidden = true
-              _this.reproduceSetting[0].items[4].hidden = true
-              _this.articleLinkSetting[0].items[4].hidden = true
+            if (!_this.tagList.length) {
+              _this.otherSettings[0].items[0].hidden = true;
+              _this.imagesSeting[0].items[6].hidden = true;
+              _this.reproduceSetting[0].items[4].hidden = true;
+              _this.articleLinkSetting[0].items[4].hidden = true;
             } else {
-              _this.otherSettings[0].items[0].hidden = false
-              _this.imagesSeting[0].items[6].hidden = false
-              _this.reproduceSetting[0].items[4].hidden = false
-              _this.articleLinkSetting[0].items[4].hidden = false
+              _this.otherSettings[0].items[0].hidden = false;
+              _this.imagesSeting[0].items[6].hidden = false;
+              _this.reproduceSetting[0].items[4].hidden = false;
+              _this.articleLinkSetting[0].items[4].hidden = false;
             }
-            if(_this.contextMenu.docId) {
-              if(_this.contextMenu.articleType == 3) {
-                _this.getQuoteDocumentInfor(_this.contextMenu.docId)
+            if (_this.contextMenu.docId) {
+              if (_this.contextMenu.articleType == 3) {
+                _this.getQuoteDocumentInfor(_this.contextMenu.docId);
               } else {
-                _this.getDocumentInfor(_this.contextMenu.docId)
+                _this.getDocumentInfor(_this.contextMenu.docId);
               }
             } else {
               // 扩展字段必填触发updateForm
               this.$nextTick(() => {
                 _this.docInfor = {
-                  hiddenFlag: '0',
-                  topFlag: '0',
+                  hiddenFlag: "0",
+                  topFlag: "0",
                   publishTime: new Date()
-                }
-              })
+                };
+              });
             }
-            resolve()
+            resolve();
           })
-          .catch((error) => {
-            reject(error)
-          })
-      })
+          .catch(error => {
+            reject(error);
+          });
+      });
     },
     getDocumentInfor(id) {
-      var _this = this
+      var _this = this;
       return new Promise((resolve, reject) => {
         documentInfor(id)
-          .then((response) => {
-            _this.docInfor = response.data.result
-            if(_this.docInfor.contentBody) {
-              _this.docInfor.contentBody = _this.docInfor.contentBody.replace(/!important/g, '')
+          .then(response => {
+            _this.docInfor = response.data.result;
+            if (_this.docInfor.contentBody) {
+              _this.docInfor.contentBody = _this.docInfor.contentBody.replace(
+                /!important/g,
+                ""
+              );
             }
-            _this.typeForm.articleType = response.data.result.articleType ? response.data.result.articleType : 0
-            if(_this.typeForm.articleType == 4) {
-              _this.typeForm.articleType = 0
+            _this.typeForm.articleType = response.data.result.articleType
+              ? response.data.result.articleType
+              : 0;
+            if (_this.typeForm.articleType == 4) {
+              _this.typeForm.articleType = 0;
             }
-            if(_this.docInfor.extFieldsList && _this.docInfor.extFieldsList.length) {
-              _this.docInfor.extFieldsList.forEach((ele) => {
-                _this.docInfor[ele.label] = ele.fieldValue
-              })
+            if (
+              _this.docInfor.extFieldsList &&
+              _this.docInfor.extFieldsList.length
+            ) {
+              _this.docInfor.extFieldsList.forEach(ele => {
+                _this.docInfor[ele.label] = ele.fieldValue;
+              });
             }
-            resolve()
+            resolve();
           })
-          .catch((error) => {
-            reject(error)
-          })
-      })
+          .catch(error => {
+            reject(error);
+          });
+      });
     },
     getQuoteDocumentInfor(id) {
-      var _this = this
+      var _this = this;
       return new Promise((resolve, reject) => {
         documentQuoteInfor(id)
-          .then((response) => {
-            _this.docInfor = response.data.result
-            _this.typeForm.articleType = response.data.result.articleType ? response.data.result.articleType : 0
-            if(_this.docInfor.extFieldsList && _this.docInfor.extFieldsList.length) {
-              _this.docInfor.extFieldsList.forEach((ele) => {
-                _this.docInfor[ele.label] = ele.fieldValue
-              })
+          .then(response => {
+            _this.docInfor = response.data.result;
+            _this.typeForm.articleType = response.data.result.articleType
+              ? response.data.result.articleType
+              : 0;
+            if (
+              _this.docInfor.extFieldsList &&
+              _this.docInfor.extFieldsList.length
+            ) {
+              _this.docInfor.extFieldsList.forEach(ele => {
+                _this.docInfor[ele.label] = ele.fieldValue;
+              });
             }
-            resolve()
+            resolve();
           })
-          .catch((error) => {
-            reject(error)
-          })
-      })
+          .catch(error => {
+            reject(error);
+          });
+      });
     },
     fetchDict() {
       var _this = this;
       return new Promise((resolve, reject) => {
-        fetchDictByDictName('文稿来源')
+        fetchDictByDictName("文稿来源")
           .then(response => {
-            if(response.data.result.details && response.data.result.details.length) {
-              _this.sourceList = response.data.result.details.map((ele) => {
+            if (
+              response.data.result.details &&
+              response.data.result.details.length
+            ) {
+              _this.sourceList = response.data.result.details.map(ele => {
                 return {
                   label: ele.dictDetailName,
                   value: ele.dictDetailName
-                }
-              })
-              _this.imagesSeting[0].items[2].options = _this.sourceList
-              _this.reproduceSetting[0].items[2].options = _this.sourceList
-              _this.articleLinkSetting[0].items[2].options = _this.sourceList
+                };
+              });
+              _this.imagesSeting[0].items[2].options = _this.sourceList;
+              _this.reproduceSetting[0].items[2].options = _this.sourceList;
+              _this.articleLinkSetting[0].items[2].options = _this.sourceList;
             }
             resolve();
           })
@@ -297,31 +386,31 @@ export default {
       });
     }
   }
-}
+};
 </script>
 <style lang="scss" >
 .basicContent-wrap {
   margin: 0;
   margin-bottom: 30px;
-  .tool-bars{
+  .tool-bars {
     label {
       font-weight: normal;
     }
     .el-form-item {
-      margin-bottom:0px;
-      .el-input__inner{
+      margin-bottom: 0px;
+      .el-input__inner {
         height: 32px;
         line-height: 32px;
       }
-      .el-form-item__content{
+      .el-form-item__content {
         text-align: left;
       }
     }
-    .quote-tille{
+    .quote-tille {
       font-size: 14px;
       color: #606266;
       line-height: 40px;
-      padding-left:12px;
+      padding-left: 12px;
     }
   }
 }

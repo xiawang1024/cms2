@@ -84,9 +84,21 @@ const statisticsChart = {
         component: () => import(`@/${path}/writerStaticDetail`),
         name: 'writerStaticDetail',
         meta: { title: 'writerStaticDetail', icon: 'commonManuscript', role: 'cms:articleClickByAuthor' },
-        // meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms', }
+        // meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms', },
         hidden:true
       },
+      {
+        /**
+         * 大象发稿统计
+         */
+        path: 'dxDocument',
+        component: () => import(`@/${path}/dxDocument`),
+        name: 'dxDocument',
+        meta: { title: 'dxDocument', icon: '32-elephant', role: 'cms:dxDocumentStatistics' },
+        // meta: { title: 'dxDocument', icon: '32-elephant', role: 'cms', }
+       
+      },
+      
       
    
   ]
