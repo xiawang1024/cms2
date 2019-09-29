@@ -1,8 +1,21 @@
 import axios from 'axios'
-import { Message, Loading } from 'element-ui'
+import {
+  Message,
+  Loading
+} from 'element-ui'
 import baseUrl from '@/config/base-url'
-import { getAuth, setAuth, getRefreshToken, isTokenExpired, isNotGetTokenApi, isRefreshTokenExpired, removeAuth } from './auth.js'
-import { refreshToken } from '@/api/login'
+import {
+  getAuth,
+  setAuth,
+  getRefreshToken,
+  isTokenExpired,
+  isNotGetTokenApi,
+  isRefreshTokenExpired,
+  removeAuth
+} from './auth.js'
+import {
+  refreshToken
+} from '@/api/login'
 import qs from 'qs' // 序列化表单数据
 const request = axios.create({
   baseURL: baseUrl.BASE_URL || '/',
@@ -15,8 +28,9 @@ const request = axios.create({
 // 请求接口loading页面
 const requestLoading = (() => {
   const loadingStack = new Map()
-  function openLoading(loadingConfig={}, baseURL, url) {
-    if(url === '/uua/oauth/check_token' || url ==='/uua/oauth/token') {
+
+  function openLoading(loadingConfig = {}, baseURL, url) {
+    if (url === '/uua/oauth/check_token' || url === '/uua/oauth/token') {
       return
     }
     if (url && !url.match('http')) {
@@ -25,7 +39,7 @@ const requestLoading = (() => {
     if (loadingStack.has(url)) {
       return
     }
-    if(loadingConfig.noLoading) {
+    if (loadingConfig.noLoading) {
       return
     }
     loadingStack.set(url, Loading.service({
@@ -38,11 +52,11 @@ const requestLoading = (() => {
   }
 
   function closeLoading(url) {
-      if(loadingStack.get(url)) {
-        loadingStack.get(url).close()
-        loadingStack.delete(url)
-      }
+    if (loadingStack.get(url)) {
+      loadingStack.get(url).close()
+      loadingStack.delete(url)
     }
+  }
   return {
     open: openLoading,
     close: closeLoading
@@ -90,7 +104,7 @@ request.interceptors.request.use(
       config.headers.Authorization = `${auth.token_type} ${auth.access_token}`
       /** 
        * 判断token是否过期
-      */
+       */
       // console.log(isRefreshTokenExpired())
       if (isRefreshTokenExpired()) {
         removeAuth()
@@ -118,26 +132,28 @@ request.interceptors.request.use(
           refreshToken(getRefreshToken())
             .then((res) => {
               /**
-           * 将刷新 token 的标志置为false
-           */
+               * 将刷新 token 的标志置为false
+               */
               window.isRefreshing = false
               /**
-           * 成功刷新token
-           */
+               * 成功刷新token
+               */
               config.headers.Authorization = `${auth.token_type} ${auth.access_token}`
-              const { data } = res
+              const {
+                data
+              } = res
               /**
-             * 更新auth
-             */
+               * 更新auth
+               */
               setAuth(data)
-              
+
               /**
-             * 执行数组里的函数 重新发起被挂起的请求
-             */
+               * 执行数组里的函数 重新发起被挂起的请求
+               */
               onRefreshed(data.access_token)
               /**
-             * 执行onRefreshed函数后清空数组中保存的请求
-             */
+               * 执行onRefreshed函数后清空数组中保存的请求
+               */
               refreshSubscribers = []
             })
             .catch((err) => {
@@ -156,12 +172,12 @@ request.interceptors.request.use(
         })
         return retry
       }
-      if(config.requestBodyType && config.requestBodyType === 'formData') {
+      if (config.requestBodyType && config.requestBodyType === 'formData') {
         config.data = qs.stringify(config.data)
       }
       if (config.method === 'get') {
         //  给data赋值以绕过if判断
-        config.data = true 
+        config.data = true
       }
       requestLoading.open(config.loadingConfig, config.baseURL, config.url)
       return config
@@ -170,7 +186,7 @@ request.interceptors.request.use(
       /**
        * 未登录直接返回配置信息
        */
-   
+
       return config
     }
   },
@@ -186,7 +202,7 @@ request.interceptors.response.use(
   (res) => {
     requestLoading.close(res.config.url)
     console.log(res.data.code, 'res')
-    if(res.data.code === 0) {
+    if (res.data.code === 0) {
       return res
     }
     // 对响应数据做些事
