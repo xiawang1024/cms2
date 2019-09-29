@@ -171,7 +171,7 @@ export default {
         beginTime: this.beginTime,
         endTime: this.endTime,
         channelId:this.channelId,
-        accessToken:'bearer '+this.$store.getters.token.access_token
+        accessToken:'bearer '+JSON.parse(localStorage.getItem('hnDt_token')).access_token
       };
      
         downdxDocumentStatistics(data)
