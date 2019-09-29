@@ -1,8 +1,5 @@
 <template>
-  <div
-    :class="formSettings.length == 1?'v-form--single': 'v-form--multiple'"
-    class="v-form"
-  >
+  <div :class="formSettings.length == 1?'v-form--single': 'v-form--multiple'" class="v-form">
     <!-- {{formData}} -->
     <!-- <pre>{{formModel}}</pre> -->
     <!-- <pre>{{uploadCallbacks}}</pre> -->
@@ -14,16 +11,9 @@
       :label-width="labelWidth"
       :size="size"
     >
-      <div
-        v-for="(section, sectionIndex) in formSettings"
-        :key="sectionIndex"
-        class="form-section"
-      >
+      <div v-for="(section, sectionIndex) in formSettings" :key="sectionIndex" class="form-section">
         <h3 class="section-label">{{ section.label }}</h3>
-        <div
-          v-if="!section.slot"
-          class="section-content"
-        >
+        <div v-if="!section.slot" class="section-content">
           <el-form-item
             v-for="(item, index) in section.items"
             v-show="!item.hidden"
@@ -34,7 +24,7 @@
             <!-- 文字输入 -->
             <!--
               append: 文本框后置内容
-             -->
+            -->
             <template v-if="item.type=='text'">
               <el-input
                 v-model.trim="formModel[item.name]"
@@ -43,10 +33,7 @@
                 :maxlength="item.maxlength"
                 :show-word-limit="item.showWordLimit"
               >
-                <template
-                  v-if="item.append"
-                  slot="append"
-                >{{ item.append }}</template>
+                <template v-if="item.append" slot="append">{{ item.append }}</template>
               </el-input>
             </template>
             <!-- 车牌号 -->
@@ -87,7 +74,7 @@
               max: 最大值
               disabled: 是否禁用
               append: 文本框后置内容
-             -->
+            -->
             <template v-else-if="item.type=='number'">
               <el-input-number
                 v-model="formModel[item.name]"
@@ -99,15 +86,9 @@
                 :disabled="item.disabled"
                 :class="{'number-with-append': item.append}"
               >
-                <template
-                  v-if="item.append"
-                  slot="append"
-                >{{ item.append }}</template>
+                <template v-if="item.append" slot="append">{{ item.append }}</template>
               </el-input-number>
-              <span
-                v-if="item.describe"
-                style="margin-left:5px"
-              >{{ item.describe }}</span>
+              <span v-if="item.describe" style="margin-left:5px">{{ item.describe }}</span>
             </template>
             <!-- 下拉选择 -->
             <template v-else-if="item.type=='select'">
@@ -129,14 +110,8 @@
                   />
                 </template>
                 <template v-else>
-                  <el-option
-                    label="是"
-                    value="1"
-                  />
-                  <el-option
-                    label="否"
-                    value="0"
-                  />
+                  <el-option label="是" value="1" />
+                  <el-option label="否" value="0" />
                 </template>
               </el-select>
             </template>
@@ -166,11 +141,28 @@
             </template>
             <!-- 时间日期范围选择 -->
             <template v-else-if="item.type=='datetimerange'">
-              <el-date-picker v-model="formModel[item.name]" :disabled="item.disabled" :default-time="item.defaultTime" type="datetimerange" align="right" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"/>
+              <el-date-picker
+                v-model="formModel[item.name]"
+                :disabled="item.disabled"
+                :default-time="item.defaultTime"
+                type="datetimerange"
+                align="right"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              />
             </template>
             <!-- 日期范围选择 -->
             <template v-else-if="item.type=='daterange'">
-              <el-date-picker v-model="formModel[item.name]" :disabled="item.disabled" type="daterange" align="right" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"/>
+              <el-date-picker
+                v-model="formModel[item.name]"
+                :disabled="item.disabled"
+                type="daterange"
+                align="right"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              />
               <!-- <el-date-picker
                 v-model="formModel[item.name]"
                 :default-time="item.defaultTime"
@@ -179,7 +171,7 @@
                 range-separator="至"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
-              /> -->
+              />-->
             </template>
             <!-- 日期范围选择 -->
             <!-- <template v-else-if="item.type=='daterange'">
@@ -191,7 +183,7 @@
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
               />
-            </template> -->
+            </template>-->
             <!-- 日期选择 -->
             <template v-else-if="item.type=='date'">
               <el-date-picker
@@ -202,15 +194,32 @@
             </template>
             <!-- 日期和时间选择 -->
             <template v-else-if="item.type=='datetime'">
-              <el-date-picker v-model="formModel[item.name]" :disabled="item.disabled" :placeholder="item.placeholder || '选择日期'" type="datetime"/>
+              <el-date-picker
+                v-model="formModel[item.name]"
+                :disabled="item.disabled"
+                :placeholder="item.placeholder || '选择日期'"
+                type="datetime"
+              />
             </template>
             <!-- 时间范围选择 -->
             <template v-else-if="item.type=='timerange'">
-              <el-time-picker v-model="formModel[item.name]" :disabled="item.disabled" :placeholder="item.placeholder || '选择时间范围'" is-range range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间"/>
+              <el-time-picker
+                v-model="formModel[item.name]"
+                :disabled="item.disabled"
+                :placeholder="item.placeholder || '选择时间范围'"
+                is-range
+                range-separator="至"
+                start-placeholder="开始时间"
+                end-placeholder="结束时间"
+              />
             </template>
             <!-- 时间选择 -->
             <template v-else-if="item.type=='time'">
-              <el-time-picker v-model="formModel[item.name]" :disabled="item.disabled" :placeholder="item.placeholder || '选择时间'"/>
+              <el-time-picker
+                v-model="formModel[item.name]"
+                :disabled="item.disabled"
+                :placeholder="item.placeholder || '选择时间'"
+              />
               <el-date-picker
                 v-model="formModel[item.name]"
                 :placeholder="item.placeholder || '选择日期'"
@@ -228,14 +237,14 @@
                 start-placeholder="开始时间"
                 end-placeholder="结束时间"
               />
-            </template> -->
+            </template>-->
             <!-- 时间选择 -->
             <!-- <template v-else-if="item.type=='time'">
               <el-time-picker
                 v-model="formModel[item.name]"
                 :placeholder="item.placeholder || '选择时间'"
               />
-            </template> -->
+            </template>-->
             <!-- 单选 -->
             <template v-else-if="item.type=='radio'">
               <el-radio-group
@@ -268,20 +277,27 @@
             </template>
             <!-- 文本域 -->
             <template v-else-if="item.type=='textarea'">
-              <el-input :autosize="{ minRows: 2, maxRows: 4}" :placeholder="item.placeholder || '请输入内容'" :disabled="item.disabled" :maxlength="item.maxlength" v-model="formModel[item.name]" type="textarea"/>
+              <el-input
+                :autosize="{ minRows: 2, maxRows: 4}"
+                :placeholder="item.placeholder || '请输入内容'"
+                :disabled="item.disabled"
+                :maxlength="item.maxlength"
+                v-model="formModel[item.name]"
+                type="textarea"
+              />
               <!-- <el-input
                 :autosize="{ minRows: 2, maxRows: 4}"
                 :placeholder="item.placeholder || '请输入内容'"
                 :maxlength="item.maxlength"
                 v-model="formModel[item.name]"
                 type="textarea"
-              /> -->
+              />-->
             </template>
             <!-- 图片上传 -->
             <!--
               limit: 图片上传数量限制
               tip: 提示文字，可以是String或者Array
-             -->
+            -->
             <template v-else-if="item.type=='img'">
               <define-upload
                 :class="{'has-text-input': item.hasTextInput}"
@@ -291,7 +307,6 @@
                 :name="'file'"
                 :limit="item.limit"
                 :before-upload="beforeUploadCallbacks[item.name]"
-              
                 :on-preview="handlePreviewImg"
                 :on-remove="removeCallbacks[item.name]"
                 class="upload-img"
@@ -301,32 +316,20 @@
                 :http-request="defineHttpRequest[item.name]"
                 accept="image/*"
               >
-                <el-button
-                  :disabled="isUploading"
-                  size="mini"
-                  type="primary"
-                >点击上传</el-button>
-                <div
-                  slot="tip"
-                  class="upload-tip-container"
-                >
-                  <div
-                    v-if="item.tip && typeof item.tip === 'string'"
-                    class="el-upload__tip"
-                  >
+                <el-button :disabled="isUploading" size="mini" type="primary">点击上传</el-button>
+                <div slot="tip" class="upload-tip-container">
+                  <div v-if="item.tip && typeof item.tip === 'string'" class="el-upload__tip">
                     {{ item.tip }}
-                    <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
+                    <span
+                      v-if="item.limit"
+                    >({{ formModel[item.name].length }}/{{ item.limit }})</span>
                   </div>
-                  <div
-                    v-else-if="item.tip && item.tip.length"
-                    class="el-upload__tip"
-                  >
+                  <div v-else-if="item.tip && item.tip.length" class="el-upload__tip">
                     <ul style="line-height: 1.3;">
+                      <li v-for="(tipItem, tipIndex) in item.tip" :key="tipIndex">{{ tipItem }}</li>
                       <li
-                        v-for="(tipItem, tipIndex) in item.tip"
-                        :key="tipIndex"
-                      >{{ tipItem }}</li>
-                      <li v-if="item.limit">最多上传{{ item.limit }}张({{ formModel[item.name].length }}/{{ item.limit }})</li>
+                        v-if="item.limit"
+                      >最多上传{{ item.limit }}张({{ formModel[item.name].length }}/{{ item.limit }})</li>
                     </ul>
                   </div>
                   <!-- 图片描述输入框 -->
@@ -341,7 +344,7 @@
                     >
                       <div class="handelBtn">
                         <!-- <span>设为封面</span>
-                        <span>添加水印</span> -->
+                        <span>添加水印</span>-->
                         <el-button
                           type="text"
                           style="margin-left: 10px"
@@ -372,17 +375,12 @@
                 :disabled="item.disabled"
                 class="upload-file"
               >
-                <el-button
-                  :disabled="isUploading"
-                  size="mini"
-                  type="primary"
-                >点击上传</el-button>
-                <div
-                  v-if="item.tip"
-                  slot="tip"
-                  class="el-upload__tip"
-                >{{ item.tip }}
-                  <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
+                <el-button :disabled="isUploading" size="mini" type="primary">点击上传</el-button>
+                <div v-if="item.tip" slot="tip" class="el-upload__tip">
+                  {{ item.tip }}
+                  <span
+                    v-if="item.limit"
+                  >({{ formModel[item.name].length }}/{{ item.limit }})</span>
                 </div>
               </el-upload>
             </template>
@@ -404,17 +402,12 @@
                 class="upload-file"
                 accept="audio/mp3"
               >
-                <el-button
-                  :disabled="isUploading"
-                  size="mini"
-                  type="primary"
-                >点击上传</el-button>
-                <div
-                  v-if="item.tip"
-                  slot="tip"
-                  class="el-upload__tip"
-                >{{ item.tip }}
-                  <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
+                <el-button :disabled="isUploading" size="mini" type="primary">点击上传</el-button>
+                <div v-if="item.tip" slot="tip" class="el-upload__tip">
+                  {{ item.tip }}
+                  <span
+                    v-if="item.limit"
+                  >({{ formModel[item.name].length }}/{{ item.limit }})</span>
                 </div>
               </el-upload>
             </template>
@@ -436,30 +429,26 @@
                 class="upload-file"
                 accept="video/mp4"
               >
-                <el-button
-                  :disabled="isUploading"
-                  size="mini"
-                  type="primary"
-                >点击上传</el-button>
-                <div
-                  v-if="item.tip"
-                  slot="tip"
-                  class="el-upload__tip"
-                >{{ item.tip }}
-                  <span v-if="item.limit">({{ formModel[item.name].length }}/{{ item.limit }})</span>
+                <el-button :disabled="isUploading" size="mini" type="primary">点击上传</el-button>
+                <div v-if="item.tip" slot="tip" class="el-upload__tip">
+                  {{ item.tip }}
+                  <span
+                    v-if="item.limit"
+                  >({{ formModel[item.name].length }}/{{ item.limit }})</span>
                 </div>
               </el-upload>
             </template>
             <!-- 分片上传 -->
             <template v-else-if="item.type=='simpleVideo'">
-              <uploader 
-                :options="options" 
-                :file-status-text="statusText" 
+              <uploader
+                :options="options"
+                :file-status-text="statusText"
                 :default-file-list="formModel[item.name]"
                 :uploader-name="item.name"
-                :ref="item.name" 
-                @file-success="fileComplete" 
+                :ref="item.name"
+                @file-success="fileSuccess"
                 @complete="complete"
+                @file-complete="fileComplete"
                 @fileInfor="fileInfor"
                 :on-remove="removeCallbacks[item.name]"
                 :on-preview="handlePreviewFile"
@@ -496,7 +485,7 @@
               enableAuth: 是否使用城市权限控制，默认 false
               enableOtherCity: 是否带有“其他”选项，默认 false
               enableAllCity: 是否显示“全部”选项（当有该权限时），默认 true
-               -->
+              -->
               <city-select
                 v-model="formModel[item.name]"
                 :placeholder="item.placeholder"
@@ -510,21 +499,12 @@
             </template>
             <!-- slot自定义内容 -->
             <template v-else-if="item.type=='slot'">
-              <slot
-                :name="item.name"
-                :model="formModel"
-              />
+              <slot :name="item.name" :model="formModel" />
             </template>
           </el-form-item>
         </div>
-        <div
-          v-else
-          class="section-content"
-        >
-          <slot
-            :name="section.slot"
-            :model="formModel"
-          />
+        <div v-else class="section-content">
+          <slot :name="section.slot" :model="formModel" />
         </div>
       </div>
       <el-form-item v-if="showButton">
@@ -535,18 +515,8 @@
           @click="onSave"
           size="mini"
         >{{ submitName }}</el-button>
-        <el-button
-          v-if="showCancel"
-          class="cancel-btn"
-          @click="onCancel"
-          size="mini"
-        >取消</el-button>
-        <el-button
-          v-if="showReturn"
-          class="cancel-btn"
-          @click="onReturn"
-          size="mini"
-        >返回</el-button>
+        <el-button v-if="showCancel" class="cancel-btn" @click="onCancel" size="mini">取消</el-button>
+        <el-button v-if="showReturn" class="cancel-btn" @click="onReturn" size="mini">返回</el-button>
       </el-form-item>
       <slot name="bottom-slot" />
     </el-form>
@@ -600,10 +570,10 @@ import Viewer from "viewerjs";
 // import { DOWN_URL } from '@/config/base-url'
 import baseUrl from "@/config/base-url";
 import { hashCode } from "@/utils/common.js";
-import request from '@/utils/request'
+import request from "@/utils/request";
 // import {uploadByPieces} from './lib/utils'
 import { needMerge } from "@/api/simpleUpload.js";
-import defineUpload from './upload'
+import defineUpload from "./upload";
 export default {
   name: "VForm",
 
@@ -665,27 +635,31 @@ export default {
         testChunks: true,
         simultaneousUploads: 1,
         //后端约定值20M （勿改）
-        chunkSize: 10* 1024 * 1024,
+        chunkSize: 10 * 1024 * 1024,
         // 服务器分片校验函数，秒传及断点续传基础
         checkChunkUploadedByResponse: function(chunk, message) {
           let objMessage = JSON.parse(message);
           if (objMessage.result.skipUpload) {
             return true;
           }
-          return (objMessage.result.uploadedChunkList || []).indexOf(chunk.offset + 1) >= 0;
+          return (
+            (objMessage.result.uploadedChunkList || []).indexOf(
+              chunk.offset + 1
+            ) >= 0
+          );
         }
       },
       attrs: {
-        accept: '*'
+        accept: "*"
       },
       statusText: {
-        success: '成功',
-        error: '出错',
-        uploading: '上传中',
-        paused: '暂停中',
-        waiting: '等待中'
+        success: "成功",
+        error: "出错",
+        uploading: "上传中",
+        paused: "暂停中",
+        waiting: "等待中"
       },
-       // 分片上传
+      // 分片上传
       imgViewer: null,
       dataOptions: {
         shortcuts: [
@@ -773,7 +747,7 @@ export default {
     },
     formData() {
       this.updateForm();
-    },
+    }
   },
   mounted() {
     this.updateForm();
@@ -799,35 +773,39 @@ export default {
   methods: {
     // 分段上传
     fileInfor(file, index) {
-      console.log(file, index)
+      console.log(file, index);
     },
-    complete () {
-      console.log('complete', arguments)
+    complete() {
+      // console.log("complete", arguments);
+    },
+    fileComplete() {
+      // console.log(arguments, "file complete");
+      // arguments[0].cancel();
+      // arguments.forEach((ele))
     },
     // 分段上传完成后合并文件
-    fileComplete (file) {
+    fileSuccess(file) {
+      // console.log(file, "file1");
       return new Promise((resolve, reject) => {
         needMerge({
           filename: file.name,
           identifier: file.uniqueIdentifier,
           totalSize: file.size,
-          type: file.type,
+          type: file.type
         })
           .then(response => {
-            // 将返回结果添加到文件中
-            this.$refs[file.uploaderName][0].fileList[this.$refs[file.uploaderName][0].fileList.length - 1].result = response.data.result
-            // 删除上传文件
-            this.$refs[file.uploaderName][0].fileList[this.$refs[file.uploaderName][0].fileList.length - 1].cancel()
+            file.result = response.data.result;
             let fileInfor = {
               name: response.data.result.fileName,
               url: baseUrl.DOWN_URL + response.data.result.filePath,
               size: response.data.result.fileSize,
               createTime: response.data.result.createTime,
-              desc: '', 
-              title: '', 
-              coverBool:false
-            }
-            this.formModel[file.uploaderName].push(fileInfor)
+              desc: "",
+              title: "",
+              coverBool: false
+            };
+            this.formModel[file.uploaderName].push(fileInfor);
+            file.cancel();
             resolve();
           })
           .catch(error => {
@@ -837,58 +815,37 @@ export default {
     },
     // 自定义上传多图上传图片
     defineRequest(name, file) {
-      let getfile = file.file
-      let formdata = new FormData()
-      formdata.append('file', getfile)
+      let getfile = file.file;
+      let formdata = new FormData();
+      formdata.append("file", getfile);
       request({
         url: this.upURL,
-        method: 'post',
+        method: "post",
         data: formdata,
         headers: {
-          'Content-Type': 'multipart/form-data'
+          "Content-Type": "multipart/form-data"
         }
         // requestBodyType: 'formData'
-      }).then((response) => {
-        this.formModel[name].push({
-          name: response.data.result.fileName,
-          url: baseUrl.DOWN_URL + response.data.result.filePath,
-          size: getfile.size,
-          createTime: getfile.lastModified,
-          title: "",
-          desc: "",
-          coverBool: false
-        }); // [{name: xx, url: xx}]
-        this.isUploading = false;
-        if (this.imgUploadText && this.imgUploadText[name]) {
-          this.imgUploadText[name].push("");
-        }
-      }).catch((error) => {
-        this.isUploading = false;
       })
+        .then(response => {
+          this.formModel[name].push({
+            name: response.data.result.fileName,
+            url: baseUrl.DOWN_URL + response.data.result.filePath,
+            size: getfile.size,
+            createTime: getfile.lastModified,
+            title: "",
+            desc: "",
+            coverBool: false
+          }); // [{name: xx, url: xx}]
+          this.isUploading = false;
+          if (this.imgUploadText && this.imgUploadText[name]) {
+            this.imgUploadText[name].push("");
+          }
+        })
+        .catch(error => {
+          this.isUploading = false;
+        });
     },
-    // 获取上传七牛的token
-    // getUpToken() {
-    //   this.$service
-    //     .getUpToken()
-    //     .then(res => {
-    //       this.upToken = res.data.data.token
-    //       this.formSettings.forEach(setting => {
-    //         setting.items
-    //           .filter(item => item.type == 'img' || item.type == 'file')
-    //           .forEach(file => {
-    //             file.data = file.data || {}
-    //             file.data.token = this.upToken
-    //           })
-    //       })
-    //     })
-    //     .catch(() => {
-    //       this.$message({
-    //         message: '获取上传token失败，将无法上传文件，请重新加载页面',
-    //         type: 'warning'
-    //       })
-    //     })
-    // },
-    // 将数据格式化为上传七牛的参数
     getUploadParam(data) {
       if (!data || typeof data !== "object") {
         data = {};
@@ -1075,7 +1032,7 @@ export default {
               item.type == "img" ||
               item.type == "file" ||
               item.type == "audio" ||
-              item.type == "video" || 
+              item.type == "video" ||
               item.type == "simpleVideo"
             ) {
               tmpUploadCallback[item.name] = (response, file, fileList) => {
@@ -1098,7 +1055,7 @@ export default {
         this.uploadCallbacks = tmpUploadCallback;
         this.removeCallbacks = tmpRemoveCallback;
         this.beforeUploadCallbacks = tmpBeforeUploadCallback;
-        this.defineHttpRequest = tempHttpRequest
+        this.defineHttpRequest = tempHttpRequest;
         this.updateRule();
       }
     },
@@ -1132,8 +1089,8 @@ export default {
     },
     // 移除上传文件回调
     handleRemoveFile(name, file, fileList) {
-      console.log(fileList, '123456');
-      console.log(file, '123456');
+      console.log(fileList, "123456");
+      console.log(file, "123456");
       this.formModel[name].forEach((item, index) => {
         if (file.uid == item.uid) {
           this.formModel[name].splice(index, 1);
@@ -1145,21 +1102,21 @@ export default {
     },
     // 上传文件成功回调（图片上传使用了自定义http-request,原因是多图上传时会报错）
     handleUploadFile(name, response, file, fileList) {
-        if(file.status == 'success') {
-          this.formModel[name].push({
-            name: response.result.fileName,
-            url: baseUrl.DOWN_URL + response.result.filePath,
-            size: file.size,
-            createTime: file.raw.lastModified,
-            title: "",
-            desc: "",
-            coverBool: false
-          }); // [{name: xx, url: xx}]
-          this.isUploading = false;
-          if (this.imgUploadText && this.imgUploadText[name]) {
-            this.imgUploadText[name].push("");
-          }
+      if (file.status == "success") {
+        this.formModel[name].push({
+          name: response.result.fileName,
+          url: baseUrl.DOWN_URL + response.result.filePath,
+          size: file.size,
+          createTime: file.raw.lastModified,
+          title: "",
+          desc: "",
+          coverBool: false
+        }); // [{name: xx, url: xx}]
+        this.isUploading = false;
+        if (this.imgUploadText && this.imgUploadText[name]) {
+          this.imgUploadText[name].push("");
         }
+      }
     },
     // 上传文件失败回调
     handleUploadError(err, file, fileList) {
@@ -1347,12 +1304,12 @@ export default {
 </script>
 <style lang="scss">
 .v-form {
-  .save-btn{
-    margin-bottom:30px;
+  .save-btn {
+    margin-bottom: 30px;
   }
   .el-input__count {
-    .el-input__count-inner{
-      height:29px !important;
+    .el-input__count-inner {
+      height: 29px !important;
     }
   }
   .imageHandel {
