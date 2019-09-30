@@ -647,7 +647,8 @@ export default {
               chunk.offset + 1
             ) >= 0
           );
-        }
+        },
+        singleFile: true
       },
       attrs: {
         accept: "*"
