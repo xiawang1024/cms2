@@ -97,8 +97,29 @@ const statisticsChart = {
         meta: { title: 'dxDocument', icon: '32-elephant', role: 'cms:dxDocumentStatistics' },
         // meta: { title: 'dxDocument', icon: '32-elephant', role: 'cms', }
        
+      },{
+        /**
+         * 大象号统计
+         */
+        path: 'dxhStatistics',
+        component: () => import(`@/${path}/dxhStatistics`),
+        name: 'dxhStatistics',
+        meta: { title: 'dxhStatistics', icon: '32-elephant', role: 'cms:dxDocumentStatistics' },
+        // meta: { title: 'dxDocument', icon: '32-elephant', role: 'cms', }
+       
       },
       
+      {
+        /**
+         * 部门统计
+         */
+        path: 'dapartmentStatistics',
+        component: () => import(`@/${path}/dapartmentStatistics`),
+        name: 'dapartmentStatistics',
+        meta: { title: 'dapartmentStatistics', icon: 'department', role: 'cms:dxDocumentStatistics' },
+        // meta: { title: 'dxDocument', icon: 'department', role: 'cms', }
+       
+      },
       
    
   ]
