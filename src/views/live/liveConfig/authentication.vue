@@ -138,7 +138,11 @@ export default {
   mounted() {},
   methods: {
     searchItem(val){
+      if(val.username){
       this.username=val.username;
+      }else{
+      this.username='';
+      }
        this.pageNo=1,
       this.pageSize=10,
       this.totalCount=0,

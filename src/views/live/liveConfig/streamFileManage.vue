@@ -155,8 +155,11 @@ export default {
   },
   methods: {
      searchItem(val){
-       console.log(val,'val')
+       if(val.username){
       this.username=val.username;
+      }else{
+      this.username='';
+      }
        this.pageNo=1,
       this.pageSize=10,
       this.totalCount=0,

@@ -10,21 +10,36 @@
     </el-row>
     <el-table :data="tableValue" row-key="id">
       <el-table-column type="index" width="50" />
-      <el-table-column prop="fileType" width="80" label="文件类型" :formatter="typeFormate" />
-      <el-table-column prop="title" width="80" label="标题" />
-      <el-table-column prop="videoBitRate" width="80" label="视频码率" />
-      <el-table-column prop="audioBitRate" width="80" label="音频码率" />
-      <el-table-column prop="resolution" width="80" label="分辨率" />
-      <el-table-column prop="videoCode" width="80" label="视频编码" />
-      <el-table-column prop="audioCode" width="80" label="音频编码" />
-      <el-table-column prop="createUser" width="100" label="创建人" />
-      <el-table-column prop="vodStream" label="流地址" show-overflow-tooltip min-width="550">
-        <template slot-scope="scope">
-          <span v-if="scope.row.state==3">{{ scope.row.vodStream|createUrl }}</span>
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-form-item label="视频码率：">
+              <span>{{ props.row.videoBitRate }}</span>
+            </el-form-item>
+            <el-form-item label="音频码率：">
+              <span>{{ props.row.audioBitRate }}</span>
+            </el-form-item>
+            <el-form-item label="分辨率：">
+              <span>{{ props.row.resolution }}</span>
+            </el-form-item>
+            <el-form-item label="视频编码：">
+              <span>{{ props.row.videoCode }}</span>
+            </el-form-item>
+            <el-form-item label="音频编码：">
+              <span>{{ props.row.audioCode }}</span>
+            </el-form-item>
+            <el-form-item label="创建时间：">
+              <span>{{ props.row.createTime }}</span>
+            </el-form-item>
+            <el-form-item label="更新时间：">
+              <span>{{ props.row.updateTime }}</span>
+            </el-form-item>
+          </el-form>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" width="150" label="创建时间" />
-      <el-table-column prop="updateTime" width="150" label="更新时间" />
+      <el-table-column prop="title" width="250" label="标题" show-overflow-tooltip/>
+      <el-table-column prop="createUser" width="100" label="创建人" />
+      <el-table-column prop="fileType" width="80" label="文件类型" :formatter="typeFormate" />
       <el-table-column prop="state" width="120" label="转码状态">
         <template slot-scope="scope">
           <span v-if="scope.row.state==3" class="colorSuccess">成功</span>
@@ -34,13 +49,17 @@
           <span v-if="scope.row.state==-1" class="colorInfo">源文件不存在</span>
         </template>
       </el-table-column>
-
+      <el-table-column prop="vodStream" label="流地址" show-overflow-tooltip min-width="650">
+        <template slot-scope="scope">
+          <span v-if="scope.row.state==3">{{ scope.row.vodStream|createUrl }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="230" fixed="right">
         <template slot-scope="scope">
           <el-button
             v-show="scope.row.state==2"
             size="mini"
-            type="warning"
+            type="primary"
             @click="handleRecover(scope.$index, scope.row)"
           >重新转码</el-button>
           <el-button
@@ -503,7 +522,7 @@ export default {
         if (val.auidoFilePath[0].url) {
         //截掉url域名
         let url = val.auidoFilePath[0].url;
-        data.auidoFilePath = url.split(baseUrl.DOWN_URL)[1];
+        data.inputFilePath = url.split(baseUrl.DOWN_URL)[1];
       } else {
         this.$message({
           type: "error",
@@ -741,4 +760,16 @@ export default {
 .colorInfo {
   color: #409eff;
 }
+.demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 100%;
+  }
 </style>
