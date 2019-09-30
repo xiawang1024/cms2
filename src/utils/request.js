@@ -92,8 +92,8 @@ function onRefreshed(token) {
  */
 request.interceptors.request.use(
   (config) => {
-    console.log(config, 'config')
-    // config.headers[Content-Type] = 'application/json;charset=UTF-8'
+    console.log(config, 'config111')
+    // config.headers[Content - Type] = 'application/json;charset=UTF-8'
     const auth = getAuth()
     /**
      * 判断是否已登录
@@ -174,11 +174,14 @@ request.interceptors.request.use(
       }
       if (config.requestBodyType && config.requestBodyType === 'formData') {
         config.data = qs.stringify(config.data)
+        // config.headers[Content - Type] = 'application/x-www-form-urlencoded; charset=utf-8'
+        console.log(config.data, 'config.data')
       }
       if (config.method === 'get') {
         //  给data赋值以绕过if判断
         config.data = true
       }
+      console.log(config.loadingConfig)
       requestLoading.open(config.loadingConfig, config.baseURL, config.url)
       return config
     } else {
