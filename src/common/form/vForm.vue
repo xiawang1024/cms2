@@ -648,7 +648,7 @@ export default {
             ) >= 0
           );
         },
-        singleFile: true
+        singleFile: false
       },
       attrs: {
         accept: "*"
