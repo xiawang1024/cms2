@@ -27,6 +27,7 @@ import { getdxDocumentStatistics,downdxDocumentStatistics } from "@/api/cms/live
 import dayjs from "dayjs";
 import store from "store";
 import { mapGetters } from "vuex";
+import { fetchDictByDictName } from "@/api/cms/dict";
 export default {
   data() {
     return {
@@ -39,6 +40,33 @@ export default {
           visible: "true",
           value:["1161445440512724992",'1161447048013287424'],
           // value:["1108265560111714304","1126019193184063488"], //默认大象号ID  "1161447048013287424"
+          changeOnSelect: true,
+          options: []
+        },{
+          label: "排序方式",
+          name: "sortBy",
+          type: "select",
+          visible: "true",
+          value:'clickNumInt',
+          changeOnSelect: true,
+          options: [
+              {
+                  label:'点击量',
+                  value:'clickNumInt'
+
+              },
+              {
+                  label:'来源',
+                  value:'origin'
+
+              }
+          ]
+        },{
+            label: "来源",
+          name: "origin",
+          type: "select",
+          visible: "true",
+          value:'',
           changeOnSelect: true,
           options: []
         },
@@ -75,6 +103,8 @@ export default {
       ],
       beginTime: "",
       endTime: "",
+      sortBy:'clickNumInt',
+      origin:'',
       tableData: []
     };
   },
@@ -87,6 +117,8 @@ export default {
     }
   },
   created() {
+      this.fetchDict();
+
   },
   mounted() {
     this.searchSettings[0].options = this.columnAll.length
@@ -105,16 +137,30 @@ export default {
            this.$message.error("请正确选择时间区间");
        return false;
       }
-      if(val.columnId[0]==undefined){
-           this.$message.error("请选择栏目");
-        return false;
-      }
+      // if(val.columnId[0]==undefined){
+      //      this.$message.error("请选择栏目");
+      //   return false;
+      // }
       this.timeDeail(val);
-      let columnId=JSON.parse(JSON.stringify(val.columnId)).reverse()[0]
-
-      this.channelId=columnId;
+      if(val.columnId){
+        let columnId=JSON.parse(JSON.stringify(val.columnId)).reverse()[0]
+        this.channelId=columnId;
+      }else{
+        this.channelId=''
+      }
+      
       // console.log(this.beginTime, this.endTime,columnId, "time");
-      this.initTableList(columnId)
+       if(val.sortBy){
+           this.sortBy=val.sortBy;
+       }
+       if(val.origin){
+           this.origin=val.origin;
+       }else{
+         this.origin=''
+       }
+      
+      // console.log(this.beginTime, this.endTime,columnId, "time");
+      this.initTableList(this.channelId)
     },
     timeDeail(val) {
       
@@ -150,7 +196,9 @@ export default {
       let data = {
         beginTime: this.beginTime,
         endTime: this.endTime,
-        channelId:val
+        channelId:val,
+        sortBy:this.sortBy,
+        origin:this.origin,
       };
       return new Promise((resolve, reject) => {
         getdxDocumentStatistics(data)
@@ -171,7 +219,9 @@ export default {
         beginTime: this.beginTime,
         endTime: this.endTime,
         channelId:this.channelId,
-        accessToken:'bearer '+JSON.parse(localStorage.getItem('hnDt_token')).access_token
+        accessToken:'bearer '+JSON.parse(localStorage.getItem('hnDt_token')).access_token,
+         sortBy:this.sortBy,
+        origin:this.origin,
       };
      
         downdxDocumentStatistics(data)
@@ -223,6 +273,32 @@ export default {
     //     })
     //   );
     // }
+    //获取来源列表
+       fetchDict() {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        fetchDictByDictName("文稿来源")
+          .then(response => {
+            if (
+              response.data.result.details &&
+              response.data.result.details.length
+            ) {
+              _this.sourceList = response.data.result.details.map(ele => {
+                return {
+                  label: ele.dictDetailName,
+                  value: ele.dictDetailName
+                };
+              });
+              _this.searchSettings[2].options = _this.sourceList;
+              
+            }
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
   }
 };
 </script>

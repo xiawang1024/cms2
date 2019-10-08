@@ -243,7 +243,7 @@ export function articleTrend(channelId) {
 
   
 
-//大象号统计
+//部门统计
 /*
 **   sortBy : origin/clickNumInt
 */
@@ -255,7 +255,7 @@ export function articleTrend(channelId) {
     });
 
   }
-//下载大象号统计
+//下载部门统计
 
 export function downdxhStatistics(data) {
   postAjax(data)
@@ -288,36 +288,3 @@ export function downdxhStatistics(data) {
 
 
 
-  //部门排行 
-  export function getdepartStatistics(data) {
-    return request({
-      url:Cpath+`/cms/article/querydepartoriginstatisclickbytenantidandchannelidandtime?channelId=${data.channelId}&beginTime=${data.beginTime}&endTime=${data.endTime}&removeReferFlag=true&origin=${data.origin}&sortBy=${data.sortBy}&order=desc`,
-      method: "post"
-    });
-
-  }
-
-  //下载部门排行
-
-  export function downdepartStatistics(data) {
-    postAjax(data)
-    function postAjax (data) {
-      axios({
-        method: 'get',
-        url: baseUrl.BASE_URL +`/cms/article/querydepartoriginstatisclickbytenantidandchannelidandtimeexport?channelId=${data.channelId}&beginTime=${data.beginTime}&endTime=${data.endTime}&removeReferFlag=true&origin=${data.origin}&sortBy=${data.sortBy}&order=desc`,
-        responseType: 'blob',
-        headers: {
-          // 'Content-Type': 'application/json;charset=utf-8',
-          'Authorization': data.accessToken
-        }
-      })
-        .then(res => {
-          download('template.xlsx', res.data)
-          Message.success('下载成功')
-        })
-        .catch(error => {
-          Message.warning(error.msg ? error.msg : '导出失败')
-        })
-    }
-  }
- 

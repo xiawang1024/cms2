@@ -11,7 +11,7 @@
       </el-row>
     </div>
 
-    <el-table :data="tableData" style="width: 100%" stripe>
+    <el-table :data="tableData" style="width: 100%" >
       <el-table-column label="#" type="index" />
       <el-table-column label="部门" prop="departmentName" />
       <el-table-column label="来源" prop="origin" />
@@ -242,7 +242,9 @@ export default {
         beginTime: this.beginTime,
         endTime: this.endTime,
         channelId:this.channelId,
-        accessToken:'bearer '+JSON.parse(localStorage.getItem('hnDt_token')).access_token
+        accessToken:'bearer '+JSON.parse(localStorage.getItem('hnDt_token')).access_token,
+        sortBy:this.sortBy,
+        origin:this.origin,
       };
 
         // 调用下载接口
