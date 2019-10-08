@@ -1,7 +1,7 @@
 <template>
   <div class="uploader">
     <slot :files="files" :file-list="fileList" :started="started">
-      <uploader-unsupport/>
+      <uploader-unsupport />
       <uploader-drop>
         <!-- <p>Drop files here to upload or</p> -->
         <div class="bgc-img">
@@ -10,33 +10,33 @@
         </div>
         <!-- <uploader-btn :directory="true">select folder</uploader-btn> -->
       </uploader-drop>
-      <uploaded-file :uploaded-list = "successFiles" @remove="remove" @lookView="lookView"/>
-      <uploader-list @review="review"/>
+      <uploaded-file :uploaded-list="successFiles" @remove="remove" @lookView="lookView" />
+      <uploader-list @review="review" />
     </slot>
   </div>
 </template>
 
 <script>
-import Uploader from 'simple-uploader.js'
-import { kebabCase } from '../common/utils'
-import UploaderBtn from './btn.vue'
-import UploaderDrop from './drop.vue'
-import UploaderUnsupport from './unsupport.vue'
-import UploaderList from './list.vue'
-import UploaderFiles from './files.vue'
-import UploaderFile from './file.vue'
-import UploadedFile from './uploadedFile'
-const COMPONENT_NAME = 'uploader'
-const FILE_ADDED_EVENT = 'fileAdded'
-const FILES_ADDED_EVENT = 'filesAdded'
-const UPLOAD_START_EVENT = 'uploadStart'
-const UPLOAD_CHANGE = 'change'
+import Uploader from "simple-uploader.js";
+import { kebabCase } from "../common/utils";
+import UploaderBtn from "./btn.vue";
+import UploaderDrop from "./drop.vue";
+import UploaderUnsupport from "./unsupport.vue";
+import UploaderList from "./list.vue";
+import UploaderFiles from "./files.vue";
+import UploaderFile from "./file.vue";
+import UploadedFile from "./uploadedFile";
+const COMPONENT_NAME = "uploader";
+const FILE_ADDED_EVENT = "fileAdded";
+const FILES_ADDED_EVENT = "filesAdded";
+const UPLOAD_START_EVENT = "uploadStart";
+const UPLOAD_CHANGE = "change";
 export default {
   name: COMPONENT_NAME,
-  provide () {
+  provide() {
     return {
       uploader: this
-    }
+    };
   },
   components: {
     UploaderBtn,
@@ -50,8 +50,8 @@ export default {
   props: {
     options: {
       type: Object,
-      default () {
-        return {}
+      default() {
+        return {};
       }
     },
     autoStart: {
@@ -60,25 +60,25 @@ export default {
     },
     fileStatusText: {
       type: [Object, Function],
-      default () {
+      default() {
         return {
-          success: 'success',
-          error: 'error',
-          uploading: 'uploading',
-          paused: 'paused',
-          waiting: 'waiting'
-        }
+          success: "success",
+          error: "error",
+          uploading: "uploading",
+          paused: "paused",
+          waiting: "waiting"
+        };
       }
     },
     defaultFileList: {
       type: Array,
-      default () {
-        return []
+      default() {
+        return [];
       }
     },
     uploaderName: {
       type: String,
-      default: ''
+      default: ""
     },
     onRemove: {
       type: Function,
@@ -94,80 +94,80 @@ export default {
     },
     limit: {
       type: Number,
-      default: 0
+      default: 1000
     },
     // 上传文件类型
     accept: {
       type: Object,
       default: () => {
-        return {}
+        return {};
       }
     }
   },
-  data () {
+  data() {
     return {
       started: false,
       files: [],
       fileList: [],
       successFiles: []
-    }
+    };
   },
   watch: {
     defaultFileList(val) {
-      this.successFiles = val.map((ele) => {
-        return ele
-      })
-      console.log(this.successFiles, 'this.successFiles')
+      this.successFiles = val.map(ele => {
+        return ele;
+      });
+      console.log(this.successFiles, "this.successFiles");
     },
     accept(val) {
-      console.log(val, 'accept')
+      console.log(val, "accept");
     }
   },
-  created () {
-    this.options.initialPaused = !this.autoStart
-    const uploader = new Uploader(this.options)
-    this.uploader = uploader
-    this.uploader.fileStatusText = this.fileStatusText
-    uploader.on('catchAll', this.allEvent)
-    uploader.on(FILE_ADDED_EVENT, this.fileAdded)
-    uploader.on(FILES_ADDED_EVENT, this.filesAdded)
-    uploader.on(UPLOAD_CHANGE, this.uploadChange)
-    uploader.on('fileRemoved', this.fileRemoved)
-    uploader.on('filesSubmitted', this.filesSubmitted)
-    uploader.on('fileSuccess', this.fileSuccess)
+  created() {
+    this.options.initialPaused = !this.autoStart;
+    const uploader = new Uploader(this.options);
+    this.uploader = uploader;
+    this.uploader.fileStatusText = this.fileStatusText;
+    uploader.on("catchAll", this.allEvent);
+    uploader.on(FILE_ADDED_EVENT, this.fileAdded);
+    uploader.on(FILES_ADDED_EVENT, this.filesAdded);
+    uploader.on(UPLOAD_CHANGE, this.uploadChange);
+    uploader.on("fileRemoved", this.fileRemoved);
+    uploader.on("filesSubmitted", this.filesSubmitted);
+    uploader.on("fileSuccess", this.fileSuccess);
   },
-  destroyed () {
-    const uploader = this.uploader
-    uploader.off('catchAll', this.allEvent)
-    uploader.off(FILE_ADDED_EVENT, this.fileAdded)
-    uploader.off(FILES_ADDED_EVENT, this.filesAdded)
-    uploader.off('fileRemoved', this.fileRemoved)
-    uploader.off('filesSubmitted', this.filesSubmitted)
-    uploader.off('fileSuccess', this.fileSuccess)
-    this.uploader = null
+  destroyed() {
+    const uploader = this.uploader;
+    uploader.off("catchAll", this.allEvent);
+    uploader.off(FILE_ADDED_EVENT, this.fileAdded);
+    uploader.off(FILES_ADDED_EVENT, this.filesAdded);
+    uploader.off("fileRemoved", this.fileRemoved);
+    uploader.off("filesSubmitted", this.filesSubmitted);
+    uploader.off("fileSuccess", this.fileSuccess);
+    this.uploader = null;
   },
   methods: {
     // 点击查看文件
     lookView(file) {
       // console.log(file, 'lookView')
-      this.onPreview(file)
+      this.onPreview(file);
     },
     remove(file, index) {
-      console.log(file, index)
-      this.onRemove(file, this.successFiles)
+      console.log(file, index);
+      this.onRemove(file, this.successFiles);
     },
     review(file, index) {
-      this.$emit('fileInfor', {file, index})
+      this.$emit("fileInfor", { file, index });
     },
-    uploadStart () {
-      this.started = true
+    uploadStart() {
+      this.started = true;
       // console.log('start')
     },
-    fileAdded (file, event) {
-      this.$emit(kebabCase(FILE_ADDED_EVENT), file)
+    fileAdded(file, event) {
+      this.$emit(kebabCase(FILE_ADDED_EVENT), file);
       if (file.ignored) {
         // is ignored, filter it
-        return false
+        return false;
       }
     },
     uploadChange(event) {
@@ -177,65 +177,70 @@ export default {
       //   })
       // })
     },
-    filesAdded (files, fileList) {
-      this.$emit(kebabCase(FILES_ADDED_EVENT), files, fileList)
+    filesAdded(files, fileList) {
+      this.$emit(kebabCase(FILES_ADDED_EVENT), files, fileList);
       if (files.ignored || fileList.ignored) {
         // is ignored, filter it
-        return false
+        return false;
       }
     },
-    fileRemoved (file) {
-      this.files = this.uploader.files
-      this.fileList = this.uploader.fileList
+    fileRemoved(file) {
+      this.files = this.uploader.files;
+      this.fileList = this.uploader.fileList;
     },
-    filesSubmitted (files, fileList) {
-      this.files = this.uploader.files
-      this.fileList = this.uploader.fileList
+    filesSubmitted(files, fileList) {
+      this.files = this.uploader.files;
+      this.fileList = this.uploader.fileList;
+      if (this.limit < files.length) {
+        this.$message.warning(`只能上传${this.limit}个文件`);
+        this.uploader.cancel();
+        return;
+      }
       if (this.autoStart) {
-        this.uploader.upload()
+        this.uploader.upload();
       }
     },
     fileSuccess(rootFile, file, message, chunk) {
-      file.cmsPath = JSON.parse(message)
-      file.uploaderName = this.uploaderName
-      this.$emit('fileSuccess', file)
+      file.cmsPath = JSON.parse(message);
+      file.uploaderName = this.uploaderName;
+      this.$emit("fileSuccess", file);
       if (file.ignored || rootFile.ignored) {
-        return false
+        return false;
       }
     },
-    allEvent (...args) {
-      const name = args[0]
+    allEvent(...args) {
+      const name = args[0];
       const EVENTSMAP = {
         [FILE_ADDED_EVENT]: true,
         [FILES_ADDED_EVENT]: true,
-        [UPLOAD_START_EVENT]: 'uploadStart'
-      }
-      const handler = EVENTSMAP[name]
+        [UPLOAD_START_EVENT]: "uploadStart"
+      };
+      const handler = EVENTSMAP[name];
       if (handler) {
         if (handler === true) {
-          return
+          return;
         }
-        this[handler].apply(this, args.slice(1))
+        this[handler].apply(this, args.slice(1));
       }
-      args[0] = kebabCase(name)
-      this.$emit.apply(this, args)
+      args[0] = kebabCase(name);
+      this.$emit.apply(this, args);
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
-  .uploader {
-    position: relative;
+.uploader {
+  position: relative;
+}
+.bgc-img {
+  width: 300px;
+  height: 200px;
+  .img-desc {
+    color: #ccc;
   }
-  .bgc-img {
-    width:300px;
-    height:200px;
-    .img-desc {
-      color:#ccc;
-    }
-  }
-   .bgc-img > .uploader-btn {
-     margin-top:100px;
-   }
+}
+.bgc-img > .uploader-btn {
+  margin-top: 100px;
+}
 </style>
