@@ -2,7 +2,9 @@
 const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
-const { VueLoaderPlugin } = require('vue-loader')
+const {
+  VueLoaderPlugin
+} = require('vue-loader')
 const vueLoaderConfig = require('./vue-loader.conf')
 
 function resolve(dir) {
@@ -12,9 +14,8 @@ function resolve(dir) {
 const createLintingRule = () => ({
   include: [
     resolve('src'),
-    resolve('test'),
-    resolve('node_modules/vue-awesome')
-   ]
+    resolve('test')
+  ]
   // test: /\.(js|vue)$/,
   // loader: 'eslint-loader',
   // enforce: 'pre',
@@ -28,7 +29,7 @@ console.log(process.env.NODE_ENV)
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    app: './src/main.js'
+    app: ['babel-polyfill', './src/main.js']
   },
   output: {
     path: config.build.assetsRoot,
@@ -44,9 +45,8 @@ module.exports = {
     //   }
     //   return env
     // })()
-    publicPath: process.env.NODE_ENV === 'production'
-      ? config.build.assetsPublicPath
-      : config.dev.assetsPublicPath
+    publicPath: process.env.NODE_ENV === 'production' ?
+      config.build.assetsPublicPath : config.dev.assetsPublicPath
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
@@ -69,7 +69,9 @@ module.exports = {
         include: [
           resolve('src'),
           resolve('test'),
-          resolve('node_modules/webpack-dev-server/client')
+          resolve('node_modules/webpack-dev-server/client'),
+          resolve('/node_modules/_element-ui@2.8.2@element-ui/src'),
+          resolve('/node_modules/_element-ui@2.8.2@element-ui/packages')
         ]
       },
       {

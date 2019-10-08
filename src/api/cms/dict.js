@@ -17,7 +17,7 @@ export function fetchDict(id) {
 
 export function fetchDictByDictName(dictName) {
   return request({
-    url: '/cms/dict/findarticleoriginfilterbydictname?dictName=' + dictName,
+    url: '/cms/dict/findarticleoriginfilterbydictname?dictName=' + encodeURIComponent(dictName),
     method: 'get',
     loadingConfig: {
       noLoading: true
@@ -27,7 +27,7 @@ export function fetchDictByDictName(dictName) {
 // 获取全部来源
 export function fetchDictAllByDictName(dictName) {
   return request({
-    url: '/cms/dict/findbydictname?dictName=' + dictName,
+    url: '/cms/dict/findbydictname?dictName=' + encodeURIComponent(dictName),
     method: 'get',
     loadingConfig: {
       noLoading: true

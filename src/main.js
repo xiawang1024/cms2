@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import Vue from 'vue'
 
 import Cookies from 'js-cookie'
@@ -23,14 +24,15 @@ import initVue from '@/utils/init/'
 import Moment from 'moment'
 import VueClipboard from 'vue-clipboard2'
 import uploader from '@/common/uploader'
+
 Vue.use(uploader)
-Vue.prototype.moment=Moment
+Vue.prototype.moment = Moment
 initVue(Vue)
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
   i18n: (key, value) => i18n.t(key, value)
 })
-Vue.use( VueClipboard )
+Vue.use(VueClipboard)
 
 // register global utility filters.
 Object.keys(filters).forEach((key) => {
@@ -40,7 +42,7 @@ Object.keys(filters).forEach((key) => {
 Vue.config.productionTip = false
 // 移动端禁止访问
 router.beforeEach((to, from, next) => {
-  if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
     // router.replace({path: '/404'});
     alert('禁止访问')
   } else {

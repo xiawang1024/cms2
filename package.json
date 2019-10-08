@@ -94,7 +94,9 @@
     "babel-plugin-syntax-jsx": "6.18.0",
     "babel-plugin-transform-runtime": "6.23.0",
     "babel-plugin-transform-vue-jsx": "3.7.0",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "1.7.0",
+    "babel-preset-es2015-ie": "^6.7.0",
     "babel-preset-stage-2": "6.24.1",
     "chalk": "2.4.1",
     "copy-webpack-plugin": "4.5.2",
@@ -140,7 +142,7 @@
     "webpack": "4.16.5",
     "webpack-bundle-analyzer": "^3.4.1",
     "webpack-cli": "3.1.0",
-    "webpack-dev-server": "^3.2.1",
+    "webpack-dev-server": "^3.8.2",
     "webpack-merge": "4.1.4"
   },
   "engines": {
