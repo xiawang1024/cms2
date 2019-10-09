@@ -78,7 +78,7 @@ const liveRouterMap = [livePage]
 /**
  * 系统设置
  */
-import dataPermission from './routers/systemSet/dataPermission'
+import dataPermission from './routers/newCommand/dataPermission'
 const systemSetRouterMap = [dataPermission]
 
 /**
