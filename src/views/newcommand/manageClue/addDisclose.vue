@@ -62,7 +62,7 @@ import {
   createDisclose,
   editDisclose,
   discloseInfor,
-  discloseClassify
+  // discloseClassify
 } from "@/api/newsCommand/disclose.js";
 export default {
   name: "ColumnHandel",
@@ -153,7 +153,7 @@ export default {
     
   },
   mounted() {
-    this.discloseClassify();
+    // this.discloseClassify();
     if (this.$route.query.Disclose == "addDisclose") {
       this.isEdit = false;
     } else {
@@ -208,21 +208,21 @@ export default {
       });
     },
     // 搜索分类接口
-    discloseClassify() {
-      var _this = this;
-      return new Promise((resolve, reject) => {
-        discloseClassify().then(response => {
-          _this.formSettings[0].items[1].options = response.data.result.map(
-            ele => {
-              return {
-                label: ele.typeName,
-                value: ele.numberNo
-              };
-            }
-          );
-        });
-      });
-    },
+    // discloseClassify() {
+    //   var _this = this;
+    //   return new Promise((resolve, reject) => {
+    //     discloseClassify().then(response => {
+    //       _this.formSettings[0].items[1].options = response.data.result.map(
+    //         ele => {
+    //           return {
+    //             label: ele.typeName,
+    //             value: ele.numberNo
+    //           };
+    //         }
+    //       );
+    //     });
+    //   });
+    // },
     // 爆料详情
     discloseInfor(res) {
       var _this=this;

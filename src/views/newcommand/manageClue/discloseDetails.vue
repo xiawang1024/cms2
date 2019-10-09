@@ -52,7 +52,7 @@
                   <div class="rightdiv">{{ formData.breakingPeople }}</div>
                 </el-col>
               </el-row>
-              <el-row>
+              <el-row v-if="checkAuth('newcommond:baoliao:phoneNumber')">
                 <el-col :span="5">
                   <div class="leftdiv">爆料人联系方式</div>
                 </el-col>
@@ -126,8 +126,8 @@
           </el-main>
 
           <el-main v-if="auditStatus==0" class="elmain3">
-            <el-button size="small" @click="amendDiscloseStateBtn(1)" type="primary">审核通过</el-button>
-            <el-button size="small" @click="amendDiscloseStateBtn(2)" type="danger">审核拒绝</el-button>
+            <el-button size="small" @click="amendDiscloseStateBtn(1)" v-if="checkAuth('newcommond:baoliao:audit')" type="primary">审核通过</el-button>
+            <el-button size="small" @click="amendDiscloseStateBtn(2)" v-if="checkAuth('newcommond:baoliao:audit')" type="danger">审核拒绝</el-button>
           </el-main>
         </el-container>
       </el-col>
@@ -144,7 +144,7 @@
     </el-row>
     <el-row style="paddingLeft:20px;paddingBottom:20px;">
       <el-col :span="2">
-        <el-button size="mini" type="primary" @click="handleAdd">添加</el-button>
+        <el-button size="mini" type="primary" v-if="checkAuth('newcommond:baoliao:addRecorde')" @click="handleAdd" >添加</el-button>
       </el-col>
     </el-row>
     <el-row>
@@ -230,8 +230,16 @@ export default {
   mounted() {
     this.discloseId = this.$route.query.discloseId;
     this.discloseInfor(this.discloseId);
+   
   },
   methods: {
+     checkAuth(authKey) {
+      if (this.$store.getters.authorities.indexOf(authKey) === -1) {
+        return false;
+      } else {
+        return true;
+      }
+    },
     handleAdd() {
       //显示对会话框
 

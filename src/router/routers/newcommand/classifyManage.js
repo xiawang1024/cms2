@@ -9,9 +9,9 @@ const classifyManage = {
   meta: {
     title: "classifyManage",
     icon: "manageClue",
-    role: "newsCommand:baoliao"
+    role: "newsCommand:classify"
   },
-  hidden: true,
+  // hidden: true,
   name: "classifyManage",
   children: [
     {
@@ -24,9 +24,9 @@ const classifyManage = {
       meta: {
         title: "classifyManage",
         icon: "discloseList",
-        role: "newsCommand:baoliao"
+        role: "newsCommand:classify"
       },
-      hidden: true,
+      // hidden: true,
 
     }
   ]
