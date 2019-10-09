@@ -278,13 +278,15 @@
             <!-- 文本域 -->
             <template v-else-if="item.type=='textarea'">
               <el-input
-                :autosize="{ minRows: 2, maxRows: 4}"
+                :autosize="{ minRows: 4, maxRows: 8}"
                 :placeholder="item.placeholder || '请输入内容'"
                 :disabled="item.disabled"
                 :maxlength="item.maxlength"
                 v-model="formModel[item.name]"
+                :show-word-limit="item.showWordLimit"
                 type="textarea"
               />
+              <span class="textarea-words" v-if="item.showWords">{{ formModel[item.name].length }}</span>
               <!-- <el-input
                 :autosize="{ minRows: 2, maxRows: 4}"
                 :placeholder="item.placeholder || '请输入内容'"
@@ -1312,6 +1314,13 @@ export default {
     .el-input__count-inner {
       height: 29px !important;
     }
+  }
+  .textarea-words {
+    color: #909399;
+    position: absolute;
+    font-size: 12px;
+    bottom: 5px;
+    right: 10px;
   }
   .imageHandel {
     margin-top: 85px;

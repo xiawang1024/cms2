@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 import Vue from 'vue'
-
+import moment from 'moment'
 import Cookies from 'js-cookie'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
@@ -40,6 +40,26 @@ Object.keys(filters).forEach((key) => {
 })
 
 Vue.config.productionTip = false
+// 时间格式化过滤器
+Vue.filter('timeFilter', function (value, format) {
+  if (!format) {
+    format = 'YYYY-MM-DD HH:mm:ss'
+  }
+  if (!isNaN(value)) {
+    if (String(value).length === 10) {
+      return moment.unix(value).format(format)
+    } else if (String(value).length === 13) {
+      return moment(value).format(format)
+    } else {
+      return '暂无'
+    }
+  }
+  let date = new Date(value)
+  if (!isNaN(date.getTime())) {
+    return moment(value).format(format)
+  }
+  return '暂无'
+})
 // 移动端禁止访问
 router.beforeEach((to, from, next) => {
   if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {

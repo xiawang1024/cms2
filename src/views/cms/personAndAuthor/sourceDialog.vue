@@ -18,8 +18,8 @@
         @check="checked"
         :props="defaultProps"/>
       <span slot="footer" class="dialog-footer">
-        <el-button size="small" @click="$emit('update:dialogVisible', false)">取消</el-button>
-        <el-button type="primary" size="small" @click="confirmSave">确 定</el-button>
+        <el-button size="mini" @click="$emit('update:dialogVisible', false)">取消</el-button>
+        <el-button type="primary" size="mini" @click="confirmSave">确 定</el-button>
       </span>
     </el-dialog>
   </div>

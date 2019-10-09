@@ -22,8 +22,9 @@ import articleCheck from './routers/cms/articleCheck'
 // import extensions from './routers/cms/extensions'
 import commentModeration from './routers/cms/commentModeration'
 import statisticsChart from './routers/cms/statisticsChart'
+import pushMessage from './routers/cms/pushMessage'
 // const cmsRouterMap = [webSite, systemSet, personAndAuthor,commentModeration]
-const cmsRouterMap = [webSite, systemSet, personAndAuthor, checkSetting, articleCheck, commentModeration,statisticsChart]
+const cmsRouterMap = [webSite, systemSet, personAndAuthor, checkSetting, articleCheck, commentModeration,statisticsChart, pushMessage]
 
 /**
  * 用户中心系统路由
