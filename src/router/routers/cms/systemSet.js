@@ -132,7 +132,7 @@ const systemSet = {
        * 蜜蜂采集
        */
       path: 'collection',
-      component: () => import(`@/${path}/form`),
+      component: () => import(`@/${path}/beeClect/index`),
       name: 'collection',
       meta: { title: 'collection', icon: 'bee', role: 'cms:bee' },
     },
