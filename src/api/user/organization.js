@@ -91,3 +91,10 @@ export function OrganizationCheckCode(organizationCode) {
     method: 'GET'
   })
 }
+export function OrganizationPermission(data) {
+  return request({
+    url: '/userb/organization/refreshpermissioninfo',
+    method: 'POST',
+    data
+  })
+}

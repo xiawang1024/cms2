@@ -17,11 +17,12 @@
     <!-- 表格的数据展示，参数放置到 tableConfig 中进行传入。 -->
     <!-- 分页条处理：每页条数变化、当前页页码条数、表格选中数据监听 -->
     <pap-table
-      ref="organization-table"
+      ref="organizationTable"
       v-bind="tableConfig"
       @handle-size-change="handleSizeChange"
       @handle-current-change="handleCurrentChange"
       @multiple-selection="multipleSelectionEmit"
+      @handel-permission="handelPermission"
     />
     <!-- 允许当前页面被其他组件依赖，依赖的过程中，允许具名slot，保证明确的节点被插入到当前组件中 -->
     <slot name="fotter-slot" />
@@ -45,7 +46,8 @@ import {
   OrganizationCreate,
   OrganizationUpdate,
   OrganizationUpdateForEnable,
-  OrganizationCheckCode
+  OrganizationCheckCode,
+  OrganizationPermission
 } from "@/api/user/organization";
 
 export default {
@@ -111,6 +113,7 @@ export default {
             formatter: row => (row.enableFlag === 1 ? "启用" : "禁用")
           }
         ],
+        slotHandel: true,
         tableData: [],
         paginationPageNo: 1,
         paginationSize: 10,
@@ -244,6 +247,22 @@ export default {
     this.getList();
   },
   methods: {
+    // 点击分配权限确定
+    handelPermission(val) {
+      return new Promise((resolve, reject) => {
+        // 开始请求
+        OrganizationPermission(val)
+          .then(async res => {
+            this.$refs.organizationTable.handelVisible = false;
+            this.$message.success("添加成功");
+            // 结束
+            resolve();
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
     // 点击搜索
     search(data) {
       this.searchData = data;
