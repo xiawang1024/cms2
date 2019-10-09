@@ -10,11 +10,11 @@ const systemSet = {
   path: `/${systemSetPath}/systemSetPath`,
   component: Layout,
   meta: {
-    title: "liveConfig",
-    icon: "liveClue",
-    role: "systemSet"
+    title: "dataPermission",
+    icon: "password",
+    role: "systemSet:dataPermission"
   },
-  name: "live",
+  name: "systemSet",
   children: [
 
     {
@@ -27,7 +27,7 @@ const systemSet = {
       meta: {
         title: 'dataPermission',
         icon: 'password',
-        role: 'systemSet'
+        role: 'systemSet:dataPermission'
       },
     }
   ]
