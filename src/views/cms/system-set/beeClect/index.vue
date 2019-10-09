@@ -227,7 +227,7 @@
                 <li>
                   <el-row>
                     <el-col :span="14" />
-                    <el-col :span="8">
+                    <el-col :span="10">
                       <el-button size="mini" type="primary" @click="test">测试</el-button>
                       <el-button size="mini" type="primary" @click="save">保存</el-button>
                       <el-button size="mini" type="primary" @click="saveAs">另存</el-button>
