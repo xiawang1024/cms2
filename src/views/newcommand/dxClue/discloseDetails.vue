@@ -52,7 +52,7 @@
                   <div class="rightdiv">{{ formData.breakingPeople }}</div>
                 </el-col>
               </el-row>
-              <el-row>
+              <el-row v-if="checkAuth('newcommond:baoliao:phoneNumber')">
                 <el-col :span="5">
                   <div class="leftdiv">爆料人联系方式</div>
                 </el-col>
@@ -173,7 +173,6 @@
         :form-data="addData"
         @save="submitSave"
         label-width="80px"
-        :btn-loading="isLoading"
       />
     </el-dialog>
     <!-- <div>{{discloseClassify}}</div> -->
@@ -233,6 +232,13 @@ export default {
     this.discloseInfor(this.discloseId);
   },
   methods: {
+    checkAuth(authKey) {
+      if (this.$store.getters.authorities.indexOf(authKey) === -1) {
+        return false;
+      } else {
+        return true;
+      }
+    },
     handleAdd() {
       //显示对会话框
       this.dialogVisible = true;
