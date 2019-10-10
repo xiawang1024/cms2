@@ -209,7 +209,7 @@ export function articleTrend(channelId) {
    //频道发稿统计（大象）
    export function getdxDocumentStatistics(data) {
     return request({
-      url:Cpath+`/cms/article/queryarticleclickbytenantidandchannelidandtime?channelId=${data.channelId}&beginTime=${data.beginTime}&endTime=${data.endTime}&removeReferFlag=true&origin=${data.origin}&sortBy=${data.sortBy}&order=desc`,
+      url:Cpath+`/cms/article/queryarticleclickbytenantidandchannelidandtime?channelId=${data.channelId}&beginTime=${data.beginTime}&endTime=${data.endTime}&removeReferFlag=true&origin=${data.origin}&sortBy=origin,clickNumInt&order=desc`,
       method: "post"
     });
 
@@ -221,7 +221,7 @@ export function articleTrend(channelId) {
     function postAjax (data) {
       axios({
         method: 'get',
-        url: baseUrl.BASE_URL +`/cms/article/queryarticleclickbytenantidandchannelidandtimeexport?channelId=${data.channelId}&beginTime=${data.beginTime}&endTime=${data.endTime}&removeReferFlag=true&origin=${data.origin}&sortBy=${data.sortBy}&order=desc`,
+        url: baseUrl.BASE_URL +`/cms/article/queryarticleclickbytenantidandchannelidandtimeexport?channelId=${data.channelId}&beginTime=${data.beginTime}&endTime=${data.endTime}&removeReferFlag=true&origin=${data.origin}&sortBy=origin,clickNumInt&order=desc`,
         responseType: 'blob',
         headers: {
           // 'Content-Type': 'application/json;charset=utf-8',
@@ -250,7 +250,7 @@ export function articleTrend(channelId) {
 
    export function getdxhStatistics(data) {
     return request({
-      url:Cpath+`/cms/article/queryoriginstatisclickbytenantidandchannelidandtime?channelId=${data.channelId}&beginTime=${data.beginTime}&endTime=${data.endTime}&removeReferFlag=true&origin=${data.origin}&sortBy=${data.sortBy}&order=desc`,
+      url:Cpath+`/cms/article/queryoriginstatisclickbytenantidandchannelidandtime?channelId=${data.channelId}&beginTime=${data.beginTime}&endTime=${data.endTime}&removeReferFlag=true&origin=${data.origin}&sortBy=origin,clickNumInt&order=desc`,
       method: "post"
     });
 
@@ -262,7 +262,7 @@ export function downdxhStatistics(data) {
   function postAjax (data) {
     axios({
       method: 'get',
-      url: baseUrl.BASE_URL +`/cms/article/queryoriginstatisclickbytenantidandchannelidandtimeexport?channelId=${data.channelId}&beginTime=${data.beginTime}&endTime=${data.endTime}&removeReferFlag=true&origin=${data.origin}&sortBy=${data.sortBy}&order=desc`,
+      url: baseUrl.BASE_URL +`/cms/article/queryoriginstatisclickbytenantidandchannelidandtimeexport?channelId=${data.channelId}&beginTime=${data.beginTime}&endTime=${data.endTime}&removeReferFlag=true&origin=${data.origin}&sortBy=origin,clickNumInt&order=desc`,
       responseType: 'blob',
       headers: {
         // 'Content-Type': 'application/json;charset=utf-8',

@@ -42,26 +42,28 @@ export default {
           // value:["1108265560111714304","1126019193184063488"], //默认大象号ID  "1161447048013287424"
           changeOnSelect: true,
           options: []
-        },{
-          label: "排序方式",
-          name: "sortBy",
-          type: "select",
-          visible: "true",
-          value:'clickNumInt',
-          changeOnSelect: true,
-          options: [
-              {
-                  label:'点击量',
-                  value:'clickNumInt'
+        },
+        // {
+        //   label: "排序方式",
+        //   name: "sortBy",
+        //   type: "select",
+        //   visible: "true",
+        //   value:'clickNumInt',
+        //   changeOnSelect: true,
+        //   options: [
+        //       {
+        //           label:'点击量',
+        //           value:'clickNumInt'
 
-              },
-              {
-                  label:'来源',
-                  value:'origin'
+        //       },
+        //       {
+        //           label:'来源',
+        //           value:'origin'
 
-              }
-          ]
-        },{
+        //       }
+        //   ]
+        // },
+        {
             label: "来源",
           name: "origin",
           type: "select",
@@ -103,7 +105,7 @@ export default {
       ],
       beginTime: "",
       endTime: "",
-      sortBy:'clickNumInt',
+      // sortBy:'clickNumInt',
       origin:'',
       tableData: []
     };
@@ -150,9 +152,9 @@ export default {
       }
       
       // console.log(this.beginTime, this.endTime,columnId, "time");
-       if(val.sortBy){
-           this.sortBy=val.sortBy;
-       }
+      //  if(val.sortBy){
+      //      this.sortBy=val.sortBy;
+      //  }
        if(val.origin){
            this.origin=val.origin;
        }else{
@@ -197,7 +199,7 @@ export default {
         beginTime: this.beginTime,
         endTime: this.endTime,
         channelId:val,
-        sortBy:this.sortBy,
+        // sortBy:this.sortBy,
         origin:this.origin,
       };
       return new Promise((resolve, reject) => {
@@ -220,7 +222,7 @@ export default {
         endTime: this.endTime,
         channelId:this.channelId,
         accessToken:'bearer '+JSON.parse(localStorage.getItem('hnDt_token')).access_token,
-         sortBy:this.sortBy,
+        //  sortBy:this.sortBy,
         origin:this.origin,
       };
      
@@ -289,7 +291,7 @@ export default {
                   value: ele.dictDetailName
                 };
               });
-              _this.searchSettings[2].options = _this.sourceList;
+              _this.searchSettings[1].options = _this.sourceList;
               
             }
             resolve();
