@@ -105,8 +105,8 @@ const statisticsChart = {
         path: 'departmentStatistics',
         component: () => import(`@/${path}/departmentStatistics`),
         name: 'departmentStatistics',
-        // meta: { title: 'departmentStatistics', icon: 'department', role: 'cms:departmentStatistics' },
-        meta: { title: 'departmentStatistics', icon: 'department', role: 'cms', }
+        meta: { title: 'departmentStatistics', icon: 'department', role: 'cms:departmentStatistics' },
+        // meta: { title: 'departmentStatistics', icon: 'department', role: 'cms', }
        
       },
       
