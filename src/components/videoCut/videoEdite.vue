@@ -18,19 +18,20 @@
       @CloseDialog="playReset"
       @audioPlay="audioPlay"
     />
-    <audioWave :audio_url="audio_url" :cut-list="cutList" ref="audioWave"/>
+    <!-- <audioWave :audio_url="audio_url" :cut-list="cutList" ref="audioWave"/> -->
+    <div style="margin:10px;"/>
     <logoEdite :cut-list="cutList" :duration="duration" @putLogo="putLogo"/>
   </div>
 </template>
 <script>
 import CropTool from "@/components/videoCut/CropTool.vue";
-import audioWave from "@/components/videoCut/audio.vue";
+// import audioWave from "@/components/videoCut/audio.vue";
 import logoEdite from "@/components/videoCut/logoEdite.vue";
 export default {
   name: "VideoEdite",
   components: {
     CropTool,
-    audioWave,
+    // audioWave,
     logoEdite
   },
   props: {
