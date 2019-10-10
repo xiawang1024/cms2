@@ -209,7 +209,7 @@ export function articleTrend(channelId) {
    //频道发稿统计（大象）
    export function getdxDocumentStatistics(data) {
     return request({
-      url:Cpath+`/cms/article/queryarticleclickbytenantidandchannelidandtime?channelId=${data.channelId}&sortBy=actualClickNumInt&beginTime=${data.beginTime}&endTime=${data.endTime}`,
+      url:Cpath+`/cms/article/queryarticleclickbytenantidandchannelidandtime?channelId=${data.channelId}&beginTime=${data.beginTime}&endTime=${data.endTime}&removeReferFlag=true&origin=${data.origin}&sortBy=origin,clickNumInt&order=desc`,
       method: "post"
     });
 
@@ -218,12 +218,51 @@ export function articleTrend(channelId) {
   //大象发稿文档下载
   
   export function downdxDocumentStatistics(data) {
+    function postAjax (data) {
+      axios({
+        method: 'get',
+        url: baseUrl.BASE_URL +`/cms/article/queryarticleclickbytenantidandchannelidandtimeexport?channelId=${data.channelId}&beginTime=${data.beginTime}&endTime=${data.endTime}&removeReferFlag=true&origin=${data.origin}&sortBy=origin,clickNumInt&order=desc`,
+        responseType: 'blob',
+        headers: {
+          // 'Content-Type': 'application/json;charset=utf-8',
+          'Authorization': data.accessToken
+        }
+      })
+        .then(res => {
+          download('template.xlsx', res.data)
+          Message.success('下载成功')
+        })
+        .catch(error => {
+          Message.warning(error.msg ? error.msg : '导出失败')
+        })
+    }
     postAjax(data)
   }
+  
+
+
+  
+
+//部门统计
+/*
+**   sortBy : origin/clickNumInt
+*/
+
+   export function getdxhStatistics(data) {
+    return request({
+      url:Cpath+`/cms/article/queryoriginstatisclickbytenantidandchannelidandtime?channelId=${data.channelId}&beginTime=${data.beginTime}&endTime=${data.endTime}&removeReferFlag=true&origin=${data.origin}&sortBy=origin,clickNumInt&order=desc`,
+      method: "post"
+    });
+
+  }
+//下载部门统计
+
+export function downdxhStatistics(data) {
+  postAjax(data)
   function postAjax (data) {
     axios({
       method: 'get',
-      url: baseUrl.BASE_URL +`/cms/article/queryarticleclickbytenantidandchannelidandtimeexport?channelId=${data.channelId}&sortBy=actualClickNumInt&beginTime=${data.beginTime}&endTime=${data.endTime}`,
+      url: baseUrl.BASE_URL +`/cms/article/queryoriginstatisclickbytenantidandchannelidandtimeexport?channelId=${data.channelId}&beginTime=${data.beginTime}&endTime=${data.endTime}&removeReferFlag=true&origin=${data.origin}&sortBy=origin,clickNumInt&order=desc`,
       responseType: 'blob',
       headers: {
         // 'Content-Type': 'application/json;charset=utf-8',
@@ -238,6 +277,13 @@ export function articleTrend(channelId) {
         Message.warning(error.msg ? error.msg : '导出失败')
       })
   }
+}
+
+
+
+
+
+
 
 
 

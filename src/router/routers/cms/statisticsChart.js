@@ -98,7 +98,17 @@ const statisticsChart = {
         // meta: { title: 'dxDocument', icon: '32-elephant', role: 'cms', }
        
       },
-      
+      {
+        /**
+         * 部门统计
+         */
+        path: 'departmentStatistics',
+        component: () => import(`@/${path}/departmentStatistics`),
+        name: 'departmentStatistics',
+        meta: { title: 'departmentStatistics', icon: 'department', role: 'cms:departmentStatistics' },
+        // meta: { title: 'departmentStatistics', icon: 'department', role: 'cms', }
+       
+      },
       
    
   ]

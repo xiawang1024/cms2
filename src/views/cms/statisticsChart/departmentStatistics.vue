@@ -11,23 +11,22 @@
       </el-row>
     </div>
 
-    <el-table :data="tableData" style="width: 100%" stripe>
-      <el-table-column label="来源" prop="origin" width="150" />
-      <el-table-column label="ID序号" width="200" prop="id" />
-      <el-table-column label="标题" prop="title" />
-      <el-table-column label="类型" width="80" prop="articleShowStyle" />
-      <el-table-column label="发布时间" width="200" prop="publishDate" />
-      <el-table-column label="编辑" width="100" prop="createUser" />
-      <el-table-column label="点击" width="200" prop="clickNumInt" />
+    <el-table :data="tableData" style="width: 100%" >
+      <el-table-column label="#" type="index" />
+      <el-table-column label="部门" prop="departmentName" />
+      <el-table-column label="来源" prop="origin" />
+      <el-table-column label="点击量" prop="departmentArticleClickNumber" />
+      <el-table-column label="发稿量" prop="departmentArticleNumber" />
     </el-table>
   </div>
 </template>
 <script>
-import { getdxDocumentStatistics,downdxDocumentStatistics } from "@/api/cms/liveCharts";
+import {getdxhStatistics,downdxhStatistics } from "@/api/cms/liveCharts";
 import dayjs from "dayjs";
 import store from "store";
 import { mapGetters } from "vuex";
 import { fetchDictByDictName } from "@/api/cms/dict";
+
 export default {
   data() {
     return {
@@ -120,7 +119,6 @@ export default {
   },
   created() {
       this.fetchDict();
-
   },
   mounted() {
     this.searchSettings[0].options = this.columnAll.length
@@ -131,6 +129,32 @@ export default {
 
   },
   methods: {
+      //获取来源列表
+       fetchDict() {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        fetchDictByDictName("文稿来源")
+          .then(response => {
+            if (
+              response.data.result.details &&
+              response.data.result.details.length
+            ) {
+              _this.sourceList = response.data.result.details.map(ele => {
+                return {
+                  label: ele.dictDetailName,
+                  value: ele.dictDetailName
+                };
+              });
+              _this.searchSettings[1].options = _this.sourceList;
+              
+            }
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
     searchItem(val) {
 
 
@@ -139,13 +163,14 @@ export default {
            this.$message.error("请正确选择时间区间");
        return false;
       }
-      // if(val.columnId[0]==undefined){
-      //      this.$message.error("请选择栏目");
-      //   return false;
-      // }
+    //   if(val.columnId[0]==undefined){
+    //        this.$message.error("请选择栏目");
+    //     return false;
+    //   }
       this.timeDeail(val);
       if(val.columnId){
         let columnId=JSON.parse(JSON.stringify(val.columnId)).reverse()[0]
+
         this.channelId=columnId;
       }else{
         this.channelId=''
@@ -160,8 +185,6 @@ export default {
        }else{
          this.origin=''
        }
-      
-      // console.log(this.beginTime, this.endTime,columnId, "time");
       this.initTableList(this.channelId)
     },
     timeDeail(val) {
@@ -203,7 +226,7 @@ export default {
         origin:this.origin,
       };
       return new Promise((resolve, reject) => {
-        getdxDocumentStatistics(data)
+        getdxhStatistics(data)
           .then(res => {
             if (res.data.code == 0) {
               this.tableData = res.data.result;
@@ -222,85 +245,16 @@ export default {
         endTime: this.endTime,
         channelId:this.channelId,
         accessToken:'bearer '+JSON.parse(localStorage.getItem('hnDt_token')).access_token,
-        //  sortBy:this.sortBy,
+        // sortBy:this.sortBy,
         origin:this.origin,
       };
-     
-        downdxDocumentStatistics(data)
+
+        // 调用下载接口
+        downdxhStatistics(data)
         
       
     },
 
-    //前端下载
-    // handleDownload() {
-    //   import("@/vendor/Export2Excel").then(excel => {
-    //     const tHeader = [
-    //       "来源",
-    //       "ID序号",
-    //       "标题",
-    //       "类型",
-    //       "发布时间",
-    //       "编辑",
-    //       "点击"
-    //     ];
-    //     const filterVal = [
-    //       "origin",
-    //       "id",
-    //       "title",
-    //       "articleShowStyle",
-    //       "publishDate",
-    //       "createUser",
-    //       "clickNumInt"
-    //     ];
-    //     const list = this.tableData;
-    //     const data = this.formatJson(filterVal, list);
-    //     excel.export_json_to_excel({
-    //       header: tHeader,
-    //       data,
-    //       filename: this.filename,
-    //       autoWidth: this.autoWidth,
-    //       bookType: this.bookType
-    //     });
-    //     this.downloadLoading = false;
-    //   });
-    // },
-    // formatJson(filterVal, jsonData) {
-    //   return jsonData.map(v =>
-    //     filterVal.map(j => {
-    //       if (j === "timestamp") {
-    //         return parseTime(v[j]);
-    //       } else {
-    //         return v[j];
-    //       }
-    //     })
-    //   );
-    // }
-    //获取来源列表
-       fetchDict() {
-      var _this = this;
-      return new Promise((resolve, reject) => {
-        fetchDictByDictName("文稿来源")
-          .then(response => {
-            if (
-              response.data.result.details &&
-              response.data.result.details.length
-            ) {
-              _this.sourceList = response.data.result.details.map(ele => {
-                return {
-                  label: ele.dictDetailName,
-                  value: ele.dictDetailName
-                };
-              });
-              _this.searchSettings[1].options = _this.sourceList;
-              
-            }
-            resolve();
-          })
-          .catch(error => {
-            reject(error);
-          });
-      });
-    },
   }
 };
 </script>
