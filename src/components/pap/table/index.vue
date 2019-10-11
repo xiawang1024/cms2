@@ -14,13 +14,13 @@
     </el-form>
 
     <el-table
-      ref="pap-base-table"
+      ref="papBaseTable"
       :row-key="rowKeys"
       :data="currentTableData"
       v-loading="tableLoading"
-      stripe
-      style="width: 100%; "
+      style="width: 100%;"
       @selection-change="handleSelectionChange"
+      highlight-current-row
     >
       <el-table-column type="selection" width="55" :reserve-selection="reserveSelection"></el-table-column>
       <el-table-column v-for="(col) in currentTableColumn" :key="col.prop" v-bind="col"></el-table-column>
@@ -47,13 +47,6 @@
       <el-table size="mini" :data="multipleSelection" v-loading="tableLoading" height="400">
         <el-table-column v-for="(col) in currentTableColumn" :key="col.prop" v-bind="col"></el-table-column>
       </el-table>
-    </el-dialog>
-    <el-dialog title="分配权限" :visible.sync="handelVisible" width="30%">
-      <el-input type="textarea" :rows="2" placeholder="请输入权限编码，用逗号隔开" v-model="permissionCode"></el-input>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="handelVisible = false" size="mini">取 消</el-button>
-        <el-button type="primary" @click="permissionAdd()" size="mini">确 定</el-button>
-      </span>
     </el-dialog>
   </div>
 </template>
@@ -102,6 +95,10 @@ export default {
     total: {
       type: Number,
       default: 0
+    },
+    defaultPageSize: {
+      type: Number,
+      default: 10
     }
   },
   data() {
@@ -121,8 +118,6 @@ export default {
       // 选中数据弹窗查看
       selectedTableDataDialogVisible: false,
       handelVisible: false,
-      // 权限编码
-      permissionCode: "",
       origizationRow: {}
     };
   },
@@ -138,29 +133,20 @@ export default {
         this.currentTableData = val;
       },
       immediate: true
+    },
+    defaultPageSize: {
+      handler(val) {
+        this.paginationSize = val;
+      },
+      immediate: true
     }
   },
   methods: {
-    // 添加权限
-    permissionAdd() {
-      // this.handelVisible = false;
-      if (!this.permissionCode) {
-        this.$message.warning("请输入权限编码");
-        return;
-      }
-
-      let permissionCodeList = this.permissionCode.split(",").map(ele => {
-        return ele.trim();
-      });
-      this.$emit("handel-permission", {
-        clientLicenseId: this.origizationRow.organizationCode,
-        permissionCodeList: permissionCodeList
-      });
-    },
     sendPermission(row) {
-      this.permissionCode = "";
-      this.origizationRow = row;
-      this.handelVisible = true;
+      // this.permissionCode = "";
+      // this.origizationRow = row;
+      // this.handelVisible = true;
+      this.$emit("handel-permission", row);
     },
     // 表格数据查看
     handleShowSelectedTableData(val) {

@@ -129,15 +129,16 @@ export default {
         // 多页选中数据回显，分页记录保存选中的数据
         rowKeys: "permissionId",
         colomn: [
-          { prop: "permissionCode", label: "权限编码" },
           { prop: "permissionName", label: "权限名称" },
+          { prop: "permissionCode", label: "权限编码" },
           { prop: "sysApplicationId", label: "所属系统" },
           { prop: "httpUrl", label: "请求链接" },
           { prop: "httpMethod", label: "请求协议" }
         ],
         tableData: [],
         paginationPageNo: 1,
-        paginationSize: 10,
+        paginationSize: 20,
+        defaultPageSize: 20,
         total: 0
       },
       // 表格选择的值
@@ -155,16 +156,24 @@ export default {
       ],
       searchSettings: [
         {
+          label: "权限名称",
+          name: "permissionName",
+          placeholder: "请输入权限名称",
+          visible: true,
+          type: "text"
+        },
+        {
           label: "权限编码",
           name: "permissionCode",
           placeholder: "请输入权限编码",
           visible: true,
           type: "text"
         },
+
         {
-          label: "权限名称",
-          name: "permissionName",
-          placeholder: "请输入权限名称",
+          label: "所属系统",
+          name: "sysApplicationId",
+          placeholder: "请输入所属系统",
           visible: true,
           type: "text"
         }

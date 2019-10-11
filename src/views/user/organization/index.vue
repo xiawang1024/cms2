@@ -33,6 +33,22 @@
       :content-form="dialogForm"
       @dialogSubmitClick="dialogSubmitClick"
     />
+    <el-dialog title="分配权限" :visible.sync="sendPermissionVisible" width="70%">
+      <!-- <el-input type="textarea" :rows="2" placeholder="请输入权限编码，用逗号隔开" v-model="permissionCode"></el-input> -->
+      <div class="v-search-header">
+        <v-search :search-settings="dialogSearchSettings" @search="dialogSearch" />
+      </div>
+      <pap-table
+        ref="organizationDailogTable"
+        v-bind="dialogTableConfig"
+        @handle-size-change="dialogHandleSizeChange"
+        @handle-current-change="dialogHandleCurrentChange"
+      />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="sendPermissionVisible = false" size="mini">取 消</el-button>
+        <el-button type="primary" @click="sendPermission()" size="mini">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -41,6 +57,7 @@ import PapSearch from "@/components/pap/search/index";
 import PapTable from "@/components/pap/table/index";
 import PapDialog from "@/components/pap/dialog/index";
 import ButtonGroup from "@/components/pap/button-group/index";
+import { PermissionList } from "@/api/user/permission";
 import {
   OrganizationList,
   OrganizationCreate,
@@ -49,6 +66,13 @@ import {
   OrganizationCheckCode,
   OrganizationPermission
 } from "@/api/user/organization";
+import {
+  buttonArray,
+  searchForm,
+  searchSettings,
+  dialogSearchSettings,
+  dialogForm
+} from "./setting.js";
 
 export default {
   name: "SysOrganization",
@@ -58,45 +82,13 @@ export default {
     PapDialog,
     ButtonGroup
   },
+
   data() {
+    dialogForm[3].rules[0].validator = this.checkOrganizationRepeat;
     return {
       /* eslint-disable */
       // 按钮组
-      buttonArray: [
-        {
-          name: "搜索",
-          auth: true,
-          click: "list-click",
-          icon: "el-icon-search"
-        },
-        {
-          name: "新建",
-          auth: true,
-          click: "create-click",
-          icon: "el-icon-plus"
-        },
-        {
-          name: "编辑",
-          auth: true,
-          click: "edit-click",
-          disabled: true,
-          icon: "el-icon-edit"
-        },
-        {
-          name: "审核通过",
-          auth: true,
-          click: "enable-click",
-          disabled: true,
-          icon: "el-icon-check"
-        },
-        {
-          name: "审核拒绝",
-          auth: true,
-          click: "disable-click",
-          disabled: true,
-          icon: "el-icon-close"
-        }
-      ],
+      buttonArray: buttonArray,
 
       // 表格
       tableConfig: {
@@ -113,6 +105,7 @@ export default {
             formatter: row => (row.enableFlag === 1 ? "启用" : "禁用")
           }
         ],
+        // 表格内添加操作
         slotHandel: true,
         tableData: [],
         paginationPageNo: 1,
@@ -123,123 +116,40 @@ export default {
       multipleSelection: [],
 
       // 搜索框
-      searchForm: [
-        {
-          $id: "organizationCode",
-          $type: "input",
-          $label: "租户编码",
-          $default: "",
-          $el: { placeholder: "请输入", style: "width: 200px" }
-        },
-        {
-          $id: "organizationName",
-          $type: "input",
-          $label: "租户名称",
-          $default: "",
-          $el: { placeholder: "请输入", style: "width: 200px" }
-        },
-        {
-          $id: "organizationType",
-          $type: "input",
-          $label: "系统类型",
-          $default: "CUSTOMER",
-          $enableWhen: { null: "null" },
-          $el: { placeholder: "请输入", style: "width: 200px" }
-        }
-      ],
-      searchSettings: [
-        {
-          label: "租户编码",
-          name: "organizationCode",
-          placeholder: "请输入租户编码",
-          visible: true,
-          type: "text"
-        },
-        {
-          label: "租户名称",
-          name: "organizationName",
-          placeholder: "请输入租户名称",
-          visible: true,
-          type: "text"
-        }
-        // {
-        //   label: '系统类型',
-        //   name: 'organizationType',
-        //   placeholder: '请输入系统类型',
-        //   visible: false,
-        //   type: 'text'
-        // }
-      ],
+      searchForm: searchForm,
+      searchSettings: searchSettings,
+      dialogSearchSettings: dialogSearchSettings,
       // 搜索条件
       searchData: {
         organizationCode: "",
         organizationName: "",
         organizationType: "CUSTOMER"
       },
+      // 弹框内搜索
+      dialogSearchData: {},
       // 弹出框表单
-      dialogForm: [
-        {
-          $id: "organizationId",
-          $type: "input",
-          $label: "租户编号",
-          $default: "",
-          $enableWhen: { null: "null" },
-          $el: { placeholder: "请输入", style: "width: 200px" }
-        },
-        {
-          $id: "organizationType",
-          $type: "input",
-          $label: "系统类型",
-          $default: "CUSTOMER",
-          $enableWhen: { null: "null" },
-          $el: { placeholder: "请输入", style: "width: 200px" }
-        },
-        {
-          $id: "enableFlag",
-          $type: "input",
-          $label: "可用状态",
-          $default: "0",
-          $enableWhen: { null: "null" },
-          $el: { placeholder: "请输入", style: "width: 200px" }
-        },
-        {
-          $id: "organizationCode",
-          $type: "input",
-          $label: "租户编码",
-          $default: "",
-          $el: { placeholder: "请输入", style: "width: 200px" },
-          rules: [
-            {
-              validator: this.checkOrganizationRepeat
-            }
-          ]
-        },
-        {
-          $id: "organizationName",
-          $type: "input",
-          $label: "租户名称",
-          $default: "",
-          $el: { placeholder: "请输入", style: "width: 200px" }
-        },
-        {
-          $id: "organizationManager",
-          $type: "input",
-          $label: "租户管理者",
-          $default: "",
-          $el: { placeholder: "请输入", style: "width: 200px" }
-        },
-        {
-          $id: "remark",
-          $type: "input",
-          $label: "备注",
-          $default: "",
-          $el: { placeholder: "请输入", style: "width: 200px" }
-        }
-      ],
+      dialogForm: dialogForm,
       dialogSubmitClickEmit: "dialogSubmitClick",
       dialogOperationType: "",
       dialogOrganizationCopyTemp: "",
-      filename: ""
+      filename: "",
+      // 分配权限弹框
+      sendPermissionVisible: false,
+      // 权限弹框数据
+      dialogTableConfig: {
+        rowKeys: "permissionId",
+        colomn: [
+          { prop: "permissionName", label: "权限名称" },
+          { prop: "permissionCode", label: "权限编码" },
+          { prop: "sysApplicationId", label: "所属系统" }
+        ],
+        // 表格内添加操作
+        tableData: [],
+        paginationPageNo: 1,
+        paginationSize: 10,
+        total: 0
+      },
+      organizationData: {}
       /* eslint-disable */
     };
   },
@@ -247,14 +157,18 @@ export default {
     this.getList();
   },
   methods: {
-    // 点击分配权限确定
-    handelPermission(val) {
+    // 获取权限列表
+    getPermissionList() {
+      var _this = this;
       return new Promise((resolve, reject) => {
-        // 开始请求
-        OrganizationPermission(val)
+        PermissionList(
+          _this.dialogSearchData,
+          this.dialogTableConfig.paginationPageNo,
+          this.dialogTableConfig.paginationSize
+        )
           .then(async res => {
-            this.$refs.organizationTable.handelVisible = false;
-            this.$message.success("添加成功");
+            _this.dialogTableConfig.total = res.data.result.total;
+            _this.dialogTableConfig.tableData = res.data.result.content;
             // 结束
             resolve();
           })
@@ -263,10 +177,37 @@ export default {
           });
       });
     },
+    // 权限弹框操作事件
+    dialogHandleSizeChange(val) {
+      this.dialogTableConfig.paginationPageNo = 1;
+      this.dialogTableConfig.paginationSize = val;
+      this.getPermissionList();
+    },
+    dialogHandleCurrentChange(val) {
+      this.dialogTableConfig.paginationPageNo = val;
+      this.getPermissionList();
+    },
+    // 点击分配权限确定
+    handelPermission(val) {
+      this.organizationData = val;
+      this.sendPermissionVisible = true;
+      this.getPermissionList();
+      this.$nextTick(() => {
+        this.$refs.organizationDailogTable.$refs.papBaseTable.clearSelection();
+      });
+    },
+    // 点击弹框内搜索
+    dialogSearch(data) {
+      this.$refs.organizationDailogTable.paginationPageNo = 1;
+      this.dialogSearchData = data;
+      this.dialogTableConfig.paginationPageNo = 1;
+      this.getPermissionList();
+    },
     // 点击搜索
     search(data) {
       this.searchData = data;
       this.tableConfig.paginationPageNo = 1;
+      this.$refs.organizationTable.paginationPageNo = 1;
       this.searchData.organizationType = "CUSTOMER";
       this.getList();
     },
@@ -284,6 +225,34 @@ export default {
             _this.tableConfig.total = res.data.result.total;
             _this.tableConfig.tableData = res.data.result.content;
             // 结束
+            resolve();
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    },
+    // 确认分配权限
+    sendPermission() {
+      const choosedPermission = this.$refs.organizationDailogTable.multipleSelection.map(
+        ele => {
+          return ele.permissionCode;
+        }
+      );
+      if (!choosedPermission.length) {
+        this.$message.warning("请选择至少一个权限");
+        return;
+      }
+      return new Promise((resolve, reject) => {
+        // 开始请求
+        let params = {
+          permissionCodeList: choosedPermission,
+          clientLicenseId: this.organizationData.organizationCode
+        };
+        OrganizationPermission(params)
+          .then(res => {
+            this.sendPermissionVisible = false;
+            this.$message.success("添加成功");
             resolve();
           })
           .catch(err => {
