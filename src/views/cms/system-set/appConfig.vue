@@ -38,14 +38,17 @@
       </el-table-column>
     </el-table>
     <el-dialog :visible.sync="dialogVisible" :title="dialogTitle">
-      <v-form
+      <!-- <v-form
         ref="vform"
         :form-settings="formSettings"
         :form-data="formData"
         @save="submitSave"
         label-width="130px"
         :btn-loading="isLoading"
-      />
+      /> -->
+      <!-- 上传组件 -->
+      <upload-app/>  
+
     </el-dialog>
     <el-pagination
       class="fenyeDiv"
@@ -72,9 +75,10 @@ import {
   updateAppInfo,
   checkName
 } from "@/api/cms/appConfig.js";
+import uploadApp from "@/views/cms/system-set/appConfig/index.vue"
 export default {
   name: "AppConfig",
-
+  components:{uploadApp},
   data() {
     var validateNumber = (rule, value, callback) => {
       if (value < 0) {
@@ -91,7 +95,7 @@ export default {
       pageNo: 1,
       pageSize: 10,
       totalCount: 0,
-      dialogVisible: false,
+      dialogVisible: true,
       dialogTitle: "",
       handleType: "",
       isLoading: false,
