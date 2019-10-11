@@ -26,7 +26,11 @@
           <el-tooltip class="item" effect="dark" :content="node.label " placement="top-start" :disabled="lengthComputed(node.label) < 44">
             <div class="column-name">{{ node.label }}</div>
           </el-tooltip>
-          <div class="column-type" :style="{ marginLeft: marginWidth(data.sourceMatrixLevel) + 'px'}">{{ data.sourceMatrixType == '1' ? '视频' : '矩阵' }} </div>
+          <div class="column-type" :style="{ marginLeft: marginWidth(data.sourceMatrixLevel) + 'px'}">
+            <span v-if="data.sourceMatrixType =='SP'">{{ '视频' }}</span>
+            <span v-if="data.sourceMatrixType =='bm'">{{ '部门' }}</span>
+            <span v-if="data.sourceMatrixType == 'jz'">{{ "矩阵" }}</span>
+          </div>
           <div class="column-remark">{{ data.sourceMatrixRemark }} </div>
           <div class="column-seqNo">{{ data.seqNo }}</div>
           <div class="column-handel">

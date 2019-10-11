@@ -63,6 +63,10 @@ export default {
                 {
                   label: '矩阵',
                   value: 'jz'
+                },
+                {
+                  label: '部门',
+                  value: 'bm'
                 }
               ]
             },
