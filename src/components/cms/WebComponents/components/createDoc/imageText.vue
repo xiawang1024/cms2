@@ -92,18 +92,18 @@
                       true-label="1"
                       false-label="0"
                       v-model="adddocSet.topFlag"
-                      :disabled="contextMenu.articleType == 3 || !checkAuth('cms:article:articleId')"
+                      :disabled="contextMenu.articleType == 3 || !checkAuth('cms:article:stick')"
                     >置顶</el-checkbox>
                     <el-checkbox
                       true-label="1"
                       false-label="0"
                       v-model="adddocSet.hiddenFlag"
-                      :disabled="contextMenu.articleType == 3 || !checkAuth('cms:article:articleId')"
+                      :disabled="contextMenu.articleType == 3 || !checkAuth('cms:article:stick')"
                     >隐身</el-checkbox>
                     <span class="extractCode">提取码</span>
                     <el-input
                       v-model="adddocSet.extractCode"
-                      :disabled="contextMenu.articleType == 3 || !checkAuth('cms:article:articleId')"
+                      :disabled="contextMenu.articleType == 3 || !checkAuth('cms:article:stick')"
                     />
                   </div>
                 </template>
