@@ -193,7 +193,9 @@ export default {
       this.sendPermissionVisible = true;
       this.getPermissionList();
       this.$nextTick(() => {
-        this.$refs.organizationDailogTable.$refs.papBaseTable.clearSelection();
+        this.$refs.organizationDailogTable.$refs[
+          "pap-base-table"
+        ].clearSelection();
       });
     },
     // 点击弹框内搜索

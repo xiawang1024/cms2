@@ -14,7 +14,7 @@
     </el-form>
 
     <el-table
-      ref="papBaseTable"
+      ref="pap-base-table"
       :row-key="rowKeys"
       :data="currentTableData"
       v-loading="tableLoading"
