@@ -98,12 +98,12 @@
                       true-label="1"
                       false-label="0"
                       v-model="adddocSet.hiddenFlag"
-                      :disabled="contextMenu.articleType == 3 || !checkAuth('cms:article:stick')"
+                      :disabled="contextMenu.articleType == 3"
                     >隐身</el-checkbox>
                     <span class="extractCode">提取码</span>
                     <el-input
                       v-model="adddocSet.extractCode"
-                      :disabled="contextMenu.articleType == 3 || !checkAuth('cms:article:stick')"
+                      :disabled="contextMenu.articleType == 3"
                     />
                   </div>
                 </template>
