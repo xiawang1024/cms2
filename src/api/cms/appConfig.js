@@ -199,3 +199,111 @@ export function enableNavigation(data) {
       }
     });
   }
+
+
+// -------------------------------------------------------------------------------------------------
+let Dpath='http://192.168.7.38:8080'
+  //新增开机图片
+export function addOpenimage(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/openimage/save?operationUser=${data.operationUser}&clientLicenseId=${data.clientLicenseId}`,
+    method: "post",
+    data,
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+  //修改开机图片
+  export function updateOpenimage(data) {
+    return request({
+      url:
+        Dpath +`/autoconfig/openimage/update?operationUser=${data.operationUser}&clientLicenseId=${data.clientLicenseId}`,
+      method: "put",
+      data,
+      loadingConfig: {
+        noLoading: true
+      }
+    });
+  }
+  
+
+//根据appId 查询开机图
+
+
+export function getOpenimage(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/openimage/tenantId?tenantId=${data.tenantId}&appId=${data.appId}`,
+    method: "get",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+
+//添加app 导航栏主题
+
+export function addthemeimage(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/themeimage/save`,
+    method: "post",
+    data,
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+
+//根据appId 查询导航图
+export function getThemeimage(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/themeimage/search?tenantId=${data.tenantId}&appId=${data.appId}`,
+    method: "get",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+
+//添加我的主题图片
+
+export function addMyimage(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/myimage/save`,
+    method: "post",
+    data,
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+
+//根据appId 查询我的主题图片
+export function getMyimage(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/myimage/search?tenantId=${data.tenantId}&appId=${data.appId}`,
+    method: "get",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+
+//根据id 查询底部icon
+
+export function geticon(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/navigation/findNavigationIsEnable?appInfoId=${data.appId}&enable=true`,
+    method: "get",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}

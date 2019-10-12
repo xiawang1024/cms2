@@ -11,7 +11,7 @@
       <el-table-column prop="version" label="Android版本"/>
       <el-table-column prop="versionIOS" label="IOS版本"/>
       <el-table-column prop="description" label="描述"/>
-      <el-table-column prop="startingImage" label="启动页">
+      <el-table-column prop="startingImage" label="分享图标">
         <template slot-scope="scope">
           <img :src="scope.row.startingImage" class="icon">
         </template>
@@ -38,16 +38,15 @@
       </el-table-column>
     </el-table>
     <el-dialog :visible.sync="dialogVisible" :title="dialogTitle">
-      <!-- <v-form
+      <v-form
         ref="vform"
         :form-settings="formSettings"
         :form-data="formData"
         @save="submitSave"
         label-width="130px"
         :btn-loading="isLoading"
-      /> -->
-      <!-- 上传组件 -->
-      <upload-app/>  
+      />
+     
 
     </el-dialog>
     <el-pagination
@@ -75,10 +74,8 @@ import {
   updateAppInfo,
   checkName
 } from "@/api/cms/appConfig.js";
-import uploadApp from "@/views/cms/system-set/appConfig/index.vue"
 export default {
   name: "AppConfig",
-  components:{uploadApp},
   data() {
     var validateNumber = (rule, value, callback) => {
       if (value < 0) {
@@ -95,7 +92,7 @@ export default {
       pageNo: 1,
       pageSize: 10,
       totalCount: 0,
-      dialogVisible: true,
+      dialogVisible: false,
       dialogTitle: "",
       handleType: "",
       isLoading: false,
@@ -154,7 +151,7 @@ export default {
               limit: 1,
               disabled: false,
               required: true,
-              placeholder: "请输入启动页图片URL"
+              placeholder: "请上传分享图标"
             },
             {
               label: "APP图标",
@@ -246,13 +243,13 @@ export default {
               placeholder: "请输入描述"
             },
             {
-              label: "启动页图片",
+              label: "分享图标",
               name: "startingImage",
               type: "img",
               limit: 1,
               disabled: false,
               required: true,
-              placeholder: "请输入启动页图片URL"
+              placeholder: "请上传分享图标"
             },
             {
               label: "APP图标",
@@ -337,13 +334,13 @@ export default {
               placeholder: "请输入描述"
             },
             {
-              label: "启动页图片",
+              label: "分享图标",
               name: "startingImage",
               type: "img",
               limit: 1,
               disabled: false,
               required: true,
-              placeholder: "请输入启动页图片URL"
+              placeholder: "请上传分享图标"
             },
             {
               label: "APP图标",

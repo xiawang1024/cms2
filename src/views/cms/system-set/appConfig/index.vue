@@ -6,7 +6,6 @@
       :form-data="formData"
       @save="submitSave"
       label-width="130px"
-      :btn-loading="isLoading"
     />
   </div>
 </template>
@@ -14,27 +13,27 @@
 export default {
   name: "UploadApp",
   data() {
-      //开机启动图校验尺寸
-      var startPicture=(rule, value, callback)=>{
+      //开机启动图校验尺寸(大图)
+      var startPictureBig=(rule, value, callback)=>{
           let pic=new Image();
           pic.src=value[0].url;
-          if(pic.width!=120||pic.height!=70){
-              callback(new Error('请上传120*70像素的图片'))
-          }else{
+          // if(pic.width!=1242||pic.height!=2688){
+          //     callback(new Error('请上传1242*2688像素的图片'))
+          // }else{
               callback()
-          }
+          // }
          
 
       };
-      //icon 图标尺寸校验
-      var iconPicture=(rule, value, callback)=>{
+      //开机启动图校验尺寸(小图)
+      var startPictureSmall=(rule, value, callback)=>{
           let pic=new Image();
           pic.src=value[0].url;
-          if(pic.width!=120||pic.height!=70){
-              callback(new Error('请上传120*70像素的图片'))
-          }else{
+          // if(pic.width!=1242||pic.height!=2208 ){
+          //     callback(new Error('请上传1242*2208像素的图片'))
+          // }else{
               callback()
-          }
+          // }
          
 
       };
@@ -44,30 +43,43 @@ export default {
         {
           items: [
             {
-              label: "app名字",
-              name: "appName",
-              type: "text",
-              valueType: "string",
-              disabled: false,
-              required: true,
-              placeholder: "请输入app名字",
-            
-            },
-            {
-              label: "启动页图片",
-              name: "startingImage",
+              label: "启动页图片（大）",
+              name: "startPictureBig",
               type: "img",
               limit: 1,
               disabled: false,
-              placeholder: "请输入启动页图片URL",
+              placeholder: "请上传启动页图片",
               rule:[
               {
               required: true,
-                 validator: startPicture,
+                 validator: startPictureBig,
                   trigger: "blur"
               }
 
               ]
+            }, {
+              label: "启动页图片（小）",
+              name: "startPictureSmall",
+              type: "img",
+              limit: 1,
+              disabled: false,
+              placeholder: "请上传启动页图片",
+              rule:[
+              {
+                  required: true,
+                 validator: startPictureSmall,
+                  trigger: "blur"
+              }
+
+              ]
+            },
+            {
+              label: "版本",
+              name: "version",
+              type: "text",
+              disabled: false,
+              placeholder: "请输入版本号",
+              required:true,
             },
            
           ]
@@ -78,7 +90,7 @@ export default {
   created() {},
   methods: {
       submitSave(val){
-          console.log(val,'va')
+          this.$emit('handleupload',val,'start')
       },
       
   }
