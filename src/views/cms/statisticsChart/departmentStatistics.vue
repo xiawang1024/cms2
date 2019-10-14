@@ -2,13 +2,14 @@
   <div class="mainBox">
     <div class="v-search-header">
       <el-row>
-        <el-col :span="22">
+        <el-col :span="24">
           <v-search :search-settings="searchSettings" @search="searchItem" />
         </el-col>
         <el-col :span="2">
           <el-button class="exportBtn" type="success" size="mini" @click="handleExport">一键导出</el-button>
         </el-col>
       </el-row>
+      
     </div>
 
     <el-table :data="tableData" style="width: 100%" >
@@ -90,7 +91,7 @@ export default {
           name: "beginTime",
           visible: true,
           options: [],
-          type: "date",
+          type: "datetime",
           changeOnSelect: true
         },
         {
@@ -98,7 +99,7 @@ export default {
           name: "endTime",
           visible: true,
           options: [],
-          type: "date",
+          type: "datetime",
           changeOnSelect: true
         }
       ],
