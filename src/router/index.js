@@ -65,7 +65,7 @@ import fileClue from './routers/newCommand/fileClue'
 import liveClue from './routers/newCommand/liveClue'
 import operationRecord from './routers/newCommand/operationRecord'
 import classifyManage from './routers/newCommand/classifyManage'
-import newCommandPermission from './routers/newCommand/dataPermission'
+import newCommandPermission from './routers/newCommand/dataPermission1'
 
 const newscommandRouterMap = [manageClue, dxClue, commandDispatch, manuscriptClue, fileClue, liveClue, operationRecord, classifyManage, newCommandPermission]
 
