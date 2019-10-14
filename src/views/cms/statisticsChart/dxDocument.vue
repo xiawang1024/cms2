@@ -2,7 +2,7 @@
   <div class="mainBox">
     <div class="v-search-header">
       <el-row>
-        <el-col :span="22">
+        <el-col :span="24">
           <v-search :search-settings="searchSettings" @search="searchItem" />
         </el-col>
         <el-col :span="2">
@@ -90,17 +90,15 @@ export default {
           label: "开始时间",
           name: "beginTime",
           visible: true,
-          options: [],
-          type: "date",
-          changeOnSelect: true
+          type: "datetime",
+          value:'',
         },
         {
           label: "结束时间",
           name: "endTime",
           visible: true,
-          options: [],
-          type: "date",
-          changeOnSelect: true
+          type: "datetime",
+          value:'',
         }
       ],
       beginTime: "",

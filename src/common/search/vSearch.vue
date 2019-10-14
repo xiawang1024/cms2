@@ -69,6 +69,15 @@
                 :value-format="item.valueFormat"
               />
             </template>
+            <!-- 日期和时间选择 -->
+            <template v-else-if="item.type=='datetime'">
+              <el-date-picker
+                v-model="formModel[item.name]"
+                :disabled="item.disabled"
+                :placeholder="item.placeholder || '选择日期'"
+                type="datetime"
+              />
+            </template>
             <!-- 日期范围选择器 -->
             <template v-else-if="item.type=='daterange'">
               <el-date-picker
