@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="6" class="smallmargin">
+      <el-col :span="5" class="smallmargin">
         <vcard
           :imgurl="bigImgUrl"
           :imgurl2="smallImgUrl"
@@ -12,7 +12,9 @@
           :pic-type="0"
         />
       </el-col>
-      <el-col :span="6" class="smallmargin">
+    </el-row>
+    <el-row>
+      <el-col :span="5" class="smallmargin">
         <vcard
           :imgurl="themeImageUrl"
           :version="version"
@@ -21,7 +23,7 @@
           :pic-type="1"
         />
       </el-col>
-      <el-col :span="6" class="smallmargin">
+      <el-col :span="5" class="smallmargin">
         <vcard
           :imgurl="myImageUrl"
           :version="version"
@@ -30,18 +32,21 @@
           :pic-type="2"
         />
       </el-col>
-      <el-col :span="6" class="smallmargin">
+      <el-col :span="5" class="smallmargin">
         <el-card :body-style="{ padding: '0px' }">
           <div v-for="(item,index) in tabBarList" :key="index">
-            <img :src="item.icon0" class="image">
-            <img :src="item.icon1" class="image">
+            <div class="flexbox">
+              <img :src="item.icon0" class="image">
+              <img :src="item.icon1" class="image">
+            </div>
+           
             <div style="padding: 14px;">
               <span>{{ item.name }}</span>
-              <div class="bottom clearfix">
-                <time class="time">{{ currentDate }}</time>
-                <el-button type="text" class="button" @click="handleUp(item.id)">操作按钮</el-button>
-              </div>
             </div>
+          </div>
+          <div class="bottom clearfix" >
+            <time class="time">底部导航图</time>
+            <el-button type="text" class="button" align="right" @click="handleUp(item.id)">编辑</el-button>
           </div>
            
 
@@ -352,7 +357,7 @@ export default {
       });
     },
     handleUp(){
-        
+
     }
   }
 };
@@ -361,8 +366,17 @@ export default {
 .smallmargin{
     margin:5px;
 }
+.flexbox{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
 .image{
     display: block;
-    width: 50%;
+    width: 60px;
+}
+.button {
+  padding: 0;
+  float: right;
 }
 </style>

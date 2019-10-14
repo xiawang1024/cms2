@@ -3,15 +3,20 @@
     <el-row>
       <el-col :span="24">
         <el-card :body-style="{ padding: '10px' }">
-          <img style="padding: 14px 0;" :src="imgurl" class="image" >
-          <div >
-            <span>{{ description }}</span>
-          </div>
-          <img style="padding: 14px 0;" :src="imgurl2" class="image" v-if="imgurl2" >
-          <div >
-            <span>{{ description2 }}</span>
+          <div class="flexbox">
+            <div>
+              <img style="padding: 14px 0;" :src="imgurl" class="image" >
+              <div>
+                <span>{{ description }}</span>
+              </div>
+            </div>
+            <div >
+              <img style="padding: 14px 0;" :src="imgurl2" class="image" v-if="imgurl2" >
+              <div>
+                <span>{{ description2 }}</span>
+              </div>
+            </div>
             <div class="bottom clearfix">
-              <time class="time">版本{{ version }}</time>
               <el-button type="text" class="button" @click="$emit('handleEdite',picType)">编辑</el-button>
             </div>
           </div>
@@ -28,7 +33,7 @@ export default {
       type: String,
       default: ""
     },
-     imgurl2: {
+    imgurl2: {
       type: String,
       default: ""
     },
@@ -36,7 +41,7 @@ export default {
       type: String,
       default: ""
     },
-     description2: {
+    description2: {
       type: String,
       default: ""
     },
@@ -44,9 +49,9 @@ export default {
       type: Number,
       default: ""
     },
-    version:{
-        type:String,
-        default:''
+    version: {
+      type: String,
+      default: ""
     }
   },
   data() {
@@ -86,5 +91,10 @@ export default {
 
 .clearfix:after {
   clear: both;
+}
+.flexbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
