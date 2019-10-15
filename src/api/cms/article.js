@@ -9,6 +9,7 @@ export function documentList(queryObj, pageNo, pageSize, sortBy = 'topFlag', ord
     // requestBodyType: 'formData'
   })
 }
+
 // 修改文章
 export function editDocument(queryObj) {
   return request({
