@@ -73,8 +73,10 @@ const newscommandRouterMap = [manageClue, dxClue, commandDispatch, manuscriptClu
 /**
  * 直播
  */
-import livePage from './routers/live/livePage'
-const liveRouterMap = [livePage]
+import livePage from './routers/live/livePage';
+import fileManage from './routers/live/fileManage';
+
+const liveRouterMap = [livePage,fileManage]
 
 /**
  * 系统设置
