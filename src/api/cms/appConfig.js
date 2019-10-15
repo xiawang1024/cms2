@@ -324,3 +324,16 @@ export function getSkin(data) {
     }
   });
 }
+
+
+//禁用启用皮肤
+export function forbidden(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/appConfig/forbid?tenantId=${data.tenantId}&appId=${data.appId}&status=${data.status}`,
+    method: "put",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}

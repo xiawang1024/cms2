@@ -35,10 +35,11 @@
         <el-button type="primary" size="mini" @click="handleUp" v-show="skinId" >编辑</el-button>
         <el-button type="primary" size="mini" @click="handleEnable" v-show="skinConfig.status" :disabled="skinConfig.length==0" >禁用皮肤</el-button>
         <el-button type="primary" size="mini" @click="handleEnable" v-show="!skinConfig.status" :disabled="skinConfig.length==0" >启用皮肤</el-button>
-        <span>(主题管理)</span>
+        <span>(主题管理 版本：{{ skinConfig.version }})</span>
       </el-col>
       <el-col :span="24" >
-        <el-card :body-style="{ padding: '0px' }">
+        <div />
+        <el-card :body-style="{ padding: '0px' }" :class="skinConfig.status?'':drawCover">
           <el-col class="flexbox">
             <div class="cell" >
               <img :src="skinConfig.themeImageUrl" >
@@ -89,7 +90,8 @@ import {
   getOpenimage,
   updateOpenimage,
   getSkin,
-  addSkin
+  addSkin,
+  forbidden
 } from "@/api/cms/appConfig.js";
 export default {
   components: { 
@@ -389,13 +391,17 @@ export default {
       var _this=this;
       if(this.skinConfig.status){
         //启用状态禁用
-        let data=JSON.parse(JSON.stringify(this.skinConfig));
+        let data={
+          appId: this.appId,
+        status: 'false',
+        tenantId: this.BaseInfor.clientLicenseId,
+        }
         data.status=false;
         return new Promise((resolve, reject) => {
-        addSkin(data)
+        forbidden(data)
           .then(res => {
             if (res.data.code == 0) {
-              this.$message.success(res.data.msg);
+              this.$message.success('已起用');
             } else {
               this.$message.error(res.data.msg);
             }
@@ -410,13 +416,16 @@ export default {
 
       }else{
         //禁用状态启用
-        let data=JSON.parse(JSON.stringify(this.skinConfig));
-        data.status=true;
+         let data={
+          appId: this.appId,
+        status: 'true',
+        tenantId: this.BaseInfor.clientLicenseId,
+        }
         return new Promise((resolve, reject) => {
-        addSkin(data)
+        forbidden(data)
           .then(res => {
             if (res.data.code == 0) {
-              this.$message.success(res.data.msg);
+              this.$message.success('已禁用');
             } else {
               this.$message.error(res.data.msg);
             }
@@ -493,5 +502,9 @@ export default {
 }
 .flex3{
   flex: 3;
+}
+.drawCover{
+  opacity: 0.2;
+  border:1px solid red;
 }
 </style>
