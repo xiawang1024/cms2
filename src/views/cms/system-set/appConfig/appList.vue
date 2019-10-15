@@ -1,114 +1,114 @@
 <template>
-  <div>
+  <div class="mainbox">
+    <!-- 启动图 -->
     <el-row>
-      <el-col :span="5" class="smallmargin">
-        <vcard
-          :imgurl="bigImgUrl"
-          :imgurl2="smallImgUrl"
-          :description="bigDescription"
-          :description2="smallDescription"
-          :version="version"
-          @handleEdite="handleEdite"
-          :pic-type="0"
-        />
+      <el-col class="dealTitle">
+        <el-button type="primary" size="mini" @click="handleEdite" v-show="!openImageId">新增</el-button>
+        <el-button type="primary" size="mini" @click="handleEdite" v-show="openImageId">编辑</el-button>
+        <span>(开机启动图管理)</span>
+      </el-col>
+      <el-col class="flexbox">
+        <div class="cell">
+          <img :src="startConfig.image0" alt >
+          <span>1242*2688</span>
+        </div>
+        <div class="cell">
+          <img :src="startConfig.image1" alt >
+          <span>1242*2208</span>
+        </div>
+
+        <div class="cell">
+          <img :src="startConfig.image2" alt >
+          <span>1080*2160</span>
+        </div>
+        <div class="cell">
+          <img :src="startConfig.image3" alt >
+          <span>1080*2240</span>
+        </div>
       </el-col>
     </el-row>
-    <el-row>
-      <el-col :span="5" class="smallmargin">
-        <vcard
-          :imgurl="themeImageUrl"
-          :version="version"
-          :description="themeDescription"
-          @handleEdite="handleEdite"
-          :pic-type="1"
-        />
+    <!-- 一键换肤 -->
+    
+    <el-row class="secondMargin">
+      <el-col class="dealTitle">
+        <el-button type="primary" size="mini" @click="handleUp" v-show="!skinId">新增</el-button>
+        <el-button type="primary" size="mini" @click="handleUp" v-show="skinId" >编辑</el-button>
+        <el-button type="primary" size="mini" @click="handleEnable" v-show="skinConfig.status" :disabled="skinConfig.length==0" >禁用皮肤</el-button>
+        <el-button type="primary" size="mini" @click="handleEnable" v-show="!skinConfig.status" :disabled="skinConfig.length==0" >启用皮肤</el-button>
+        <span>(主题管理)</span>
       </el-col>
-      <el-col :span="5" class="smallmargin">
-        <vcard
-          :imgurl="myImageUrl"
-          :version="version"
-          :description="myDescription"
-          @handleEdite="handleEdite"
-          :pic-type="2"
-        />
-      </el-col>
-      <el-col :span="5" class="smallmargin">
+      <el-col :span="24" >
         <el-card :body-style="{ padding: '0px' }">
-          <div v-for="(item,index) in tabBarList" :key="index">
-            <div class="flexbox">
-              <img :src="item.icon0" class="image">
-              <img :src="item.icon1" class="image">
+          <el-col class="flexbox">
+            <div class="cell" >
+              <img :src="skinConfig.themeImageUrl" >
+              <div style="padding: 14px;">
+                <span>导航图</span>
+              </div>
             </div>
-           
-            <div style="padding: 14px;">
-              <span>{{ item.name }}</span>
+            <div class="cell" >
+              <img :src="skinConfig.myImageUrl" >
+              <div style="padding: 14px;">
+                <span>我的背景图</span>
+              </div>
             </div>
-          </div>
-          <div class="bottom clearfix" >
-            <time class="time">底部导航图</time>
-            <el-button type="text" class="button" align="right" @click="handleUp(item.id)">编辑</el-button>
-          </div>
-           
-
+            <div class="cell " v-for="(item,index) in skinConfig.navigations" :key="index">
+              <img :src="item.icon0" class="image" >
+              <img :src="item.icon1" class="image" >
+              <div style="padding: 14px 0;">
+                <span>{{ item.name }}</span>
+              </div>
+            </div>
+            <div class="cell" >
+              <div class="block">
+                <el-color-picker v-model="skinConfig.color"/>
+              </div>
+              <div style="padding: 14px;">
+                <span>我的主题色</span>
+              </div>
+            </div>
+          </el-col>
         </el-card>
       </el-col>
     </el-row>
 
     <!-- 上传组件 -->
     <el-dialog :visible.sync="dialogVisible" :title="dialogTitle">
-      <upload-app @handleupload="handleupload" />
+      <open-image @handleupload="handleupload" />
     </el-dialog>
-    <el-dialog :visible.sync="dialogVisibleTheme" :title="dialogTitle">
-      <single-picture @handleupload="themeupload"/>
-    </el-dialog>
-
-    <el-dialog :visible.sync="dialogVisibleMyImage" :title="dialogTitle">
-      <single-picture @handleupload="MyImageupload"/>
+    <el-dialog :visible.sync="dialogVisibleIcon" :title="dialogTitle">
+      <tabbar @iconUpload="iconUpload" />
     </el-dialog>
   </div>
 </template>
 <script>
-import uploadApp from "@/views/cms/system-set/appConfig/index.vue";
-import singlePicture from "@/views/cms/system-set/appConfig/singlePicture.vue";
-
-import vcard from "@/views/cms/system-set/appConfig/card.vue";
-
+import openImage from "@/views/cms/system-set/appConfig/openImage.vue";
+import tabbar from "@/views/cms/system-set/appConfig/tabbarConfig.vue";
 import {
   addOpenimage,
   getOpenimage,
   updateOpenimage,
-  getThemeimage,
-  addthemeimage,
-  getMyimage,
-  addMyimage,
-  geticon,
-
+  getSkin,
+  addSkin
 } from "@/api/cms/appConfig.js";
 export default {
-  components: { uploadApp, vcard, singlePicture },
+  components: { 
+    openImage,
+      tabbar
+       },
 
   data() {
     return {
-      fullTabList: "",
       dialogVisible: false,
-      dialogVisibleTheme: false,
-      dialogVisibleMyImage: false,
+      dialogVisibleIcon: false,
       dialogTitle: "",
-      bigDescription: "开机启动图（大）",
-      smallDescription: "开机启动图（小）",
-      themeDescription: "导航图",
-      myDescription: "我的主题图片",
-      bigImgUrl: "",
-      smallImgUrl: "",
-      themeImageUrl: "",
-      myImageUrl: "",
       appId: this.$route.query.appId,
-      BaseInfor: "",
-      version: "",
       openImageId: "",
-      themeImageId: "",
-      myImageId: "",
-      tabBarList:[],
+      skinId:'',
+      tabBarList: [],
+      skinConfig:[],
+      startConfig:[],
+
     };
   },
   created() {
@@ -116,9 +116,7 @@ export default {
   },
   mounted() {
     this.getFullTab();
-    this.getThemePicture();
-    this.Myimage();
-    this.getTabBar();
+    this.skinList();
   },
   methods: {
     //获取启动图
@@ -133,8 +131,7 @@ export default {
           .then(res => {
             console.log(res, "res");
             if (res.data.code == 0) {
-              this.bigImgUrl = res.data.result.bigImageUrl;
-              this.smallImgUrl = res.data.result.smallImageUrl;
+              this.startConfig=res.data.result;
               this.version = res.data.result.version;
               this.openImageId = res.data.result.id || null;
             } else {
@@ -147,109 +144,49 @@ export default {
           });
       });
     },
-    //获取导航图
-    getThemePicture() {
-      var _this = this;
-      let data = {
-        appId: this.appId,
-        tenantId: this.BaseInfor.clientLicenseId
-      };
-      return new Promise((resolve, reject) => {
-        getThemeimage(data)
+      //查询皮肤列表
+    skinList(){
+      let data={
+         appId: this.appId,
+         tenantId:this.BaseInfor.clientLicenseId
+      }
+        return new Promise((resolve, reject) => {
+        getSkin(data)
           .then(res => {
-            console.log(res, "res");
             if (res.data.code == 0) {
-              this.themeImageUrl = res.data.result.themeImageUrl;
-              this.version = res.data.result.version;
-              this.themeImageId = res.data.result.id || null;
+             this.skinConfig=res.data.result
+              this.skinId=res.data.result.id || null
             } else {
-              //新增图片状态；
+              this.$message.error(res.data.msg);
             }
+           
             resolve();
+          
           })
-          .catch(err => {
+          .then(err => {
             reject(err);
           });
       });
     },
-    //获取我的主题图片
-    Myimage() {
-      var _this = this;
-      let data = {
-        appId: this.appId,
-        tenantId: this.BaseInfor.clientLicenseId
-      };
-      return new Promise((resolve, reject) => {
-        getMyimage(data)
-          .then(res => {
-            if (res.data.code == 0) {
-              this.myImageUrl = res.data.result.myImageUrl;
-              this.version = res.data.result.version;
-              this.myImageId = res.data.result.id || null;
-            } else {
-              //新增图片状态；
-            }
-            resolve();
-          })
-          .catch(err => {
-            reject(err);
-          });
-      });
-    },
-    //获取icon
-    getTabBar() {
-      var _this = this;
-      let data = {
-        appId: this.appId,
-        tenantId: this.BaseInfor.clientLicenseId
-      };
-      return new Promise((resolve, reject) => {
-        geticon(data)
-          .then(res => {
-            if (res.data.code == 0) {
-              this.tabBarList = res.data.result
-            } else {
-              //新增图片状态；
-            }
-            resolve();
-          })
-          .catch(err => {
-            reject(err);
-          });
-      });
-    },
-
     handleEdite(type) {
-      if (type === 0) {
         //启动图编辑
         this.dialogTitle = "启动图编辑";
         //调用上传组件
         this.dialogVisible = true;
-      }
-      if (type === 1) {
-        //导航图编辑
-        this.dialogTitle = "导航图编辑";
-        //调用上传组件
-        this.dialogVisibleTheme = true;
-      }
-      if (type === 2) {
-        //我的主题图编辑
-        this.dialogTitle = "我的主题图编辑";
-        //调用上传组件
-        this.dialogVisibleMyImage = true;
-      }
+      
     },
     handleupload(val, type) {
       var _this = this;
-      console.log(val, type, "asdf");
       if (type == "start") {
         //新增开机图
         let data = {
           appId: this.appId,
-          bigImageUrl: val.startPictureBig[0].url,
+            image0:val.image0[0].url,
+            image1:val.image1[0].url,
+            image2:val.image2[0].url,
+            image3:val.image3[0].url,
           createUser: this.BaseInfor.userName,
           id: this.openImageId,
-          smallImageUrl: val.startPictureSmall[0].url,
           tenantId: this.BaseInfor.clientLicenseId,
           updateUser: this.BaseInfor.userName,
           version: val.version,
@@ -267,6 +204,7 @@ export default {
                   this.$message.error(res.data.msg);
                 }
                 resolve();
+                _this.getFullTab();
                 _this.dialogVisible = false;
               })
               .then(err => {
@@ -294,89 +232,266 @@ export default {
         }
       }
     },
-    themeupload(val) {
-      var _this = this;
-      let data = {
-        appId: this.appId,
-        themeImageUrl: val.themeImage[0].url,
-        createUser: this.BaseInfor.userName,
-        id: this.themeImageId,
-        tenantId: this.BaseInfor.clientLicenseId,
-        updateUser: this.BaseInfor.userName,
-        version: val.version,
-        operationUser: this.BaseInfor.userName,
-        clientLicenseId: this.BaseInfor.clientLicenseId
-      };
-      return new Promise((resolve, reject) => {
-        addthemeimage(data)
-          .then(res => {
-            if (res.data.code == 0) {
-              this.$message.success(res.data.msg);
-            } else {
-              this.$message.error(res.data.msg);
-            }
-            _this.dialogVisibleTheme = false;
-            _this.getThemePicture();
-            resolve();
-          })
-          .then(err => {
-            reject(err);
-          });
-      });
-    },
-    MyImageupload(val) {
-      var _this = this;
-      let data = {
-        appId: this.appId,
-        myImageUrl: val.themeImage[0].url,
-        createUser: this.BaseInfor.userName,
-        id: this.myImageId,
-        tenantId: this.BaseInfor.clientLicenseId,
-        updateUser: this.BaseInfor.userName,
-        version: val.version,
-        operationUser: this.BaseInfor.userName,
-        clientLicenseId: this.BaseInfor.clientLicenseId
-      };
-      return new Promise((resolve, reject) => {
-        addMyimage(data)
-          .then(res => {
-            if (res.data.code == 0) {
-              this.$message.success(res.data.msg);
-            } else {
-              this.$message.error(res.data.msg);
-            }
-            _this.dialogVisibleMyImage = false;
-            _this.Myimage();
-            resolve();
-            //刷新起动图
-            _this.getFullTab();
-          })
-          .then(err => {
-            reject(err);
-          });
-      });
-    },
-    handleUp(){
+    // themeupload(val) {
+    //   var _this = this;
+    //   let data = {
+    //     appId: this.appId,
+    //     themeImageUrl: val.themeImage[0].url,
+    //     createUser: this.BaseInfor.userName,
+    //     id: this.themeImageId,
+    //     tenantId: this.BaseInfor.clientLicenseId,
+    //     updateUser: this.BaseInfor.userName,
+    //     version: val.version,
+    //     operationUser: this.BaseInfor.userName,
+    //     clientLicenseId: this.BaseInfor.clientLicenseId
+    //   };
+    //   return new Promise((resolve, reject) => {
+    //     addthemeimage(data)
+    //       .then(res => {
+    //         if (res.data.code == 0) {
+    //           this.$message.success(res.data.msg);
+    //         } else {
+    //           this.$message.error(res.data.msg);
+    //         }
+    //         _this.dialogVisibleTheme = false;
+    //         _this.getThemePicture();
+    //         resolve();
+    //       })
+    //       .then(err => {
+    //         reject(err);
+    //       });
+    //   });
+    // },
+    // MyImageupload(val) {
+    //   var _this = this;
+    //   let data = {
+    //     appId: this.appId,
+    //     myImageUrl: val.themeImage[0].url,
+    //     createUser: this.BaseInfor.userName,
+    //     id: this.myImageId,
+    //     tenantId: this.BaseInfor.clientLicenseId,
+    //     updateUser: this.BaseInfor.userName,
+    //     version: val.version,
+    //     operationUser: this.BaseInfor.userName,
+    //     clientLicenseId: this.BaseInfor.clientLicenseId
+    //   };
+    //   return new Promise((resolve, reject) => {
+    //     addMyimage(data)
+    //       .then(res => {
+    //         if (res.data.code == 0) {
+    //           this.$message.success(res.data.msg);
+    //         } else {
+    //           this.$message.error(res.data.msg);
+    //         }
+    //         _this.dialogVisibleMyImage = false;
+    //         _this.Myimage();
+    //         resolve();
+    //         //刷新起动图
+    //         _this.getFullTab();
+    //       })
+    //       .then(err => {
+    //         reject(err);
+    //       });
+    //   });
+    // },
 
+    //底部导航编辑
+    handleUp() {
+      this.dialogVisibleIcon = true;
+    },
+    iconUpload(val) {
+      var _this=this;
+      console.log(val, "val");
+
+      let data = {
+        appId: this.appId,
+        id: this.skinId,
+        myImageUrl: val.myImageUrl[0].url,
+        navigations: [],
+        status: val.status,
+        tenantId: this.BaseInfor.clientLicenseId,
+        themeImageUrl: val.themeImageUrl[0].url,
+        version: val.version,
+        color:val.color,
+      };
+      let iconId=[];
+      if(this.skinConfig.navigations){
+        this.skinConfig.navigations.forEach(element => {
+        iconId.push(element.id)
+
+        });
+      }
+
+      data.navigations.push({
+            icon0: val.icon00[0].url,
+            icon1: val.icon10[0].url,
+            id: iconId[0]||'',
+            name: val.name0,
+            type: '',
+            version: val.version
+      })
+      data.navigations.push({
+            icon0: val.icon01[0].url,
+            icon1: val.icon11[0].url,
+            id: iconId[1]||'',
+            name: val.name1,
+            type: '',
+            version: val.version
+      })
+      data.navigations.push({
+            icon0: val.icon02[0].url,
+            icon1: val.icon12[0].url,
+            id: iconId[2]||'',
+            name: val.name2,
+            type: '',
+            version: val.version
+      })
+      data.navigations.push({
+            icon0: val.icon03[0].url,
+            icon1: val.icon13[0].url,
+            id: iconId[3]||'',
+            name: val.name3,
+            type: '',
+            version: val.version
+      })
+      data.navigations.push({
+            icon0: val.icon04[0].url,
+            icon1: val.icon14[0].url,
+            id: iconId[4]||'',
+            name: val.name0,
+            type: '',
+            version: val.version
+      })
+
+      //调用保存接口
+
+
+    console.log(data,'保存数据')
+      return new Promise((resolve, reject) => {
+        addSkin(data)
+          .then(res => {
+            if (res.data.code == 0) {
+              this.$message.success(res.data.msg);
+            } else {
+              this.$message.error(res.data.msg);
+            }
+            _this.dialogVisibleIcon = false;
+            _this.skinList();
+            resolve();
+          
+          })
+          .then(err => {
+            reject(err);
+          });
+      });
+    },
+    handleEnable(){
+      var _this=this;
+      if(this.skinConfig.status){
+        //启用状态禁用
+        let data=JSON.parse(JSON.stringify(this.skinConfig));
+        data.status=false;
+        return new Promise((resolve, reject) => {
+        addSkin(data)
+          .then(res => {
+            if (res.data.code == 0) {
+              this.$message.success(res.data.msg);
+            } else {
+              this.$message.error(res.data.msg);
+            }
+            _this.skinList();
+            resolve();
+          
+          })
+          .then(err => {
+            reject(err);
+          });
+      });
+
+      }else{
+        //禁用状态启用
+        let data=JSON.parse(JSON.stringify(this.skinConfig));
+        data.status=true;
+        return new Promise((resolve, reject) => {
+        addSkin(data)
+          .then(res => {
+            if (res.data.code == 0) {
+              this.$message.success(res.data.msg);
+            } else {
+              this.$message.error(res.data.msg);
+            }
+            _this.skinList();
+            resolve();
+          
+          })
+          .then(err => {
+            reject(err);
+          });
+      });
+      }
     }
+
   }
 };
 </script>
 <style lang="scss" scoped>
-.smallmargin{
-    margin:5px;
+.mainbox{
+  padding: 15px;
+  margin: 10px;
 }
-.flexbox{
+.secondMargin{
+  margin-top: 15px;
+}
+.smallmargin {
+  margin: 5px;
+}
+.flexbox {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  .cell {
+    box-shadow: 1px 1px 5px #eee;
+
+    margin: 0 10px;
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    span {
+      text-align: center;
+    }
+    img {
+      width: 300px;
+      display: block;
+      padding: 10px 0;
+    }
+    .image {
+      width: 40px;
+    }
+  }
 }
-.image{
-    display: block;
-    width: 60px;
+.image {
+  display: block;
+  width: 40px;
 }
 .button {
   padding: 0;
   float: right;
+}
+.dealTitle {
+  padding: 10px 0;
+  border-bottom: 1px solid rgb(235, 238, 245);
+}
+.clearfix {
+  clear: both;
+}
+.bottom {
+  padding: 10px;
+}
+.flex1{
+  flex: 1;
+}
+.flex3{
+  flex: 3;
 }
 </style>

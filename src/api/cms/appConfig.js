@@ -245,36 +245,64 @@ export function getOpenimage(data) {
 
 //添加app 导航栏主题
 
-export function addthemeimage(data) {
-  return request({
-    url:
-      Dpath +`/autoconfig/themeimage/save`,
-    method: "post",
-    data,
-    loadingConfig: {
-      noLoading: true
-    }
-  });
-}
+// export function addthemeimage(data) {
+//   return request({
+//     url:
+//       Dpath +`/autoconfig/themeimage/save`,
+//     method: "post",
+//     data,
+//     loadingConfig: {
+//       noLoading: true
+//     }
+//   });
+// }
 
 //根据appId 查询导航图
-export function getThemeimage(data) {
-  return request({
-    url:
-      Dpath +`/autoconfig/themeimage/search?tenantId=${data.tenantId}&appId=${data.appId}`,
-    method: "get",
-    loadingConfig: {
-      noLoading: true
-    }
-  });
-}
+// export function getThemeimage(data) {
+//   return request({
+//     url:
+//       Dpath +`/autoconfig/themeimage/search?tenantId=${data.tenantId}&appId=${data.appId}`,
+//     method: "get",
+//     loadingConfig: {
+//       noLoading: true
+//     }
+//   });
+// }
 
 //添加我的主题图片
 
-export function addMyimage(data) {
+// export function addMyimage(data) {
+//   return request({
+//     url:
+//       Dpath +`/autoconfig/myimage/save`,
+//     method: "post",
+//     data,
+//     loadingConfig: {
+//       noLoading: true
+//     }
+//   });
+// }
+
+//根据appId 查询我的主题图片
+// export function getMyimage(data) {
+//   return request({
+//     url:
+//       Dpath +`/autoconfig/myimage/search?tenantId=${data.tenantId}&appId=${data.appId}`,
+//     method: "get",
+//     loadingConfig: {
+//       noLoading: true
+//     }
+//   });
+// }
+
+
+
+//app主题图片和底部图标设计
+
+export function addSkin(data) {
   return request({
     url:
-      Dpath +`/autoconfig/myimage/save`,
+      Dpath +`/autoconfig/appConfig/save`,
     method: "post",
     data,
     loadingConfig: {
@@ -283,24 +311,13 @@ export function addMyimage(data) {
   });
 }
 
-//根据appId 查询我的主题图片
-export function getMyimage(data) {
+//根据租户id和appId查询主题信息和图标
+
+
+export function getSkin(data) {
   return request({
     url:
-      Dpath +`/autoconfig/myimage/search?tenantId=${data.tenantId}&appId=${data.appId}`,
-    method: "get",
-    loadingConfig: {
-      noLoading: true
-    }
-  });
-}
-
-//根据id 查询底部icon
-
-export function geticon(data) {
-  return request({
-    url:
-      Dpath +`/autoconfig/navigation/findNavigationIsEnable?appInfoId=${data.appId}&enable=true`,
+      Dpath +`/autoconfig/appConfig/search?tenantId=${data.tenantId}&appId=${data.appId}`,
     method: "get",
     loadingConfig: {
       noLoading: true

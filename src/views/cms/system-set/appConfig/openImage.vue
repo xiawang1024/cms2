@@ -43,8 +43,8 @@ export default {
         {
           items: [
             {
-              label: "启动页图片（大）",
-              name: "startPictureBig",
+              label: "启动页图片（1242*2688）",
+              name: "image0",
               type: "img",
               limit: 1,
               disabled: false,
@@ -58,8 +58,39 @@ export default {
 
               ]
             }, {
-              label: "启动页图片（小）",
-              name: "startPictureSmall",
+              label: "启动页图片（1242*2208）",
+              name: "image1",
+              type: "img",
+              limit: 1,
+              disabled: false,
+              placeholder: "请上传启动页图片",
+              rule:[
+              {
+                  required: true,
+                 validator: startPictureSmall,
+                  trigger: "blur"
+              }
+
+              ]
+            },
+            {
+              label: "启动页图片（1080*2160）",
+              name: "image2",
+              type: "img",
+              limit: 1,
+              disabled: false,
+              placeholder: "请上传启动页图片",
+              rule:[
+              {
+              required: true,
+                 validator: startPictureBig,
+                  trigger: "blur"
+              }
+
+              ]
+            }, {
+              label: "启动页图片（1080*2240）",
+              name: "image3",
               type: "img",
               limit: 1,
               disabled: false,

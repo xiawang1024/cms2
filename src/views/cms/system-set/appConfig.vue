@@ -85,7 +85,7 @@ export default {
       }
     };
     return {
-      currentUser: this.$store.getters.tenantId,
+      currentUser: '',
       currentId: "",
       searchApp: "",
       fullApp: [],
@@ -458,7 +458,11 @@ export default {
   },
   created() {
     //请求app列表数据
+    this.currentUser=JSON.parse(localStorage.getItem("BaseInfor")).clientLicenseId;
     this.getAppList(this.pageNo, this.pageSize, { tenantId: this.currentUser });
+  },
+  mounted(){
+
   },
   methods: {
     formatDate(row) {
