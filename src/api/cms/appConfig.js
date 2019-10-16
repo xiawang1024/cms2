@@ -202,7 +202,9 @@ export function enableNavigation(data) {
 
 
 // -------------------------------------------------------------------------------------------------
-let Dpath='http://192.168.7.38:8080'
+// let Dpath='http://192.168.7.38:8080'
+let Dpath=''
+
   //新增开机图片
 export function addOpenimage(data) {
   return request({
@@ -242,58 +244,6 @@ export function getOpenimage(data) {
     }
   });
 }
-
-//添加app 导航栏主题
-
-// export function addthemeimage(data) {
-//   return request({
-//     url:
-//       Dpath +`/autoconfig/themeimage/save`,
-//     method: "post",
-//     data,
-//     loadingConfig: {
-//       noLoading: true
-//     }
-//   });
-// }
-
-//根据appId 查询导航图
-// export function getThemeimage(data) {
-//   return request({
-//     url:
-//       Dpath +`/autoconfig/themeimage/search?tenantId=${data.tenantId}&appId=${data.appId}`,
-//     method: "get",
-//     loadingConfig: {
-//       noLoading: true
-//     }
-//   });
-// }
-
-//添加我的主题图片
-
-// export function addMyimage(data) {
-//   return request({
-//     url:
-//       Dpath +`/autoconfig/myimage/save`,
-//     method: "post",
-//     data,
-//     loadingConfig: {
-//       noLoading: true
-//     }
-//   });
-// }
-
-//根据appId 查询我的主题图片
-// export function getMyimage(data) {
-//   return request({
-//     url:
-//       Dpath +`/autoconfig/myimage/search?tenantId=${data.tenantId}&appId=${data.appId}`,
-//     method: "get",
-//     loadingConfig: {
-//       noLoading: true
-//     }
-//   });
-// }
 
 
 
