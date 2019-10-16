@@ -60,7 +60,6 @@
 import { fetchList, removeProgram } from '@/api/program/program'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-import baseUrl from '@/config/base-url'
 
 export default {
   name: 'ProgramList',
@@ -152,7 +151,7 @@ export default {
     },
     handleSizeChange(val) {
       this.searchData.limit = val
-      this.getList()``
+      this.getList()
     },
     handleCurrentChange(val) {
       this.searchData.page = val
