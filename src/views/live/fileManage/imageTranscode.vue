@@ -36,9 +36,9 @@
       <el-table-column prop="vodStream" label="图片地址" show-overflow-tooltip min-width="650">
         <template slot-scope="scope">
           <el-row>
-            <span v-if="scope.row.state==3">{{ scope.row.outputPart[0]|createUrl }}</span>
-            <span v-if="scope.row.state==3">{{ scope.row.outputPart[1]|createUrl }}</span>
-            <span v-if="scope.row.state==3">{{ scope.row.outputPart[2]|createUrl }}</span>
+            <img v-if="scope.row.state==3" :src="scope.row.pic1" title="预览" class="viewimage" @click="handleView(scope.row.pic1)">
+            <img v-if="scope.row.state==3" :src="scope.row.pic2" title="预览" class="viewimage" @click="handleView(scope.row.pic2)">
+            <img v-if="scope.row.state==3" :src="scope.row.pic3" title="预览" class="viewimage" @click="handleView(scope.row.pic3)">
           </el-row>
         </template>
       </el-table-column>
@@ -50,12 +50,12 @@
             type="primary"
             @click="handleRecover(scope.$index, scope.row)"
           >重新处理</el-button>
-          <el-button
+          <!-- <el-button
             v-show="scope.row.state==3"
             size="mini"
             type="primary"
             @click="handleReview(scope.$index, scope.row)"
-          >预览</el-button>
+          >预览</el-button> -->
           <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -82,12 +82,10 @@
         label-width="80px"
       />
     </el-dialog>
-    <el-dialog :visible.sync="dialogVideo" title="预览" >
-      <el-row>
-        <el-col :span="24">
-
-          <img :src="videoSource" alt="">
-         
+    <el-dialog :visible.sync="dialogVideo" width="0" custom-class="visibleStyle" modal="true">
+      <el-row >
+        <el-col :span="24" >
+          <img :src="videoSource" alt="" >
         </el-col>
       </el-row>
     </el-dialog>
@@ -100,19 +98,10 @@ import {
   imageList,
   retrayImage
 } from "@/api/live/imageTranscode.js";
-// import baseUrl from "@/config/base-url";
+import baseUrl from "@/config/base-url";
 export default {
   // name: "VideoTranscode",
-  // filters: {
-  //   createUrl(val) {
-  //     let data = "无";
-  //     if(val!=null){
-  //     data = baseUrl.STREAM_URL + val;
-
-  //     }
-  //     return data;
-  //   }
-  // },
+  
   data() {
     return {
       searchSettings: [
@@ -154,7 +143,7 @@ export default {
         }
       ],
       tableValue: [],
-      videoSource: "",
+      videoSource: '',
       dialogVideo: false,
       pageNo: 1,
       pageSize: 10,
@@ -241,6 +230,12 @@ export default {
             console.log(res, "res");
             if (res.data.code == 0) {
               this.tableValue = res.data.result.content;
+              this.tableValue.forEach((item,index)=>{
+                 this.tableValue[index].pic1=baseUrl.DOWN_URL+item.outputPart+item.size1+'.webp';
+                 this.tableValue[index].pic2=baseUrl.DOWN_URL+item.outputPart+item.size2+'.webp';
+                 this.tableValue[index].pic3=baseUrl.DOWN_URL+item.outputPart+item.size3+'.webp';
+
+              })
               this.totalCount = res.data.result.total;
             } else {
               this.$message({
@@ -268,12 +263,14 @@ export default {
       this.dialogVisible = true;
     },
     submitSave(val) {
+      console.log(val,'val')
+      
       var _this = this;
       let data = {
             createTime: "",
             "createUser": this.BaseInfor.userName,
             "imageId": "",
-            "inputPath": val.imageFilePath[0].url,
+            "inputPath": '',
             "outputPart": "",
             "processTimes": 0,
             "size1": 120,
@@ -285,6 +282,11 @@ export default {
             "updateTime": "",
 
       };
+      if (val.imageFilePath[0].url) {
+        //截掉url域名
+        let url = val.imageFilePath[0].url;
+        data.inputPath = url.split(baseUrl.DOWN_URL)[1];
+      }
 
       return new Promise((resolve, reject) => {
         creatimage(data)
@@ -370,11 +372,13 @@ export default {
       });
     },
     //预览
-    handleReview(index, row) {
-      this.dialogVideo = true;
-      this.videoSource =
-        baseUrl.STREAM_URL + "/transdownload" + row.outputFilePath;
-    },
+    // handleReview(index, row) {
+    //   this.videoSource =[]
+    //   this.dialogVideo = true;
+    //   this.videoSource =[row.pic1,row.pic2,row.pic3]
+    //   console.log(this.videoSource,'source')
+    //     //http://cmsres.test.dianzhenkeji.com/imageService/2019/10/16/1184280800368001024-120.webp
+    // },
     searchItem(val) {
       this.createUser = val.createUser;
       (this.pageNo = 1),
@@ -385,6 +389,10 @@ export default {
         (this.state = val.state == undefined ? "" : val.state);
       this.initTable();
     },
+    handleView(url){
+      this.dialogVideo=true;
+         this.videoSource=url
+    }
     
   }
 };
@@ -417,4 +425,17 @@ export default {
   margin-bottom: 0;
   width: 100%;
 }
+.viewimage{
+  width: 120px;
+  padding: 5px;
+  cursor: pointer;
+
+}
+/deep/ .visibleStyle{
+  // background-color: rgba(0,0,0,0.4) ;
+  display: flex;
+    justify-content: center;
+    align-items: center;
+} 
+
 </style>
