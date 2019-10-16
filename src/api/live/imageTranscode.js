@@ -26,6 +26,7 @@ export function creatimage(data) {
     url:
       Cpath +`/editimage/creatimage`,
     method: "post",
+    data,
 
   });
 }
