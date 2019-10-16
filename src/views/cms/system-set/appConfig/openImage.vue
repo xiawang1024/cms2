@@ -111,7 +111,17 @@ export default {
               disabled: false,
               placeholder: "请输入版本号",
               required:true,
-            },
+            },{
+              label: "启用主题",
+              name: "status",
+              disabled: false,
+              type:"checkbox",
+              value:false,
+              options: [{ // select、radio、checkbox等的选择内容
+                    label: '启用',
+                    value: true
+                }]
+            }
            
           ]
         }

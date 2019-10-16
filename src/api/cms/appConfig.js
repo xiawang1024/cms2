@@ -287,3 +287,16 @@ export function forbidden(data) {
     }
   });
 }
+
+
+//禁用开机启动图
+export function startforbidden(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/openimage/forbid?tenantId=${data.tenantId}&appId=${data.appId}&status=${data.status}`,
+    method: "put",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
