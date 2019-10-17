@@ -183,7 +183,7 @@ export default {
     streamAdressManage: '视频流地址管理',
     fileManage:'文件管理',
     ARTranscode:'音视频转码',
-    imageTanscode:'图片转码',
+    imageTanscode:'图片处理',
 
 
 
