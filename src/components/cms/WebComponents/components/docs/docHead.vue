@@ -215,6 +215,13 @@ export default {
       documentIds: [],
       searchSettings: [
         {
+          label: "标题",
+          name: "articleTitleLike",
+          placeholder: "请输入标题",
+          visible: true,
+          type: "text"
+        },
+        {
           label: "来源",
           name: "articleOrigin",
           placeholder: "请选择",
@@ -223,10 +230,17 @@ export default {
           type: "select"
         },
         {
+          label: "关键字",
+          name: "seoKeywordsLike",
+          placeholder: "请输入关键字",
+          visible: true,
+          type: "text"
+        },
+        {
           label: "类型",
           name: "articleType",
           placeholder: "请选择",
-          visible: true,
+          visible: false,
           type: "select",
           options: typeOptions
         },
@@ -234,23 +248,9 @@ export default {
           label: "状态",
           name: "articleStatus",
           placeholder: "请选择",
-          visible: true,
+          visible: false,
           type: "select",
           options: statusOptions
-        },
-        {
-          label: "标题",
-          name: "articleTitleLike",
-          placeholder: "请输入标题",
-          visible: false,
-          type: "text"
-        },
-        {
-          label: "关键字",
-          name: "seoKeywordsLike",
-          placeholder: "请输入关键字",
-          visible: false,
-          type: "text"
         }
       ],
       sourceCopyList: []
@@ -263,7 +263,7 @@ export default {
     sourceList(val) {
       if (val) {
         this.sourceCopyList = val;
-        this.searchSettings[0].options = val;
+        this.searchSettings[1].options = val;
       }
     }
   },

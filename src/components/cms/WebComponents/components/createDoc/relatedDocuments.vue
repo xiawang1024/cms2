@@ -157,7 +157,7 @@ export default {
       this.tableData = arr.reduce((cur, next) => {
         obj[next.articleId]
           ? ""
-          : (obj[next.articleId] = true && cur.push(next));
+          : (obj[next.articleId] = true && cur.unshift(next));
         return cur;
       }, []); //设置cur默认类型为数组，并且初始值为空的数组
     },

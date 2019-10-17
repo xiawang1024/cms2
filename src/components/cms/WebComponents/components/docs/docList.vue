@@ -11,12 +11,12 @@
       :row-class-name="tableRowClassName"
     >
       <el-table-column type="selection" width="50" />
-      <el-table-column prop="articleId" label="ID/序号" width="150" show-overflow-tooltip>
+      <el-table-column prop="articleId" label="ID/序号" width="70" show-overflow-tooltip>
         <template slot-scope="scope">
           <span class="article-id">{{ scope.row.articleId }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="articleTitle" label="标题" min-width="250" show-overflow-tooltip>
+      <el-table-column prop="articleTitle" label="标题" min-width="400" show-overflow-tooltip>
         <template slot-scope="scope">
           <span
             v-if="checkAuth('cms:article:edit')"
@@ -96,8 +96,8 @@
       <el-table-column prop="publishTime" label="发布时间" width="155" show-overflow-tooltip>
         <template slot-scope="scope">{{ scope.row.publishTime|timeFilter }}</template>
       </el-table-column>
-      <el-table-column prop="createUser" label="撰稿人" width="100" show-overflow-tooltip />
-      <el-table-column prop="clickNum" label="点击" min-width="100" />
+      <el-table-column prop="createUser" label="撰稿人" width="70" show-overflow-tooltip />
+      <el-table-column prop="clickNum" label="点击" width="70" show-overflow-tooltip />
       <el-table-column fixed="right" label="操作" width="200">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click.stop="checkProcess(scope.row)">审核进度</el-button>
