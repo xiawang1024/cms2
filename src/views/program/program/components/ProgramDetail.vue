@@ -269,6 +269,7 @@ export default {
           channelId: '',          // 所属频率
           programlistDesc: '',    // 排单描述
           addtime: '',            // 添加时间
+          edittime: '',           // 编辑时间
           adduser: '',            // 添加者
           status: 1,              // 状态    
           startTime: '',          // 开始时间戳
@@ -432,9 +433,13 @@ export default {
           this.postForm.endtime = 0
         }
         let date =  (new Date()).getTime()/1000
-        this.postForm.addtime = date
+        if (this.isEdit) {
+          this.postForm.edittime = date
+        } else {
+          this.postForm.addtime = date
+        }
         this.postForm.programlistInfo = JSON.stringify(this.programs)
-        this.postForm.adduser = this.$store.getters.tenantId
+        this.postForm.adduser = JSON.parse(localStorage.getItem("BaseInfor")).userName
 
       this.$refs['postForm'].validate(valid => {
         if(valid) {
