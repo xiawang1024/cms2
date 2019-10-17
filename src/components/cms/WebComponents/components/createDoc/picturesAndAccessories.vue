@@ -74,7 +74,7 @@
         type="primary"
         size="mini"
         @click="save('0')"
-      >存草稿</el-button>
+      >保存</el-button>
       <el-button
         :disabled="Boolean(contextMenu.docId) && (docInformation.articleStatus ==1) && (baseInfor.userName !== docInformation.createUser)"
         type="primary"
