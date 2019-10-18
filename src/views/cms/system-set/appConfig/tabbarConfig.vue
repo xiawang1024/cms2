@@ -66,7 +66,7 @@ export default {
               name: "name0",
               type: "text",
               disabled: false,
-              placeholder: "请输入导航名",
+              placeholder: "请输入模块名",
               required:true,
             },
             {
@@ -90,7 +90,7 @@ export default {
               name: "name1",
               type: "text",
               disabled: false,
-              placeholder: "请输入导航名",
+              placeholder: "请输入模块名",
               required:true,
             },{
               label: "底部图标3（选中）",
@@ -112,7 +112,7 @@ export default {
               name: "name2",
               type: "text",
               disabled: false,
-              placeholder: "请输入导航名",
+              placeholder: "请输入模块名",
               required:true,
             },{
               label: "底部图标4（选中）",
@@ -134,7 +134,7 @@ export default {
               name: "name3",
               type: "text",
               disabled: false,
-              placeholder: "请输入导航名",
+              placeholder: "请输入模块名",
               required:true,
             },{
               label: "底部图标5（选中）",
@@ -156,7 +156,7 @@ export default {
               name: "name4",
               type: "text",
               disabled: false,
-              placeholder: "请输入导航名",
+              placeholder: "请输入模块名",
               required:true,
             },
             {

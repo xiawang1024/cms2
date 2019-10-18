@@ -110,7 +110,6 @@ export default {
               type: "text",
               disabled: false,
               placeholder: "请输入版本号",
-              required:true,
             },{
               label: "启用主题",
               name: "status",

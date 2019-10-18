@@ -41,7 +41,7 @@
       </el-col>
       <el-col :span="24" >
         <div />
-        <el-card :body-style="{ padding: '0px' }" :class="skinConfig.status?'':drawCover">
+        <el-card :body-style="{ padding: '0px' }" :class="skinConfig.status?'':'drawCover'">
           <el-col class="flexbox">
             <div class="cell" >
               <img :src="skinConfig.themeImageUrl" >
@@ -404,7 +404,7 @@ export default {
         forbidden(data)
           .then(res => {
             if (res.data.code == 0) {
-              this.$message.success('已起用');
+              this.$message.success('已禁用');
             } else {
               this.$message.error(res.data.msg);
             }
@@ -428,7 +428,7 @@ export default {
         forbidden(data)
           .then(res => {
             if (res.data.code == 0) {
-              this.$message.success('已禁用');
+              this.$message.success('已起用');
             } else {
               this.$message.error(res.data.msg);
             }
@@ -455,7 +455,7 @@ export default {
         startforbidden(data)
           .then(res => {
             if (res.data.code == 0) {
-              this.$message.success('已起用');
+              this.$message.success('已禁用');
             } else {
               this.$message.error(res.data.msg);
             }
@@ -479,7 +479,7 @@ export default {
         startforbidden(data)
           .then(res => {
             if (res.data.code == 0) {
-              this.$message.success('已禁用');
+              this.$message.success('已启用');
             } else {
               this.$message.error(res.data.msg);
             }
