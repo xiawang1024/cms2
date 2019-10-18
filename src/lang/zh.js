@@ -181,6 +181,9 @@ export default {
     directStream: '直播流管理',
     liveConfig: '流媒体配置',
     streamAdressManage: '视频流地址管理',
+    fileManage:'文件管理',
+    ARTranscode:'音视频转码',
+    imageTanscode:'图片处理',
 
 
 
