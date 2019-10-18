@@ -57,6 +57,20 @@ const livePage = {
           icon: "allTask",
           role: "live"
         }
+      },{
+        /**
+         * 视频编辑
+         */
+        path: "videoEdit",
+        component: () => import(`@/${path}/videoEdit`),
+        name: "videoEdit",
+        //   redirect: '/newCommand/manageClue/discloseList',
+        meta: {
+          title: "videoEdit",
+          icon: "allTask",
+          role: "live"
+        },
+        hidden:true
       },
   ]
 };
