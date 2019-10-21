@@ -228,7 +228,7 @@ const systemSet = {
        * 导航列表
        */
       path: 'appTabList',
-      component: () => import(`@/${path}/appTabList`),
+      component: () => import(`@/${path}/appConfig/appList`),
       name: 'appTabList',
       meta: {
         title: 'appTabList',
