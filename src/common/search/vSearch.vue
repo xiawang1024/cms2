@@ -33,6 +33,7 @@
                 :multiple="item.multiple"
                 :clearable="true"
                 :disabled="item.disabled"
+                :filterable="item.filterable"
                 @change="(item.events&&item.events.change)?$emit(item.events.change, formModel[item.name]):null"
               >
                 <template v-if="item.options">
