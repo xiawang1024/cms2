@@ -5,12 +5,18 @@
       :form-settings="formSettings"
       :form-data="formData"
       @save="submitSave"
-      label-width="150px"
+      label-width="160px"
     />
   </div>
 </template>
 <script>
 export default {
+  props:{
+    formData:{
+      type:Object,
+      default:()=>{}
+    }
+  },
   data() {
       //开机启动图校验尺寸(大图)
       var startPictureBig=(rule, value, callback)=>{
@@ -26,7 +32,7 @@ export default {
       };
      
     return {
-        formData:{},
+        
         formSettings: [
         {
           items: [
@@ -36,6 +42,7 @@ export default {
               type: "img",
               limit: 1,
               disabled: false,
+              required:true,
               placeholder: "请上传图片",
             }, {
               label: "导航图",
@@ -43,6 +50,7 @@ export default {
               type: "img",
               limit: 1,
               disabled: false,
+              required:true,
               placeholder: "请上传图片",
             }, 
             {
@@ -51,6 +59,7 @@ export default {
               type: "img",
               limit: 1,
               disabled: false,
+              required:true,
               placeholder: "请上传图片",
             }, 
             {
@@ -59,6 +68,7 @@ export default {
               type: "img",
               limit: 1,
               disabled: false,
+              required:true,
               placeholder: "请上传图片",
             }, 
             {
@@ -75,6 +85,7 @@ export default {
               type: "img",
               limit: 1,
               disabled: false,
+              required:true,
               placeholder: "请上传图片",
             }, 
             {
@@ -83,6 +94,7 @@ export default {
               type: "img",
               limit: 1,
               disabled: false,
+              required:true,
               placeholder: "请上传图片",
             }, 
             {
@@ -98,6 +110,7 @@ export default {
               type: "img",
               limit: 1,
               disabled: false,
+              required:true,
               placeholder: "请上传图片",
             }, {
               label: "底部图标3（未选中）",
@@ -105,6 +118,7 @@ export default {
               type: "img",
               limit: 1,
               disabled: false,
+              required:true,
               placeholder: "请上传图片",
             }, 
             {
@@ -120,6 +134,7 @@ export default {
               type: "img",
               limit: 1,
               disabled: false,
+              required:true,
               placeholder: "请上传图片",
             }, {
               label: "底部图标4（未选中）",
@@ -127,6 +142,7 @@ export default {
               type: "img",
               limit: 1,
               disabled: false,
+              required:true,
               placeholder: "请上传图片",
             }, 
             {
@@ -142,6 +158,7 @@ export default {
               type: "img",
               limit: 1,
               disabled: false,
+              required:true,
               placeholder: "请上传图片",
             }, {
               label: "底部图标5（未选中）",
@@ -149,6 +166,7 @@ export default {
               type: "img",
               limit: 1,
               disabled: false,
+              required:true,
               placeholder: "请上传图片",
             }, 
             {
@@ -164,6 +182,7 @@ export default {
               name: "version",
               type: "text",
               disabled: false,
+              required:true,
               placeholder: "请输入版本号",
               required:true,
             },{
