@@ -58,6 +58,17 @@ export function columnList(queryObj, pageNo, pageSize, sortBy = 'channelLevel') 
     data: queryObj
   })
 }
+// 相关文档添加loading
+export function columnListRelationLoading(queryObj, pageNo, pageSize, sortBy = 'channelLevel') {
+  return request({
+    url: '/cms/channel/pagebyuserid?pageNo=' + pageNo + '&pageSize=' + pageSize + '&sortBy=' + sortBy + "&order=asc,desc",
+    method: 'post',
+    data: queryObj,
+    loadingConfig: {
+      target: '.left-list-container'
+    }
+  })
+}
 // 根据权限栏目获取
 export function columnListLoading(queryObj, pageNo, pageSize, sortBy = 'channelLevel') {
   return request({
