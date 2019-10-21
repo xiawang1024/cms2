@@ -84,7 +84,7 @@
 </template>
 <script>
 import splitPane from "vue-splitpane";
-import { columnList } from "@/api/cms/columnManage";
+import { columnListRelationLoading } from "@/api/cms/columnManage";
 import { documentList } from "@/api/cms/article";
 import mixins from "@/components/cms/mixins";
 // import documentLists from './documentList'
@@ -220,7 +220,7 @@ export default {
     columnList() {
       var _this = this;
       return new Promise((resolve, reject) => {
-        columnList({}, 1, 1000)
+        columnListRelationLoading({}, 1, 1000)
           .then(response => {
             _this.tableData = _this.toTree(response.data.result.content);
             if (_this.tableData.length) {
