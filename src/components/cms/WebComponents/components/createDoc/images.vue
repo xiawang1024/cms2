@@ -19,6 +19,7 @@
     <div class="images-btn">
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
       <!-- <el-button type = "primary" size="mini" @click = "save('docContentForm', '0', 'saveOnly')">保存</el-button> -->
+      <el-button size="mini" @click="goBack">返回</el-button>
       <el-button
         :disabled="Boolean(contextMenu.docId) && (docInfor.articleStatus ==1) && (baseInfor.userName !== docInfor.createUser)"
         type="primary"

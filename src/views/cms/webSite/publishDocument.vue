@@ -11,20 +11,14 @@
     >
       <template slot="paneL">
         <div class="left-container">
-          <el-scrollbar
-            wrap-class="scrollbar-wrapper"
-            style="height:100%;"
-          >
-            <tree :tree-data = "tableData" ref="tree"/>
+          <el-scrollbar wrap-class="scrollbar-wrapper" style="height:100%;">
+            <tree :tree-data="tableData" ref="tree" />
           </el-scrollbar>
         </div>
       </template>
       <template slot="paneR">
         <div class="right-container">
-          <el-scrollbar
-            wrap-class="scrollbar-wrapper"
-            style="height:100%;"
-          >
+          <el-scrollbar wrap-class="scrollbar-wrapper" style="height:100%;">
             <WebComponents :component-type="contextMenu.id" />
           </el-scrollbar>
         </div>
@@ -34,86 +28,89 @@
 </template>
 
 <script>
-import WebSiteTag from '@/components/cms/WebSiteTag'
-import splitPane from 'vue-splitpane'
-import Tree from '@/components/cms/Tree'
-import WebComponents from '@/components/cms/WebComponents'
-import { mapGetters } from 'vuex'
-import { recycleBin } from '@/api/cms/article'
-import mixins from '@/components/cms/mixins'
-import store from 'store'
+import WebSiteTag from "@/components/cms/WebSiteTag";
+import splitPane from "vue-splitpane";
+import Tree from "@/components/cms/Tree";
+import WebComponents from "@/components/cms/WebComponents";
+import { mapGetters } from "vuex";
+import { recycleBin } from "@/api/cms/article";
+import mixins from "@/components/cms/mixins";
+import store from "store";
 export default {
-  name: 'WebSiteWrap',
+  name: "WebSiteWrap",
   components: { WebSiteTag, splitPane, Tree, WebComponents },
   mixins: [mixins],
   data() {
     return {
-      componentType: '1',
+      componentType: "1",
       pageNum: 1,
       pageSize: 1000,
       tableData: []
-    }
+    };
   },
   /**
    * columnAll 全部栏目列表
    */
   computed: {
-    ...mapGetters(['contextMenu', 'choosedColumn', 'columnAll', 'treeTags'])
+    ...mapGetters(["contextMenu", "choosedColumn", "columnAll", "treeTags"])
   },
   watch: {
     columnAll(val) {
-      this.tableData = val
-     
-      this.barSet()
+      this.tableData = val;
+
+      this.barSet();
     }
   },
   mounted() {
-    this.tableData = this.columnAll.length ? this.columnAll : store.get('columnsAll')
-    this.$store.dispatch('toggleSideBar')
-    this.barSet()
-    this.recycleBin()
+    this.tableData = this.columnAll.length
+      ? this.columnAll
+      : store.get("columnsAll");
+    this.$store.dispatch("toggleSideBar");
+    this.barSet();
+    this.recycleBin();
   },
   // TODO:webSiteViewType
   beforeRouteEnter(to, from, next) {
-    const { path } = to
-    if (path === '/website/doc') {
+    const { path } = to;
+    if (path === "/website/doc") {
       next(vm => {
-        vm.$store.dispatch('setViewTypeShow', true)
-      })
+        vm.$store.dispatch("setViewTypeShow", true);
+      });
     }
-    next()
+    next();
   },
   beforeRouteLeave(to, from, next) {
-    const { path } = from
-    if (path === '/website/doc') {
-      this.$store.dispatch('setViewTypeShow', false)
+    const { path } = from;
+    if (path === "/website/doc") {
+      this.$store.dispatch("setViewTypeShow", false);
     }
-    next()
+    next();
   },
   methods: {
-    resize() {
-    },
+    resize() {},
     recycleBin() {
       return new Promise((resolve, reject) => {
         recycleBin()
-          .then((response) => {
-            this.$store.dispatch('setRecycleChannelId', response.data.result)
-            resolve()
+          .then(response => {
+            this.$store.dispatch("setRecycleChannelId", response.data.result);
+            resolve();
           })
-          .catch((error) => {
-            reject(error)
-          })
-      })
+          .catch(error => {
+            reject(error);
+          });
+      });
     },
     barSet() {
-      if(this.tableData.length) {
-        if(this.treeTags && this.treeTags.length) {
+      if (this.tableData.length) {
+        if (this.treeTags && this.treeTags.length) {
           this.$nextTick(() => {
-            this.$refs.tree.$refs.websitTree.setCurrentKey(this.treeTags[this.treeTags.length - 1].id)
-          })
+            this.$refs.tree.$refs.websitTree.setCurrentKey(
+              this.treeTags[this.treeTags.length - 1].id
+            );
+          });
         } else {
-          let webSiteTags = []
-          if(this.tableData[0].children && this.tableData[0].children.length) {
+          let webSiteTags = [];
+          if (this.tableData[0].children && this.tableData[0].children.length) {
             webSiteTags = [
               {
                 channelCode: this.tableData[0].channelCode,
@@ -122,22 +119,27 @@ export default {
                 pubArticleFlag: this.tableData[0].pubArticleFlag
               },
               {
-              channelCode: this.tableData[0].children[0].channelCode,
-              id: this.tableData[0].children[0].channelId,
-              label: this.tableData[0].children[0].channelName,
-              pubArticleFlag:  this.tableData[0].children[0].pubArticleFlag
-            }]
+                channelCode: this.tableData[0].children[0].channelCode,
+                id: this.tableData[0].children[0].channelId,
+                label: this.tableData[0].children[0].channelName,
+                pubArticleFlag: this.tableData[0].children[0].pubArticleFlag
+              }
+            ];
           } else {
-            webSiteTags = [{
-              channelCode: this.tableData[0].channelCode,
-              id: this.tableData[0].channelId,
-              label: this.tableData[0].channelName,
-              pubArticleFlag: this.tableData[0].pubArticleFlag
-            }]
+            webSiteTags = [
+              {
+                channelCode: this.tableData[0].channelCode,
+                id: this.tableData[0].channelId,
+                label: this.tableData[0].channelName,
+                pubArticleFlag: this.tableData[0].pubArticleFlag
+              }
+            ];
           }
-          this.$store.dispatch('setTreeTags', webSiteTags)
+          this.$store.dispatch("setTreeTags", webSiteTags);
           this.$nextTick(() => {
-            this.$refs.tree.$refs.websitTree.setCurrentKey(this.treeTags[this.treeTags.length - 1].id)
+            this.$refs.tree.$refs.websitTree.setCurrentKey(
+              this.treeTags[this.treeTags.length - 1].id
+            );
             // if(this.tableData && this.tableData.length) {
             //   if(this.tableData[0].children) {
             //     document.querySelectorAll('.el-tree-node')[1].classList.add('is-current')
@@ -145,10 +147,10 @@ export default {
             //     document.querySelectorAll('.el-tree-node')[0].classList.add('is-current')
             //   }
             // }
-          })
+          });
         }
       }
-    },
+    }
     // columnList() {
     //   var _this = this
     //   return new Promise((resolve, reject) => {
@@ -189,7 +191,7 @@ export default {
     //   })
     // },
   }
-}
+};
 </script>
 
 <style lang='scss' scoped>

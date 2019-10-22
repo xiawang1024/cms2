@@ -191,7 +191,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["treeTags"])
+    ...mapGetters(["treeTags", "contextMenu"])
   },
   watch: {
     tableData: function(val) {

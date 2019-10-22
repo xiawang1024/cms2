@@ -17,6 +17,7 @@
       </template>
     </v-form>
     <div class="reproduce-btn">
+      <el-button size="mini" @click="goBack">返回</el-button>
       <el-button
         :disabled="Boolean(contextMenu.docId) && (docInfor.articleStatus ==1) && (baseInfor.userName !== docInfor.createUser)"
         type="primary"

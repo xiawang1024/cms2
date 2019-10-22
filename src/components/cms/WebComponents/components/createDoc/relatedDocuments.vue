@@ -45,6 +45,7 @@
       :dialog-visible.sync="dialogVisible"
       @getChoosed="getChoosed"
       :list="tableData"
+      :source-list="sourceList"
     />
   </div>
 </template>
@@ -52,6 +53,7 @@
 import { TreeData } from "./mockData.js";
 import { mapGetters } from "vuex";
 import { getRelationDoc, saveRelationDoc } from "@/api/cms/article";
+import { fetchDictByDictName } from "@/api/cms/dict";
 import documentDialog from "./relationComponents/documentDialog.vue";
 import Sortable from "sortablejs";
 export default {
@@ -70,7 +72,8 @@ export default {
       search: "",
       tableData: [],
       treeData: TreeData,
-      dialogVisible: false
+      dialogVisible: false,
+      sourceList: []
     };
   },
   computed: {
@@ -81,6 +84,7 @@ export default {
       if (val === "relatedDocuments") {
         if (this.contextMenu.docId) {
           this.getRelationDoc(this.contextMenu.docId);
+          this.fetchDict();
         }
       }
     }
@@ -91,6 +95,29 @@ export default {
     });
   },
   methods: {
+    // 获取文章来源
+    fetchDict() {
+      return new Promise((resolve, reject) => {
+        fetchDictByDictName("文稿来源")
+          .then(response => {
+            if (
+              response.data.result.details &&
+              response.data.result.details.length
+            ) {
+              this.sourceList = response.data.result.details.map(ele => {
+                return {
+                  label: ele.dictDetailName,
+                  value: ele.dictDetailName
+                };
+              });
+            }
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
     // 拖拽排序
     setSort() {
       var that = this;
@@ -115,20 +142,11 @@ export default {
           // 更新items数组
           var item = that.tableData.splice(oldIndex, 1);
           that.tableData.splice(newIndex, 0, item[0]);
-          // 下一个tick就会走patch更新
-          // let ids = that.newList.map((ele) => {
-          //   return ele.articleId
-          // })
-          // let params = {
-          //   articleIdList: ids
-          // }
-          // that.articalSort(params)
         }
       });
     },
     // 保存选择文章
     saveHandelRelation() {
-      console.log(this.tableData, "tableData");
       let articleIdList = [];
       if (this.tableData.length) {
         this.tableData.forEach(ele => {
