@@ -30,7 +30,7 @@
       :doc-infor="docInfor"
       v-if="typeForm.articleType == 0 || contextMenu.articleType == 3"
     />
-    <images
+    <!-- <images
       ref="images"
       :extends-list="extendsList"
       :images-setting="imagesSeting"
@@ -61,6 +61,17 @@
       :link-setting="articleLinkSetting"
       :tag-list="tagList"
       v-if="typeForm.articleType == 5"
+    />-->
+    <other-type
+      ref="othrtType"
+      :source-list="sourceList"
+      :extends-list="extendsList"
+      :images-setting="otherTypeformSetting"
+      :tag-list="tagList"
+      :channel-id="channelId"
+      :doc-infor="docInfor"
+      :article-type="typeForm.articleType"
+      v-if="!(typeForm.articleType == 0 || typeForm.articleType == 3) && contextMenu.articleType !== 3"
     />
     <!-- <quote v-if="typeForm.articleType == 3"></quote> -->
   </div>
@@ -71,6 +82,7 @@ import images from "./images.vue";
 import splicing from "./splicing.vue";
 import reproduce from "./reproduce.vue";
 import articleLink from "./articleLink";
+import otherType from "./otherArticleType";
 import quote from "./quote";
 import { columnInfor } from "@/api/cms/columnManage";
 import { documentInfor, documentQuoteInfor } from "@/api/cms/article";
@@ -80,12 +92,21 @@ import {
   imagesSeting,
   reproduceSetting,
   defultItems,
-  articleLinkSetting
+  articleLinkSetting,
+  splicingSetting
 } from "./setting.js";
 import { mapGetters } from "vuex";
 export default {
   name: "BasicContent",
-  components: { imageText, images, splicing, reproduce, quote, articleLink },
+  components: {
+    imageText,
+    images,
+    splicing,
+    reproduce,
+    quote,
+    articleLink,
+    otherType
+  },
   props: {
     activeName: {
       default: "",
@@ -138,7 +159,21 @@ export default {
   },
   // JSON.parse(localStorage.getItem("BaseInfor")).userId
   computed: {
-    ...mapGetters(["treeTags", "contextMenu"])
+    ...mapGetters(["treeTags", "contextMenu"]),
+    otherTypeformSetting() {
+      switch (this.typeForm.articleType) {
+        case 1:
+          return imagesSeting;
+        case 2:
+          return splicingSetting;
+        case 4:
+          return reproduceSetting;
+        case 5:
+          return articleLinkSetting;
+        default:
+          [];
+      }
+    }
   },
   watch: {
     // 存储文章信息
@@ -371,7 +406,8 @@ export default {
               _this.sourceList = response.data.result.details.map(ele => {
                 return {
                   label: ele.dictDetailName,
-                  value: ele.dictDetailName
+                  value: ele.dictDetailName,
+                  combinName: ele.combinName
                 };
               });
               _this.imagesSeting[0].items[2].options = _this.sourceList;

@@ -15,6 +15,14 @@
           <el-input v-model="adddocSet.extractCode" />
         </div>
       </template>
+      <template slot="preview">
+        <div>
+          <el-button type="primary" size="mini" @click="lookPreview">预览</el-button>
+        </div>
+        <div class="preview" v-if="indexTitle">
+          <div v-html="indexTitle" />
+        </div>
+      </template>
     </v-form>
     <div class="images-btn">
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
@@ -70,6 +78,10 @@ export default {
         return [];
       },
       type: Array
+    },
+    articleType: {
+      type: Number,
+      default: 0
     }
     // propInformation: {
     //   default: ()=> {
@@ -86,7 +98,8 @@ export default {
         topFlag: "1"
       },
       formData: {},
-      isLoading: false
+      isLoading: false,
+      indexTitle: ""
     };
   },
   computed: {
@@ -130,6 +143,10 @@ export default {
     };
   },
   methods: {
+    // 拼条预览
+    lookPreview() {
+      this.indexTitle = this.$refs.form.formModel.contentTitle;
+    },
     goBack() {
       this.$store.dispatch("setContextMenu", {
         id: "0",
@@ -138,10 +155,10 @@ export default {
         pageSize: this.contextMenu.pageSize
       });
     },
-    goEdit(docId) {
-      const select = { id: "1", label: "新建文档", docId: docId };
-      this.$store.dispatch("setContextMenu", select);
-    },
+    // goEdit(docId) {
+    //   const select = { id: "1", label: "新建文档", docId: docId };
+    //   this.$store.dispatch("setContextMenu", select);
+    // },
     createDoc(formData, saveType) {
       var _this = this;
       return new Promise((resolve, reject) => {
@@ -152,11 +169,12 @@ export default {
               message: "恭喜你，操作成功!",
               type: "success"
             });
-            if (saveType === "saveOnly") {
-              this.goEdit(response.data.result.articleId);
-            } else {
-              this.goBack();
-            }
+            this.goBack();
+            // if (saveType === "saveOnly") {
+            //   this.goEdit(response.data.result.articleId);
+            // } else {
+            //   this.goBack();
+            // }
             resolve();
             _this.isLoading = false;
           })
@@ -176,11 +194,12 @@ export default {
               message: "恭喜你，操作成功!",
               type: "success"
             });
-            if (saveType === "saveOnly") {
-              this.goEdit(response.data.result.articleId);
-            } else {
-              this.goBack();
-            }
+            this.goBack();
+            // if (saveType === "saveOnly") {
+            //   this.goEdit(response.data.result.articleId);
+            // } else {
+            //   this.goBack();
+            // }
             resolve();
             _this.isLoading = false;
           })
@@ -208,7 +227,7 @@ export default {
         });
       }
       resoultObj.tagIdsList = chooseTags;
-      resoultObj.articleType = 1;
+      resoultObj.articleType = this.articleType;
       delete resoultObj.set;
       delete resoultObj.tagIds;
       delete resoultObj.btn;
@@ -248,7 +267,7 @@ export default {
           });
         }
         resoultObj.tagIdsList = chooseTags;
-        resoultObj.articleType = 1;
+        resoultObj.articleType = this.articleType;
         delete resoultObj.set;
         delete resoultObj.tagIds;
         delete resoultObj.btn;
@@ -258,6 +277,7 @@ export default {
         if (resoultObj.publishTime) {
           resoultObj.publishTime = handleDate(resoultObj.publishTime);
         }
+        // 编辑文章
         if (this.contextMenu.docId) {
           if (
             this.getDocInformation.attachmentsList &&
@@ -270,6 +290,7 @@ export default {
           resoultObj.articleId = this.contextMenu.docId;
           this.editDoc(resoultObj, saveType);
         } else {
+          // 新建文章
           if (
             this.getDocInformation.attachmentsList &&
             this.getDocInformation.attachmentsList.length

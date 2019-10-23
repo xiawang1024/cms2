@@ -143,9 +143,11 @@ import {
 import { mapGetters } from "vuex";
 import { handleDate } from "@/utils/date-filter";
 import store from "store";
+import sourceMixin from "./mixin";
 export default {
   name: "ImageText",
   components: { Tinymce },
+  mixins: [sourceMixin],
   props: {
     extendsList: {
       default: () => {
@@ -292,19 +294,16 @@ export default {
     },
     sourceList(val) {
       if (val.length) {
-        // this.baseSettings[0].items[1].options = val;
         this.filterSourceList = val;
       }
-    },
-    otherSettings(val) {
-      console.log(val, "val");
     }
   },
   mounted() {
-    if (this.sourceList.length) {
-      //this.baseSettings[0].items[1].options = this.sourceList;
-      this.filterSourceList = this.sourceList;
-    }
+    // console.log("mounted111111");
+    // 初始化过滤来源
+    // if (this.sourceList.length) {
+    //   this.filterSourceList = this.sourceList;
+    // }
     // 转载禁用
     if (this.contextMenu.articleType == 3) {
       this.baseSettings[0].items.forEach(ele => {
@@ -334,15 +333,15 @@ export default {
   },
   methods: {
     // 来源过滤
-    filterMethod(val) {
-      let filterSource = [];
-      this.sourceList.forEach(ele => {
-        if (ele.value.indexOf(val) !== -1) {
-          filterSource.push(ele);
-        }
-      });
-      this.filterSourceList = filterSource;
-    },
+    // filterMethod(val) {
+    //   let filterSource = [];
+    //   this.sourceList.forEach(ele => {
+    //     if (ele.combinName.indexOf(val) !== -1) {
+    //       filterSource.push(ele);
+    //     }
+    //   });
+    //   this.filterSourceList = filterSource;
+    // },
     checkAuth(authKey) {
       // console.log(this.$store.getters.authorities, 'this.$store.getters.authorities')
       if (this.$store.getters.authorities.indexOf(authKey) === -1) {
