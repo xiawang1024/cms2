@@ -139,6 +139,7 @@ export default {
             resolve();
           })
           .catch(error => {
+            _this.tableData = [];
             reject(error);
           });
       });
