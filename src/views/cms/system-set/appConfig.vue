@@ -11,7 +11,7 @@
       <el-table-column prop="version" label="Android版本"/>
       <el-table-column prop="versionIOS" label="IOS版本"/>
       <el-table-column prop="description" label="描述"/>
-      <el-table-column prop="startingImage" label="启动页">
+      <el-table-column prop="startingImage" label="分享图标">
         <template slot-scope="scope">
           <img :src="scope.row.startingImage" class="icon">
         </template>
@@ -46,6 +46,8 @@
         label-width="130px"
         :btn-loading="isLoading"
       />
+     
+
     </el-dialog>
     <el-pagination
       class="fenyeDiv"
@@ -74,7 +76,6 @@ import {
 } from "@/api/cms/appConfig.js";
 export default {
   name: "AppConfig",
-
   data() {
     var validateNumber = (rule, value, callback) => {
       if (value < 0) {
@@ -84,7 +85,7 @@ export default {
       }
     };
     return {
-      currentUser: this.$store.getters.tenantId,
+      currentUser: '',
       currentId: "",
       searchApp: "",
       fullApp: [],
@@ -150,7 +151,7 @@ export default {
               limit: 1,
               disabled: false,
               required: true,
-              placeholder: "请输入启动页图片URL"
+              placeholder: "请上传分享图标"
             },
             {
               label: "APP图标",
@@ -242,13 +243,13 @@ export default {
               placeholder: "请输入描述"
             },
             {
-              label: "启动页图片",
+              label: "分享图标",
               name: "startingImage",
               type: "img",
               limit: 1,
               disabled: false,
               required: true,
-              placeholder: "请输入启动页图片URL"
+              placeholder: "请上传分享图标"
             },
             {
               label: "APP图标",
@@ -333,13 +334,13 @@ export default {
               placeholder: "请输入描述"
             },
             {
-              label: "启动页图片",
+              label: "分享图标",
               name: "startingImage",
               type: "img",
               limit: 1,
               disabled: false,
               required: true,
-              placeholder: "请输入启动页图片URL"
+              placeholder: "请上传分享图标"
             },
             {
               label: "APP图标",
@@ -457,7 +458,11 @@ export default {
   },
   created() {
     //请求app列表数据
+    this.currentUser=JSON.parse(localStorage.getItem("BaseInfor")).clientLicenseId;
     this.getAppList(this.pageNo, this.pageSize, { tenantId: this.currentUser });
+  },
+  mounted(){
+
   },
   methods: {
     formatDate(row) {

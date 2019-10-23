@@ -199,3 +199,104 @@ export function enableNavigation(data) {
       }
     });
   }
+
+
+// -------------------------------------------------------------------------------------------------
+// let Dpath='http://192.168.7.38:8080'
+let Dpath=''
+
+  //新增开机图片
+export function addOpenimage(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/openimage/save?operationUser=${data.operationUser}&clientLicenseId=${data.clientLicenseId}`,
+    method: "post",
+    data,
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+  //修改开机图片
+  export function updateOpenimage(data) {
+    return request({
+      url:
+        Dpath +`/autoconfig/openimage/update?operationUser=${data.operationUser}&clientLicenseId=${data.clientLicenseId}`,
+      method: "put",
+      data,
+      loadingConfig: {
+        noLoading: true
+      }
+    });
+  }
+  
+
+//根据appId 查询开机图
+
+
+export function getOpenimage(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/openimage/tenantId?tenantId=${data.tenantId}&appId=${data.appId}`,
+    method: "get",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+
+
+
+//app主题图片和底部图标设计
+
+export function addSkin(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/appConfig/save`,
+    method: "post",
+    data,
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+
+//根据租户id和appId查询主题信息和图标
+
+
+export function getSkin(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/appConfig/search?tenantId=${data.tenantId}&appId=${data.appId}`,
+    method: "get",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+
+
+//禁用启用皮肤
+export function forbidden(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/appConfig/forbid?tenantId=${data.tenantId}&appId=${data.appId}&status=${data.status}`,
+    method: "put",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+
+
+//禁用开机启动图
+export function startforbidden(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/openimage/forbid?tenantId=${data.tenantId}&appId=${data.appId}&status=${data.status}`,
+    method: "put",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}

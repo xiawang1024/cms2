@@ -3,7 +3,7 @@
     <div class="v-search-header">
       <el-row>
         <el-col :span="24">
-          <v-search :search-settings="searchSettings" @search="searchItem" />
+          <v-search :search-settings="searchSettings" @search="searchItem" ref="vserch" />
         </el-col>
         <el-col :span="2">
           <el-button class="exportBtn" type="success" size="mini" @click="handleExport">一键导出</el-button>
@@ -69,6 +69,7 @@ export default {
           type: "select",
           visible: "true",
           value:'',
+          filterable:true,
           changeOnSelect: true,
           options: []
         },
@@ -147,6 +148,7 @@ export default {
                 };
               });
               _this.searchSettings[1].options = _this.sourceList;
+              _this.$refs.vserch.updateForm();
               
             }
             resolve();
