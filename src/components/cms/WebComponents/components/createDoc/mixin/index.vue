@@ -1,5 +1,5 @@
 <template>
-  <div/>
+  <div />
 </template>
 <script>
 export default {
@@ -8,6 +8,7 @@ export default {
   },
   methods: {
     filterMethod(val) {
+      console.log(val, "val11111");
       let filterSource = [];
       this.sourceList.forEach(ele => {
         if (ele.combinName.indexOf(val) !== -1) {

@@ -30,40 +30,8 @@
       :doc-infor="docInfor"
       v-if="typeForm.articleType == 0 || contextMenu.articleType == 3"
     />
-    <!-- <images
-      ref="images"
-      :extends-list="extendsList"
-      :images-setting="imagesSeting"
-      :tag-list="tagList"
-      :channel-id="channelId"
-      :doc-infor="docInfor"
-      v-if="typeForm.articleType == 1"
-    />
-    <splicing
-      ref="splicing"
-      :channel-id="channelId"
-      :doc-infor="docInfor"
-      :tag-list="tagList"
-      v-if="typeForm.articleType == 2"
-    />
-    <reproduce
-      ref="reproduce"
-      :channel-id="channelId"
-      :doc-infor="docInfor"
-      :reproduce-setting="reproduceSetting"
-      :tag-list="tagList"
-      v-if="typeForm.articleType == 4 && contextMenu.articleType !== 3"
-    />
-    <article-link
-      ref="articleLink"
-      :channel-id="channelId"
-      :doc-infor="docInfor"
-      :link-setting="articleLinkSetting"
-      :tag-list="tagList"
-      v-if="typeForm.articleType == 5"
-    />-->
     <other-type
-      ref="othrtType"
+      ref="othertType"
       :source-list="sourceList"
       :extends-list="extendsList"
       :images-setting="otherTypeformSetting"
@@ -78,12 +46,7 @@
 </template>
 <script>
 import imageText from "./imageText";
-import images from "./images.vue";
-import splicing from "./splicing.vue";
-import reproduce from "./reproduce.vue";
-import articleLink from "./articleLink";
 import otherType from "./otherArticleType";
-import quote from "./quote";
 import { columnInfor } from "@/api/cms/columnManage";
 import { documentInfor, documentQuoteInfor } from "@/api/cms/article";
 import { fetchDictByDictName } from "@/api/cms/dict";
@@ -100,11 +63,6 @@ export default {
   name: "BasicContent",
   components: {
     imageText,
-    images,
-    splicing,
-    reproduce,
-    quote,
-    articleLink,
     otherType
   },
   props: {
@@ -112,12 +70,6 @@ export default {
       default: "",
       type: String
     }
-    //  propInformation: {
-    //    default: ()=> {
-    //      return {}
-    //    },
-    //    type: Object
-    //  }
   },
   data() {
     return {
@@ -157,7 +109,6 @@ export default {
       sourceList: []
     };
   },
-  // JSON.parse(localStorage.getItem("BaseInfor")).userId
   computed: {
     ...mapGetters(["treeTags", "contextMenu"]),
     otherTypeformSetting() {
@@ -178,32 +129,16 @@ export default {
   watch: {
     // 存储文章信息
     activeName(val, oldVal) {
-      console.log(oldVal, "3333");
       if (oldVal == "basicContent" && this.typeForm.articleType == 0) {
         this.$store.dispatch(
           "setBaseInfor",
           this.$refs.imageText.getSubmitData()
         );
       }
-      if (oldVal == "basicContent" && this.typeForm.articleType == 1) {
-        this.$store.dispatch("setBaseInfor", this.$refs.images.getSubmitData());
-      }
-      if (oldVal == "basicContent" && this.typeForm.articleType == 2) {
+      if (oldVal == "basicContent" && this.typeForm.articleType !== 0) {
         this.$store.dispatch(
           "setBaseInfor",
-          this.$refs.splicing.getSubmitData()
-        );
-      }
-      if (oldVal == "basicContent" && this.typeForm.articleType == 4) {
-        this.$store.dispatch(
-          "setBaseInfor",
-          this.$refs.reproduce.getSubmitData()
-        );
-      }
-      if (oldVal == "basicContent" && this.typeForm.articleType == 5) {
-        this.$store.dispatch(
-          "setBaseInfor",
-          this.$refs.articleLink.getSubmitData()
+          this.$refs.othertType.getSubmitData()
         );
       }
     }
@@ -213,7 +148,6 @@ export default {
     this.getColumnInfor(this.treeTags[this.treeTags.length - 1].id);
     this.channelId = this.treeTags[this.treeTags.length - 1].id;
     this.fetchDict();
-    console.log(this.otherSettings[0].items[5], "otherSettings");
     if (
       JSON.parse(localStorage.getItem("BaseInfor")).clientLicenseId == "DXNews"
     ) {
@@ -370,6 +304,7 @@ export default {
           });
       });
     },
+    // 获取引用文章详情
     getQuoteDocumentInfor(id) {
       var _this = this;
       return new Promise((resolve, reject) => {

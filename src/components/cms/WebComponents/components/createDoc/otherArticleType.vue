@@ -23,6 +23,22 @@
           <div v-html="indexTitle" />
         </div>
       </template>
+      <template slot="articleOrigin" slot-scope="scope">
+        <el-select
+          v-model="scope.model.articleOrigin"
+          filterable
+          placeholder="请选择"
+          clearable
+          :filter-method="filterMethod"
+        >
+          <el-option
+            v-for="item in filterSourceList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </template>
     </v-form>
     <div class="images-btn">
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
@@ -48,8 +64,10 @@ import { createDocument, editDocument } from "@/api/cms/article";
 import { mapGetters } from "vuex";
 import { handleDate } from "@/utils/date-filter";
 import store from "store";
+import sourceMixin from "./mixin";
 export default {
-  name: "Images",
+  name: "OtherArticleType",
+  mixins: [sourceMixin],
   props: {
     extendsList: {
       default: () => {
@@ -82,13 +100,13 @@ export default {
     articleType: {
       type: Number,
       default: 0
+    },
+    sourceList: {
+      default: () => {
+        return [];
+      },
+      type: Array
     }
-    // propInformation: {
-    //   default: ()=> {
-    //     return {}
-    //   },
-    //   type: Object
-    // }
   },
   data() {
     return {
@@ -99,7 +117,8 @@ export default {
       },
       formData: {},
       isLoading: false,
-      indexTitle: ""
+      indexTitle: "",
+      filterSourceList: []
     };
   },
   computed: {
@@ -123,9 +142,15 @@ export default {
         });
       }
       this.formData.tagIds = showTags;
+    },
+    sourceList(val) {
+      if (val.length) {
+        this.filterSourceList = val;
+      }
     }
   },
   mounted() {
+    this.filterSourceList = this.sourceList;
     this.formData = this.docInfor;
     let showTags = [];
     if (this.docInfor.tagIdsList) {
@@ -155,10 +180,6 @@ export default {
         pageSize: this.contextMenu.pageSize
       });
     },
-    // goEdit(docId) {
-    //   const select = { id: "1", label: "新建文档", docId: docId };
-    //   this.$store.dispatch("setContextMenu", select);
-    // },
     createDoc(formData, saveType) {
       var _this = this;
       return new Promise((resolve, reject) => {
@@ -170,11 +191,6 @@ export default {
               type: "success"
             });
             this.goBack();
-            // if (saveType === "saveOnly") {
-            //   this.goEdit(response.data.result.articleId);
-            // } else {
-            //   this.goBack();
-            // }
             resolve();
             _this.isLoading = false;
           })
@@ -195,11 +211,6 @@ export default {
               type: "success"
             });
             this.goBack();
-            // if (saveType === "saveOnly") {
-            //   this.goEdit(response.data.result.articleId);
-            // } else {
-            //   this.goBack();
-            // }
             resolve();
             _this.isLoading = false;
           })
@@ -211,7 +222,6 @@ export default {
     },
     getSubmitData() {
       let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet);
-      // resoultObj.channelId = this.channelId
       // 标签字段处理
       let chooseTags = [];
       if (resoultObj.tagIds) {

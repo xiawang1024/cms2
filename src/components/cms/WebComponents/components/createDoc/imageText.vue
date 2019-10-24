@@ -332,16 +332,6 @@ export default {
     };
   },
   methods: {
-    // 来源过滤
-    // filterMethod(val) {
-    //   let filterSource = [];
-    //   this.sourceList.forEach(ele => {
-    //     if (ele.combinName.indexOf(val) !== -1) {
-    //       filterSource.push(ele);
-    //     }
-    //   });
-    //   this.filterSourceList = filterSource;
-    // },
     checkAuth(authKey) {
       // console.log(this.$store.getters.authorities, 'this.$store.getters.authorities')
       if (this.$store.getters.authorities.indexOf(authKey) === -1) {
