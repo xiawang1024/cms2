@@ -109,6 +109,12 @@ export default {
         [];
       },
       type: Array
+    },
+    sourceList: {
+      default: () => {
+        [];
+      },
+      type: Array
     }
   },
   data() {
@@ -119,6 +125,7 @@ export default {
       tableData: [],
       documentsData: [],
       searchData: {},
+      channelId: "",
       totalCount: 0,
       multipleSelection: [],
       searchSettings: [
@@ -128,6 +135,21 @@ export default {
           placeholder: "请输入撰稿人",
           visible: true,
           options: [],
+          type: "text"
+        },
+        {
+          label: "来源",
+          name: "articleOrigin",
+          placeholder: "请选择",
+          visible: true,
+          type: "select",
+          options: []
+        },
+        {
+          label: "关键字",
+          name: "seoKeywordsLike",
+          placeholder: "请输入关键字",
+          visible: true,
           type: "text"
         }
       ],
@@ -139,24 +161,19 @@ export default {
       if (val) {
         this.columnList();
       }
+    },
+    sourceList(val) {
+      this.searchSettings[1].options = val;
     }
   },
   created() {},
   methods: {
     searchList(data) {
-      this.searchData.createUser = data.createUser;
+      this.searchData = data;
       this.pageNum = 1;
       this.$refs.pagnation.currentPage = 1;
       this.getDocumentList();
     },
-    // choosed() {
-    //   this.documentsData.forEach(row => {
-    //     this.$refs.multipleTable.toggleRowSelection(row)
-    //   })
-    // },
-    /**
-     * 文章列表方法
-     */
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
@@ -183,24 +200,25 @@ export default {
     },
     // 栏目下的文档列表
     documentList(column) {
-      this.searchData.channelId = column.channelId;
-      this.searchData.createUser = "";
+      this.channelId = column.channelId;
+      // 清除搜索内容
       this.$refs.vSearch.onReset();
+      this.searchData = {};
       this.getDocumentList();
     },
     getDocumentList() {
       this.loading = true;
-      var _this = this;
+      this.searchData.channelId = this.channelId;
       return new Promise((resolve, reject) => {
-        documentList(_this.searchData, _this.pageNum, _this.pageSize)
+        documentList(this.searchData, this.pageNum, this.pageSize)
           .then(response => {
-            _this.documentsData = response.data.result.content;
-            _this.totalCount = response.data.result.total;
+            this.documentsData = response.data.result.content;
+            this.totalCount = response.data.result.total;
             this.$nextTick(() => {
-              _this.documentsData.forEach(row => {
-                _this.list.forEach(ele => {
+              this.documentsData.forEach(row => {
+                this.list.forEach(ele => {
                   if (ele.articleId == row.articleId) {
-                    _this.$refs.multipleTable.toggleRowSelection(row);
+                    this.$refs.multipleTable.toggleRowSelection(row);
                   }
                 });
               });
@@ -218,30 +236,29 @@ export default {
       this.$emit("update:dialogVisible", false);
     },
     columnList() {
-      var _this = this;
       return new Promise((resolve, reject) => {
         columnListRelationLoading({}, 1, 1000)
           .then(response => {
-            _this.tableData = _this.toTree(response.data.result.content);
-            if (_this.tableData.length) {
+            this.tableData = this.toTree(response.data.result.content);
+            if (this.tableData.length) {
               this.$nextTick(() => {
-                if (_this.tableData && _this.tableData.length) {
-                  if (_this.tableData[0].children) {
+                if (this.tableData && this.tableData.length) {
+                  if (this.tableData[0].children) {
                     document
                       .querySelectorAll(".el-dialog__body .el-tree-node")[1]
                       .classList.add("is-current");
-                    this.searchData.channelId =
-                      _this.tableData[0].children[0].channelId;
+                    this.channelId = this.tableData[0].children[0].channelId;
                   } else {
                     document
                       .querySelectorAll(".el-dialog__body .el-tree-node")[0]
                       .classList.add("is-current");
-                    this.searchData.channelId = _this.tableData[0].channelId;
+                    this.channelId = this.tableData[0].channelId;
                   }
                 }
+                this.getDocumentList();
               });
             }
-            this.getDocumentList();
+
             resolve();
           })
           .catch(error => {

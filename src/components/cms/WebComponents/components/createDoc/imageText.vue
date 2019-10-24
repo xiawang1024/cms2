@@ -39,6 +39,7 @@
         <div class="btn-list">
           <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
           <!-- <el-button type = "primary" size="mini" @click = "save('docContentForm', '0', 'saveOnly')">保存</el-button> -->
+          <el-button size="mini" @click="goBack">返回</el-button>
           <el-button
             :disabled="Boolean(contextMenu.docId) && (docInfor.articleStatus ==1) && (baseInfor.userName !== docInfor.createUser)"
             type="primary"
@@ -69,7 +70,24 @@
                 :form-data="formData"
                 label-width="80px"
                 :show-button="showButton"
-              />
+              >
+                <template slot="articleOrigin" slot-scope="scope">
+                  <el-select
+                    v-model="scope.model.articleOrigin"
+                    filterable
+                    placeholder="请选择"
+                    clearable
+                    :filter-method="filterMethod"
+                  >
+                    <el-option
+                      v-for="item in filterSourceList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </template>
+              </v-form>
             </div>
           </el-card>
         </div>
@@ -125,9 +143,11 @@ import {
 import { mapGetters } from "vuex";
 import { handleDate } from "@/utils/date-filter";
 import store from "store";
+import sourceMixin from "./mixin";
 export default {
   name: "ImageText",
   components: { Tinymce },
+  mixins: [sourceMixin],
   props: {
     extendsList: {
       default: () => {
@@ -217,11 +237,12 @@ export default {
             {
               label: "来源",
               name: "articleOrigin",
-              type: "select",
+              type: "slot",
               placeholder: "请选择",
-              required: true,
-              filterable: true,
-              options: []
+              required: true
+              // events: {
+              //   change: "filterMethod"
+              // }
             },
             {
               label: "作者",
@@ -240,7 +261,8 @@ export default {
           ]
         }
       ],
-      showButton: false
+      showButton: false,
+      filterSourceList: []
     };
   },
   computed: {
@@ -272,18 +294,16 @@ export default {
     },
     sourceList(val) {
       if (val.length) {
-        this.baseSettings[0].items[1].options = val;
+        this.filterSourceList = val;
       }
-    },
-    otherSettings(val) {
-      console.log(val, "val");
     }
   },
   mounted() {
-    console.log(this.contextMenu.docId, "this.contextMenu.docId");
-    if (this.sourceList.length) {
-      this.baseSettings[0].items[1].options = this.sourceList;
-    }
+    // console.log("mounted111111");
+    // 初始化过滤来源
+    // if (this.sourceList.length) {
+    //   this.filterSourceList = this.sourceList;
+    // }
     // 转载禁用
     if (this.contextMenu.articleType == 3) {
       this.baseSettings[0].items.forEach(ele => {
@@ -311,7 +331,6 @@ export default {
       topFlag: this.docInfor.topFlag ? this.docInfor.topFlag + "" : "0"
     };
   },
-  created() {},
   methods: {
     checkAuth(authKey) {
       // console.log(this.$store.getters.authorities, 'this.$store.getters.authorities')
@@ -398,6 +417,7 @@ export default {
         });
       }
     },
+    // 获取提交数据，以便于在不同tab下获取数据
     getSubmitData() {
       let resoultObj = Object.assign(
         this.$refs.baseForm.formModel,
@@ -460,6 +480,10 @@ export default {
       return resoultObj;
     },
     save(formName, publishType, saveType) {
+      console.log(
+        this.$refs.baseForm.formModel,
+        "this.$refs.baseForm.formModel"
+      );
       let resoultObj = Object.assign(
         this.$refs.baseForm.formModel,
         this.$refs.otherForm.formModel,

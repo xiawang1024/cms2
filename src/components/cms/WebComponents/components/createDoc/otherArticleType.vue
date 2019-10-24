@@ -15,10 +15,35 @@
           <el-input v-model="adddocSet.extractCode" />
         </div>
       </template>
+      <template slot="preview">
+        <div>
+          <el-button type="primary" size="mini" @click="lookPreview">预览</el-button>
+        </div>
+        <div class="preview" v-if="indexTitle">
+          <div v-html="indexTitle" />
+        </div>
+      </template>
+      <template slot="articleOrigin" slot-scope="scope">
+        <el-select
+          v-model="scope.model.articleOrigin"
+          filterable
+          placeholder="请选择"
+          clearable
+          :filter-method="filterMethod"
+        >
+          <el-option
+            v-for="item in filterSourceList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </template>
     </v-form>
     <div class="images-btn">
       <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
       <!-- <el-button type = "primary" size="mini" @click = "save('docContentForm', '0', 'saveOnly')">保存</el-button> -->
+      <el-button size="mini" @click="goBack">返回</el-button>
       <el-button
         :disabled="Boolean(contextMenu.docId) && (docInfor.articleStatus ==1) && (baseInfor.userName !== docInfor.createUser)"
         type="primary"
@@ -39,8 +64,10 @@ import { createDocument, editDocument } from "@/api/cms/article";
 import { mapGetters } from "vuex";
 import { handleDate } from "@/utils/date-filter";
 import store from "store";
+import sourceMixin from "./mixin";
 export default {
-  name: "Images",
+  name: "OtherArticleType",
+  mixins: [sourceMixin],
   props: {
     extendsList: {
       default: () => {
@@ -69,13 +96,17 @@ export default {
         return [];
       },
       type: Array
+    },
+    articleType: {
+      type: Number,
+      default: 0
+    },
+    sourceList: {
+      default: () => {
+        return [];
+      },
+      type: Array
     }
-    // propInformation: {
-    //   default: ()=> {
-    //     return {}
-    //   },
-    //   type: Object
-    // }
   },
   data() {
     return {
@@ -84,87 +115,10 @@ export default {
         hiddenFlag: "0",
         topFlag: "1"
       },
-      // formSettings: [
-      //   {
-      //     items: [
-      //       {
-      //         label: '正文标题',
-      //         name: 'articleTitle',
-      //         type: 'text',
-      //         placeholder: '请输入正文标题',
-      //         required: true,
-      //         maxlength: '10'
-      //       },
-      //       {
-      //         label: '首页标题',
-      //         name: 'contentTitle',
-      //         type: 'text',
-      //         placeholder: '请输入首页标题',
-      //         maxlength: 10,
-      //         required: true
-      //       },
-      //       {
-      //         label: '文档来源',
-      //         name: 'articleOrigin',
-      //         type: 'select',
-      //         placeholder: '请选择',
-      //         options: [
-      //           {
-      //             label: '1',
-      //             value: '123'
-      //           }
-      //         ]
-      //       },{
-      //         label:'文档作者',
-      //         name: 'articleAuthor',
-      //         type:'text',
-      //         placeholder: '请输入文档作者'
-      //       },{
-      //         label: '关键字',
-      //         name: 'seoKeywords',
-      //         type: 'text',
-      //         placeholder: '请输入关键字',
-      //       },{
-      //         label: '摘要',
-      //         name: 'seoDescription',
-      //         type: 'textarea',
-      //         placeholder: '请输入摘要'
-      //       },{
-      //         label: '标签',
-      //         name: 'tag',
-      //         type: 'checkbox',
-      //         options: []
-      //       },{
-      //         label:'点击量',
-      //         name: 'clickNum',
-      //         type:'number',
-      //         placeholder: '请输入点击量'
-      //       },{
-      //         label:'创建时间',
-      //         name:'createTime',
-      //         type:'date',
-      //         placeholder: '请选择'
-      //       },
-      //       {
-      //         label: '设置',
-      //         name: 'set',
-      //         type: 'slot',
-      //       },
-      //       {
-      //         label: '排序号',
-      //         name: 'seqNo',
-      //         type: 'number'
-      //       },
-      //       {
-      //         label: '',
-      //         name: 'btn',
-      //         type: 'slot'
-      //       },
-      //     ]
-      //   }
-      // ],
       formData: {},
-      isLoading: false
+      isLoading: false,
+      indexTitle: "",
+      filterSourceList: []
     };
   },
   computed: {
@@ -188,9 +142,15 @@ export default {
         });
       }
       this.formData.tagIds = showTags;
+    },
+    sourceList(val) {
+      if (val.length) {
+        this.filterSourceList = val;
+      }
     }
   },
   mounted() {
+    this.filterSourceList = this.sourceList;
     this.formData = this.docInfor;
     let showTags = [];
     if (this.docInfor.tagIdsList) {
@@ -208,6 +168,10 @@ export default {
     };
   },
   methods: {
+    // 拼条预览
+    lookPreview() {
+      this.indexTitle = this.$refs.form.formModel.contentTitle;
+    },
     goBack() {
       this.$store.dispatch("setContextMenu", {
         id: "0",
@@ -215,10 +179,6 @@ export default {
         pageNum: this.contextMenu.pageNum,
         pageSize: this.contextMenu.pageSize
       });
-    },
-    goEdit(docId) {
-      const select = { id: "1", label: "新建文档", docId: docId };
-      this.$store.dispatch("setContextMenu", select);
     },
     createDoc(formData, saveType) {
       var _this = this;
@@ -230,11 +190,7 @@ export default {
               message: "恭喜你，操作成功!",
               type: "success"
             });
-            if (saveType === "saveOnly") {
-              this.goEdit(response.data.result.articleId);
-            } else {
-              this.goBack();
-            }
+            this.goBack();
             resolve();
             _this.isLoading = false;
           })
@@ -254,11 +210,7 @@ export default {
               message: "恭喜你，操作成功!",
               type: "success"
             });
-            if (saveType === "saveOnly") {
-              this.goEdit(response.data.result.articleId);
-            } else {
-              this.goBack();
-            }
+            this.goBack();
             resolve();
             _this.isLoading = false;
           })
@@ -270,7 +222,6 @@ export default {
     },
     getSubmitData() {
       let resoultObj = Object.assign(this.$refs.form.formModel, this.adddocSet);
-      // resoultObj.channelId = this.channelId
       // 标签字段处理
       let chooseTags = [];
       if (resoultObj.tagIds) {
@@ -286,7 +237,7 @@ export default {
         });
       }
       resoultObj.tagIdsList = chooseTags;
-      resoultObj.articleType = 1;
+      resoultObj.articleType = this.articleType;
       delete resoultObj.set;
       delete resoultObj.tagIds;
       delete resoultObj.btn;
@@ -326,7 +277,7 @@ export default {
           });
         }
         resoultObj.tagIdsList = chooseTags;
-        resoultObj.articleType = 1;
+        resoultObj.articleType = this.articleType;
         delete resoultObj.set;
         delete resoultObj.tagIds;
         delete resoultObj.btn;
@@ -336,6 +287,7 @@ export default {
         if (resoultObj.publishTime) {
           resoultObj.publishTime = handleDate(resoultObj.publishTime);
         }
+        // 编辑文章
         if (this.contextMenu.docId) {
           if (
             this.getDocInformation.attachmentsList &&
@@ -348,6 +300,7 @@ export default {
           resoultObj.articleId = this.contextMenu.docId;
           this.editDoc(resoultObj, saveType);
         } else {
+          // 新建文章
           if (
             this.getDocInformation.attachmentsList &&
             this.getDocInformation.attachmentsList.length
