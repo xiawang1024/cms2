@@ -32,8 +32,8 @@
           :filter-method="filterMethod"
         >
           <el-option
-            v-for="item in filterSourceList"
-            :key="item.value"
+            v-for="(item, index) in filterSourceList"
+            :key="index"
             :label="item.label"
             :value="item.value"
           />

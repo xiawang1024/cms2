@@ -77,11 +77,12 @@
                     filterable
                     placeholder="请选择"
                     clearable
-                    :filter-method="filterMethod"
+                    remote
+                    :remote-method="filterMethod"
                   >
                     <el-option
-                      v-for="item in filterSourceList"
-                      :key="item.value"
+                      v-for="(item, index) in filterSourceList"
+                      :key="index"
                       :label="item.label"
                       :value="item.value"
                     />
@@ -143,11 +144,11 @@ import {
 import { mapGetters } from "vuex";
 import { handleDate } from "@/utils/date-filter";
 import store from "store";
-import sourceMixin from "./mixin";
+//import sourceMixin from "./mixin";
 export default {
   name: "ImageText",
   components: { Tinymce },
-  mixins: [sourceMixin],
+  //mixins: [sourceMixin],
   props: {
     extendsList: {
       default: () => {
@@ -332,6 +333,28 @@ export default {
     };
   },
   methods: {
+    filterMethod(val) {
+      console.log(val);
+      //let filterSource = [];
+      // this.sourceList.forEach(ele => {
+      //   if (ele.combinName && ele.combinName.indexOf(val) !== -1) {
+      //     filterSource.push(ele);
+      //   }
+      // });
+
+      // this.filterSourceList = filterSource;
+      setTimeout(() => {
+        this.filterSourceList = this.sourceList.filter(ele => {
+          return ele.combinName.indexOf(val) !== -1;
+        });
+      }, 200);
+
+      console.log(this.filterSourceList);
+      // this.$nextTick(() => {
+      //   this.filterSourceList = filterSource;
+      // });
+      // this.filterSourceList = filterSource;
+    },
     checkAuth(authKey) {
       // console.log(this.$store.getters.authorities, 'this.$store.getters.authorities')
       if (this.$store.getters.authorities.indexOf(authKey) === -1) {

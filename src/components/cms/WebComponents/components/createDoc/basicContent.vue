@@ -50,6 +50,7 @@ import otherType from "./otherArticleType";
 import { columnInfor } from "@/api/cms/columnManage";
 import { documentInfor, documentQuoteInfor } from "@/api/cms/article";
 import { fetchDictByDictName } from "@/api/cms/dict";
+import { testSource } from "./sourceList";
 import {
   otherSettings,
   imagesSeting,
@@ -338,7 +339,14 @@ export default {
               response.data.result.details &&
               response.data.result.details.length
             ) {
-              _this.sourceList = response.data.result.details.map(ele => {
+              // _this.sourceList = response.data.result.details.map(ele => {
+              //   return {
+              //     label: ele.dictDetailName,
+              //     value: ele.dictDetailName,
+              //     combinName: ele.combinName
+              //   };
+              // });
+              _this.sourceList = testSource.map(ele => {
                 return {
                   label: ele.dictDetailName,
                   value: ele.dictDetailName,
