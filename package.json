@@ -44,6 +44,7 @@
     "delegate": "^3.2.0",
     "driver.js": "0.8.1",
     "dropzone": "5.2.0",
+    "duration-time-conversion": "^1.0.1",
     "echarts": "4.1.0",
     "element-ui": "2.8.2",
     "file-saver": "^2.0.2",
