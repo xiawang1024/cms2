@@ -2,7 +2,7 @@
   <div class="com-component-container">
     <el-row type="flex" class="tool-bar" justify="end">
       <el-col :span="6">
-        <ChannelSelect @channelCascaderChange="channelCascaderChange"/>
+        <ChannelSelect @channelCascaderChange="channelCascaderChange" />
       </el-col>
       <el-col :span="5">
         <el-input
@@ -19,12 +19,12 @@
         <el-button size="mini" type="primary" @click="handleAdd">新增组件</el-button>
       </el-col>
     </el-row>
-    <el-table :data="componentList" style="width: 100%">
-      <el-table-column prop="componentName" label="组件名称"/>
+    <el-table :data="componentList" style="width: 100%" highlight-current-row>
+      <el-table-column prop="componentName" label="组件名称" />
       <el-table-column prop="componentVariables" label="变量数量">
         <template slot-scope="scope">{{ JSON.stringify(scope.row.componentVariablesList) }}</template>
       </el-table-column>
-      <el-table-column prop="componentDescription" label="描述"/>
+      <el-table-column prop="componentDescription" label="描述" />
       <el-table-column label="操作" fixed="right" width="150">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleAlter(scope.$index, scope.row)">编辑</el-button>
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { fetchComponentList } from "@/api/cms/component";
+import { fetchComponentList, deleteComponent } from "@/api/cms/component";
 import ChannelSelect from "@/components/cms/ChannelSelect";
 export default {
   name: "ComComponentSet",
@@ -113,6 +113,29 @@ export default {
     },
     handleDelete(index, row) {
       console.log("删除" + row.componentId);
+      this.$confirm("确定删除该模板吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.deleteComponents(row.componentId);
+        })
+        .catch(() => {});
+    },
+    deleteComponents(id) {
+      return new Promise((resolve, reject) => {
+        deleteComponent({ componentId: id })
+          .then(response => {
+            // _this.componentList = response.data.result.content;
+            // _this.totalCount = response.data.result.total;
+            this.fetchList();
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
     },
     // 表格分页处理
     handleSizeChange(val) {
@@ -134,7 +157,6 @@ export default {
 }
 
 .com-component-container {
-
 }
 
 .tool-bar {
@@ -145,10 +167,10 @@ export default {
   margin-left: 20px;
   margin-bottom: 10px;
 }
-.fenyeDiv{
+.fenyeDiv {
   margin-top: 30px;
 }
-.seleAddBtn{
+.seleAddBtn {
   margin-top: -6px;
 }
 </style>

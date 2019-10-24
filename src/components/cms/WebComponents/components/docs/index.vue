@@ -117,6 +117,7 @@ export default {
     searchList(val) {
       this.searchData = val;
       this.pageNum = 1;
+      this.currentPage = 1;
       this.documentList();
     },
     sizeChange(val) {
@@ -139,6 +140,7 @@ export default {
             resolve();
           })
           .catch(error => {
+            _this.tableData = [];
             reject(error);
           });
       });

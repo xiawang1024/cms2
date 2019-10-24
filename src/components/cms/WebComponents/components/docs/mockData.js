@@ -210,11 +210,11 @@ export const statusOptions = [{
   {
     value: '11',
     label: '已发布'
-  },
-  {
-    value: '10',
-    label: '待发布'
   }
+  // {
+  //   value: '10',
+  //   label: '待发布'
+  // }
 ]
 
 export const DocList = [{

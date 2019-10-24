@@ -125,7 +125,7 @@ import {
 } from "@/api/live/videoTranscode.js";
 import baseUrl from "@/config/base-url";
 export default {
-  name: "VideoTranscode",
+  // name: "VideoTranscode",
   filters: {
     createUrl(val) {
       let data = "无";

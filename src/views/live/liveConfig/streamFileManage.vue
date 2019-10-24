@@ -3,10 +3,8 @@
     <template>
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="视频剪辑" name="0" />
-        <el-tab-pane label="视频转码" name="1" />
       </el-tabs>
     </template>
-    <video-transcode v-if="activeName=='1'"/> 
     <div v-if="activeName=='0'">
       <div class="v-search-header">
         <v-search :search-settings="searchSettings" @search="searchItem"/>
@@ -115,9 +113,8 @@ import videoEdite from "@/components/videoCut/videoEdite.vue";
 import videoMerge from "@/components/videoMerge/merge.vue";
 
   import simplifySecond from '@/utils/videoCut/simplifySecond';
-  import videoTranscode from './videoTranscode'
 export default {
-  components: { videoEdite,videoTranscode,videoMerge },
+  components: { videoEdite,videoMerge },
   data() {
     return {
       tableValue: [],

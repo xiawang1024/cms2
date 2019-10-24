@@ -124,7 +124,7 @@ export const imagesSeting = [{
     {
       label: '文档来源',
       name: 'articleOrigin',
-      type: 'slot',
+      type: 'select',
       placeholder: '请选择',
       required: true,
       filterable: true,
@@ -213,7 +213,7 @@ export const reproduceSetting = [{
     {
       label: '文档来源',
       name: 'articleOrigin',
-      type: 'slot',
+      type: 'select',
       placeholder: '请选择',
       required: true,
       filterable: true,
@@ -273,7 +273,8 @@ export const articleLinkSetting = [{
     {
       label: '文档来源',
       name: 'articleOrigin',
-      type: 'slot',
+      //type: 'slot',
+      type: 'select',
       placeholder: '请选择',
       required: true,
       filterable: true,
