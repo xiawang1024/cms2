@@ -30,3 +30,11 @@ export function updateComponent(data) {
     data
   })
 }
+
+export function deleteComponent(data) {
+  return request({
+    url: '/cms/component',
+    method: 'delete',
+    data
+  })
+}
