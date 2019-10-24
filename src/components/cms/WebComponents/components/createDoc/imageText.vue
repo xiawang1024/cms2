@@ -334,26 +334,11 @@ export default {
   },
   methods: {
     filterMethod(val) {
-      console.log(val);
-      //let filterSource = [];
-      // this.sourceList.forEach(ele => {
-      //   if (ele.combinName && ele.combinName.indexOf(val) !== -1) {
-      //     filterSource.push(ele);
-      //   }
-      // });
-
-      // this.filterSourceList = filterSource;
       setTimeout(() => {
         this.filterSourceList = this.sourceList.filter(ele => {
           return ele.combinName.indexOf(val) !== -1;
         });
       }, 200);
-
-      console.log(this.filterSourceList);
-      // this.$nextTick(() => {
-      //   this.filterSourceList = filterSource;
-      // });
-      // this.filterSourceList = filterSource;
     },
     checkAuth(authKey) {
       // console.log(this.$store.getters.authorities, 'this.$store.getters.authorities')

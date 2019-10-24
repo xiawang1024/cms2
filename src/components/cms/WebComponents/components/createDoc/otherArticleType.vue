@@ -29,7 +29,8 @@
           filterable
           placeholder="请选择"
           clearable
-          :filter-method="filterMethod"
+          remote
+          :remote-method="filterMethod"
         >
           <el-option
             v-for="(item, index) in filterSourceList"
@@ -64,10 +65,10 @@ import { createDocument, editDocument } from "@/api/cms/article";
 import { mapGetters } from "vuex";
 import { handleDate } from "@/utils/date-filter";
 import store from "store";
-import sourceMixin from "./mixin";
+// import sourceMixin from "./mixin";
 export default {
   name: "OtherArticleType",
-  mixins: [sourceMixin],
+  // mixins: [sourceMixin],
   props: {
     extendsList: {
       default: () => {
@@ -168,6 +169,13 @@ export default {
     };
   },
   methods: {
+    filterMethod(val) {
+      setTimeout(() => {
+        this.filterSourceList = this.sourceList.filter(ele => {
+          return ele.combinName.indexOf(val) !== -1;
+        });
+      }, 200);
+    },
     // 拼条预览
     lookPreview() {
       this.indexTitle = this.$refs.form.formModel.contentTitle;
