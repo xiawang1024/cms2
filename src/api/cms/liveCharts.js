@@ -139,7 +139,7 @@ export function fullChanelList(tenantId) {
     method: "get"
   });
 }
-export function fullAuthorList(tenantId) {
+export function fullcreateUserList(tenantId) {
   return request({
     url: articlePath + `/getArticleStatisticsUserByTenantId?tenantId=${tenantId}&flag=0`,
     method: "get"
@@ -155,9 +155,9 @@ export function articleTrend(channelId) {
 }
 
   //获取文章点击量和发稿量整体趋势(按作者)
-  export function articleTrendByAuthor(tenantId,author) {
+  export function articleTrendBycreateUser(tenantId,createUser) {
     return request({
-      url: articlePath + `/getArticleTrendByAuthor?tenantId=${tenantId}&author=${author}`,
+      url: articlePath + `/getArticleTrendByCreateUser?tenantId=${tenantId}&createUser=${createUser}`,
       method: "get"
     });
   }
@@ -182,9 +182,9 @@ export function articleTrend(channelId) {
   }
 
   //按作者获取文章点击次数、发稿量(每天和累计)
-  export function articleStatisticsByAuthor(data) {
+  export function articleStatisticsBycreateUser(data) {
     return request({
-      url: articlePath + `/getArticleStatisticsByAuthor?tenantId=${data.tenantId}&author=${data.author}&startDate=${data.startDate}&endDate=${data.endDate}`,
+      url: articlePath + `/getArticleStatisticsByCreateUser?tenantId=${data.tenantId}&createUser=${data.createUser}&startDate=${data.startDate}&endDate=${data.endDate}`,
       method: "get"
     });
 
