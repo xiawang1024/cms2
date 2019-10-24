@@ -143,11 +143,11 @@ import {
 import { mapGetters } from "vuex";
 import { handleDate } from "@/utils/date-filter";
 import store from "store";
-import sourceMixin from "./mixin";
+// import sourceMixin from "./mixin";
 export default {
   name: "ImageText",
   components: { Tinymce },
-  mixins: [sourceMixin],
+  // mixins: [sourceMixin],
   props: {
     extendsList: {
       default: () => {
@@ -295,10 +295,14 @@ export default {
       this.formData.tagIds = showTags;
     },
     sourceList(val) {
-      if (val.length) {
-        this.filterSourceList = val;
+      console.log(val, "watchval");
+      // if (val.length) {
+      //   this.filterSourceList = val;
+      //   this.baseSettings[0].items[1].options = val;
+      // }
+      this.$nextTick(() => {
         this.baseSettings[0].items[1].options = val;
-      }
+      });
     }
   },
   mounted() {
