@@ -69,7 +69,7 @@ export default {
   },
   mounted() {
     this.getMessageList();
-    this.getAppList();
+    //this.getAppList();
   },
   methods: {
     goBack() {
