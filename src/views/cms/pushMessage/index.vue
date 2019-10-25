@@ -24,7 +24,7 @@
       <el-table-column prop="createTime" label="失败" min-width="150" show-overflow-tooltip/>-->
       <el-table-column prop="viewedDeviceCount" label="点击量" width="150" show-overflow-tooltip>
         <template slot-scope="scope">
-          <span>{{ scope.row.article.actualClickNum }}</span>
+          <span>{{ scope.row.article ? scope.row.article.actualClickNum : 0 }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -89,7 +89,7 @@ export default {
       this.searchData.pageSize = this.pageSize;
       return new Promise((resolve, reject) => {
         messageList(this.searchData)
-          .then(async res => {
+          .then(res => {
             this.total = parseInt(res.data.result.totalElements);
             this.tableData = res.data.result.content;
             // 结束
