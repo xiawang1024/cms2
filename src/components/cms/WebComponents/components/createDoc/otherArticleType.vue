@@ -174,7 +174,7 @@ export default {
         this.filterSourceList = this.sourceList.filter(ele => {
           return ele.combinName.indexOf(val) !== -1;
         });
-      }, 200);
+      }, 100);
     },
     // 拼条预览
     lookPreview() {

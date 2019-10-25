@@ -238,10 +238,8 @@ export default {
             {
               label: "来源",
               name: "articleOrigin",
-              // type: "slot",
-              type: "select",
+              type: "slot",
               placeholder: "请选择",
-              filterable: true,
               required: true
               // events: {
               //   change: "filterMethod"
@@ -296,22 +294,17 @@ export default {
       this.formData.tagIds = showTags;
     },
     sourceList(val) {
-      console.log(val, "watchval");
-      // if (val.length) {
-      //   this.filterSourceList = val;
-      //   this.baseSettings[0].items[1].options = val;
-      // }
-      this.$nextTick(() => {
-        this.baseSettings[0].items[1].options = val;
-      });
+      if (val.length) {
+        this.filterSourceList = val;
+      }
     }
   },
   mounted() {
     // console.log("mounted111111");
     // 初始化过滤来源
-    if (this.sourceList.length) {
-      this.baseSettings[0].items[1].options = this.sourceList;
-    }
+    // if (this.sourceList.length) {
+    //   this.filterSourceList = this.sourceList;
+    // }
     // 转载禁用
     if (this.contextMenu.articleType == 3) {
       this.baseSettings[0].items.forEach(ele => {
@@ -345,7 +338,7 @@ export default {
         this.filterSourceList = this.sourceList.filter(ele => {
           return ele.combinName.indexOf(val) !== -1;
         });
-      }, 200);
+      }, 100);
     },
     checkAuth(authKey) {
       // console.log(this.$store.getters.authorities, 'this.$store.getters.authorities')
