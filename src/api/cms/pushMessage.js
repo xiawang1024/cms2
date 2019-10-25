@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function messageList(data) {
   return request({
-    url: '/hnradio-push-service/external/push/list',
+    url: '/hnradio-message-service/push/list',
     method: 'post',
     data
   })
