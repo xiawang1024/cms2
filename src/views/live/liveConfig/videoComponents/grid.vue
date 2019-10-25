@@ -18,162 +18,211 @@ export default {
   },
   data() {
     return {
-      timer1: null
-    };
-  },
-  watch: {
-    duration() {
-      this.drawGrid();
-    },
-
-    currentTime() {
-     
-        this.drawGrid();
-      
-    }
-  },
-  mounted() {
-    this.drawGrid();
-  },
-  methods: {
-    drawGrid() {
-      var _this = this;
-      let c = this.$refs.box1;
-      const ctx = c.getContext("2d");
-      const option = {
+        timer1: null,
         gridColor: "rgba(255, 255, 255, 0.05)",
         backgroundColor: "rgb(28,32,34)",
+
         pixelRatio: 1,
-        width: c.width,
-        height: c.height,
+        width: 1000,
+        height: 150,
         gridGap: 0,
-        gridNum: 0,
+        gridNum: 0, 
         padding: 10,
         //标尺
         rulerColor: "rgba(255,255,255,0.5)",
         rulerAtTop: true, //是否显示在最上方
         beginTime: 0,
         //指针
-        // currentTime:parseFloat(this.currentTime).toFixed(2),//调节指针位置
         cursorColor: "#ff0000",
-        duration: this.duration
-      };
-      function update() {
-        c.width = option.width = 80 * option.duration;
-        option.gridNum = option.duration * 10 + option.padding * 2;
-        option.gridGap = c.width / option.gridNum;
-        // option.beginTime = Math.floor(option.currentTime / option.duration) * option.duration
-      }
-      update();
+        gapParamas:10/1000,//间距参数
+    };
+  },
+  watch: {
+    duration() {
+      this.update();
+    },
 
-      //定时刷新指针
-      setInterval(() => {
-        //   setTimeout(()=>{
-        //  option.currentTime+=1
+    currentTime() {
+     
+        // this.movePic();
+      this.update();
 
-        //   },1000)
-        // console.log(this.currentTime,'yidongzhi')
+      
+    }
+  },
+  mounted() {
+  },
+  methods: {
+    init(){
+
+    },
+    update() {
+      var _this=this;
+       let c = this.$refs.box1;
+        c.width = _this.width ;
+        c.height=_this.height;
+        _this.gridGap = _this.width*_this.gapParamas;
+        _this.offset=_this.gridGap*10,
+        _this.gridNum = _this.width/_this.gridGap+(_this.currentTime*_this.offset)/_this.gridGap
+        console.log(_this.width,'asdf')
+        _this.beginTime = Math.floor(_this.currentTime / _this.duration) * _this.duration
+        console.log(_this.beginTime,'beginTime')
+      _this.drawBackground();
+      },
+    movePic(){
+       let c = this.$refs.box1;
         c.parentNode.scrollLeft = 80 * this.currentTime;
-        // drawCurse();
-        //根据播放时间滚动图片
-      }, 16.7);
+    },
 
-      //画背景
-      ctx.clearRect(0, 0, option.width, option.height);
-      ctx.fillStyle = option.backgroundColor;
-      ctx.fillRect(0, 0, option.width, option.height);
-      ctx.fillStyle = option.paddingColor;
-      ctx.fillRect(0, 0, option.padding * option.gridGap, option.height);
-      ctx.fillRect(
-        option.width - option.padding * option.gridGap,
-        0,
-        option.padding * option.gridGap,
-        option.height
-      );
+    drawGrid() {
 
+      var _this = this;
+      let c = this.$refs.box1;
+      const ctx = c.getContext("2d");
       // 画网格
-      ctx.fillStyle = option.gridColor;
-
+      ctx.fillStyle = _this.gridColor;
+      console.log('grid',_this.height,_this.gridNum)
       //画竖线
-      for (let index = 0; index < option.gridNum; index += 1) {
-        ctx.fillRect(
-          option.gridGap * index,
+      for (let index = 0; index < _this.gridNum; index += 1) {
+        if( _this.gridGap * index-_this.currentTime*_this.offset>-10){
+           ctx.fillRect(
+          _this.gridGap * index-_this.currentTime*_this.offset,
           0,
-          option.pixelRatio,
-          option.height
+          _this.pixelRatio,
+          _this.height
         );
+        }
+       
+
       }
       //画横线
-      for (let index = 0; index < option.height / option.gridGap; index += 1) {
+      for (let index = 0; index < _this.height / _this.gridGap; index += 1) {
         ctx.fillRect(
           0,
-          option.gridGap * index,
-          option.width,
-          option.pixelRatio
+          _this.gridGap * index,
+          _this.width,
+          _this.pixelRatio
         );
       }
 
+      _this.drawRuler();
+    },
+    drawBackground(){
+      
+      //画背景
+      var _this = this;
+      let c = this.$refs.box1;
+      const ctx = c.getContext("2d");
+      ctx.clearRect(0, 0, _this.width, _this.height);
+      ctx.fillStyle = _this.backgroundColor;
+      ctx.fillRect(0, 0, _this.width, _this.height);
+      ctx.fillStyle = _this.paddingColor;
+      ctx.fillRect(0, 0, _this.padding * _this.gridGap, _this.height);
+      ctx.fillRect(
+        _this.width - _this.padding * _this.gridGap,
+        0,
+        _this.padding * _this.gridGap,
+        _this.height
+      );
+       _this.drawGrid();
+      
+    },
+    drawRuler(){
+      var _this = this;
+      let c = this.$refs.box1;
+      const ctx = c.getContext("2d");
       //画标尺
 
       const fontSize = 11;
       const fontHeight = 15;
       const fontTop = 30;
-      ctx.font = `${fontSize * option.pixelRatio}px Arial`;
-      ctx.fillStyle = option.rulerColor;
+      ctx.font = `${fontSize * _this.pixelRatio}px Arial`;
+      ctx.fillStyle = _this.rulerColor;
       let second = -1;
-      for (let index = 0; index < option.gridNum; index += 1) {
+      for (let index = 0; index < _this.gridNum; index += 1) {
         if (
           index &&
-          index >= option.padding &&
-          index <= option.gridNum - option.padding &&
-          (index - option.padding) % 10 === 0
+          index >= _this.padding &&
+          index <= _this.gridNum - _this.padding &&
+          (index - _this.padding) % 10 === 0
         ) {
           second += 1;
-          ctx.fillRect(
-            option.gridGap * index,
-            option.rulerAtTop
+            if( _this.gridGap * index-_this.currentTime*_this.offset>-10){
+              ctx.fillRect(
+            _this.gridGap * index-_this.currentTime*_this.offset,
+            _this.rulerAtTop
               ? 0
-              : option.height - fontHeight * option.pixelRatio,
-            option.pixelRatio,
-            fontHeight * option.pixelRatio
+              : _this.height - fontHeight * _this.pixelRatio,
+            _this.pixelRatio,
+            fontHeight * _this.pixelRatio
           );
-          ctx.fillText(
-            durationToTime(option.beginTime + second).split(".")[0],
-            option.gridGap * index -
-              fontSize * option.pixelRatio * 2 +
-              option.pixelRatio,
-            option.rulerAtTop
-              ? fontTop * option.pixelRatio
-              : option.height - fontTop * option.pixelRatio + fontSize
+            }
+          
+            if(_this.gridGap * index -
+              fontSize * _this.pixelRatio * 2 +
+              _this.pixelRatio-_this.currentTime*_this.offset>-40){
+               ctx.fillText(
+            durationToTime(_this.beginTime + second).split(".")[0],
+            _this.gridGap * index -
+              fontSize * _this.pixelRatio * 2 +
+              _this.pixelRatio-_this.currentTime*_this.offset,
+            _this.rulerAtTop
+              ? fontTop * _this.pixelRatio
+              : _this.height - fontTop * _this.pixelRatio + fontSize
           );
-        } else if (index && (index - option.padding) % 5 === 0) {
-          ctx.fillRect(
-            option.gridGap * index,
-            option.rulerAtTop
+            }
+         
+        } else if (index && (index - _this.padding) % 5 === 0) {
+          if( _this.gridGap * index-_this.currentTime*_this.offset>-10){
+             ctx.fillRect(
+            _this.gridGap * index-_this.currentTime*_this.offset,
+            _this.rulerAtTop
               ? 0
-              : option.height - (fontHeight / 2) * option.pixelRatio,
-            option.pixelRatio,
-            (fontHeight / 2) * option.pixelRatio
+              : _this.height - (fontHeight / 2) * _this.pixelRatio,
+            _this.pixelRatio,
+            (fontHeight / 2) * _this.pixelRatio
           );
+          }
+         
         }
       }
       // 时间点函数
       function durationToTime(duration = 0) {
+        console.log(DT.d2t(duration.toFixed(3)),'zhi')
         return DT.d2t(duration.toFixed(3));
       }
 
-      function drawCurse() {
+    },
+    drawCurse() {
         // 画指针
-        ctx.fillStyle = option.cursorColor;
+        var _this = this;
+      let c = this.$refs.box1;
+      const ctx = c.getContext("2d");
+        ctx.fillStyle = _this.cursorColor;
+        ctx.clearRect(0, 0, _this.width, _this.height);
         ctx.fillRect(
-          option.padding * option.gridGap +
-            (_this.currentTime - option.beginTime) * option.gridGap * 10,
+          _this.padding * _this.gridGap +
+            (_this.currentTime - _this.beginTime) * _this.gridGap * 10,
           0,
-          option.pixelRatio,
-          option.height
+          _this.pixelRatio,
+          _this.height
         );
+      },
+      //定时刷新指针
+      updateCurse(){
+          //定时刷新指针
+          setInterval(() => {
+              setTimeout(()=>{
+            _this.currentTime+=1
+
+              },1000)
+            console.log(this.currentTime,'yidongzhi')
+            c.parentNode.scrollLeft = 80 * this.currentTime;
+            drawCurse();
+            // 根据播放时间滚动图片
+          }, 16.7);
+
       }
-    }
   }
 };
 </script>

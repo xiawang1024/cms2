@@ -145,6 +145,7 @@ export default {
       cutList:[],
       currentTime:'2',
       duration:1,
+      timer:null,
     };
   },
   watch:{
@@ -159,19 +160,23 @@ export default {
     this.onMove();
     this.initNode()
   },
+  beforeDestroy(){
+    clearInterval(this.timer);
+    this.timer=null;
+  },
   methods: {
     initNode(){
       var _this=this;
       let myvideo=this.$refs.myvideo
       myvideo.addEventListener('canplay',function(){
           _this.duration=this.duration;
+          // _this.duration=819;  //崩溃临界值
 
-        setInterval(() => {
+
+        _this.timer=setInterval(() => {
         //实时获取播放时间
-          
           _this.currentTime=parseFloat(this.currentTime).toFixed(4);
         console.log(_this.currentTime,'time12312')
-
         },16.7);
       })
 
@@ -283,8 +288,9 @@ export default {
         
 
     },
+    
    
-  }
+  },
 };
 </script> 
 <style lang="scss" scoped>
