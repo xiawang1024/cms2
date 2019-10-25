@@ -342,7 +342,7 @@ export default {
         setTimeout(() => {
           this.selectloading = false;
           this.filterSourceList = this.sourceList.filter(item => {
-            return item.combinName.indexOf(query) > -1;
+            return item.combinName && item.combinName.indexOf(query) > -1;
           });
         }, 200);
       } else {
