@@ -332,6 +332,7 @@ export default {
     },
     fetchDict() {
       var _this = this;
+      _this.sourceList = [];
       return new Promise((resolve, reject) => {
         fetchDictByDictName("文稿来源")
           .then(response => {
