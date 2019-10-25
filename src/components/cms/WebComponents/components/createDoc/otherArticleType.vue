@@ -30,7 +30,9 @@
           placeholder="请选择"
           clearable
           remote
+          reserve-keyword
           :remote-method="filterMethod"
+          :loading="selectloading"
         >
           <el-option
             v-for="(item, index) in filterSourceList"
@@ -119,7 +121,8 @@ export default {
       formData: {},
       isLoading: false,
       indexTitle: "",
-      filterSourceList: []
+      filterSourceList: [],
+      selectloading: false
     };
   },
   computed: {
@@ -169,12 +172,18 @@ export default {
     };
   },
   methods: {
-    filterMethod(val) {
-      setTimeout(() => {
-        this.filterSourceList = this.sourceList.filter(ele => {
-          return ele.combinName.indexOf(val) !== -1;
-        });
-      }, 200);
+    filterMethod(query) {
+      if (query !== "") {
+        this.selectloading = true;
+        setTimeout(() => {
+          this.selectloading = false;
+          this.filterSourceList = this.sourceList.filter(item => {
+            return item.combinName.indexOf(query) > -1;
+          });
+        }, 200);
+      } else {
+        this.filterSourceList = this.sourceList;
+      }
     },
     // 拼条预览
     lookPreview() {
