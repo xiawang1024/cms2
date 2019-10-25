@@ -108,6 +108,16 @@ const statisticsChart = {
         meta: { title: 'departmentStatistics', icon: 'department', role: 'cms:departmentStatistics' },
         // meta: { title: 'departmentStatistics', icon: 'department', role: 'cms', }
        
+      },{
+        /**
+         * 大象个人统计
+         */
+        path: 'dxCreateUser',
+        component: () => import(`@/${path}/dxCreateUser`),
+        name: 'dxCreateUser',
+        // meta: { title: 'dxCreateUser', icon: 'zuozhe', role: 'cms:dxCreateUser' },
+        meta: { title: 'dxCreateUser', icon: 'zuozhe', role: 'cms', }
+       
       },
       
    

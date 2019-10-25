@@ -279,9 +279,37 @@ export function downdxhStatistics(data) {
   }
 }
 
+//大象个人统计
+export function getdxCreateUser(pageNo,pageSize,data) {
+  return request({
+    url:Cpath+`/content-search/article/indexs/q?pageNo=${pageNo}&pageSize=${pageSize}`,
+    method: "post",
+    data
+  });
 
-
-
+}
+//下载大象个人统计
+export function downdxCreateUser(data) {
+  postAjax(data)
+  function postAjax (data) {
+    axios({
+      method: 'get',
+      url: baseUrl.BASE_URL +`/content-search/article/indexs/qexport?pageNo=${data.pageNo}&pageSize=${data.pageSize}`,
+      responseType: 'blob',
+      headers: {
+        // 'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': data.accessToken
+      }
+    })
+      .then(res => {
+        download('template.xlsx', res.data)
+        Message.success('下载成功')
+      })
+      .catch(error => {
+        Message.warning(error.msg ? error.msg : '导出失败')
+      })
+  }
+}
 
 
 
