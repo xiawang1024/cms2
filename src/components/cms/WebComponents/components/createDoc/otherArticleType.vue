@@ -173,6 +173,7 @@ export default {
   },
   methods: {
     filterMethod(query) {
+      window.query = query;
       if (query !== "") {
         this.selectloading = true;
         setTimeout(() => {

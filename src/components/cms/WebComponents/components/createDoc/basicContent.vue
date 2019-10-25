@@ -347,6 +347,13 @@ export default {
                   combinName: ele.combinName
                 };
               });
+              // _this.sourceList = testSource.map(ele => {
+              //   return {
+              //     label: ele.dictDetailName,
+              //     value: ele.dictDetailName,
+              //     combinName: ele.combinName
+              //   };
+              // });
               _this.imagesSeting[0].items[2].options = _this.sourceList;
               _this.reproduceSetting[0].items[2].options = _this.sourceList;
               _this.articleLinkSetting[0].items[2].options = _this.sourceList;
