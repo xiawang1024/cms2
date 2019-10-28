@@ -30,7 +30,7 @@
                     <input v-model="item.endTime" :disabled="index!=hanleRow" @change="handleend(index)">
                   </td>
                   <td>
-                    <input v-model="item.duration" :disabled="index!=hanleRow" >
+                    <input v-model.number="item.duration" :disabled="index!=hanleRow" @change="handleduration(index)" >
                   </td>
                   <td>
                     <input v-model="item.subtitles" :disabled="index!=hanleRow" >
@@ -207,7 +207,7 @@ export default {
     timeFactory(val,type){
       if(type==='second'){
         let min=Math.floor(val%3600);
-        let time=Math.floor(val/3600) + ":" + Math.floor(min/60) + ":"+ val%60 
+        let time=Math.floor(val/3600) + ":" + Math.floor(min/60) + ":"+ (val%60).toFixed(3) 
         return time
       }
       if(type=='string'){
@@ -239,10 +239,14 @@ export default {
     },
      handlebegin(index){
         this.tableValue[index].time=this.timeFactory(this.tableValue[index].beginTime,'string')
+         this.tableValue[index].duration=this.timeFactory((this.tableValue[index].endTime),'string')-this.timeFactory((this.tableValue[index].beginTime),'string')
      } ,
      handleend(index)
      {
-        this.tableValue[index].time=this.timeFactory(this.tableValue[index].endTime,'string')
+        this.tableValue[index].duration=this.timeFactory(this.tableValue[index].endTime,'string')-this.tableValue[index].time
+     },
+     handleduration(index){
+       this.tableValue[index].endTime=this.timeFactory((this.tableValue[index].duration+this.tableValue[index].time),'second')
      },
     // 面板组件事件监听
     // 拖动事件
@@ -389,7 +393,7 @@ $forColor: #cccccc;
 }
 .dragview{
   width: 100%;
-  overflow: auto;
+  overflow: hidden;
   height: 150px;
   position: absolute;
   left: 0;
@@ -473,12 +477,12 @@ $nomalMover:rgba(255,255,255,0.1);
 .editePlat{
 
   // border: 1px solid black;
-  border-left: 100px solid rgba(255,0,0,0.2);
-  border-right: 1000px solid rgba(255,0,0,0.2);
+  border-left: 100px solid rgba(255,0,0,0);
+  border-right: 1000px solid rgba(255,0,0,0);
   height: 100%;
   position: relative;
   background-color: transparent;
-   background-image: linear-gradient(to right,rgba(255,0,0,0.2), rgba(0,0,255,0.2));
+  //  background-image: linear-gradient(to right,rgba(255,0,0,0.2), rgba(0,0,255,0.2));
 
   &>div{
     position: absolute;
