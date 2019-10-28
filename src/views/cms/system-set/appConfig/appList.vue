@@ -190,9 +190,9 @@ export default {
                   name2: res.data.result.navigations[2].name,
                   name3: res.data.result.navigations[3].name,
                   name4: res.data.result.navigations[4].name,
-                  version:res.data.result.version,
-                  status1:res.data.result.status,
-                  color:res.data.result.color
+                  version: res.data.result.version,
+                  status1: res.data.result.status,
+                  color: res.data.result.color
                 });
               this.skinId = res.data.result.id || null;
             } else {
@@ -254,9 +254,9 @@ export default {
             addOpenimage(data)
               .then(res => {
                 if (res.data.code == 0) {
-                  this.$message.success("成功");
+                  this.$message.success(res.data.msg);
                 } else {
-                  this.$message.error("失败");
+                  this.$message.error(res.data.msg);
                 }
                 resolve();
                 _this.dialogVisible = false;
@@ -455,7 +455,7 @@ export default {
           forbidden(data)
             .then(res => {
               if (res.data.code == 0) {
-                this.$message.success("已起用");
+                this.$message.success("已启用");
               } else {
                 this.$message.error(res.data.msg);
               }
