@@ -24,19 +24,19 @@
                 >
                   <td>&#x3000;{{ index+1 }}</td>
                   <td>
-                    <input :value="item.beginTime" :disabled="index!=hanleRow" >
+                    <input v-model="item.beginTime" :disabled="index!=hanleRow" @change="handlebegin(index)" >
                   </td>
                   <td>
-                    <input :value="item.endTime" :disabled="index!=hanleRow" >
+                    <input v-model="item.endTime" :disabled="index!=hanleRow" @change="handleend(index)">
                   </td>
                   <td>
-                    <input :value="item.duration" :disabled="index!=hanleRow" >
+                    <input v-model="item.duration" :disabled="index!=hanleRow" >
                   </td>
                   <td>
                     <input v-model="item.subtitles" :disabled="index!=hanleRow" >
                   </td>
                   <td>
-                    <input :value="item.logo" :disabled="index!=hanleRow" >
+                    <input v-model="item.logo" :disabled="index!=hanleRow" >
                   </td>
                   <td class="dealicon">
                     <i class="el-icon-edit" @click="handleEdite(index)"/>
@@ -86,26 +86,27 @@
     </el-row>
     <el-row class="bottomPlat">
       <div class="grid">
+        <!-- 网格组件 -->
           
         <grid :current-time="currentTime" :duration="duration" />
 
       </div>
       <!-- 面板组件 -->
-      <div class="editePlat" ref="editePlat">
+      <div class="dragview">
         <!-- 拖动组件 -->
-        <template v-for="(item,index) in tableValue" >  
-          <div class="moverCell" :key="index">
-            <div data-order="fir" :data-my="index"/>
-            <div data-order="sec" data-logo="cell" :data-my="index" >
-              <p>{{ item.subtitles }}</p>
+        <div class="editePlat" ref="editePlat">
+          <template v-for="(item,index) in tableValue" >  
+            <div class="moverCell" :key="index" :style="'left:'+basisparam*item.time+'px;width:'+basisparam*item.duration+'px'">
+              <div data-order="fir" :data-my="index"/>
+              <div data-order="sec" data-logo="cell" :data-my="index" >
+                <p>{{ item.subtitles }}</p>
+              </div>
+              <div data-order="thr" :data-my="index"/>
             </div>
-            <div data-order="thr" :data-my="index"/>
-          </div>
-        </template>
-        <!-- 网格组件 -->
-       
-
+          </template>
+        </div>
       </div>
+      
        
 
     </el-row>
@@ -119,39 +120,23 @@ export default {
     return {
       hanleRow: -1, //全禁用状态
       data: "",
-      tableValue: [
-        {
-          beginTime: "00:00:00",
-          endTime: "01:00:00",
-          duration: "562",
-          subtitles: "此处是字幕",
-          logo: "123"
-        },
-        {
-          beginTime: "00:00:00",
-          endTime: "01:00:00",
-          duration: "562",
-          subtitles: "此处是字幕",
-          logo: "123"
-        },
-        {
-          beginTime: "00:00:00",
-          endTime: "01:00:00",
-          duration: "562",
-          subtitles: "此处是字幕",
-          logo: "123"
-        }
-      ],
+      tableValue: [],
       cutList:[],
-      currentTime:'2',
+      currentTime:'1',
       duration:1,
       timer:null,
+      basisparam:100,
+      currentVideoCut:0,
     };
   },
   watch:{
     tableValue(){
 
+    },
+    currentTime(){
+      this.ontranslate();
     }
+   
   },
   created() {
     this.data = JSON.parse(this.$route.query.data);
@@ -168,45 +153,113 @@ export default {
     initNode(){
       var _this=this;
       let myvideo=this.$refs.myvideo
+       let  basisNode=this.$refs.editePlat;
       myvideo.addEventListener('canplay',function(){
+         clearInterval(_this.timer);
           _this.duration=this.duration;
+          //初始化滑块宽度
+          basisNode.style.width=(this.duration*_this.basisparam+2000)+'px'
           // _this.duration=819;  //崩溃临界值
-
-
         _this.timer=setInterval(() => {
         //实时获取播放时间
           _this.currentTime=parseFloat(this.currentTime).toFixed(4);
-        console.log(_this.currentTime,'time12312')
+        // console.log(this.currentTime,'time12312',_this.duration)
+          if(this.currentTime.toFixed(2)===_this.duration.toFixed(2)){
+            clearInterval(_this.timer);
+            _this.timer=null;
+          }
         },16.7);
+
+         
       })
 
     },
+
     handleEdite(index) {
       this.hanleRow = index;
+      
       
     },
     handleSave(index) {
       this.hanleRow = -1;
     },
     handleAdd(){
-        this.tableValue.push({
-          beginTime: "00:00:00",
-          endTime: "01:00:00",
-          duration: "562",
-          subtitles: "此处是字幕",
-          logo: "123"
-        });
+      
+      let time=2*this.currentVideoCut;
+      if(this.tableValue[this.currentVideoCut]){
+        time=this.tableValue[this.currentVideoCut].time+this.tableValue[this.currentVideoCut].duration
+      }
+      this.currentVideoCut+=1;
+      let duration=2;
+      let data={
+        time,
+        beginTime:this.timeFactory(time,'second'),
+        endTime:this.timeFactory((time+duration),'second'),
+        duration,
+        subtitles:"此处是字幕",
+        logo:'123'
+      }
+
+
+        this.tableValue.push(data);
     },
+    //时间处理函数
+    timeFactory(val,type){
+      if(type==='second'){
+        let min=Math.floor(val%3600);
+        let time=Math.floor(val/3600) + ":" + Math.floor(min/60) + ":"+ val%60 
+        return time
+      }
+      if(type=='string'){
+        let arr=val.split(':')
+        let time=arr[0]*3600+arr[1]*60+arr[2]*1
+        return time
+      }
+    },
+    //拖动同步时间函数
+    timeWatch(val,index,type){
+      if(type===1){
+        this.tableValue[index].time=val/this.basisparam;
+      this.tableValue[index].beginTime=this.timeFactory(this.tableValue[index].time,'second');
+      this.tableValue[index].endTime=this.timeFactory((this.tableValue[index].time+this.tableValue[index].duration),'second')
+
+      }
+      if(type===2){
+      this.tableValue[index].duration=val/this.basisparam
+      this.tableValue[index].endTime=this.timeFactory((this.tableValue[index].time+this.tableValue[index].duration),'second')
+      }
+       if(type===3){
+      this.tableValue[index].duration=val[0]/this.basisparam
+      this.tableValue[index].time=val[1]/this.basisparam;
+      this.tableValue[index].beginTime=this.timeFactory(this.tableValue[index].time,'second');
+      }
+
+      
+
+    },
+     handlebegin(index){
+        this.tableValue[index].time=this.timeFactory(this.tableValue[index].beginTime,'string')
+     } ,
+     handleend(index)
+     {
+        this.tableValue[index].time=this.timeFactory(this.tableValue[index].endTime,'string')
+     },
     // 面板组件事件监听
     // 拖动事件
     onFocuse(){
       //获取焦点
        let  node=this.$refs.editePlat.childNodes;
         node.addEventListener('click',function(){
-          console.log('1')
+          console.log('停止播放，裁剪开始')
         })
     },
+    ontranslate(){
+       let  basisNode=this.$refs.editePlat;
+       let positon=this.currentTime*this.basisparam;
+       basisNode.parentNode.scrollLeft=positon;
+    },
     onMove(){
+      var _this=this;
       // 拖动
       let  node=this.$refs.editePlat;
         let clickPointx=0;
@@ -226,6 +279,10 @@ export default {
 
             let dx=end-start
             moverCell[order].style.left=dx+ol+'px';
+            //反向监听移动
+            _this.timeWatch((dx+ol),order,1)
+            
+
             //  console.log(dx,ol,'clientX')
 
         }   
@@ -233,13 +290,15 @@ export default {
           let dx=end-start
           console.log(dx,currentWidth,'width')
            moverCell[order].style.width=dx+currentWidth+'px';
+            _this.timeWatch((dx+currentWidth),order,2)
+
         }
         if(leftResize){
           let dx=(end-start)
           console.log(dx,currentWidth,'width')
            moverCell[order].style.width=-dx+currentWidth+'px';
             moverCell[order].style.left=ol+dx+'px';
-
+             _this.timeWatch(([-dx+currentWidth,ol+dx]),order,3)
         }
 
         if(e.target.dataset.order=='sec'){
@@ -322,9 +381,23 @@ $forColor: #cccccc;
 }
 .bottomPlat {
   background-color: $baseColor;
+  width: 100%;
   // border: 1px solid #00f;
   height: 150px;
   font-size: 14px;
+  position: relative;
+}
+.dragview{
+  width: 100%;
+  overflow: auto;
+  height: 150px;
+  position: absolute;
+  left: 0;
+  top: 0;
+   font-size: 14px;
+  
+
+
 }
 
 // table
@@ -398,10 +471,15 @@ $forColor: #cccccc;
 $activeMover:#2a6696;
 $nomalMover:rgba(255,255,255,0.1);
 .editePlat{
-  border: 1px solid black;
+
+  // border: 1px solid black;
+  border-left: 100px solid rgba(255,0,0,0.2);
+  border-right: 1000px solid rgba(255,0,0,0.2);
   height: 100%;
   position: relative;
   background-color: transparent;
+   background-image: linear-gradient(to right,rgba(255,0,0,0.2), rgba(0,0,255,0.2));
+
   &>div{
     position: absolute;
     height: 100%;

@@ -21,21 +21,29 @@ export default {
         timer1: null,
         gridColor: "rgba(255, 255, 255, 0.05)",
         backgroundColor: "rgb(28,32,34)",
-
         pixelRatio: 1,
-        width: 1000,
+        width: 2000,
         height: 150,
-        gridGap: 0,
+        gridGap: 10,
         gridNum: 0, 
-        padding: 10,
+        padding: -40,
         //标尺
         rulerColor: "rgba(255,255,255,0.5)",
         rulerAtTop: true, //是否显示在最上方
-        beginTime: 0,
+        // beginTime: 0,
         //指针
         cursorColor: "#ff0000",
-        gapParamas:10/1000,//间距参数
+       
+
+
     };
+  },
+  computed:{
+      beginTime:function(){
+          return (Math.floor(this.currentTime / this.duration) * this.duration)
+      }
+
+    // beginTime :()=>( Math.floor(this.currentTime / this.duration) * this.duration)
   },
   watch: {
     duration() {
@@ -45,28 +53,45 @@ export default {
     currentTime() {
      
         // this.movePic();
+        if(this.beginTime<this.duration){
       this.update();
+
+        }
 
       
     }
   },
   mounted() {
   },
+  
   methods: {
-    init(){
-
-    },
+    //  init(){
+    //     var _this=this;
+    //    let c = this.$refs.box1;
+    //    let p= this.$refs.mainbox;
+    //     getStyle(p,'width').then(res=>{
+    //       c.width= _this.width=Number(res);
+    //      });
+    //     c.height=_this.height;
+    //     _this.offset=_this.gridGap*10,
+    //    console.log(this.width,c.width,'width1000')
+    //    function getStyle(node, styleType){
+    //      return new Promise((resolve,reject)=>{
+    //        let attr= node.currentStyle? node.currentStyle[styleType]: getComputedStyle(node)[styleType];//浏览器中有node.currentStyle方法就用，没有就用另一个
+    //        resolve(attr)
+    //      })
+    // }
+    // },
     update() {
       var _this=this;
        let c = this.$refs.box1;
         c.width = _this.width ;
         c.height=_this.height;
-        _this.gridGap = _this.width*_this.gapParamas;
         _this.offset=_this.gridGap*10,
         _this.gridNum = _this.width/_this.gridGap+(_this.currentTime*_this.offset)/_this.gridGap
-        console.log(_this.width,'asdf')
-        _this.beginTime = Math.floor(_this.currentTime / _this.duration) * _this.duration
-        console.log(_this.beginTime,'beginTime')
+        // console.log(_this.width,'asdf')
+        
+        // console.log(_this.beginTime,'beginTime')
       _this.drawBackground();
       },
     movePic(){
@@ -81,7 +106,7 @@ export default {
       const ctx = c.getContext("2d");
       // 画网格
       ctx.fillStyle = _this.gridColor;
-      console.log('grid',_this.height,_this.gridNum)
+      // console.log('grid',_this.height,_this.gridNum)
       //画竖线
       for (let index = 0; index < _this.gridNum; index += 1) {
         if( _this.gridGap * index-_this.currentTime*_this.offset>-10){
@@ -139,6 +164,7 @@ export default {
       ctx.font = `${fontSize * _this.pixelRatio}px Arial`;
       ctx.fillStyle = _this.rulerColor;
       let second = -1;
+      // console.log(_this.gridNum,'num')
       for (let index = 0; index < _this.gridNum; index += 1) {
         if (
           index &&
@@ -157,7 +183,7 @@ export default {
             fontHeight * _this.pixelRatio
           );
             }
-          
+            console.log(_this.beginTime,_this.duration,'value')
             if(_this.gridGap * index -
               fontSize * _this.pixelRatio * 2 +
               _this.pixelRatio-_this.currentTime*_this.offset>-40){
@@ -188,10 +214,10 @@ export default {
       }
       // 时间点函数
       function durationToTime(duration = 0) {
-        console.log(DT.d2t(duration.toFixed(3)),'zhi')
+        // console.log(DT.d2t(duration.toFixed(3)),'zhi')
         return DT.d2t(duration.toFixed(3));
       }
-
+     
     },
     drawCurse() {
         // 画指针
@@ -199,7 +225,7 @@ export default {
       let c = this.$refs.box1;
       const ctx = c.getContext("2d");
         ctx.fillStyle = _this.cursorColor;
-        ctx.clearRect(0, 0, _this.width, _this.height);
+        // ctx.clearRect(0, 0, _this.width, _this.height);
         ctx.fillRect(
           _this.padding * _this.gridGap +
             (_this.currentTime - _this.beginTime) * _this.gridGap * 10,
@@ -210,15 +236,15 @@ export default {
       },
       //定时刷新指针
       updateCurse(){
+        var _this=this;
           //定时刷新指针
           setInterval(() => {
               setTimeout(()=>{
             _this.currentTime+=1
 
               },1000)
-            console.log(this.currentTime,'yidongzhi')
             c.parentNode.scrollLeft = 80 * this.currentTime;
-            drawCurse();
+            _this.drawCurse();
             // 根据播放时间滚动图片
           }, 16.7);
 
