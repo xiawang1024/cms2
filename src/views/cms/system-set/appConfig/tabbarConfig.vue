@@ -18,39 +18,84 @@ export default {
     }
   },
   data() {
-    //开机启动图校验尺寸(大图)
-    // var startPictureBig=(rule, value, callback)=>{
-    //     let pic=new Image();
-    //     pic.src=value[0].url;
-    //     // if(pic.width!=1242||pic.height!=2688){
-    //     //     callback(new Error('请上传1242*2688像素的图片'))
-    //     // }else{
-    //         callback()
-    //     // }
-
-    // };
+    //导航图
+    var startPicture1 = (rule, value, callback) => {
+      let pic = new Image();
+      if (value[0]) {
+        pic.src = value[0].url;
+        let imgType = value[0].url
+          .split(".")
+          .reverse()[0]
+          .toLowerCase();
+        if (imgType == "png") {
+          if (pic.width != 750 || pic.height != 140) {
+            callback(new Error("请上传750*140像素的图片"));
+          } else {
+            callback();
+          }
+        } else {
+          callback(new Error("请上传PNG格式图片"));
+        }
+      } else {
+        callback(new Error("请上传750*140像素的PNG格式图片"));
+      }
+    };
+    //我的背景图
+    var startPicture2 = (rule, value, callback) => {
+      let pic = new Image();
+      if (value[0]) {
+        pic.src = value[0].url;
+        let imgType = value[0].url
+          .split(".")
+          .reverse()[0]
+          .toLowerCase();
+        if (imgType == "png") {
+          if (pic.width != 750 || pic.height != 470) {
+            callback(new Error("请上传750*470像素的图片"));
+          } else {
+            callback();
+          }
+        } else {
+          callback(new Error("请上传PNG格式图片"));
+        }
+      } else {
+        callback(new Error("请上传750*470像素的PNG格式图片"));
+      }
+    };
 
     return {
       formSettings: [
         {
           items: [
             {
-              label: "我的主题图",
-              name: "myImageUrl",
-              type: "img",
-              limit: 1,
-              disabled: false,
-              required: true,
-              placeholder: "请上传图片"
-            },
-            {
               label: "导航图",
               name: "themeImageUrl",
               type: "img",
               limit: 1,
               disabled: false,
-              required: true,
-              placeholder: "请上传图片"
+              placeholder: "请上传图片",
+              rule: [
+                {
+                  required: true,
+                  validator: startPicture1,
+                  trigger: "blur"
+                }
+              ]
+            },
+            {
+              label: "我的背景图",
+              name: "myImageUrl",
+              type: "img",
+              limit: 1,
+              disabled: false,
+              placeholder: "请上传图片",
+              rule: [
+                {
+                  required: true,
+                  validator: startPicture2,
+                  trigger: "blur"
+                }
+              ]
             },
             {
               label: "底部图标1（选中）",
@@ -188,7 +233,8 @@ export default {
               type: "text",
               disabled: false,
               required: true,
-              placeholder: "请输入版本号"
+              placeholder: "请输入版本号",
+              required: true
             },
             {
               label: "启用主题",

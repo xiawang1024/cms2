@@ -254,9 +254,9 @@ export default {
             addOpenimage(data)
               .then(res => {
                 if (res.data.code == 0) {
-                  this.$message.success("成功");
+                  this.$message.success(res.data.msg);
                 } else {
-                  this.$message.error("失败");
+                  this.$message.error(res.data.msg);
                 }
                 resolve();
                 _this.dialogVisible = false;
@@ -455,7 +455,7 @@ export default {
           forbidden(data)
             .then(res => {
               if (res.data.code == 0) {
-                this.$message.success("已起用");
+                this.$message.success("已启用");
               } else {
                 this.$message.error(res.data.msg);
               }
