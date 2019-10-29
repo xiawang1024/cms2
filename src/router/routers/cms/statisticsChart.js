@@ -119,6 +119,17 @@ const statisticsChart = {
         meta: { title: 'dxCreateUser', icon: 'zuozhe', role: 'cms', }
        
       },
+      {
+        /**
+         * 大象背部编辑统计
+         */
+        path: 'dxCreateUserCheck',
+        component: () => import(`@/${path}/dxCreateUserCheck`),
+        name: 'dxCreateUserCheck',
+        // meta: { title: 'dxCreateUser', icon: 'zuozhe', role: 'cms:dxCreateUserCheck' },
+        meta: { title: 'dxCreateUserCheck', icon: 'zuozhe', role: 'cms', }
+       
+      },
       
    
   ]
