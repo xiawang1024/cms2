@@ -104,7 +104,7 @@ export default {
     writerStaticDetail:'作者文章点击量',
     dxDocument:'大象发稿统计',
     dxCreateUser:'大象个人统计',
-    dxCreateUserCheck:'大象内部编辑考核',
+    dxCreateUserCheck:'大象编辑考核',
     departmentStatistics:'部门排行',
     systemStatus: '系统状态',
     logs: '日志',

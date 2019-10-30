@@ -37,7 +37,7 @@ export default {
           label: "开始时间",
           name: "beginTime",
           visible: true,
-          type: "date",
+          type: "datetime",
           value:'',
           defaultTime:'00:00:00',
           pickerOptions:{
@@ -48,13 +48,17 @@ export default {
           label: "结束时间",
           name: "endTime",
           visible: true,
-          type: "date",
+          type: "datetime",
           value:'',
+          defaultTime:'23:59:59',
+          pickerOptions:{
+               selectableRange: '23:59:59 - 23:59:59'
+          }
         },
       ],
       beginTime:'',
       endTime:'',
-
+      
     };
   },
   created() {
@@ -73,11 +77,11 @@ export default {
         if (val.beginTime && val.endTime) {
           // 发送请求
           if (val.beginTime > val.endTime) {
-            this.beginTime = dayjs(val.endTime).format("YYYY-MM-DD");
-            this.endTime = dayjs(val.beginTime).format("YYYY-MM-DD");
+            this.beginTime = dayjs(val.endTime).format("YYYY-MM-DD HH:mm:ss");
+            this.endTime = dayjs(val.beginTime).format("YYYY-MM-DD HH:mm:ss");
           } else {
-            this.beginTime = dayjs(val.beginTime).format("YYYY-MM-DD");
-            this.endTime = dayjs(val.endTime).format("YYYY-MM-DD");
+            this.beginTime = dayjs(val.beginTime).format("YYYY-MM-DD HH:mm:ss");
+            this.endTime = dayjs(val.endTime).format("YYYY-MM-DD HH:mm:ss");
           }
          this.fetchTrend();
 

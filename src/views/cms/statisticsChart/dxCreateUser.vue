@@ -37,7 +37,12 @@
     <div class="v-search-header">
       <el-row>
         <el-col :span="24">
-          <v-search :search-settings="searchSettings" @search="searchItem" ref="vserch" @reset="reset" />
+          <v-search
+            :search-settings="searchSettings"
+            @search="searchItem"
+            ref="vserch"
+            @reset="reset"
+          />
         </el-col>
         <el-col :span="2">
           <el-button class="exportBtn" type="success" size="mini" @click="handleExport">一键导出</el-button>
@@ -67,13 +72,8 @@
   </div>
 </template>
 <script>
-import {
-  getdxCreateUser,
-  downdxCreateUser
-} from "@/api/cms/liveCharts";
-import {
-  articleTrendBycreateUser,
-} from "@/api/cms/liveCharts";
+import { getdxCreateUser, downdxCreateUser } from "@/api/cms/liveCharts";
+import { articleTrendBycreateUser } from "@/api/cms/liveCharts";
 import dayjs from "dayjs";
 export default {
   data() {
@@ -99,71 +99,70 @@ export default {
       // sortBy:'clickNumInt',
       origin: "",
       tableData: [],
-      boardvalue:[],
-      pageNo:1,
-      pageSize:10,
-      total:0,
-      createUser:'',
-      tenantId:'',
-
+      boardvalue: [],
+      pageNo: 1,
+      pageSize: 10,
+      total: 0,
+      createUser: "",
+      tenantId: ""
     };
   },
   created() {
-      this.InitInfo();
-   
+    this.InitInfo();
   },
   mounted() {
     //    this.initTableList();
-       this.fetchTrend();
+    this.fetchTrend();
   },
   methods: {
-       InitInfo() {
-      this.createUser = JSON.parse(
+    InitInfo() {
+      this.createUser = JSON.parse(localStorage.getItem("BaseInfor")).userName;
+      this.tenantId = JSON.parse(
         localStorage.getItem("BaseInfor")
-      ).userName;
-      this.tenantId=JSON.parse(
-        localStorage.getItem("BaseInfor")
-      ).clientLicenseId
-
-    //   this.beginTime=dayjs().subtract(1,'day').format("YYYY-MM-DD")+' 00:00:00';
-    //   this.endTime=dayjs().subtract(1,'day').format("YYYY-MM-DD")+' 23:59:59';
-    //     this.searchSettings[0].value=this.beginTime;
-    //     this.searchSettings[1].value=this.endTime;
-
-
+      ).clientLicenseId;
+      //判断进入页面是否是从管理员界面，
+      if (this.$route.query.beginTime) {
+        this.beginTime = this.$route.query.beginTime;
+        this.endTime = this.$route.query.endTime;
+        this.createUser = this.$route.query.createUser;
+        this.searchSettings[0].value = this.beginTime;
+        this.searchSettings[1].value = this.endTime;
+        this.initTableList();
+      }
+      //   this.beginTime=dayjs().subtract(1,'day').format("YYYY-MM-DD")+' 00:00:00';
+      //   this.endTime=dayjs().subtract(1,'day').format("YYYY-MM-DD")+' 23:59:59';
+      //     this.searchSettings[0].value=this.beginTime;
+      //     this.searchSettings[1].value=this.endTime;
     },
     searchItem(val) {
-        this.pageNo=1;
-        this.timeDeail(val);
-       
+      this.pageNo = 1;
+      this.timeDeail(val);
     },
-    reset(){
-        this.tableData=[]
-        this.beginTime='';
-        this.endTime='';
-        this.total=0;
+    reset() {
+      this.tableData = [];
+      this.beginTime = "";
+      this.endTime = "";
+      this.total = 0;
     },
     timeDeail(val) {
-      
-        if (val.beginTime && val.endTime) {
-          // 发送请求
-          if (val.beginTime > val.endTime) {
-            this.beginTime = dayjs(val.endTime).format("YYYY-MM-DD HH:mm:ss");
-            this.endTime = dayjs(val.beginTime).format("YYYY-MM-DD HH:mm:ss");
-          } else {
-            this.beginTime = dayjs(val.beginTime).format("YYYY-MM-DD HH:mm:ss");
-            this.endTime = dayjs(val.endTime).format("YYYY-MM-DD HH:mm:ss");
-          }
-       this.initTableList();
-
-        } else if (val.beginTime == ""||val.beginTime==undefined) {
-          this.$message.error("请选择开始时间");
-          return false;
-        } else if (val.endTime == ""||val.endTime==undefined) {
-          this.$message.error("请选择结束时间");
-          return false;
+      if (val.beginTime && val.endTime) {
+        // 发送请求
+        if (val.beginTime > val.endTime) {
+          this.beginTime = dayjs(val.endTime).format("YYYY-MM-DD HH:mm:ss");
+          this.endTime = dayjs(val.beginTime).format("YYYY-MM-DD HH:mm:ss");
+        } else {
+          this.beginTime = dayjs(val.beginTime).format("YYYY-MM-DD HH:mm:ss");
+          this.endTime = dayjs(val.endTime).format("YYYY-MM-DD HH:mm:ss");
         }
-        //自选
+        this.initTableList();
+      } else if (val.beginTime == "" || val.beginTime == undefined) {
+        this.$message.error("请选择开始时间");
+        return false;
+      } else if (val.endTime == "" || val.endTime == undefined) {
+        this.$message.error("请选择结束时间");
+        return false;
+      }
+      //自选
     },
     //作者预览面板
     fetchTrend() {
@@ -183,19 +182,24 @@ export default {
     },
 
     //查询请求
-    initTableList(val) {
+    initTableList() {
       let data = {
         startPublishDate: this.beginTime,
         endPublishDate: this.endTime,
         createUser: this.createUser
-       
       };
       return new Promise((resolve, reject) => {
-        getdxCreateUser(this.pageNo,this.pageSize,data)
+        getdxCreateUser(this.pageNo, this.pageSize, data)
           .then(res => {
             if (res.data.code == 0) {
-              this.tableData = res.data.result.content;
-              this.total=res.data.result.total;
+              if(res.data.result.total>5000){
+              this.$message.error("请求数据超过5000条，请缩短时间范围！");
+                
+              }else{
+                this.tableData = res.data.result.content;
+              this.total = res.data.result.total;
+              }
+              
             } else {
               this.$message.error(res.data.msg);
             }
@@ -208,17 +212,16 @@ export default {
     //分页处理
     handleSizeChange(val) {
       this.pageSize = val;
-     this. initTableList();
+      this.initTableList();
     },
     handleCurrentChange(val) {
       this.pageNo = val;
       this.initTableList();
-     
     },
     handleExport() {
       let data = {
-         pageNo:this.pageNo,
-          pageSize:this.pageSize,
+        pageNo: 1,
+        pageSize: this.total,
         beginTime: this.beginTime,
         endTime: this.endTime,
         createUser: this.createUser,
@@ -228,11 +231,13 @@ export default {
         //  sortBy:this.sortBy,
         origin: this.origin
       };
-
-      downdxCreateUser(data);
+      if (this.total > 5000) {
+        this.$message.error("下载条数不能超过5000");
+      } else {
+        downdxCreateUser(data);
+      }
     },
 
-    
     //获取来源列表
     fetchDict() {
       var _this = this;
@@ -259,47 +264,47 @@ export default {
           });
       });
     },
-    articleType(val){
-        let data='';
-        if(val.articleType==0){
-            data='图文'
-        }
-        if(val.articleType==1){
-            data='图集'
-        }
-        if(val.articleType==2){
-            data='拼条'
-        }
-        if(val.articleType==3){
-            data='引用'
-        }
-        if(val.articleType==4){
-            data='URL'
-        }
-        if(val.articleType==5){
-            data='投票'
-        }
-        if(val.articleType==6){
-            data='调查'
-        }
-        if(val.articleType==7){
-            data='单页'
-        }
-        return data;
+    articleType(val) {
+      let data = "";
+      if (val.articleType == 0) {
+        data = "图文";
+      }
+      if (val.articleType == 1) {
+        data = "图集";
+      }
+      if (val.articleType == 2) {
+        data = "拼条";
+      }
+      if (val.articleType == 3) {
+        data = "引用";
+      }
+      if (val.articleType == 4) {
+        data = "URL";
+      }
+      if (val.articleType == 5) {
+        data = "投票";
+      }
+      if (val.articleType == 6) {
+        data = "调查";
+      }
+      if (val.articleType == 7) {
+        data = "单页";
+      }
+      return data;
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-.fenyeDiv{
-    margin-top:30px;
+.fenyeDiv {
+  margin-top: 30px;
 }
 .mainBox {
   padding: 15px;
 }
 $textcolor: #303133;
 .board {
-  box-shadow: 1px 1px 5px #EEE;
+  box-shadow: 1px 1px 5px #eee;
   overflow: hidden;
   margin-bottom: 20px;
   border: 1px solid #eee;
@@ -320,22 +325,19 @@ $textcolor: #303133;
       p:nth-child(1) {
         color: $textcolor;
         font-size: 16px;
-        margin: 0
+        margin: 0;
       }
 
       p:nth-child(2) {
         font-size: 40px;
         color: $textcolor;
         margin: 10px;
-
-
-
       }
       margin: 20px 0px;
     }
   }
-  .hasboder{
-      border-right: 1px solid #eee
+  .hasboder {
+    border-right: 1px solid #eee;
   }
 }
 </style>

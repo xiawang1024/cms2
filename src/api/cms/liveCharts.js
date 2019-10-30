@@ -170,9 +170,10 @@ export function articleTrend(channelId) {
   }
 
   //获取文章点击量和发稿量整体趋势(总站)
+  // 'http://192.168.7.38:8010'
   export function periodArticleStatisticsTotal(data) {
     return request({
-      url: 'http://192.168.7.38:8010'+ `/baiduStatistics/articleStatistics/periodArticleStatisticsTotal?tenantId=${data.tenantId}&startDate=${data.startDate}&endDate=${data.endDate}`,
+      url:  `/baiduStatistics/articleStatistics/periodArticleStatisticsTotal?tenantId=${data.tenantId}&startDate=${data.startDate}&endDate=${data.endDate}`,
       method: "get"
     });
   }
@@ -290,7 +291,7 @@ export function downdxhStatistics(data) {
 //大象个人统计
 export function getdxCreateUser(pageNo,pageSize,data) {
   return request({
-    url:'http://192.168.7.40:53015'+`/cms/statisticsManage/article/indexs/q?pageNo=${pageNo}&pageSize=${pageSize}`,
+    url:`/cms/statisticsManage/article/indexs/q?pageNo=${pageNo}&pageSize=${pageSize}`,
     method: "post",
     data
   });
@@ -301,10 +302,11 @@ export function downdxCreateUser(data) {
   postAjax(data)
   function postAjax (data) {
     axios({
-      method: 'get',
-      url: 'http://192.168.7.40:53015' +`/cms/statisticsManage/article/indexs/q/export?pageNo=${data.pageNo}&pageSize=${data.pageSize}`,
-      // url: baseUrl.BASE_URL +`/cms/statisticsManage/article/indexs/q/export?pageNo=${data.pageNo}&pageSize=${data.pageSize}`,
+      method: 'post',
+      // url:"http://192.168.7.40:53015"+`/cms/statisticsManage/article/indexs/q/export?pageNo=${data.pageNo}&pageSize=${data.pageSize}`,
+      url: baseUrl.BASE_URL +`/cms/statisticsManage/article/indexs/q/export?pageNo=${data.pageNo}&pageSize=${data.pageSize}`,
       responseType: 'blob',
+      data,
       headers: {
         // 'Content-Type': 'application/json;charset=utf-8',
         'Authorization': data.accessToken
@@ -319,11 +321,19 @@ export function downdxCreateUser(data) {
       })
   }
 }
-
+  //获取大象内部所有编辑
+  
+  export function queryInsideEditorNames() {
+    return request({
+      url:`/cms/statisticsManage/queryInsideEditorNames`,
+      method: "get"
+    });
+  
+  }
 //大象内部编辑考核
 export function getdxCreateUserCheck(data) {
   return request({
-    url:'http://192.168.7.40:53015'+`/cms/statisticsManage/queryInsideEditor?createUser=${data.createUser}&startDate=${data.beginTime}&endDate=${data.endTime}`,
+    url:`/cms/statisticsManage/queryInsideEditor?createUser=${data.createUser}&startDate=${data.beginTime}&endDate=${data.endTime}`,
     method: "post"
   });
 
@@ -335,8 +345,8 @@ export function downloadCreateUserCheck(data) {
   function postAjax (data) {
     axios({
       method: 'get',
-      // url:baseUrl.BASE_URL+`/cms/statisticsManage/queryInsideEditorExport?createUser=${data.createUser}&startDate=${data.beginTime}&endDate=${data.endTime}`,
-      url:'http://192.168.7.40:53015'+`/cms/statisticsManage/queryInsideEditorExport?createUser=${data.createUser}&startDate=${data.beginTime}&endDate=${data.endTime}`,
+      url:baseUrl.BASE_URL+`/cms/statisticsManage/queryInsideEditorExport?createUser=${data.createUser}&startDate=${data.beginTime}&endDate=${data.endTime}`,
+      // url:`/cms/statisticsManage/queryInsideEditorExport?createUser=${data.createUser}&startDate=${data.beginTime}&endDate=${data.endTime}`,
       responseType: 'blob',
       headers: {
         // 'Content-Type': 'application/json;charset=utf-8',
