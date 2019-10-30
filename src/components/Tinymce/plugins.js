@@ -3,7 +3,7 @@
 // Custom builds see https://www.tinymce.com/download/custom-builds/
 //advlist anchor autolink autosave code codesample colorpicker colorpicker contextmenu directionality emoticons fullscreen hr image imagetools insertdatetime link lists media nonbreaking noneditable pagebreak paste preview print save searchreplace spellchecker tabfocus table template textcolor textpattern visualblocks visualchars wordcount charmap'
 const plugins = [
-  'advlist anchor autolink code codesample colorpicker colorpicker contextmenu directionality emoticons fullscreen hr image imagetools insertdatetime link lists media nonbreaking noneditable pagebreak paste preview print save searchreplace spellchecker tabfocus table template textcolor textpattern visualblocks visualchars wordcount imageupload'
+  'advlist anchor autolink code codesample colorpicker colorpicker contextmenu directionality emoticons fullscreen hr image imagetools insertdatetime link lists media nonbreaking noneditable pagebreak paste preview print searchreplace spellchecker tabfocus table template textcolor textpattern visualblocks visualchars wordcount imageupload'
 ]
 
 export default plugins

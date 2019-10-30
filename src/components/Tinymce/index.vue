@@ -140,7 +140,7 @@ export default {
         // 新加
         imageupload_url: this.upURL,
         // 自动保存时间
-        // autosave_interval: "10s",
+        //autosave_interval: "10s",
         imageupload_converCb: res => {
           // 根据后端返回的数据，转换成符合插件要求的数据结构
           window.tinymce
@@ -162,7 +162,6 @@ export default {
           });
           editor.addShortcut("ctrl+s", "Custom Ctrl+S", "custom_ctrl_s");
           editor.addCommand("custom_ctrl_s", function() {
-            alert("save");
             return;
             /*
             your custom codes
