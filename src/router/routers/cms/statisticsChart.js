@@ -115,8 +115,8 @@ const statisticsChart = {
         path: 'dxCreateUser',
         component: () => import(`@/${path}/dxCreateUser`),
         name: 'dxCreateUser',
-        // meta: { title: 'dxCreateUser', icon: 'zuozhe', role: 'cms:dxCreateUser' },
-        meta: { title: 'dxCreateUser', icon: 'zuozhe', role: 'cms', }
+        meta: { title: 'dxCreateUser', icon: 'zuozhe', role: 'cms:dxCreateUser' },
+        // meta: { title: 'dxCreateUser', icon: 'zuozhe', role: 'cms', }
        
       },
       {
@@ -126,8 +126,8 @@ const statisticsChart = {
         path: 'dxCreateUserCheck',
         component: () => import(`@/${path}/dxCreateUserCheck`),
         name: 'dxCreateUserCheck',
-        // meta: { title: 'dxCreateUserCheck', icon: 'dxCheck', role: 'cms:dxCreateUserCheck' },
-        meta: { title: 'dxCreateUserCheck', icon: 'dxCheck', role: 'cms', }
+        meta: { title: 'dxCreateUserCheck', icon: 'dxCheck', role: 'cms:dxCreateUserCheck' },
+        // meta: { title: 'dxCreateUserCheck', icon: 'dxCheck', role: 'cms', }
        
       },
       
