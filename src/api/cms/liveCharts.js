@@ -161,7 +161,7 @@ export function articleTrend(channelId) {
       method: "get"
     });
   }
-  //获取文章点击量和发稿量整体趋势(总站)
+  //获取文章点击量和发稿量整体趋势(总站 旧接口，首页dashboard在用)
   export function articleTrendBytenantId(tenantId) {
     return request({
       url: articlePath + `/getArticleTrendTotal?tenantId=${tenantId}`,
@@ -169,6 +169,14 @@ export function articleTrend(channelId) {
     });
   }
 
+  //获取文章点击量和发稿量整体趋势(总站)
+  export function periodArticleStatisticsTotal(data) {
+    return request({
+      url: 'http://192.168.7.38:8010'+ `/baiduStatistics/articleStatistics/periodArticleStatisticsTotal?tenantId=${data.tenantId}&startDate=${data.startDate}&endDate=${data.endDate}`,
+      method: "get"
+    });
+  }
+  
 
 
   //按频道获取文章点击次数、发稿量(每天和累计)
@@ -282,7 +290,7 @@ export function downdxhStatistics(data) {
 //大象个人统计
 export function getdxCreateUser(pageNo,pageSize,data) {
   return request({
-    url:Cpath+`/content-search/article/indexs/q?pageNo=${pageNo}&pageSize=${pageSize}`,
+    url:'http://192.168.7.40:53015'+`/cms/statisticsManage/article/indexs/q?pageNo=${pageNo}&pageSize=${pageSize}`,
     method: "post",
     data
   });
@@ -294,7 +302,8 @@ export function downdxCreateUser(data) {
   function postAjax (data) {
     axios({
       method: 'get',
-      url: baseUrl.BASE_URL +`/content-search/article/indexs/qexport?pageNo=${data.pageNo}&pageSize=${data.pageSize}`,
+      url: 'http://192.168.7.40:53015' +`/cms/statisticsManage/article/indexs/q/export?pageNo=${data.pageNo}&pageSize=${data.pageSize}`,
+      // url: baseUrl.BASE_URL +`/cms/statisticsManage/article/indexs/q/export?pageNo=${data.pageNo}&pageSize=${data.pageSize}`,
       responseType: 'blob',
       headers: {
         // 'Content-Type': 'application/json;charset=utf-8',
@@ -310,6 +319,41 @@ export function downdxCreateUser(data) {
       })
   }
 }
+
+//大象内部编辑考核
+export function getdxCreateUserCheck(data) {
+  return request({
+    url:'http://192.168.7.40:53015'+`/cms/statisticsManage/queryInsideEditor?createUser=${data.createUser}&startDate=${data.beginTime}&endDate=${data.endTime}`,
+    method: "post"
+  });
+
+}
+
+//大象内部编辑考核(下载)
+export function downloadCreateUserCheck(data) {
+  postAjax(data)
+  function postAjax (data) {
+    axios({
+      method: 'get',
+      // url:baseUrl.BASE_URL+`/cms/statisticsManage/queryInsideEditorExport?createUser=${data.createUser}&startDate=${data.beginTime}&endDate=${data.endTime}`,
+      url:'http://192.168.7.40:53015'+`/cms/statisticsManage/queryInsideEditorExport?createUser=${data.createUser}&startDate=${data.beginTime}&endDate=${data.endTime}`,
+      responseType: 'blob',
+      headers: {
+        // 'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': data.accessToken
+      }
+    })
+      .then(res => {
+        download('template.xlsx', res.data)
+        Message.success('下载成功')
+      })
+      .catch(error => {
+        Message.warning(error.msg ? error.msg : '导出失败')
+      })
+  }
+
+}
+
 
 
 

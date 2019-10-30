@@ -181,10 +181,10 @@ export default {
             this.beginTime = dayjs(val.beginTime).format("YYYY-MM-DD HH:mm:ss");
             this.endTime = dayjs(val.endTime).format("YYYY-MM-DD HH:mm:ss");
           }
-        } else if (val.beginTime == "") {
+        } else if (val.beginTime == ""||val.beginTime==undefined) {
           this.$message.error("请选择开始时间");
           return false;
-        } else if (val.endTime == "") {
+        } else if (val.endTime == ""||val.endTime==undefined) {
           this.$message.error("请选择结束时间");
           return false;
         }

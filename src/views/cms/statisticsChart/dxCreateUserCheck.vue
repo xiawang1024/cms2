@@ -11,10 +11,14 @@
       </el-row>
     </div>
 
-    <el-table :data="tableData" @selection-change="handleSelectionChange" show-summary style="width: 100%" stripe>
-      <el-table-column
-        type="selection"
-        width="55"/>
+    <el-table
+      :data="tableData"
+      @selection-change="handleSelectionChange"
+      show-summary
+      style="width: 100%"
+      stripe
+    >
+      <el-table-column type="selection" width="55" />
       <el-table-column label="编辑" prop="origin" width="150" />
       <el-table-column label="发稿量" width="200" prop="id" />
       <el-table-column label="点击量" prop="title" />
@@ -25,7 +29,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
+    <!-- <el-pagination
       class="fenyeDiv"
       :current-page="pageNo"
       :page-sizes="[10,30,60,100]"
@@ -36,19 +40,15 @@
       style="float: right"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-    />
+    /> -->
   </div>
 </template>
 <script>
-import { getdxDocumentStatistics,downdxDocumentStatistics } from "@/api/cms/liveCharts";
+import { getdxCreateUserCheck} from "@/api/cms/liveCharts";
 import dayjs from "dayjs";
-import store from "store";
-import { mapGetters } from "vuex";
-import { fetchDictByDictName } from "@/api/cms/dict";
 export default {
   data() {
     return {
-      channelId:'1161447048013287424',
       searchSettings: [
         {
           label: "开始时间",
@@ -68,30 +68,32 @@ export default {
             label: "编辑",
           name: "createUser",
           type: "text",
+          placeholder:'全部',
           visible: "true",
-          value:'全部',
+          value:'',
          
         },
       ],
       beginTime: "",
       endTime: "",
       origin:'',
-      tableData: []
+      tableData: [],
+      createUser:'',
     };
   },
   created() {
-      this.fetchDict();
+     
 
   },
   mounted() {
    
-   this.searchItem({quckTime:7,columnId:this.searchSettings[0].value});
 
   },
   methods: {
     searchItem(val) {
       this.timeDeail(val);
-      this.initTableList(this.channelId)
+      this.createUser=val.createUser||'';
+     
     },
     timeDeail(val) {
         if (val.beginTime && val.endTime) {
@@ -103,26 +105,28 @@ export default {
             this.beginTime = dayjs(val.beginTime).format("YYYY-MM-DD HH:mm:ss");
             this.endTime = dayjs(val.endTime).format("YYYY-MM-DD HH:mm:ss");
           }
-        } else if (val.beginTime == "") {
+         this.initTableList();
+
+        } else if (val.beginTime == ""||val.beginTime == undefined) {
           this.$message.error("请选择开始时间");
           return false;
-        } else if (val.endTime == "") {
+        } else if (val.endTime == ""||val.endTime == undefined) {
           this.$message.error("请选择结束时间");
           return false;
         }
         //自选
-      }
-    },
+      },
+    
 
     //查询请求
-    initTableList(val) {
+    initTableList() {
       let data = {
         beginTime: this.beginTime,
         endTime: this.endTime,
-        origin:this.origin,
+        createUser:this.createUser,
       };
       return new Promise((resolve, reject) => {
-        getdxDocumentStatistics(data)
+        getdxCreateUserCheck(data)
           .then(res => {
             if (res.data.code == 0) {
               this.tableData = res.data.result;
@@ -148,18 +152,19 @@ export default {
     },
     
     //分页处理
-    handleSizeChange(val) {
-      this.pageSize = val;
-     this. initTableList();
-    },
-    handleCurrentChange(val) {
-      this.pageNo = val;
-      this.initTableList();
+    // handleSizeChange(val) {
+    //   this.pageSize = val;
+    //  this. initTableList();
+    // },
+    // handleCurrentChange(val) {
+    //   this.pageNo = val;
+    //   this.initTableList();
      
-    },
+    // },
     handleSelectionChange(val){
          this.multipleSelection = val;
     }
+  }
   }
 
 </script>
@@ -167,7 +172,7 @@ export default {
 .mainBox {
   padding: 15px;
 }
-.fenyeDiv{
-    margin-top:30px;
+.fenyeDiv {
+  margin-top: 30px;
 }
 </style>
