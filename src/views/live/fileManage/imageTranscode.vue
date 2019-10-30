@@ -231,9 +231,9 @@ export default {
             if (res.data.code == 0) {
               this.tableValue = res.data.result.content;
               this.tableValue.forEach((item,index)=>{
-                 this.tableValue[index].pic1=baseUrl.DOWN_URL+item.outputPart+item.size1+'.webp';
-                 this.tableValue[index].pic2=baseUrl.DOWN_URL+item.outputPart+item.size2+'.webp';
-                 this.tableValue[index].pic3=baseUrl.DOWN_URL+item.outputPart+item.size3+'.webp';
+                 this.tableValue[index].pic1=baseUrl.DOWN_URL+item.outputPart+item.size1+'.jpg';
+                 this.tableValue[index].pic2=baseUrl.DOWN_URL+item.outputPart+item.size2+'.jpg';
+                 this.tableValue[index].pic3=baseUrl.DOWN_URL+item.outputPart+item.size3+'.jpg';
 
               })
               this.totalCount = res.data.result.total;
