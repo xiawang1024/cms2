@@ -139,7 +139,7 @@ export function fullChanelList(tenantId) {
     method: "get"
   });
 }
-export function fullAuthorList(tenantId) {
+export function fullcreateUserList(tenantId) {
   return request({
     url: articlePath + `/getArticleStatisticsUserByTenantId?tenantId=${tenantId}&flag=0`,
     method: "get"
@@ -155,13 +155,13 @@ export function articleTrend(channelId) {
 }
 
   //获取文章点击量和发稿量整体趋势(按作者)
-  export function articleTrendByAuthor(tenantId,author) {
+  export function articleTrendBycreateUser(tenantId,createUser) {
     return request({
-      url: articlePath + `/getArticleTrendByAuthor?tenantId=${tenantId}&author=${author}`,
+      url: articlePath + `/getArticleTrendByCreateUser?tenantId=${tenantId}&createUser=${createUser}`,
       method: "get"
     });
   }
-  //获取文章点击量和发稿量整体趋势(总站)
+  //获取文章点击量和发稿量整体趋势(总站 旧接口，首页dashboard在用)
   export function articleTrendBytenantId(tenantId) {
     return request({
       url: articlePath + `/getArticleTrendTotal?tenantId=${tenantId}`,
@@ -169,6 +169,15 @@ export function articleTrend(channelId) {
     });
   }
 
+  //获取文章点击量和发稿量整体趋势(总站)
+  // 'http://192.168.7.38:8010'
+  export function periodArticleStatisticsTotal(data) {
+    return request({
+      url:  `/baiduStatistics/articleStatistics/periodArticleStatisticsTotal?tenantId=${data.tenantId}&startDate=${data.startDate}&endDate=${data.endDate}`,
+      method: "get"
+    });
+  }
+  
 
 
   //按频道获取文章点击次数、发稿量(每天和累计)
@@ -182,9 +191,9 @@ export function articleTrend(channelId) {
   }
 
   //按作者获取文章点击次数、发稿量(每天和累计)
-  export function articleStatisticsByAuthor(data) {
+  export function articleStatisticsBycreateUser(data) {
     return request({
-      url: articlePath + `/getArticleStatisticsByAuthor?tenantId=${data.tenantId}&author=${data.author}&startDate=${data.startDate}&endDate=${data.endDate}`,
+      url: articlePath + `/getArticleStatisticsByCreateUser?tenantId=${data.tenantId}&createUser=${data.createUser}&startDate=${data.startDate}&endDate=${data.endDate}`,
       method: "get"
     });
 
@@ -279,8 +288,81 @@ export function downdxhStatistics(data) {
   }
 }
 
+//大象个人统计
+export function getdxCreateUser(pageNo,pageSize,data) {
+  return request({
+    url:`/cms/statisticsManage/article/indexs/q?pageNo=${pageNo}&pageSize=${pageSize}`,
+    method: "post",
+    data
+  });
 
+}
+//下载大象个人统计
+export function downdxCreateUser(data) {
+  postAjax(data)
+  function postAjax (data) {
+    axios({
+      method: 'post',
+      // url:"http://192.168.7.40:53015"+`/cms/statisticsManage/article/indexs/q/export?pageNo=${data.pageNo}&pageSize=${data.pageSize}`,
+      url: baseUrl.BASE_URL +`/cms/statisticsManage/article/indexs/q/export?pageNo=${data.pageNo}&pageSize=${data.pageSize}`,
+      responseType: 'blob',
+      data,
+      headers: {
+        // 'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': data.accessToken
+      }
+    })
+      .then(res => {
+        download('template.xlsx', res.data)
+        Message.success('下载成功')
+      })
+      .catch(error => {
+        Message.warning(error.msg ? error.msg : '导出失败')
+      })
+  }
+}
+  //获取大象内部所有编辑
+  
+  export function queryInsideEditorNames() {
+    return request({
+      url:`/cms/statisticsManage/queryInsideEditorNames`,
+      method: "get"
+    });
+  
+  }
+//大象内部编辑考核
+export function getdxCreateUserCheck(data) {
+  return request({
+    url:`/cms/statisticsManage/queryInsideEditor?createUser=${data.createUser}&startDate=${data.beginTime}&endDate=${data.endTime}`,
+    method: "post"
+  });
 
+}
+
+//大象内部编辑考核(下载)
+export function downloadCreateUserCheck(data) {
+  postAjax(data)
+  function postAjax (data) {
+    axios({
+      method: 'get',
+      url:baseUrl.BASE_URL+`/cms/statisticsManage/queryInsideEditorExport?createUser=${data.createUser}&startDate=${data.beginTime}&endDate=${data.endTime}`,
+      // url:`/cms/statisticsManage/queryInsideEditorExport?createUser=${data.createUser}&startDate=${data.beginTime}&endDate=${data.endTime}`,
+      responseType: 'blob',
+      headers: {
+        // 'Content-Type': 'application/json;charset=utf-8',
+        'Authorization': data.accessToken
+      }
+    })
+      .then(res => {
+        download('template.xlsx', res.data)
+        Message.success('下载成功')
+      })
+      .catch(error => {
+        Message.warning(error.msg ? error.msg : '导出失败')
+      })
+  }
+
+}
 
 
 

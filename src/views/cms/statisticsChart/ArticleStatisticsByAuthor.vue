@@ -35,9 +35,9 @@
 import articleCount from "@/components/Charts/articleCount.vue";
 import articleTitle from "@/components/Charts/articleTitle.vue";
 import {
-  articleStatisticsByAuthor,
-  articleTrendByAuthor,
-  fullAuthorList
+  articleStatisticsBycreateUser,
+  articleTrendBycreateUser,
+  fullcreateUserList
 } from "@/api/cms/liveCharts";
 export default {
   name: "LiveCharts",
@@ -60,10 +60,10 @@ export default {
       page: "1",
       timevalue: [],
       activeName: "first",
-      defaultAuthor: "",
+      defaultcreateUser: "",
       channelId: "1108260929071616000",
-      authorList: [],
-      author: "南阳人民广播电台",
+      createUserList: [],
+      createUser: "南阳人民广播电台",
       tenantId: "nanyangradio",
       searchSettings: [
         {
@@ -72,7 +72,7 @@ export default {
           placeholder: "请选择",
           visible: true,
           type: "select",
-          optionValue: this.defaultAuthor,
+          optionValue: this.defaultcreateUser,
           options: []
         }
       ]
@@ -90,23 +90,23 @@ export default {
         localStorage.getItem("BaseInfor")
       ).clientLicenseId;
       //初始化的默认作者
-      this.author = JSON.parse(localStorage.getItem("BaseInfor")).userName;
-      this.defaultAuthor = this.author;
-      this.getAuthorList();
+      this.createUser = JSON.parse(localStorage.getItem("BaseInfor")).userName;
+      this.defaultcreateUser = this.createUser;
+      this.getcreateUserList();
     },
     Init() {
       this.fetchTrend();
       this.fetchActiveUser();
     },
     //请求全部作者列表
-    getAuthorList() {
+    getcreateUserList() {
       var _this = this;
       return new Promise((resolve, reject) => {
-        fullAuthorList(this.tenantId)
+        fullcreateUserList(this.tenantId)
           .then(response => {
             if (response.data.code == 0) {
               let result = response.data.result;
-              _this.authorList = result;
+              _this.createUserList = result;
               _this.searchSettings = [
                 {
                   label: "作者",
@@ -130,11 +130,11 @@ export default {
       return new Promise((resolve, reject) => {
         let data = {
           tenantId: this.tenantId,
-          author: this.author,
+          createUser: this.createUser,
           startDate: this.startDate,
           endDate: this.endDate
         };
-        articleStatisticsByAuthor(data)
+        articleStatisticsBycreateUser(data)
           .then(response => {
             if (response.data.code == 0) {
               let result = response.data.result;
@@ -157,7 +157,7 @@ export default {
     fetchTrend() {
       var _this = this;
       return new Promise((resolve, reject) => {
-        articleTrendByAuthor(this.tenantId, this.author)
+        articleTrendBycreateUser(this.tenantId, this.createUser)
           .then(response => {
             if (response.data.code == 0) {
               let result = response.data.result;
@@ -224,7 +224,7 @@ export default {
     },
     //作者切换
     searchItem(searchData) {
-      this.author = searchData.hiddenFlag;
+      this.createUser = searchData.hiddenFlag;
       this.Init();
     },
     //日期选择
