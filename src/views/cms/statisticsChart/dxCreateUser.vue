@@ -1,7 +1,7 @@
 <template>
   <div class="mainBox">
     <el-row>
-      <div class="board">
+      <div class="statisBoard">
         <el-col :span="12">
           <div class="showBoard">
             <p>昨天</p>
@@ -303,7 +303,7 @@ export default {
   padding: 15px;
 }
 $textcolor: #303133;
-.board {
+.statisBoard {
   box-shadow: 1px 1px 5px #eee;
   overflow: hidden;
   margin-bottom: 20px;
