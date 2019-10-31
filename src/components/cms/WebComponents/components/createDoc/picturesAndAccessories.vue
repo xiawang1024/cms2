@@ -460,6 +460,15 @@ export default {
             }
           }
         }
+        //
+        if (
+          JSON.parse(localStorage.getItem("BaseInfor")).clientLicenseId ==
+            "DXNews" &&
+          !resoultObj.articleShowStyle
+        ) {
+          this.$message.warning(`请选择展现形式`);
+          return;
+        }
         this.createDoc(resoultObj);
       }
     }
