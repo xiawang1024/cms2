@@ -73,6 +73,8 @@
             <!-- 日期和时间选择 -->
             <template v-else-if="item.type=='datetime'">
               <el-date-picker
+                :default-time="item.defaultTime"
+                :picker-options="item.pickerOptions"
                 v-model="formModel[item.name]"
                 :disabled="item.disabled"
                 :placeholder="item.placeholder || '选择日期'"

@@ -237,7 +237,7 @@ import { fun_date } from "@/components/Charts/handleTimer.js";
 import {
   getTrend,
   siteProfile,
-  articleTrendByAuthor
+  articleTrendBycreateUser
 } from "@/api/cms/liveCharts";
 // import articleTitle from "@/components/Charts/articleTitle.vue";
 export default {
@@ -303,7 +303,7 @@ export default {
       today: "",
       requestParams: {},
       tenantId: "",
-      author: "",
+      createUser: "",
       sevendata:null,
     };
   },
@@ -314,7 +314,7 @@ export default {
     this.fetchTrend(this.androidAppKey,'android');
     this.fetchTrend(this.IosAppKey,'ios');
     this.profile();
-    this.authorTrend();
+    this.createUserTrend();
   },
   mounted() {},
   methods: {
@@ -360,7 +360,7 @@ export default {
       this.tenantId = JSON.parse(
         localStorage.getItem("BaseInfor")
       ).clientLicenseId;
-      this.author = JSON.parse(localStorage.getItem("BaseInfor")).userName;
+      this.createUser = JSON.parse(localStorage.getItem("BaseInfor")).userName;
     },
     //根据租户设置参数
     initParams(){
@@ -453,10 +453,10 @@ export default {
     },
 
     //获取文章点击量和发稿量整体趋势(按作者)
-    authorTrend() {
+    createUserTrend() {
       var _this = this;
       return new Promise((resolve, reject) => {
-        articleTrendByAuthor(this.tenantId, this.author)
+        articleTrendBycreateUser(this.tenantId, this.createUser)
           .then(response => {
             if (response.data.code == 0) {
               let result = response.data.result;
