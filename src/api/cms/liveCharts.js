@@ -291,6 +291,7 @@ export function downdxhStatistics(data) {
 //大象个人统计
 export function getdxCreateUser(pageNo,pageSize,data) {
   return request({
+    // url:`/cms/statisticsManage/article/indexs/replacerefer/q?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=publishDate`,
     url:`/cms/statisticsManage/article/indexs/q?pageNo=${pageNo}&pageSize=${pageSize}`,
     method: "post",
     data
