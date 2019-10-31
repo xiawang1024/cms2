@@ -222,8 +222,8 @@ export default {
       let data = {
         pageNo: 1,
         pageSize: this.total,
-        beginTime: this.beginTime,
-        endTime: this.endTime,
+        startPublishDate: this.beginTime,
+        endPublishDate: this.endTime,
         createUser: this.createUser,
         accessToken:
           "bearer " +

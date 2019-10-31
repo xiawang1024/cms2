@@ -128,7 +128,7 @@ const statisticsChart = {
         name: 'dxCreateUserCheck',
         meta: { title: 'dxCreateUserCheck', icon: 'dxCheck', role: 'cms:dxCreateUserCheck' },
         // meta: { title: 'dxCreateUserCheck', icon: 'dxCheck', role: 'cms', }
-       
+       hidden:true
       },
       
    

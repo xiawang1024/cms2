@@ -24,11 +24,11 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- <el-row>
-       <el-col :span="2" :offset="22">
-          <el-button class="exportBtn" type="primary" size="mini" @click="handleDownload">批量下载</el-button>
-        </el-col>
-    </el-row> -->
+    <el-row>
+      <el-col :span="2" :offset="22">
+        <el-button class="exportBtn" type="primary" size="mini" @click="handleDownload">批量下载</el-button>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
@@ -141,8 +141,8 @@ export default {
       let data = {
          pageNo:1,
           pageSize:5000,
-        beginTime: this.beginTime,
-        endTime: this.endTime,
+        startPublishDate: this.beginTime,
+        endPublishDate: this.endTime,
         createUser,
         accessToken:
           "bearer " +
