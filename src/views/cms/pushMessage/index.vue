@@ -24,7 +24,7 @@
       <el-table-column prop="createTime" label="失败" min-width="150" show-overflow-tooltip/>-->
       <el-table-column prop="viewedDeviceCount" label="点击量" width="150" show-overflow-tooltip>
         <template slot-scope="scope">
-          <span>{{ scope.row.article ? scope.row.article.actualClickNum : 0 }}</span>
+          <span>{{ scope.row.article ? scope.row.article.clickNumInt : 0 }}</span>
         </template>
       </el-table-column>
     </el-table>
