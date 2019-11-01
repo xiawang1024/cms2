@@ -28,11 +28,11 @@ export default {
           .reverse()[0]
           .toLowerCase();
         if (imgType == "png") {
-          if (pic.width != 750 || pic.height != 140) {
-            callback(new Error("请上传750*140像素的图片"));
-          } else {
+          // if (pic.width != 750 || pic.height != 140) {
+          //   callback(new Error("请上传750*140像素的图片"));
+          // } else {
             callback();
-          }
+          // }
         } else {
           callback(new Error("请上传PNG格式图片"));
         }
