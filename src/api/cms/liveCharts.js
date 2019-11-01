@@ -292,7 +292,7 @@ export function downdxhStatistics(data) {
 export function getdxCreateUser(pageNo,pageSize,data) {
   return request({
     // url:`/cms/statisticsManage/article/indexs/replacerefer/q?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=publishDate`,
-    url:`/cms/statisticsManage/article/indexs/q?pageNo=${pageNo}&pageSize=${pageSize}`,
+    url:`/cms/statisticsManage/article/indexs/replacerefer/q?pageNo=${pageNo}&pageSize=${pageSize}&sortBy=publishDate&order=desc`,
     method: "post",
     data
   });
@@ -304,8 +304,7 @@ export function downdxCreateUser(data) {
   function postAjax (data) {
     axios({
       method: 'post',
-      // url:"http://192.168.7.40:53015"+`/cms/statisticsManage/article/indexs/q/export?pageNo=${data.pageNo}&pageSize=${data.pageSize}`,
-      url: baseUrl.BASE_URL +`/cms/statisticsManage/article/indexs/q/export?pageNo=${data.pageNo}&pageSize=${data.pageSize}`,
+      url: baseUrl.BASE_URL+`/cms/statisticsManage/article/indexs/replacerefer/q/export?pageNo=${data.pageNo}&pageSize=${data.pageSize}&sortBy=publishDate&order=desc`,
       responseType: 'blob',
       data,
       headers: {
@@ -341,29 +340,29 @@ export function getdxCreateUserCheck(data) {
 }
 
 //大象内部编辑考核(下载)
-export function downloadCreateUserCheck(data) {
-  postAjax(data)
-  function postAjax (data) {
-    axios({
-      method: 'get',
-      url:baseUrl.BASE_URL+`/cms/statisticsManage/queryInsideEditorExport?createUser=${data.createUser}&startDate=${data.beginTime}&endDate=${data.endTime}`,
-      // url:`/cms/statisticsManage/queryInsideEditorExport?createUser=${data.createUser}&startDate=${data.beginTime}&endDate=${data.endTime}`,
-      responseType: 'blob',
-      headers: {
-        // 'Content-Type': 'application/json;charset=utf-8',
-        'Authorization': data.accessToken
-      }
-    })
-      .then(res => {
-        download('template.xlsx', res.data)
-        Message.success('下载成功')
-      })
-      .catch(error => {
-        Message.warning(error.msg ? error.msg : '导出失败')
-      })
-  }
+// export function downloadCreateUserCheck(data) {
+//   postAjax(data)
+//   function postAjax (data) {
+//     axios({
+//       method: 'get',
+//       url:baseUrl.BASE_URL+`/cms/statisticsManage/queryInsideEditorExport?createUser=${data.createUser}&startDate=${data.beginTime}&endDate=${data.endTime}`,
+//       // url:`/cms/statisticsManage/queryInsideEditorExport?createUser=${data.createUser}&startDate=${data.beginTime}&endDate=${data.endTime}`,
+//       responseType: 'blob',
+//       headers: {
+//         // 'Content-Type': 'application/json;charset=utf-8',
+//         'Authorization': data.accessToken
+//       }
+//     })
+//       .then(res => {
+//         download('template.xlsx', res.data)
+//         Message.success('下载成功')
+//       })
+//       .catch(error => {
+//         Message.warning(error.msg ? error.msg : '导出失败')
+//       })
+//   }
 
-}
+// }
 
 
 

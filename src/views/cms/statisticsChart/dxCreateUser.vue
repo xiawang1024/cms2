@@ -54,7 +54,7 @@
       <el-table-column label="来源" prop="origin" width="150" />
       <el-table-column label="标题" prop="title" />
       <el-table-column label="发布时间" width="200" prop="publishDate" />
-      <el-table-column label="文章类型" width="80" prop="articleType" :formatter="articleType" />
+      <el-table-column label="文章类型" width="80" prop="articleShowStyle" />
       <el-table-column label="点击量" width="200" prop="clickNumInt" />
     </el-table>
     <el-pagination
@@ -84,6 +84,7 @@ export default {
           name: "beginTime",
           visible: true,
           type: "datetime",
+          defaultTime:'00:00:00',
           value: ""
         },
         {
@@ -91,6 +92,7 @@ export default {
           name: "endTime",
           visible: true,
           type: "datetime",
+          defaultTime:'23:59:59',
           value: ""
         }
       ],
@@ -99,7 +101,13 @@ export default {
       // sortBy:'clickNumInt',
       origin: "",
       tableData: [],
-      boardvalue: [],
+      boardvalue: {
+        articleCount:0,
+        clickNum:0,
+        articleCountDailyYesterday:0,
+        clickNumDailyYesterday:0
+
+      },
       pageNo: 1,
       pageSize: 10,
       total: 0,
@@ -264,34 +272,34 @@ export default {
           });
       });
     },
-    articleType(val) {
-      let data = "";
-      if (val.articleType == 0) {
-        data = "图文";
-      }
-      if (val.articleType == 1) {
-        data = "图集";
-      }
-      if (val.articleType == 2) {
-        data = "拼条";
-      }
-      if (val.articleType == 3) {
-        data = "引用";
-      }
-      if (val.articleType == 4) {
-        data = "URL";
-      }
-      if (val.articleType == 5) {
-        data = "投票";
-      }
-      if (val.articleType == 6) {
-        data = "调查";
-      }
-      if (val.articleType == 7) {
-        data = "单页";
-      }
-      return data;
-    }
+    // articleType(val) {
+    //   let data = "";
+    //   if (val.articleType == 0) {
+    //     data = "图文";
+    //   }
+    //   if (val.articleType == 1) {
+    //     data = "图集";
+    //   }
+    //   if (val.articleType == 2) {
+    //     data = "拼条";
+    //   }
+    //   if (val.articleType == 3) {
+    //     data = "引用";
+    //   }
+    //   if (val.articleType == 4) {
+    //     data = "URL";
+    //   }
+    //   if (val.articleType == 5) {
+    //     data = "投票";
+    //   }
+    //   if (val.articleType == 6) {
+    //     data = "调查";
+    //   }
+    //   if (val.articleType == 7) {
+    //     data = "单页";
+    //   }
+    //   return data;
+    // }
   }
 };
 </script>

@@ -92,6 +92,7 @@ export default {
           name: "beginTime",
           visible: true,
           type: "datetime",
+          defaultTime:'00:00:00',
           value:'',
         },
         {
@@ -99,6 +100,7 @@ export default {
           name: "endTime",
           visible: true,
           type: "datetime",
+          defaultTime:'23:59:59',
           value:'',
         }
       ],

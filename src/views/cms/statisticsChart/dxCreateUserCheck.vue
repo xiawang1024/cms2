@@ -43,6 +43,7 @@ export default {
           name: "beginTime",
           visible: true,
           type: "datetime",
+          defaultTime:'00:00:00',
           value:'',
         },
         {
@@ -50,6 +51,7 @@ export default {
           name: "endTime",
           visible: true,
           type: "datetime",
+          defaultTime:'23:59:59',
           value:'',
         },
         {
@@ -130,14 +132,14 @@ export default {
      handleDownload() {
        this.tableData.forEach((item,index)=>{
          setTimeout(() => {
-       this.handleExport(item.createUser);
+       this.handleExport(item.createUser,item.articleCount);
 
-         }, 100);
+         }, index*1000);
 
        })
     },
 
-     handleExport(createUser) {
+     handleExport(createUser,count) {
       let data = {
          pageNo:1,
           pageSize:5000,
@@ -148,11 +150,11 @@ export default {
           "bearer " +
           JSON.parse(localStorage.getItem("hnDt_token")).access_token,
       };
-      if(this.total>5000){
-        this.$message.error("下载"+createUser+"的数据条数不能超过5000")
-      }else{
-      downdxCreateUser(data);
+      if(count>5000){
+        this.$message.error(createUser+"的发稿量超过5000,默认下载前5000条数据")
       }
+      downdxCreateUser(data);
+      
 
     },
     commentForm(index,row){
