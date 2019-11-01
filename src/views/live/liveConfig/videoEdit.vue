@@ -391,19 +391,21 @@ export default {
         this.tableValue[index].beginTime,
         "string"
       );
-      
+      if( this.tableValue[index].time>this.duration){
+         this.tableValue[index].time=this.duration;
+        this.tableValue[index].endTime= this.tableValue[index].beginTime=this.timeFactory(this.tableValue[index].time, "second");
+        this.tableValue[index].duration=0;
+
+      }
        if(this.tableValue[index].time>this.timeFactory(this.tableValue[index].endTime, "string")){
-          this.$message.error("起始时间输入非法");
-        this.tableValue[index].time = this.timeFactory(
-        this.tableValue[index].endTime,
-        "string"
-      )-this.tableValue[index].duration ;
-       this.tableValue[index].beginTime=this.timeFactory(this.tableValue[index].time, "second");
+          this.tableValue[index].endTime=this.tableValue[index].beginTime;
+        this.tableValue[index].duration=0;
+       
 
         }else{
           this.tableValue[index].duration =
-        this.timeFactory(this.tableValue[index].endTime, "string") -
-        this.timeFactory(this.tableValue[index].beginTime, "string");
+       ( this.timeFactory(this.tableValue[index].endTime, "string") -
+        this.timeFactory(this.tableValue[index].beginTime, "string")).toFixed(3);
         }
       
 
@@ -417,15 +419,15 @@ export default {
     handleend(index) {
 
       this.tableValue[index].duration =
-        this.timeFactory(this.tableValue[index].endTime, "string") -
-        this.tableValue[index].time;
+       ( this.timeFactory(this.tableValue[index].endTime, "string") -
+        this.tableValue[index].time).toFixed(3);
 
         if((this.tableValue[index].time+this.tableValue[index].duration)>this.duration){
           this.$message.error("结束时间输入非法");
           this.tableValue[index].endTime= this.timeFactory(this.duration, "second")
            this.tableValue[index].duration =
-        this.timeFactory(this.tableValue[index].endTime, "string") -
-        this.tableValue[index].time;
+       ( this.timeFactory(this.tableValue[index].endTime, "string") -
+        this.tableValue[index].time).toFixed(3);
         }
         
     },
