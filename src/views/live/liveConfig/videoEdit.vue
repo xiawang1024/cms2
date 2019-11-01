@@ -247,7 +247,8 @@ export default {
       this.hanleRow = index;
       //视频跳到当前时间节点
       // *****
-      this.currentTime=this.tableValue[index].time
+       let myvideo = this.$refs.myvideo;
+       myvideo.currentTime=this.tableValue[index].time;
       }
     },
     handleSave(index) {
@@ -390,6 +391,7 @@ export default {
         this.tableValue[index].beginTime,
         "string"
       );
+      
        if(this.tableValue[index].time>this.timeFactory(this.tableValue[index].endTime, "string")){
           this.$message.error("起始时间输入非法");
         this.tableValue[index].time = this.timeFactory(
@@ -477,34 +479,52 @@ export default {
         if (moveFlag) {
           let dx = end - start;
           let data='';
+          //左拓阈值
          if((dx + ol)<0){
            data=0;
          }else{
            data=dx + ol
          }
-        //  e.target.parentNode // 右边界问题 宽度读取问题（target 目标改变）
-        //  let max=_this.duration*_this.basisparam-parseFloat(getStyle(e.target.parentNode, "width"));
-        //  console.log(max,getStyle(e.target.parentNode, "width"),'kaun')
-        //  if((dx + ol)>=max){
-        //    data=max-98 //修正98
-        //  }
+        //  右拖阈值
+         let max=(_this.duration-_this.tableValue[order].duration)*_this.basisparam
+         if(data>max){
+           data=max
+
+         }
           moverCell[order].style.left = data + "px";
 
           //反向监听移动
           _this.timeWatch(data, order, 1);
-          //  console.log(dx,ol,'clientX')
         }
         if (rightResize) {
           let dx = end - start;
           console.log(dx, currentWidth, "width");
-          moverCell[order].style.width = dx + currentWidth + "px";
-          _this.timeWatch(dx + currentWidth, order, 2);
+          let data=dx + currentWidth
+          if(data<0){
+            data=0
+          }
+          let max=(_this.duration-_this.tableValue[order].time)*_this.basisparam
+          if(data>max){
+            data=max
+          }
+
+          moverCell[order].style.width = data + "px";
+          _this.timeWatch(data, order, 2);
         }
         if (leftResize) {
           let dx = end - start;
           console.log(dx, currentWidth, "width");
           let data=(dx + ol)<0?0:(dx + ol);
-
+          let max=_this.duration*_this.basisparam;
+          if(data>max){
+            data=max
+          }
+          if(-dx>ol){
+            dx=ol
+          }
+          if (-dx + currentWidth<0){
+            dx=currentWidth
+          }
           moverCell[order].style.width = -dx + currentWidth + "px";
           moverCell[order].style.left = data+ "px";
           _this.timeWatch([-dx + currentWidth, data], order, 3);
