@@ -11,7 +11,7 @@
                 <td>&#x3000;#</td>
                 <td>开始</td>
                 <td>结束</td>
-                <td>时长</td>
+                <td>时长(s)</td>
                 <td>字幕</td>
                 <td>logo</td>
                 <td>操作&#x3000;</td>
@@ -54,8 +54,8 @@
                     </div>
                   </td>
                   <td class="dealicon">
-                    <i class="el-icon-edit" @click="handleEdite(index)" />
-                    <i class="el-icon-check" @click="handleSave(index)" />
+                    <i class="el-icon-edit" @click="handleEdite(index)" v-show="hanleRow!=index" />
+                    <i class="el-icon-check" @click="handleSave(index)" v-show="hanleRow==index" />
                     <i class="el-icon-picture-outline" @click="handleAddLogo(index)" />
                     <i class="el-icon-delete" @click="handleDelete(index)" />
                   </td>
@@ -96,7 +96,7 @@
               <i class="el-icon-document-add" />
               删除全部
             </div>
-            <div class="controlcell">
+            <div class="controlcell" @click="handleDeleteEmpty">
               <i class="el-icon-delete" />
               删除空的
             </div>
@@ -120,11 +120,11 @@
               :key="index"
               :style="'left:'+basisparam*item.time+'px;width:'+basisparam*item.duration+'px'"
             >
-              <div data-order="fir" :data-my="index" />
-              <div data-order="sec" data-logo="cell" :data-my="index">
+              <div data-order="fir" :data-my="index" :class="hanleRow==index?'activeCell':''" />
+              <div data-order="sec" data-logo="cell" :class="hanleRow==index?'activeCell':''" :data-my="index">
                 <p >{{ item.subtitles }}</p>
               </div>
-              <div data-order="thr" :data-my="index" />
+              <div data-order="thr" :data-my="index" :class="hanleRow==index?'activeCell':''" />
             </div>
           </template>
         </div>
@@ -243,11 +243,24 @@ export default {
     },
 
     handleEdite(index) {
+      if(this.hanleRow == -1){
       this.hanleRow = index;
+      //视频跳到当前时间节点
+      // *****
+      this.currentTime=this.tableValue[index].time
+      }
     },
     handleSave(index) {
+
+      //数据校验不过拒绝保存，
+      if(this.hanleRow==index){
       this.hanleRow = -1;
+
+      }
+
+
     },
+    
     handleAdd() {
       let time = 0;
       //在末尾添加片段
@@ -267,7 +280,10 @@ export default {
         logo: "",
         logoDistance: ""
       };
-
+      if(data.time+data.duration>this.duration){
+        data.duration=0
+        data.endTime=this.timeFactory(data.time + data.duration, "second")
+      }
       this.tableValue.push(data);
     },
     handleDelete(index, row) {
@@ -275,6 +291,15 @@ export default {
     },
     handleDeleteAll() {
       this.tableValue = [];
+    },
+    handleDeleteEmpty(){
+      let arr=[]
+      this.tableValue.forEach((item,index)=>{
+        if(item.duration!=0){
+          arr.push(item)
+        }
+      })
+      this.tableValue=arr;
     },
     handleAddLogo(index) {
       this.dialogVisible = true;
@@ -318,9 +343,9 @@ export default {
       if (type === "second") {
         let min = Math.floor(val % 3600);
         let time =
-          Math.floor(val / 3600) +
+          (Math.floor(val / 3600)<10?('0'+Math.floor(val / 3600)):Math.floor(val / 3600)) +
           ":" +
-          Math.floor(min / 60) +
+          (Math.floor(min / 60)<10?('0'+Math.floor(min / 60)):Math.floor(min / 60)) +
           ":" +
           (val % 60).toFixed(3);
         return time;
@@ -365,20 +390,58 @@ export default {
         this.tableValue[index].beginTime,
         "string"
       );
-      this.tableValue[index].duration =
+       if(this.tableValue[index].time>this.timeFactory(this.tableValue[index].endTime, "string")){
+          this.$message.error("起始时间输入非法");
+        this.tableValue[index].time = this.timeFactory(
+        this.tableValue[index].endTime,
+        "string"
+      )-this.tableValue[index].duration ;
+       this.tableValue[index].beginTime=this.timeFactory(this.tableValue[index].time, "second");
+
+        }else{
+          this.tableValue[index].duration =
         this.timeFactory(this.tableValue[index].endTime, "string") -
         this.timeFactory(this.tableValue[index].beginTime, "string");
+        }
+      
+
+        if(this.tableValue[index].time<0){
+          this.$message.error("起始时间输入非法");
+          this.tableValue[index].time=0;
+          this.tableValue[index].beginTime='00:00:00'
+        }
+       
     },
     handleend(index) {
+
       this.tableValue[index].duration =
         this.timeFactory(this.tableValue[index].endTime, "string") -
         this.tableValue[index].time;
+
+        if((this.tableValue[index].time+this.tableValue[index].duration)>this.duration){
+          this.$message.error("结束时间输入非法");
+          this.tableValue[index].endTime= this.timeFactory(this.duration, "second")
+           this.tableValue[index].duration =
+        this.timeFactory(this.tableValue[index].endTime, "string") -
+        this.tableValue[index].time;
+        }
+        
     },
     handleduration(index) {
+      if( this.tableValue[index].duration<0){
+        this.$message.error('时长输入非法')
+        this.tableValue[index].duration=0;
+      }
+      if((this.tableValue[index].time+this.tableValue[index].duration)>this.duration){
+        this.$message.error('时长输入非法')
+        this.tableValue[index].duration=this.duration-this.tableValue[index].time
+      }
       this.tableValue[index].endTime = this.timeFactory(
         this.tableValue[index].duration + this.tableValue[index].time,
         "second"
       );
+
+
     },
     // 面板组件事件监听
     // 拖动事件
@@ -540,7 +603,9 @@ $forColor: #cccccc;
   top: 0;
   font-size: 14px;
 }
-
+.activeCell{
+  background-color: rgba(31, 121, 224, 0.534);
+}
 // table
 .tableHead {
   display: flex;
