@@ -131,11 +131,13 @@
             size="small"
             @click.stop="deleteConfiorm(scope.row.articleId)"
           >删除</el-button>
+          <el-button type="text" size="mini" @click.stop="articleMark(scope.row.articleId)">打分</el-button>
         </template>
       </el-table-column>
     </el-table>
     <review-dialog :dialog-visible.sync="dialogVisible" :article="documentInfor" />
     <step-dialog :dialog-visible.sync="stepVisible" :process-data="processData" />
+    <mark-dialog :dialog-visible.sync="markVisible" :process-data="processData" />
   </div>
 </template>
 
@@ -150,12 +152,14 @@ import {
 import { getProcess } from "@/api/cms/articleCheck";
 import reviewDialog from "./review";
 import stepDialog from "./step";
+import markDialog from "./articleMark";
 import Sortable from "sortablejs";
 import { mapGetters } from "vuex";
 export default {
   components: {
     reviewDialog,
-    stepDialog
+    stepDialog,
+    markDialog
   },
   props: {
     tableData: {
@@ -187,6 +191,7 @@ export default {
       oldList: [],
       newList: [],
       stepVisible: false,
+      markVisible: false,
       processData: []
     };
   },
@@ -207,6 +212,11 @@ export default {
     });
   },
   methods: {
+    // 打分
+    articleMark(id) {
+      console.log(id, "打分");
+      this.markVisible = true;
+    },
     // 查看审核进度
     checkProcess(row) {
       return new Promise((resolve, reject) => {
