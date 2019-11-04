@@ -30,7 +30,8 @@
       </template>
       <!-- 文字记者打分 -->
       <template slot="wordReporter" slot-scope="scope">
-        <el-select v-model="scope.model.wordReporterList" multiple placeholder="请选择">
+        <input-score v-model="scope.model.wordReporterList"/>
+        <!-- <el-select v-model="scope.model.wordReporterList" multiple placeholder="请选择">
           <el-option
             v-for="item in radioSetting.wordReporter.options"
             :key="item.value"
@@ -49,7 +50,7 @@
           <i class="el-icon-edit" style="color:#409EFF" />
           <el-input-number v-model="editorNum" size="mini" :controls="false" />
           <span>分</span>
-        </div>
+        </div>-->
       </template>
       <!-- 直播记者打分 -->
       <template slot="liveReporter" slot-scope="scope">
@@ -144,10 +145,9 @@
         </div>
       </template>
     </v-form>
-    <input-score />
     <span slot="footer" class="dialog-footer">
       <el-button @click="$emit('update:dialogVisible', false)" size="mini">取 消</el-button>
-      <el-button type="primary" size="mini">确 定</el-button>
+      <el-button type="primary" size="mini" @click="save">确 定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -173,6 +173,7 @@ export default {
   data() {
     return {
       formData: {},
+      defineText: ["选中且禁用", "复选框 A"],
       editorNum: 0,
       markSettings: [
         {
@@ -442,6 +443,9 @@ export default {
     // }
   },
   methods: {
+    save() {
+      console.log(this.$refs.mark.formModel);
+    },
     handleClose() {
       this.$emit("update:dialogVisible", false);
     }
