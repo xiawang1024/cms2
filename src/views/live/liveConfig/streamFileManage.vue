@@ -430,7 +430,9 @@ export default {
       this.$router.push({
         path:'videoEdit',
         query:{
-          data:JSON.stringify(row.videoUrl)
+          data:JSON.stringify(row.videoUrl),
+          fileId:row.id,
+          filePath:row.filePath,
         }
       })
     }

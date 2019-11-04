@@ -68,7 +68,7 @@
       </el-col>
       <el-col :span="11" class="rightPart">
         <div class="videobox">
-          <video ref="myvideo" :src="data" controls style="width:100%" />
+          <video ref="myvideo" :src="data" controls style="width:100%;maxHeight:450px" />
           <div class="coverText">
             <p>{{ subTitle }}</p>
           </div>
@@ -77,20 +77,6 @@
           </div>
         </div>
         <div class="controlboard">
-          <div @click="handleAdd">
-            <div class="controlcell">
-              <i class="el-icon-document-add" />
-              添加字幕
-            </div>
-            <div class="controlcell">
-              <i class="el-icon-minus" />
-              时间偏移 -100毫秒
-            </div>
-            <div class="controlcell">
-              <i class="el-icon-plus" />
-              时间偏移 +100毫秒
-            </div>
-          </div>
           <div>
             <div class="controlcell" @click="handleDeleteAll">
               <i class="el-icon-document-add" />
@@ -101,6 +87,25 @@
               删除空的
             </div>
           </div>
+          <div >
+            <div class="controlcell" @click="handleAdd">
+              <i class="el-icon-document-add" />
+              添加字幕
+            </div>
+            <!-- <div class="controlcell">
+              <i class="el-icon-minus" />
+              时间偏移 -100毫秒
+            </div>
+            <div class="controlcell">
+              <i class="el-icon-plus" />
+              时间偏移 +100毫秒
+            </div> -->
+            <div class="controlcell" @click="handleCutResult" >
+              <i class="el-icon-upload" />
+              保存
+            </div>
+          </div>
+         
         </div>
       </el-col>
     </el-row>
@@ -136,6 +141,12 @@
 <script>
 import grid from "./videoComponents/grid";
 import addLogo from "@/components/videoCut/addLogo";
+
+import {
+  editeStreamfile,
+} from "@/api/live/streamFileManage.js";
+  import simplifySecond from '@/utils/videoCut/simplifySecond';
+
 export default {
   components: { grid, addLogo },
   data() {
@@ -151,7 +162,10 @@ export default {
       currentIndex: "",
       subTitle: "此处是字幕",
       logoDistance: "",
-      dialogVisible: false
+      dialogVisible: false,
+      currentUser:'',
+      fileId:'',
+      filePath:'',
     };
   },
   computed: {
@@ -208,6 +222,9 @@ export default {
   },
   created() {
     this.data = JSON.parse(this.$route.query.data);
+    this.fileId=this.$route.query.fileId;
+    this.filePath=this.$route.query.filePath;
+    this.currentUser=JSON.parse(localStorage.getItem('BaseInfor')).userName;
   },
   mounted() {
     this.onMove();
@@ -260,6 +277,70 @@ export default {
       }
 
 
+    },
+    handleCutResult(){
+      var _this=this;
+      if(this.tableValue.length==0){
+        this.$message.error('没有编辑的视频片段可供保存')
+      }else{
+        if(this.hanleRow==-1){
+           //保存数据格式
+      /**
+       * [
+            {
+              "duration": "00:01:50.0",
+              "fileId": "401",
+              "logoDistance": "10:10",
+              "logoPath": "http://172.20.5.4:8080/dl/2019/7/31/1156403148202442752HoneyBee.png",
+              "orders": "0",
+              "startTime": "00:00:10.0",
+              "filepath": "/home/nieyabing/nginx/nginx-rtmp-module/tmp/vod/2019/7/30/1591531502020190730100454.mp4"
+            }
+          ]
+       */
+        let data = [];
+      data = JSON.parse(JSON.stringify(this.tableValue));
+      data.map((item, index) => {
+        //时间格式化00:00:00.0
+         const times = simplifySecond(item.duration < 0 ? 0 : item.duration)
+        item.duration = times.hours+':'+ times.minutes+':'+times.seconds
+        item.order = index;
+        item.filepath = this.filePath;
+        item.fileId = this.fileId;
+        item.operator=this.currentUser;
+        // item.logoDistance= "80:50"
+        // item.logoPath= "http://172.20.5.4:8080/dl/2019/11/4/1191175432758624256dxlogo.png"
+
+      
+      });
+      //执行保存请求
+      return new Promise((resolve, reject) => {
+            editeStreamfile(data)
+              .then(response => {
+                if (response.data.code == 0) {
+                  this.$message({
+                    type: "success",
+                    message: response.data.msg
+                  });
+                } else {
+                  this.$message({
+                    type: "error",
+                    message: response.data.msg
+                  });
+                }
+               
+                resolve();
+              })
+              .catch(error => {
+                reject(error);
+               
+              });
+          });
+        }else{
+          this.$message.error('请保存当前编辑片段后再试！')
+        }
+      }
+      
     },
     
     handleAdd() {
@@ -596,6 +677,8 @@ $forColor: #cccccc;
     overflow: auto;
     height: 560px;
     padding-bottom: 10px;
+    border: 1px solid #000;
+
   }
   .rightPart {
     // display: flex;
@@ -698,7 +781,7 @@ $forColor: #cccccc;
 $activeMover: #2a6696;
 $nomalMover: rgba(255, 255, 255, 0.1);
 .editePlat {
-  // border: 1px solid black;
+  border-top: 1px solid black;
   border-left: 100px solid rgba(255, 0, 0, 0);
   border-right: 1000px solid rgba(255, 0, 0, 0);
   height: 100%;
