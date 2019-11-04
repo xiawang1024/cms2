@@ -8,13 +8,13 @@
   >
     <v-form
       ref="mark"
-      :form-settings="markSettings"
+      :form-settings="markFormSettings"
       :form-data="formData"
       label-width="80px"
       :show-button="showButton"
     >
       <!-- 编辑打分 -->
-      <template slot="editorMark" slot-scope="scope">
+      <!-- <template slot="editorMark" slot-scope="scope">
         <el-radio-group v-model="scope.model.editorMarkRadio">
           <el-radio
             v-for="(ele,index) in radioSetting.editorRadio"
@@ -27,33 +27,48 @@
           <el-input-number v-model="editorNum" size="mini" :controls="false" />
           <span>分</span>
         </div>
-      </template>
+      </template>-->
       <!-- 文字记者打分 -->
-      <template slot="wordReporter" slot-scope="scope">
-        <input-score v-model="scope.model.wordReporterList"/>
-        <!-- <el-select v-model="scope.model.wordReporterList" multiple placeholder="请选择">
+
+      <template
+        v-for="(ele, index) in markFormSettings[0].items"
+        :slot="ele.name"
+        slot-scope="scope"
+      >
+        <el-select
+          v-model="scope.model[ele.selectName]"
+          multiple
+          placeholder="请选择"
+          v-if="ele.reporterLists && ele.reporterLists.length"
+          :key="index"
+        >
           <el-option
-            v-for="item in radioSetting.wordReporter.options"
+            v-for="item in ele.reporterLists"
             :key="item.value"
             :label="item.label"
             :value="item.value"
           />
         </el-select>
-        <el-radio-group v-model="scope.model.wordReporterRadio">
+        <el-radio-group v-model="scope.model[ele.name]" :key="index">
           <el-radio
-            v-for="(ele,index) in radioSetting.wordRadio"
+            v-for="(item,index) in ele.radioList"
             :key="index"
-            :label="ele.label"
-          >{{ ele.value }}</el-radio>
+            :label="item.label"
+          >{{ item.value }}</el-radio>
         </el-radio-group>
-        <div class="input-score">
+        <div class="input-score" :key="index">
           <i class="el-icon-edit" style="color:#409EFF" />
-          <el-input-number v-model="editorNum" size="mini" :controls="false" />
+          <el-input-number
+            v-model="scope.model[ele.defineScoreName]"
+            size="mini"
+            :controls="false"
+          />
           <span>分</span>
-        </div>-->
+        </div>
       </template>
+
       <!-- 直播记者打分 -->
-      <template slot="liveReporter" slot-scope="scope">
+      <!-- <template slot="liveReporter" slot-scope="scope">
         <el-select v-model="scope.model.liveReporterList" multiple placeholder="请选择">
           <el-option
             v-for="item in radioSetting.liveReporter.options"
@@ -71,12 +86,12 @@
         </el-radio-group>
         <div class="input-score">
           <i class="el-icon-edit" style="color:#409EFF" />
-          <el-input-number v-model="editorNum" size="mini" :controls="false" />
+          <el-input-number v-model="scope.model.editorNum" size="mini" :controls="false" />
           <span>分</span>
         </div>
-      </template>
+      </template>-->
       <!-- 图片记者打分 -->
-      <template slot="pictureReporter" slot-scope="scope">
+      <!-- <template slot="pictureReporter" slot-scope="scope">
         <el-select v-model="scope.model.pictureReporterList" multiple placeholder="请选择">
           <el-option
             v-for="item in radioSetting.pictureReporter.options"
@@ -97,9 +112,9 @@
           <el-input-number v-model="editorNum" size="mini" :controls="false" />
           <span>分</span>
         </div>
-      </template>
+      </template>-->
       <!-- 视频拍摄打分 -->
-      <template slot="videoShoot" slot-scope="scope">
+      <!-- <template slot="videoShoot" slot-scope="scope">
         <el-select v-model="scope.model.videoShootReporterList" multiple placeholder="请选择">
           <el-option
             v-for="item in radioSetting.videoShootReporter.options"
@@ -120,9 +135,9 @@
           <el-input-number v-model="editorNum" size="mini" :controls="false" />
           <span>分</span>
         </div>
-      </template>
+      </template>-->
       <!-- 视频剪辑打分 -->
-      <template slot="videoCut" slot-scope="scope">
+      <!-- <template slot="videoCut" slot-scope="scope">
         <el-select v-model="scope.model.videoCutReporterList" multiple placeholder="请选择">
           <el-option
             v-for="item in radioSetting.videoCutReporter.options"
@@ -143,7 +158,7 @@
           <el-input-number v-model="editorNum" size="mini" :controls="false" />
           <span>分</span>
         </div>
-      </template>
+      </template>-->
     </v-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="$emit('update:dialogVisible', false)" size="mini">取 消</el-button>
@@ -153,7 +168,7 @@
 </template>
 <script>
 // import { checkHandel } from "@/api/cms/articleCheck";
-import inputScore from "./inputScore";
+import inputScore from "./components/inputScore";
 export default {
   components: {
     inputScore
@@ -172,44 +187,202 @@ export default {
   },
   data() {
     return {
-      formData: {},
+      formData: {
+        editorDefineMark: 12,
+        editorNum: 123
+      },
       defineText: ["选中且禁用", "复选框 A"],
-      editorNum: 0,
-      markSettings: [
+      editorNum: 11,
+      markFormSettings: [
         {
           items: [
             {
               label: "编辑打分",
               name: "editorMark",
+              defineScoreName: "editorDefineMark",
+              selectName: "editorselect",
               type: "slot",
-              valueType: "string",
-              placeholder: "请输入关键词"
+              radioList: [
+                {
+                  label: "1",
+                  value: "深度稿"
+                },
+                {
+                  label: "2",
+                  value: "整合稿"
+                },
+                {
+                  label: "3",
+                  value: "记者稿"
+                },
+                {
+                  label: "4",
+                  value: "外稿"
+                },
+                {
+                  label: "5",
+                  value: "直播"
+                }
+              ]
             },
             {
               label: "文字记者",
               name: "wordReporter",
               type: "slot",
-              placeholder: "请选择"
+              defineScoreName: "wordDefineMark",
+              selectName: "wordselect",
+              reporterLists: [
+                {
+                  value: "选项1",
+                  label: "黄金糕"
+                },
+                {
+                  value: "选项2",
+                  label: "双皮奶"
+                }
+              ],
+              radioList: [
+                {
+                  label: "1",
+                  value: "特稿"
+                },
+                {
+                  label: "2",
+                  value: "重点稿"
+                },
+                {
+                  label: "3",
+                  value: "现场稿"
+                },
+                {
+                  label: "4",
+                  value: "一般稿"
+                },
+                {
+                  label: "5",
+                  value: "通稿"
+                }
+              ]
             },
             {
               label: "直播记者",
               name: "liveReporter",
-              type: "slot"
+              type: "slot",
+              defineScoreName: "LiveDefineMark",
+              selectName: "liveselect",
+              reporterLists: [
+                {
+                  value: "选项1",
+                  label: "黄金糕"
+                },
+                {
+                  value: "选项2",
+                  label: "双皮奶"
+                }
+              ],
+              radioList: [
+                {
+                  label: "1",
+                  value: "2小时内"
+                },
+                {
+                  label: "2",
+                  value: "2小时外"
+                }
+              ]
             },
             {
               label: "图片记者",
               name: "pictureReporter",
-              type: "slot"
+              type: "slot",
+              defineScoreName: "pictureDefineMark",
+              selectName: "pictureselect",
+              reporterLists: [
+                {
+                  value: "选项1",
+                  label: "黄金糕"
+                },
+                {
+                  value: "选项2",
+                  label: "双皮奶"
+                }
+              ],
+              radioList: [
+                {
+                  label: "1",
+                  value: "单图"
+                },
+                {
+                  label: "2",
+                  value: "多图"
+                },
+                {
+                  label: "3",
+                  value: "图集"
+                }
+              ]
             },
             {
               label: "视频拍摄",
               name: "videoShoot",
-              type: "slot"
+              type: "slot",
+              defineScoreName: "videoDefineMark",
+              selectName: "videoselect",
+              reporterLists: [
+                {
+                  value: "选项1",
+                  label: "黄金糕"
+                },
+                {
+                  value: "选项2",
+                  label: "双皮奶"
+                }
+              ],
+              radioList: [
+                {
+                  label: "1",
+                  value: "精品"
+                },
+                {
+                  label: "2",
+                  value: "一般"
+                },
+                {
+                  label: "3",
+                  value: "及格"
+                }
+              ]
             },
             {
               label: "视频剪辑",
               name: "videoCut",
-              type: "slot"
+              type: "slot",
+              defineScoreName: "videoCutDefineMark",
+              selectName: "videoCutselect",
+              reporterLists: [
+                {
+                  value: "选项1",
+                  label: "黄金糕"
+                },
+                {
+                  value: "选项2",
+                  label: "双皮奶"
+                }
+              ],
+              radioList: [
+                {
+                  label: "1",
+                  value: "创意"
+                },
+                {
+                  label: "2",
+                  value: "普通"
+                },
+                {
+                  label: "3",
+                  value: "及格"
+                }
+              ]
             }
           ]
         }
@@ -442,9 +615,14 @@ export default {
     //   }
     // }
   },
+  mounted() {
+    this.formData.editorNum = 1234556;
+  },
   methods: {
     save() {
       console.log(this.$refs.mark.formModel);
+      this.formData.editorNum = 666;
+      this.$refs.mark.formModel.editorDefineMark = 666;
     },
     handleClose() {
       this.$emit("update:dialogVisible", false);
