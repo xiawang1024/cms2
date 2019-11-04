@@ -99,7 +99,7 @@ export default {
     pcSiteCharts:'PC端统计',
     ArticleStatisticsByTenantId :'全站发稿量统计',
     ArticleStatisticsByChanel:'频道发稿量统计',
-    ArticleStatisticsByAuthor:'作者发稿量统计',
+    ArticleStatisticsByAuthor:'编辑发稿量统计',
     ArticleClickStaticByTenantId:'文章点击量统计',
     writerStaticDetail:'作者文章点击量',
     dxDocument:'大象发稿统计',

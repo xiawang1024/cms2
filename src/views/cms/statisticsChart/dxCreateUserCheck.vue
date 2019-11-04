@@ -26,7 +26,7 @@
     </el-table>
     <el-row>
       <el-col :span="2" :offset="22">
-        <el-button class="exportBtn" type="primary" size="mini" @click="handleDownload">批量下载</el-button>
+        <el-button class="exportBtn" type="primary" size="mini" @click="handleDownload" :disabled="tableData.length==0">批量下载</el-button>
       </el-col>
     </el-row>
   </div>
