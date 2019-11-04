@@ -47,7 +47,7 @@
         <el-table-column prop="filePath" label="文件路径" show-overflow-tooltip />
         <el-table-column label="操作" width="180">
           <template slot-scope="scope">
-            <!-- <el-button size="mini" type="primary" :disabled="scope.row.filePath==null||scope.row.filePath==''" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <el-button size="mini" type="primary" :disabled="scope.row.filePath==null||scope.row.filePath==''" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button size="mini" type="primary" :disabled="scope.row.filePath==null||scope.row.filePath==''" @click="handleDeal(scope.$index, scope.row)">编辑</el-button>
             <el-button
               size="mini"
@@ -430,7 +430,7 @@ export default {
       this.$router.push({
         path:'videoEdit',
         query:{
-          data:JSON.stringify(row.videoUrl),
+          data:JSON.stringify(row.editUrl),
           fileId:row.id,
           filePath:row.filePath,
         }

@@ -12,7 +12,7 @@
                 <td>开始</td>
                 <td>结束</td>
                 <td>时长(s)</td>
-                <td>字幕</td>
+                <!-- <td>字幕</td> -->
                 <td>logo</td>
                 <td>操作&#x3000;</td>
               </tr>
@@ -44,9 +44,9 @@
                       @change="handleduration(index)"
                     >
                   </td>
-                  <td>
+                  <!-- <td>
                     <input v-model="item.subtitles" :disabled="index!=hanleRow" >
-                  </td>
+                  </td> -->
                   <td>
                     <!-- <input v-model="item.logo" :disabled="index!=hanleRow" > -->
                     <div @click="handleAddLogo(index)">
@@ -69,9 +69,10 @@
       <el-col :span="11" class="rightPart">
         <div class="videobox">
           <video ref="myvideo" :src="data" controls style="width:100%;maxHeight:450px" />
-          <div class="coverText">
+          <!-- 添加字幕功能暂不开放 -->
+          <!-- <div class="coverText">
             <p>{{ subTitle }}</p>
-          </div>
+          </div> -->
           <div v-if="logoDistance" :style="logoStyle">
             <img :src="logo" alt style="width:117px" >
           </div>
@@ -79,7 +80,7 @@
         <div class="controlboard">
           <div>
             <div class="controlcell" @click="handleDeleteAll">
-              <i class="el-icon-document-add" />
+              <i class="el-icon-delete-solid" />
               删除全部
             </div>
             <div class="controlcell" @click="handleDeleteEmpty">
@@ -90,7 +91,8 @@
           <div >
             <div class="controlcell" @click="handleAdd">
               <i class="el-icon-document-add" />
-              添加字幕
+              <!-- 添加字幕 -->
+              添加片段
             </div>
             <!-- <div class="controlcell">
               <i class="el-icon-minus" />
@@ -127,7 +129,7 @@
             >
               <div data-order="fir" :data-my="index" :class="hanleRow==index?'activeCell':''" />
               <div data-order="sec" data-logo="cell" :class="hanleRow==index?'activeCell':''" :data-my="index">
-                <p >{{ item.subtitles }}</p>
+                <!-- <p >{{ item.subtitles }}</p> -->
               </div>
               <div data-order="thr" :data-my="index" :class="hanleRow==index?'activeCell':''" />
             </div>
@@ -308,6 +310,7 @@ export default {
         item.filepath = this.filePath;
         item.fileId = this.fileId;
         item.operator=this.currentUser;
+        item.startTime=item.time;
         // item.logoDistance= "80:50"
         // item.logoPath= "http://172.20.5.4:8080/dl/2019/11/4/1191175432758624256dxlogo.png"
 
