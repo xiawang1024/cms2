@@ -48,12 +48,13 @@
                     <input v-model="item.subtitles" :disabled="index!=hanleRow" >
                   </td> -->
                   <td>
-                    <!-- <input v-model="item.logo" :disabled="index!=hanleRow" > -->
-                    <div @click="handleAddLogo(index)">
-                      <img :src="item.logo" alt style="width:60px;" >
+                    <div @click="handleAddLogo(index)" style="width:60px;">
+                      <img :src="item.logoPath" alt style="width:60px;" >
                     </div>
                   </td>
                   <td class="dealicon">
+                    
+                    <i class="el-icon-view" @click="handlePreview(index)" v-show="hanleRow!=index" />
                     <i class="el-icon-edit" @click="handleEdite(index)" v-show="hanleRow!=index" />
                     <i class="el-icon-check" @click="handleSave(index)" v-show="hanleRow==index" />
                     <i class="el-icon-picture-outline" @click="handleAddLogo(index)" />
@@ -74,7 +75,7 @@
             <p>{{ subTitle }}</p>
           </div> -->
           <div v-if="logoDistance" :style="logoStyle">
-            <img :src="logo" alt style="width:117px" >
+            <img :src="logoPath" alt style="width:117px" >
           </div>
         </div>
         <div class="controlboard">
@@ -251,8 +252,6 @@ export default {
           //实时获取播放时间
           _this.currentTime = parseFloat(this.currentTime).toFixed(4);
           _this.showSubTitle(parseFloat(this.currentTime).toFixed(4));
-
-          // console.log(this.currentTime,'time12312',_this.duration)
           if (this.currentTime.toFixed(2) === _this.duration.toFixed(2)) {
             clearInterval(_this.timer);
             _this.timer = null;
@@ -275,10 +274,30 @@ export default {
       //数据校验不过拒绝保存，
       if(this.hanleRow==index){
       this.hanleRow = -1;
+      }
+    },
+    handlePreview(index){
+      var _this=this;
+         if(this.hanleRow == -1){
+      // this.hanleRow = index;
+      //视频跳到当前时间节点
+      // *****
+       let myvideo = this.$refs.myvideo;
+       myvideo.currentTime=this.tableValue[index].time;
+       let finalTime=this.tableValue[index].time+this.tableValue[index].duration;
+       myvideo.play();
+       myvideo.ontimeupdate=function(){
+          if(myvideo.currentTime>=finalTime){
+          myvideo.pause();
+          setTimeout(() => {
+          this.currentTime=_this.tableValue[index].time;
+
+          }, 500);
+          return false
+          }
+          }
 
       }
-
-
     },
     handleCutResult(){
       var _this=this;
@@ -347,7 +366,8 @@ export default {
     },
     
     handleAdd() {
-      let time = 0;
+      if(this.hanleRow == -1){
+        let time = 0;
       //在末尾添加片段
       let index=this.tableValue.length-1;
       if (this.tableValue[index]) {
@@ -362,7 +382,7 @@ export default {
         endTime: this.timeFactory(time + duration, "second"),
         duration,
         subtitles: "此处是字幕",
-        logo: "",
+        logoPath: "",
         logoDistance: ""
       };
       if(data.time+data.duration>this.duration){
@@ -370,28 +390,50 @@ export default {
         data.endTime=this.timeFactory(data.time + data.duration, "second")
       }
       this.tableValue.push(data);
+
+      }else{
+        this.$message.error('请保存编辑中的视频后再试！')
+      }
+
     },
     handleDelete(index, row) {
+       if(this.hanleRow == -1){
       this.tableValue.splice(index, 1);
+      }else{
+        this.$message.error('请保存编辑中的视频后再试！')
+      }
     },
     handleDeleteAll() {
+      if(this.hanleRow == -1){
       this.tableValue = [];
+      }else{
+        this.$message.error('请保存编辑中的视频后再试！')
+      }
     },
     handleDeleteEmpty(){
-      let arr=[]
+      if(this.hanleRow == -1){
+       let arr=[]
       this.tableValue.forEach((item,index)=>{
         if(item.duration!=0){
           arr.push(item)
         }
       })
       this.tableValue=arr;
+      }else{
+        this.$message.error('请保存编辑中的视频后再试！')
+      }
+     
     },
     handleAddLogo(index) {
-      this.dialogVisible = true;
+      if(this.hanleRow == index){
+       this.dialogVisible = true;
       this.currentIndex = index;
+      }
+     
+
     },
     putLogo(val) {
-      this.tableValue[this.currentIndex].logo = val.logoPath;
+      this.tableValue[this.currentIndex].logoPath = val.logoPath;
       this.tableValue[this.currentIndex].logoDistance = val.logoDistance;
     },
     closeDialog() {
@@ -409,17 +451,17 @@ export default {
         if (time >= time1 && time < time2) {
           flag = true;
           text = item.subtitles;
-          pic = item.logo;
+          pic = item.logoPath;
           logoDistance = item.logoDistance;
         }
       });
       if (flag) {
         this.subTitle = text;
-        this.logo = pic;
+        this.logoPath = pic;
         this.logoDistance = logoDistance;
       } else {
         this.subTitle = "";
-        this.logo = "";
+        this.logoPath = "";
         this.logoDistance = "";
       }
     },
@@ -505,8 +547,7 @@ export default {
       this.tableValue[index].duration =
        ( this.timeFactory(this.tableValue[index].endTime, "string") -
         this.tableValue[index].time).toFixed(3);
-
-        if((this.tableValue[index].time+this.tableValue[index].duration)>this.duration){
+      if((parseFloat(this.tableValue[index].time)+parseFloat(this.tableValue[index].duration))>this.duration){
           this.$message.error("结束时间输入非法");
           this.tableValue[index].endTime= this.timeFactory(this.duration, "second")
            this.tableValue[index].duration =
@@ -520,7 +561,7 @@ export default {
         this.$message.error('时长输入非法')
         this.tableValue[index].duration=0;
       }
-      if((this.tableValue[index].time+this.tableValue[index].duration)>this.duration){
+      if((parseFloat(this.tableValue[index].time)+parseFloat(this.tableValue[index].duration))>this.duration){
         this.$message.error('时长输入非法')
         this.tableValue[index].duration=this.duration-this.tableValue[index].time
       }
@@ -533,13 +574,7 @@ export default {
     },
     // 面板组件事件监听
     // 拖动事件
-    onFocuse() {
-      //获取焦点
-      let node = this.$refs.editePlat.childNodes;
-      node.addEventListener("click", function() {
-        console.log("停止播放，裁剪开始");
-      });
-    },
+    
     ontranslate() {
       let basisNode = this.$refs.editePlat;
       let positon = this.currentTime * this.basisparam;
@@ -584,7 +619,6 @@ export default {
         }
         if (rightResize) {
           let dx = end - start;
-          console.log(dx, currentWidth, "width");
           let data=dx + currentWidth
           if(data<0){
             data=0
@@ -599,7 +633,6 @@ export default {
         }
         if (leftResize) {
           let dx = end - start;
-          console.log(dx, currentWidth, "width");
           let data=(dx + ol)<0?0:(dx + ol);
           let max=_this.duration*_this.basisparam;
           if(data>max){
@@ -617,8 +650,6 @@ export default {
         }
 
         if (e.target.dataset.order == "sec") {
-          //  console.log(e.target,'target')
-
           e.target.addEventListener("mousedown", function(e) {
             order = parseInt(
               e.target.dataset.my || e.target.parentNode.dataset.my

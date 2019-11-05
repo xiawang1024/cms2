@@ -74,7 +74,6 @@ export default {
     //      });
     //     c.height=_this.height;
     //     _this.offset=_this.gridGap*10,
-    //    console.log(this.width,c.width,'width1000')
     //    function getStyle(node, styleType){
     //      return new Promise((resolve,reject)=>{
     //        let attr= node.currentStyle? node.currentStyle[styleType]: getComputedStyle(node)[styleType];//浏览器中有node.currentStyle方法就用，没有就用另一个
@@ -89,9 +88,6 @@ export default {
         c.height=_this.height;
         _this.offset=_this.gridGap*10,
         _this.gridNum = _this.width/_this.gridGap+(_this.currentTime*_this.offset)/_this.gridGap
-        // console.log(_this.width,'asdf')
-        
-        // console.log(_this.beginTime,'beginTime')
       _this.drawBackground();
       },
     movePic(){
@@ -106,7 +102,6 @@ export default {
       const ctx = c.getContext("2d");
       // 画网格
       ctx.fillStyle = _this.gridColor;
-      // console.log('grid',_this.height,_this.gridNum)
       //画竖线
       for (let index = 0; index < _this.gridNum; index += 1) {
         if( _this.gridGap * index-_this.currentTime*_this.offset>-10){
@@ -149,7 +144,9 @@ export default {
         _this.padding * _this.gridGap,
         _this.height
       );
+      _this.drawCurse();
        _this.drawGrid();
+
       
     },
     drawRuler(){
@@ -164,7 +161,6 @@ export default {
       ctx.font = `${fontSize * _this.pixelRatio}px Arial`;
       ctx.fillStyle = _this.rulerColor;
       let second = -1;
-      // console.log(_this.gridNum,'num')
       for (let index = 0; index < _this.gridNum; index += 1) {
         if (
           index &&
@@ -183,7 +179,6 @@ export default {
             fontHeight * _this.pixelRatio
           );
             }
-            console.log(_this.beginTime,_this.duration,'value')
             if(_this.gridGap * index -
               fontSize * _this.pixelRatio * 2 +
               _this.pixelRatio-_this.currentTime*_this.offset>-40){
@@ -214,10 +209,9 @@ export default {
       }
       // 时间点函数
       function durationToTime(duration = 0) {
-        // console.log(DT.d2t(duration.toFixed(3)),'zhi')
         return DT.d2t(duration.toFixed(3));
       }
-     
+    //  _this.drawCurse();
     },
     drawCurse() {
         // 画指针
@@ -227,8 +221,7 @@ export default {
         ctx.fillStyle = _this.cursorColor;
         // ctx.clearRect(0, 0, _this.width, _this.height);
         ctx.fillRect(
-          _this.padding * _this.gridGap +
-            (_this.currentTime - _this.beginTime) * _this.gridGap * 10,
+          100,
           0,
           _this.pixelRatio,
           _this.height
