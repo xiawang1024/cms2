@@ -15,6 +15,6 @@ export function needMerge(data) {
     loadingConfig: {
       noLoading: true
     },
-    timeout: 20000
+    timeout: 60000
   });
 }
