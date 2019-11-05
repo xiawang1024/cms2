@@ -3,7 +3,7 @@
     <div class="tool-bar">
       <el-button size="mini" type="primary" @click="backFoword" v-show="!pageFlag">返回</el-button>
       <el-button size="mini" type="primary" @click="searchAppConfig">检索</el-button>
-      <el-button size="mini" type="primary" @click="addAppConfig">新增</el-button>
+      <el-button size="mini" type="primary" v-if="checkAuth('cms:appSettingConfig:edit')" @click="addAppConfig">新增</el-button>
     </div>
 
     <el-table :data="fullApp">
@@ -32,8 +32,8 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="text" @click="handleDetail(scope.row.id,scope.row)">详情</el-button>
+          <el-button size="mini" type="text" v-if="checkAuth('cms:appSettingConfig:edit')" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="text" @click="handleDetail(scope.row.id,scope.row)">皮肤管理</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -465,6 +465,13 @@ export default {
 
   },
   methods: {
+    checkAuth (authKey) {
+      if (this.$store.getters.authorities.indexOf(authKey) === -1) {
+        return false
+      } else {
+        return true
+      }
+    },
     formatDate(row) {
       if (row) {
         let date = row.createTime.replace("T", " ");
