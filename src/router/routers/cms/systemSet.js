@@ -219,7 +219,7 @@ const systemSet = {
       meta: {
         title: 'appConfig',
         icon: 'appConfig',
-        role: 'cms'
+        role: 'cms:appSettingConfig'
       },
 
     },
@@ -233,42 +233,42 @@ const systemSet = {
       meta: {
         title: 'appTabList',
         icon: 'appConfig',
-        role: 'cms'
+        role: 'cms:appSettingConfig'
       },
       hidden: true
 
     },
 
-    {
-      /**
-       * app顶部列表
-       */
-      path: 'appTopList',
-      component: () => import(`@/${path}/appTopList`),
-      name: 'appTopList',
-      meta: {
-        title: 'appTopList',
-        icon: 'appConfig',
-        role: 'cms'
-      },
-      hidden: true
+    // {
+    //   /**
+    //    * app顶部列表
+    //    */
+    //   path: 'appTopList',
+    //   component: () => import(`@/${path}/appTopList`),
+    //   name: 'appTopList',
+    //   meta: {
+    //     title: 'appTopList',
+    //     icon: 'appConfig',
+    //     role: 'cms'
+    //   },
+    //   hidden: true
 
-    },
-    {
-      /**
-       * app列表页面
-       */
-      path: 'appPages',
-      component: () => import(`@/${path}/appPages`),
-      name: 'appPages',
-      meta: {
-        title: 'appPages',
-        icon: 'appConfig',
-        role: 'cms'
-      },
-      hidden: true
+    // },
+    // {
+    //   /**
+    //    * app列表页面
+    //    */
+    //   path: 'appPages',
+    //   component: () => import(`@/${path}/appPages`),
+    //   name: 'appPages',
+    //   meta: {
+    //     title: 'appPages',
+    //     icon: 'appConfig',
+    //     role: 'cms'
+    //   },
+    //   hidden: true
 
-    }
+    // }
   ]
 }
 
