@@ -34,9 +34,10 @@ export default {
               let result = response.data.result;
               _this.datavalue = result;
             }
+            resolve();
           })
-          .catch(reject => {
-            console.log(reject);
+          .catch(err => {
+            reject(err)
           });
       });
     }
