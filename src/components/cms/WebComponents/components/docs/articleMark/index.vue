@@ -3,7 +3,7 @@
     title="考核打分"
     class="dialog-mark-dialog"
     :visible.sync="dialogVisible"
-    width="675px"
+    width="710px"
     :before-close="handleClose"
   >
     <v-form
@@ -30,7 +30,11 @@
       </template>-->
       <!-- 文字记者打分 -->
 
-      <template v-for="(ele) in markFormSettings[0].items" :slot="ele.name" slot-scope="scope">
+      <template
+        v-for="(ele, index) in markFormSettings[0].items"
+        :slot="ele.name"
+        slot-scope="scope"
+      >
         <el-select
           v-model="scope.model[ele.selectName]"
           multiple
@@ -52,6 +56,18 @@
             :label="item.label"
           >{{ item.value }}</el-radio>
         </el-radio-group>
+
+        <el-popover
+          popper-class="poperclass"
+          placement="top-start"
+          title
+          width="10"
+          trigger="hover"
+          content="清空单选"
+          :key="index"
+        >
+          <i slot="reference" class="el-icon-delete clearRadio" @click="clearRadio(ele.radioName)" />
+        </el-popover>
         <div class="input-score" :key="ele.defineScoreName">
           <i class="el-icon-edit" style="color:#409EFF" />
           <el-input-number
@@ -621,6 +637,9 @@ export default {
     this.formData.editorNum = 1234556;
   },
   methods: {
+    clearRadio(name) {
+      this.$refs.mark.formModel[name] = null;
+    },
     save() {
       console.log(this.$refs.mark.formModel);
       this.formData.editorNum = 666;
@@ -654,5 +673,23 @@ export default {
       }
     }
   }
+  .clearRadio {
+    color: #f56c6c;
+    cursor: pointer;
+    margin-left: 10px;
+  }
 }
+.poperclass {
+  min-width: 70px;
+  line-height: 1;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+</style>
+// <style lang="scss" scoped>
+// .el-popover {
+//   min-width: 85px !important;
+//   line-height: 1 !important;
+// }
+//
 </style>
