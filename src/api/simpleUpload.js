@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import QS   from "qs";
+import QS from "qs";
 import baseUrl from "@/config/base-url";
 // let Cpath = "http://fupload.test.dianzhenkeji.com";
 // let Cpath = "http://fupload.test.dianzhenkeji.com";
@@ -10,10 +10,11 @@ export function needMerge(data) {
   return request({
     url: Cpath + `/chunk/mergeFile`,
     method: "post",
-    data:QS.stringify(data),
+    data: QS.stringify(data),
 
     loadingConfig: {
       noLoading: true
-    }
+    },
+    timeout: 20000
   });
 }
