@@ -30,17 +30,13 @@
       </template>-->
       <!-- 文字记者打分 -->
 
-      <template
-        v-for="(ele, index) in markFormSettings[0].items"
-        :slot="ele.name"
-        slot-scope="scope"
-      >
+      <template v-for="(ele) in markFormSettings[0].items" :slot="ele.name" slot-scope="scope">
         <el-select
           v-model="scope.model[ele.selectName]"
           multiple
           placeholder="请选择"
           v-if="ele.reporterLists && ele.reporterLists.length"
-          :key="index"
+          :key="ele.selectName"
         >
           <el-option
             v-for="item in ele.reporterLists"
@@ -49,14 +45,14 @@
             :value="item.value"
           />
         </el-select>
-        <el-radio-group v-model="scope.model[ele.name]" :key="index">
+        <el-radio-group v-model="scope.model[ele.radioName]" :key="ele.radioName">
           <el-radio
             v-for="(item,index) in ele.radioList"
             :key="index"
             :label="item.label"
           >{{ item.value }}</el-radio>
         </el-radio-group>
-        <div class="input-score" :key="index">
+        <div class="input-score" :key="ele.defineScoreName">
           <i class="el-icon-edit" style="color:#409EFF" />
           <el-input-number
             v-model="scope.model[ele.defineScoreName]"
@@ -201,6 +197,7 @@ export default {
               name: "editorMark",
               defineScoreName: "editorDefineMark",
               selectName: "editorselect",
+              radioName: "editorRadio",
               type: "slot",
               radioList: [
                 {
@@ -231,6 +228,7 @@ export default {
               type: "slot",
               defineScoreName: "wordDefineMark",
               selectName: "wordselect",
+              radioName: "wordRadio",
               reporterLists: [
                 {
                   value: "选项1",
@@ -270,6 +268,7 @@ export default {
               type: "slot",
               defineScoreName: "LiveDefineMark",
               selectName: "liveselect",
+              radioName: "liveRadio",
               reporterLists: [
                 {
                   value: "选项1",
@@ -297,6 +296,7 @@ export default {
               type: "slot",
               defineScoreName: "pictureDefineMark",
               selectName: "pictureselect",
+              radioName: "pictureRadio",
               reporterLists: [
                 {
                   value: "选项1",
@@ -328,6 +328,7 @@ export default {
               type: "slot",
               defineScoreName: "videoDefineMark",
               selectName: "videoselect",
+              radioName: "videoRadio",
               reporterLists: [
                 {
                   value: "选项1",
@@ -359,6 +360,7 @@ export default {
               type: "slot",
               defineScoreName: "videoCutDefineMark",
               selectName: "videoCutselect",
+              radioName: "vodeoCutRadio",
               reporterLists: [
                 {
                   value: "选项1",
