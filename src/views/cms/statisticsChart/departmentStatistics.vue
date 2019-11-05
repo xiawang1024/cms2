@@ -6,7 +6,7 @@
           <v-search :search-settings="searchSettings" @search="searchItem" ref="vserch" />
         </el-col>
         <el-col :span="2">
-          <el-button class="exportBtn" type="success" size="mini" @click="handleExport">一键导出</el-button>
+          <el-button class="exportBtn" type="primary" size="mini" @click="handleExport" :disabled="tableData.length==0">一键导出</el-button>
         </el-col>
       </el-row>
       
@@ -93,6 +93,7 @@ export default {
           visible: true,
           options: [],
           type: "datetime",
+          defaultTime:'00:00:00',
           changeOnSelect: true
         },
         {
@@ -101,6 +102,7 @@ export default {
           visible: true,
           options: [],
           type: "datetime",
+          defaultTime:'23:59:59',
           changeOnSelect: true
         }
       ],
@@ -179,7 +181,6 @@ export default {
         this.channelId=''
       }
       
-      // console.log(this.beginTime, this.endTime,columnId, "time");
       //  if(val.sortBy){
       //      this.sortBy=val.sortBy;
       //  }
@@ -208,10 +209,10 @@ export default {
             this.beginTime = dayjs(val.beginTime).format("YYYY-MM-DD HH:mm:ss");
             this.endTime = dayjs(val.endTime).format("YYYY-MM-DD HH:mm:ss");
           }
-        } else if (val.beginTime == "") {
+        } else if (val.beginTime == ""||val.beginTime == undefined) {
           this.$message.error("请选择开始时间");
           return false;
-        } else if (val.endTime == "") {
+        } else if (val.endTime == ""||val.endTime == undefined) {
           this.$message.error("请选择结束时间");
           return false;
         }
@@ -236,6 +237,7 @@ export default {
             } else {
               this.$message.error(res.data.msg);
             }
+            resolve();
           })
           .catch(err => {
             reject(err);

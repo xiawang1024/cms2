@@ -182,9 +182,10 @@ export default {
               let result = response.data.result;
               _this.boardvalue = result;
             }
+            resolve();
           })
-          .catch(reject => {
-            console.log(reject);
+          .catch(err => {
+            reject(err)
           });
       });
     },
@@ -211,6 +212,7 @@ export default {
             } else {
               this.$message.error(res.data.msg);
             }
+            resolve();
           })
           .catch(err => {
             reject(err);

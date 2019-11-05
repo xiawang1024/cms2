@@ -123,6 +123,7 @@ export default {
             } else {
               this.$message.error(res.data.msg);
             }
+            resolve();
           })
           .catch(err => {
             reject(err);

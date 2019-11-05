@@ -57,7 +57,7 @@ export default {
       clickNum: [],
 
       options: [],
-      chanelSelect: "",
+      chanelSelect: [],
       startDate: "",
       endDate: "",
       periodType: "daily",
@@ -103,11 +103,11 @@ export default {
               _this.options = _this.toTree(result);
               //默认显示第一个频道数据
               _this.channelId=result[0].value;
-              _this.chanelSelect = _this.channelId;
+              _this.chanelSelect = [_this.channelId];
             }
           })
-          .catch(reject => {
-            console.log(reject);
+          .catch(err => {
+           reject(err)
           });
       });
     },
@@ -130,8 +130,8 @@ export default {
               _this.clickNum = _this.formateDate(result, "clickNum");
             }
           })
-          .catch(reject => {
-            console.log(reject);
+          .catch(err => {
+            reject(err)
           });
       });
     },
@@ -146,8 +146,8 @@ export default {
               _this.datavalue = result;
             }
           })
-          .catch(reject => {
-            console.log(reject);
+          .catch(err => {
+            reject(err)
           });
       });
     },
@@ -207,8 +207,8 @@ export default {
 
     //频道切换
     handleCommand(val) {
-      console.log(val, "val");
-      this.channelId = this.chanelSelect.reverse()[0];
+      let arr=JSON.parse(JSON.stringify(val))
+      this.channelId = arr.reverse()[0];
       this.Init();
     },
     //日期选择
