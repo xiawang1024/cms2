@@ -6,7 +6,7 @@
           <v-search :search-settings="searchSettings" @search="searchItem" />
         </el-col>
         <el-col :span="2" >
-          <el-button class="exportBtn" type="success" size="mini" @click="handleExport">导出Excel</el-button>
+          <el-button class="exportBtn" type="primary" size="mini" @click="handleExport" :disabled="tableData.length==0">导出Excel</el-button>
         </el-col>
       </el-row>
     </div>
