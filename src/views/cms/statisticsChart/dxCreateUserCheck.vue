@@ -35,6 +35,7 @@
 import { getdxCreateUserCheck,queryInsideEditorNames,downdxCreateUser} from "@/api/cms/liveCharts";
 import dayjs from "dayjs";
 export default {
+  name:'DxCreateUserCheck',
   data() {
     return {
       searchSettings: [
@@ -72,10 +73,10 @@ export default {
     };
   },
   created() {
-     this.getCreateUser();
 
   },
   mounted() {
+     this.getCreateUser();
    
 
   },

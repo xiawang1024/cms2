@@ -108,7 +108,20 @@ const statisticsChart = {
         meta: { title: 'departmentStatistics', icon: 'department', role: 'cms:departmentStatistics' },
         // meta: { title: 'departmentStatistics', icon: 'department', role: 'cms', }
        
-      },{
+      },
+      {
+        /**
+         * 大象内部编辑考核
+         */
+        path: 'dxCreateUserCheck',
+        component: () => import(`@/${path}/dxCreateUserCheck`),
+        name: 'dxCreateUserCheck',
+        meta: { title: 'dxCreateUserCheck', icon: 'dxCheck', role: 'cms:dxCreateUserCheck',noCache:false},
+        // meta: { title: 'dxCreateUserCheck', icon: 'dxCheck', role: 'cms', }
+      //  hidden:true
+      
+      },
+      {
         /**
          * 大象个人统计
          */
@@ -118,17 +131,6 @@ const statisticsChart = {
         meta: { title: 'dxCreateUser', icon: 'zuozhe', role: 'cms:dxCreateUser' },
         // meta: { title: 'dxCreateUser', icon: 'zuozhe', role: 'cms', }
        
-      },
-      {
-        /**
-         * 大象内部编辑考核
-         */
-        path: 'dxCreateUserCheck',
-        component: () => import(`@/${path}/dxCreateUserCheck`),
-        name: 'dxCreateUserCheck',
-        meta: { title: 'dxCreateUserCheck', icon: 'dxCheck', role: 'cms:dxCreateUserCheck' },
-        // meta: { title: 'dxCreateUserCheck', icon: 'dxCheck', role: 'cms', }
-      //  hidden:true
       },
       
    
