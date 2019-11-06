@@ -4,10 +4,14 @@ import pluginAPI from "./js/main.js";
     // let tinymce
     "use strict";
     const global = tinymce.util.Tools.resolve("tinymce.PluginManager");
-    var imgList = { length: 0 };
+    var imgList = {
+        length: 0
+    };
 
-    function open (editor) {
-        imgList = { length: 0 }
+    function open(editor) {
+        imgList = {
+            length: 0
+        }
         editor.windowManager.open({
             title: "本地图片上传",
             width: 500,
@@ -37,7 +41,6 @@ import pluginAPI from "./js/main.js";
     }
 
     function commandRegister(editor) {
-        console.log(111111)
         editor.addCommand("mceImageUpload", function () {
 
             open(editor);
@@ -67,7 +70,7 @@ import pluginAPI from "./js/main.js";
         });
     }
 
-    function componentRegister (editor) {
+    function componentRegister(editor) {
         editor.addButton("imageupload", {
             title: "上传图片",
             icon: "image",

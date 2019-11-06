@@ -1,50 +1,44 @@
 <template>
-  <transition
-    name="fade"
-    mode="out-in"
-  >
+  <transition name="fade" mode="out-in">
     <component :is="currentComponent" />
   </transition>
 </template>
 <script>
-import { ComponentMap, Components } from './componentMap.js'
+import { ComponentMap, Components } from "./componentMap.js";
 
 export default {
-  name: 'ManageClueComponents',
+  name: "ManageClueComponents",
   components: Components,
   props: {
     componentType: {
       type: String,
-      default: '0'
+      default: "0"
     }
   },
   data() {
     return {
-      currentComponent: ''
-    }
+      currentComponent: ""
+    };
   },
   watch: {
     componentType: function(newType, oldType) {
       this.$nextTick(() => {
-        this.initComponent(newType)
-      })
+        this.initComponent(newType);
+      });
     }
   },
   mounted() {
-    this.initComponent(this.componentType)
+    this.initComponent(this.componentType);
   },
   methods: {
     initComponent(type) {
-      console.log(2222222222222222)
       const current = ComponentMap.filter((item, index) => {
-        return item.type === type
-      })
-      this.currentComponent = Object.keys(current[0])[1]
-      console.log(11111111111111111111111)
-      console.log(this.currentComponent, 'currentComponent')
+        return item.type === type;
+      });
+      this.currentComponent = Object.keys(current[0])[1];
     }
   }
-}
+};
 </script>
 <style lang='scss' scoped>
 .fade-enter-active,

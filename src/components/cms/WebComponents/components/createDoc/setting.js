@@ -182,12 +182,7 @@ export const imagesSeting = [{
       type: 'select',
       // required: true,
       options: articleShowType
-    },
-    {
-      label: '',
-      name: 'btn',
-      type: 'slot'
-    },
+    }
   ]
 }]
 

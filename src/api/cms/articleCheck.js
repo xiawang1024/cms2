@@ -6,7 +6,10 @@ export function checkHandel(data) {
     url: '/cmsnews/auditProcess/updateAuditProcess',
     method: 'post',
     data,
-    requestBodyType: 'formData'
+    requestBodyType: 'formData',
+    loadingConfig: {
+      target: '.el-dialog__body'
+    }
   })
 }
 // 查看审核进度
@@ -35,8 +38,7 @@ export function checkArticleList(data) {
     method: 'post',
     data,
     requestBodyType: 'formData',
-    loadingConfig: {
-    }
+    loadingConfig: {}
   })
 }
 // 获取文章详情

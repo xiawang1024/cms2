@@ -25,7 +25,6 @@ export default {
   computed: {
     ...mapGetters(["sysList", "sysType"]),
     sysTypeList: function() {
-      console.log(this.sysList, sysType, "libiao");
       return this.filterSysList(this.sysList);
     }
   },
@@ -45,7 +44,6 @@ export default {
       this.$store.dispatch("selectSysType", `${sysType.type}`);
     },
     filterSysList(sysList) {
-      console.log(sysList, "this.sysList");
       const syncSysList = sysType.filter(item => {
         return sysList.includes(item.type);
       });

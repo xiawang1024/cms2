@@ -186,12 +186,6 @@ export default {
       },
       type: Array
     }
-    // propInformation: {
-    //   default: ()=> {
-    //     return {}
-    //   },
-    //   type: Object
-    // }
   },
   data() {
     return {
@@ -243,9 +237,6 @@ export default {
               type: "slot",
               placeholder: "请选择",
               required: true
-              // events: {
-              //   change: "filterMethod"
-              // }
             },
             {
               label: "作者",
@@ -303,11 +294,6 @@ export default {
     }
   },
   mounted() {
-    // console.log("mounted111111");
-    // 初始化过滤来源
-    // if (this.sourceList.length) {
-    //   this.filterSourceList = this.sourceList;
-    // }
     // 转载禁用
     if (this.contextMenu.articleType == 3) {
       this.baseSettings[0].items.forEach(ele => {
@@ -351,7 +337,6 @@ export default {
       }
     },
     checkAuth(authKey) {
-      // console.log(this.$store.getters.authorities, 'this.$store.getters.authorities')
       if (this.$store.getters.authorities.indexOf(authKey) === -1) {
         return false;
       } else {
@@ -498,10 +483,6 @@ export default {
       return resoultObj;
     },
     save(formName, publishType, saveType) {
-      console.log(
-        this.$refs.baseForm.formModel,
-        "this.$refs.baseForm.formModel"
-      );
       let resoultObj = Object.assign(
         this.$refs.baseForm.formModel,
         this.$refs.otherForm.formModel,
@@ -565,11 +546,6 @@ export default {
       if (resoultObj.publishTime) {
         resoultObj.publishTime = handleDate(resoultObj.publishTime);
       }
-      // console.log(Date.parse(resoultObj.publishTime), 2222)
-      // console.log(handleDate(resoultObj.publishTime), 2222)
-
-      // 展现形式null处理
-
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.$refs.otherForm
