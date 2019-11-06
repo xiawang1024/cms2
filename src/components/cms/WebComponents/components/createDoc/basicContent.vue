@@ -272,6 +272,7 @@ export default {
     },
     // formItem去重
     removeRepet(originList, extendsList) {
+      console.log(extendsList, "extendsList");
       let ext = originList[0].items.map(ele => {
         return ele.name;
       });

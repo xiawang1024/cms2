@@ -437,18 +437,21 @@ export default {
             if (resoultObj[ele.label]) {
               return {
                 label: ele.label,
-                fieldValue: handleDate(resoultObj[ele.label])
+                fieldValue: handleDate(resoultObj[ele.label]),
+                required: ele.required
               };
             } else {
               return {
                 label: ele.label,
-                fieldValue: resoultObj[ele.label]
+                fieldValue: resoultObj[ele.label],
+                required: ele.required
               };
             }
           } else {
             return {
               label: ele.label,
-              fieldValue: resoultObj[ele.label]
+              fieldValue: resoultObj[ele.label],
+              required: ele.required
             };
           }
         });
