@@ -105,7 +105,7 @@ export default {
     dxDocument:'大象发稿统计',
     dataPermission: '数据权限',
     dxCreateUser:'大象个人统计',
-    dxCreateUserCheck:'大象编辑考核',
+    DxCreateUserCheck:'大象编辑考核',
     departmentStatistics:'部门排行',
     systemStatus: '系统状态',
     logs: '日志',
