@@ -250,7 +250,7 @@ export default {
     // 获取人员列表
     getUserList() {
       return new Promise((resolve, reject) => {
-        UserList({}, 1, 200)
+        UserList({}, 1, 1000)
           .then(async res => {
             this.peopleOptions = res.data.result.content.map(ele => {
               return {
