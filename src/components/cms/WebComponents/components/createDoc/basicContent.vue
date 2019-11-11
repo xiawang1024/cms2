@@ -186,6 +186,8 @@ export default {
           return "datetime";
         case "3":
           return "number";
+        case "4":
+          return "switch";
         default:
           "";
       }
@@ -207,7 +209,7 @@ export default {
                     type: _this.datachange(ele.type),
                     required: ele.required,
                     placeholder: "请输入",
-                    value: ele.defaultValue
+                    value: ele.type == "4" ? false : ele.defaultValue
                     // disabled: ele.defaultValue ? true : false
                   };
                 }
@@ -295,9 +297,16 @@ export default {
               _this.docInfor.extFieldsList.length
             ) {
               _this.docInfor.extFieldsList.forEach(ele => {
+                if (ele.fieldValue === "true") {
+                  ele.fieldValue = true;
+                }
                 _this.docInfor[ele.label] = ele.fieldValue;
               });
             }
+            console.log(
+              _this.docInfor.extFieldsList,
+              "_this.docInfor.extFieldsList"
+            );
             resolve();
           })
           .catch(error => {

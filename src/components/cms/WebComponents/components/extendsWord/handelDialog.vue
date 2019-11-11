@@ -5,7 +5,8 @@
     :title="params.type === 'add' ? '添加字段' : '编辑字段'"
     append-to-body
     class="extends-handel-dialog"
-    width="500px">
+    width="500px"
+  >
     <!-- <el-form :model="extendFieldForm" label-position="top">
       <el-form-item label="名称">
         <el-input v-model="extendFieldForm.name"/>
@@ -18,12 +19,19 @@
       <el-form-item label="必填">
         <el-switch v-model="extendFieldForm.required" active-color="#13ce66"/>
       </el-form-item>
-    </el-form> -->
-    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" :label-width="labelWidth" @typeChange="typeChange" @save="submitSave"/>
+    </el-form>-->
+    <v-form
+      ref="vform"
+      :form-settings="formSettings"
+      :form-data="formData"
+      :label-width="labelWidth"
+      @typeChange="typeChange"
+      @save="submitSave"
+    />
   </el-dialog>
 </template>
 <script>
-import { createExtendsWord, editExtendsWord } from '@/api/cms/columnManage'
+import { createExtendsWord, editExtendsWord } from "@/api/cms/columnManage";
 export default {
   props: {
     dialogVisible: {
@@ -32,7 +40,7 @@ export default {
     },
     params: {
       default: () => {
-        return {}
+        return {};
       },
       type: Object
     }
@@ -43,122 +51,136 @@ export default {
         {
           items: [
             {
-              label: '名称',
-              name: 'label',
-              type: 'text',
+              label: "名称",
+              name: "label",
+              type: "text",
               required: true,
-              placeholder: '请输入名称'
+              placeholder: "请输入名称"
             },
             {
-              label: '类型',
-              name: 'type',
-              type: 'select',
-              placeholder: '请选择',
+              label: "类型",
+              name: "type",
+              type: "select",
+              placeholder: "请选择",
               options: [
                 {
-                  label: '字符串',
-                  value: '1'
-                }, {
-                  label: '时间',
-                  value: '2'
-                }, {
-                  label: '数字',
-                  value: '3'
+                  label: "字符串",
+                  value: "1"
+                },
+                {
+                  label: "时间",
+                  value: "2"
+                },
+                {
+                  label: "数字",
+                  value: "3"
+                },
+                {
+                  label: "布尔",
+                  value: "4"
                 }
               ],
               required: true,
               events: {
-                change: 'typeChange'
+                change: "typeChange"
               }
             },
             {
-              label: '',
-              name: 'defaultValue',
-              type: 'text',
+              label: "",
+              name: "defaultValue",
+              type: "text",
               required: false,
               hidden: true,
-              placeholder: '请输入'
+              placeholder: "请输入"
             },
             {
-              label: '必填',
-              name: 'required',
-              type: 'switch'
+              label: "必填",
+              name: "required",
+              type: "switch"
             }
           ]
         }
       ],
-      labelWidth: '80px',
+      labelWidth: "80px",
       formData: {}
-    }
+    };
   },
   watch: {
     dialogVisible(val) {
-      if(val) {
-        if(this.params.extFieldInfor) {
-          this.formData = this.params.extFieldInfor
-          if(this.params.extFieldInfor.type == '1') {
-            this.formSettings[0].items[2].hidden = false
+      if (val) {
+        if (this.params.extFieldInfor) {
+          this.formData = this.params.extFieldInfor;
+          if (this.params.extFieldInfor.type == "1") {
+            this.formSettings[0].items[2].hidden = false;
           } else {
-            this.formSettings[0].items[2].hidden = true
+            this.formSettings[0].items[2].hidden = true;
           }
         } else {
-          this.formData = {}
-          this.formSettings[0].items[2].hidden = true
+          this.formData = {};
+          this.formSettings[0].items[2].hidden = true;
         }
       }
     }
   },
   methods: {
     typeChange(val) {
-      if(val == '1') {
-        this.formSettings[0].items[2].hidden = false
-      }else {
-        this.formSettings[0].items[2].hidden = true
+      if (val == "1") {
+        this.formSettings[0].items[2].hidden = false;
+      } else {
+        this.formSettings[0].items[2].hidden = true;
       }
     },
     submitSave(data) {
-      var _this = this
-      if(this.params.type === 'edit') {
+      var _this = this;
+      if (this.params.type === "edit") {
         return new Promise((resolve, reject) => {
-          data.extFieldId = this.params.extFieldInfor.extFieldId
+          data.extFieldId = this.params.extFieldInfor.extFieldId;
           editExtendsWord(_this.params.channelId, data)
-            .then((response) => {
-              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-              _this.$emit('update:dialogVisible', false)
-              _this.$emit('submitSuccess')
-              resolve()
+            .then(response => {
+              _this.$message({
+                showClose: true,
+                message: "恭喜你，操作成功!",
+                type: "success"
+              });
+              _this.$emit("update:dialogVisible", false);
+              _this.$emit("submitSuccess");
+              resolve();
             })
-            .catch((error) => {
-              reject(error)
-            })
-        })
+            .catch(error => {
+              reject(error);
+            });
+        });
       } else {
         return new Promise((resolve, reject) => {
           createExtendsWord(_this.params.channelId, data)
-            .then((response) => {
-              _this.$message({ showClose: true, message: '恭喜你，操作成功!', type: 'success' })
-              _this.$emit('update:dialogVisible', false)
-              _this.$emit('submitSuccess')
-              resolve()
+            .then(response => {
+              _this.$message({
+                showClose: true,
+                message: "恭喜你，操作成功!",
+                type: "success"
+              });
+              _this.$emit("update:dialogVisible", false);
+              _this.$emit("submitSuccess");
+              resolve();
             })
-            .catch((error) => {
-              reject(error)
-            })
-        })
+            .catch(error => {
+              reject(error);
+            });
+        });
       }
     },
     handleClose() {
-      this.$emit('update:dialogVisible', false)
+      this.$emit("update:dialogVisible", false);
+    }
+  }
+};
+</script>
+<style lang="scss">
+.extends-handel-dialog {
+  .v-form {
+    .save-btn {
+      margin-bottom: 0;
     }
   }
 }
-</script>
-<style lang="scss">
-  .extends-handel-dialog{
-    .v-form{
-      .save-btn{
-        margin-bottom:0;
-      }
-    }
-  }
 </style>
