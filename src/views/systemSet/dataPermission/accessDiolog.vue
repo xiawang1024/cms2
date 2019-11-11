@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog title="栏目权限设置" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
+    <el-dialog title="用户标签设置" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
       <el-tree
         ref="tree"
         :data="treeData"

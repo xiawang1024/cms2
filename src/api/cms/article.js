@@ -357,7 +357,7 @@ export function markAuthority() {
 // 获取打分json
 export function getMarkJson(articleId) {
   return request({
-    url: `/cms/score/getCheckScoreDTO/${articleId}`,
+    url: `/cms/score/getCheckScoreJsonDTO/${articleId}`,
     method: 'get'
   })
 }
@@ -370,6 +370,13 @@ export function getManuscriptScore(articleId) {
   })
 }
 
+// 获取考核打分详情
+export function getMarkScore(articleId) {
+  return request({
+    url: `/cms/score/getCheckScoreDTO/${articleId}`,
+    method: 'get'
+  })
+}
 // 提交稿件打分
 export function postManuscriptScore(data) {
   return request({

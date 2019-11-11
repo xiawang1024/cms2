@@ -3,7 +3,7 @@
     <v-form
       ref="vForm"
       :form-settings="dxFormSettings"
-      :form-data="formData"
+      :form-data="formDatas"
       label-width="100px"
       :show-button="showButton"
     >
@@ -25,9 +25,14 @@
           content="清空单选"
           :key="index"
         >
-          <i slot="reference" class="el-icon-delete clearRadio" @click="clearRadio(ele.name)" />
+          <i
+            slot="reference"
+            class="el-icon-delete clearRadio"
+            @click="clearRadio(ele.name)"
+            v-if="ele.label"
+          />
         </el-popover>
-        <div class="input-score" :key="ele.defineScoreName">
+        <div class="input-score" :key="ele.defineScoreName" v-if="ele.label">
           <i class="el-icon-edit" style="color:#409EFF" />
           <el-input-number
             v-model="scope.model[ele.defineScoreName]"
@@ -52,7 +57,9 @@ export default {
   },
   data() {
     return {
-      formDatas: {},
+      formDatas: {
+        liveExtraScore: ""
+      },
       showButton: false,
       dxFormSettings: [
         {
@@ -64,15 +71,15 @@ export default {
               type: "slot",
               radioList: [
                 {
-                  label: "1",
+                  label: 1,
                   value: "A"
                 },
                 {
-                  label: "2",
+                  label: 2,
                   value: "B"
                 },
                 {
-                  label: "3",
+                  label: 3,
                   value: "C"
                 }
               ]
@@ -84,15 +91,15 @@ export default {
               type: "slot",
               radioList: [
                 {
-                  label: "1",
+                  label: 1,
                   value: "A"
                 },
                 {
-                  label: "2",
+                  label: 2,
                   value: "B"
                 },
                 {
-                  label: "3",
+                  label: 3,
                   value: "C"
                 }
               ]
@@ -104,18 +111,33 @@ export default {
               type: "slot",
               radioList: [
                 {
-                  label: "1",
+                  label: 1,
                   value: "A"
                 },
                 {
-                  label: "2",
+                  label: 2,
                   value: "B"
                 },
                 {
-                  label: "3",
+                  label: 3,
                   value: "C"
                 }
               ]
+            },
+            {
+              label: "",
+              name: "liveExtraScore",
+              hidden: true
+            },
+            {
+              label: "",
+              name: "videoPictureExtraScore",
+              hidden: true
+            },
+            {
+              label: "",
+              name: "blogExtraScore",
+              hidden: true
             }
           ]
         }
@@ -126,17 +148,20 @@ export default {
     formData: {
       immediate: true,
       handler(val) {
-        console.log(val, "eee");
+        this.formDatas = val;
+        // this.formDatas.liveExtraScore = 123;
       }
     }
   },
   mounted() {
-    this.$refs.vForm.formModel = this.formData;
+    // this.$refs.vForm.formModel = this.formData;
+    // console.log("mountes");
+    // console.log(this.formDatas, "mounte11111s");
   },
   methods: {
     clearRadio(name) {
       this.$refs.vForm.formModel[name] = null;
     }
-  },
+  }
 };
 </script>

@@ -137,7 +137,11 @@
     </el-table>
     <review-dialog :dialog-visible.sync="dialogVisible" :article="documentInfor" />
     <step-dialog :dialog-visible.sync="stepVisible" :process-data="processData" />
-    <mark-dialog :dialog-visible.sync="markVisible" :process-data="processData" />
+    <mark-dialog
+      :dialog-visible.sync="markVisible"
+      :process-data="processData"
+      :score-pro="scorePro"
+    />
   </div>
 </template>
 
@@ -147,7 +151,8 @@ import {
   topDocument,
   untopDocument,
   articalSort,
-  articleUrl
+  articleUrl,
+  markAuthority
 } from "@/api/cms/article";
 import { getProcess } from "@/api/cms/articleCheck";
 import reviewDialog from "./review";
@@ -192,7 +197,8 @@ export default {
       newList: [],
       stepVisible: false,
       markVisible: false,
-      processData: []
+      processData: [],
+      scorePro: {}
     };
   },
   computed: {
@@ -214,8 +220,21 @@ export default {
   methods: {
     // 打分
     articleMark(id) {
-      console.log(id, "打分");
-      this.markVisible = true;
+      // this.markVisible = true;
+      return new Promise((resolve, reject) => {
+        markAuthority()
+          .then(response => {
+            this.scorePro = {
+              authorityType: response.data.result,
+              articleId: id
+            };
+            this.markVisible = true;
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
     },
     // 查看审核进度
     checkProcess(row) {
