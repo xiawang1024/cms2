@@ -100,6 +100,7 @@
         label-width="80px"
         @selectChange="typeChange"
         @selectChanges="selectChanges"
+        :btn-loading="isUploading"
       />
     </el-dialog>
     <el-dialog :visible.sync="dialogVideo" title="预览"
@@ -431,7 +432,9 @@ export default {
         fileType:'',
           createUser:'',
           title:'',
-          state:''
+          state:'',
+          isUploading:false,
+         
     };
   },
   created() {
@@ -491,6 +494,7 @@ export default {
       this.dialogVisible = true;
     },
     submitSave(val) {
+      this.isUploading=true;
       var _this = this;
       let data = {};
       if (val.fileType == 0) {
@@ -551,11 +555,14 @@ export default {
       return new Promise((resolve, reject) => {
         addTranscode(data)
           .then(res => {
+            _this.isUploading=false;
             if (res.data.code == 0) {
               this.$message({
                 type: "success",
                 message: res.data.msg
               });
+        _this.$refs.vform.updateForm();
+
               _this.initTable();
             } else {
               this.$message({

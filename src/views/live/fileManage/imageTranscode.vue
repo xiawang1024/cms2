@@ -75,14 +75,15 @@
 
     <el-dialog :visible.sync="dialogVisible" title="添加">
       <v-form
-        ref="vform"
+        ref="imgform"
         :form-settings="formSettings"
         :form-data="formData"
+        :btn-loading="isUploading"
         @save="submitSave"
         label-width="80px"
       />
     </el-dialog>
-    <el-dialog :visible.sync="dialogVideo" width="0" custom-class="visibleStyle" modal="true">
+    <el-dialog :visible.sync="dialogVideo" width="0" custom-class="visibleStyle" :modal="true">
       <el-row >
         <el-col :span="24" >
           <img :src="videoSource" alt="" >
@@ -202,6 +203,7 @@ export default {
       title: "",
       state: "",
       BaseInfor:'',
+      isUploading:false,
 
     };
   },
@@ -261,8 +263,10 @@ export default {
     },
     handleUpload() {
       this.dialogVisible = true;
+
     },
     submitSave(val) {
+      this.isUploading=true;
       console.log(val,'val')
       
       var _this = this;
@@ -297,12 +301,15 @@ export default {
                 message: res.data.msg
               });
               _this.initTable();
+        _this.$refs.imgform.updateForm();
+
             } else {
               this.$message({
                 type: "error",
                 message: res.data.msg
               });
             }
+            _this.isUploading=false;
             _this.dialogVisible = false;
           })
           .catch(err => {
