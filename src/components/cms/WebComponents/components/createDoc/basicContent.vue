@@ -34,7 +34,7 @@
       ref="othertType"
       :source-list="sourceList"
       :extends-list="extendsList"
-      :images-setting="otherTypeformSetting"
+      :other-setting="otherTypeformSetting"
       :tag-list="tagList"
       :channel-id="channelId"
       :doc-infor="docInfor"
@@ -107,6 +107,7 @@ export default {
       imagesSeting: imagesSeting,
       reproduceSetting: reproduceSetting,
       articleLinkSetting: articleLinkSetting,
+      splicingSetting: splicingSetting,
       sourceList: []
     };
   },
@@ -115,13 +116,13 @@ export default {
     otherTypeformSetting() {
       switch (this.typeForm.articleType) {
         case 1:
-          return imagesSeting;
+          return this.removeRepet(this.imagesSeting, this.extendsList);
         case 2:
-          return splicingSetting;
+          return this.removeRepet(this.splicingSetting, this.extendsList);
         case 4:
-          return reproduceSetting;
+          return this.removeRepet(this.reproduceSetting, this.extendsList);
         case 5:
-          return articleLinkSetting;
+          return this.removeRepet(this.articleLinkSetting, this.extendsList);
         default:
           [];
       }
@@ -196,71 +197,68 @@ export default {
     getColumnInfor(id) {
       // 设置默认值， 防止扩展字段重复添加
       this.otherSettings[0].items = defultItems;
-      var _this = this;
       return new Promise((resolve, reject) => {
         columnInfor(id)
           .then(response => {
             if (response.data.result.extFieldsList) {
-              _this.extendsList = response.data.result.extFieldsList.map(
-                ele => {
-                  return {
-                    label: ele.label,
-                    name: ele.label,
-                    type: _this.datachange(ele.type),
-                    required: ele.required,
-                    placeholder: "请输入",
-                    value: ele.type == "4" ? false : ele.defaultValue
-                    // disabled: ele.defaultValue ? true : false
-                  };
-                }
-              );
+              this.extendsList = response.data.result.extFieldsList.map(ele => {
+                return {
+                  label: ele.label,
+                  name: ele.label,
+                  type: this.datachange(ele.type),
+                  required: ele.required,
+                  placeholder: "请输入",
+                  value: ele.type == "4" ? false : ele.defaultValue
+                  // disabled: ele.defaultValue ? true : false
+                };
+              });
             }
             if (response.data.result.tagRule) {
               Object.keys(response.data.result.tagRule).forEach(ele => {
                 if (response.data.result.tagRule[ele]) {
-                  _this.tagList.push({
+                  this.tagList.push({
                     label: response.data.result.tagRule[ele],
                     value: ele
                   });
                 }
               });
             }
-            _this.otherSettings[0].items[0].options = _this.tagList;
-            _this.imagesSeting[0].items[6].options = _this.tagList;
-            _this.reproduceSetting[0].items[4].options = _this.tagList;
-            _this.articleLinkSetting[0].items[4].options = _this.tagList;
+            this.otherSettings[0].items[0].options = this.tagList;
+            this.imagesSeting[0].items[6].options = this.tagList;
+            this.reproduceSetting[0].items[4].options = this.tagList;
+            this.articleLinkSetting[0].items[4].options = this.tagList;
             this.$nextTick(() => {
-              _this.otherSettings[0].items = _this.otherSettings[0].items.concat(
-                _this.extendsList
+              this.otherSettings[0].items = this.otherSettings[0].items.concat(
+                this.extendsList
               );
-              if (_this.contextMenu.articleType == 3) {
+              if (this.contextMenu.articleType == 3) {
                 this.otherSettings[0].items.forEach(ele => {
                   ele.disabled = true;
                 });
               }
             });
             //未设置标签字段时标签不显示
-            if (!_this.tagList.length) {
-              _this.otherSettings[0].items[0].hidden = true;
-              _this.imagesSeting[0].items[6].hidden = true;
-              _this.reproduceSetting[0].items[4].hidden = true;
-              _this.articleLinkSetting[0].items[4].hidden = true;
+            if (!this.tagList.length) {
+              this.otherSettings[0].items[0].hidden = true;
+              this.imagesSeting[0].items[6].hidden = true;
+              this.reproduceSetting[0].items[4].hidden = true;
+              this.articleLinkSetting[0].items[4].hidden = true;
             } else {
-              _this.otherSettings[0].items[0].hidden = false;
-              _this.imagesSeting[0].items[6].hidden = false;
-              _this.reproduceSetting[0].items[4].hidden = false;
-              _this.articleLinkSetting[0].items[4].hidden = false;
+              this.otherSettings[0].items[0].hidden = false;
+              this.imagesSeting[0].items[6].hidden = false;
+              this.reproduceSetting[0].items[4].hidden = false;
+              this.articleLinkSetting[0].items[4].hidden = false;
             }
-            if (_this.contextMenu.docId) {
-              if (_this.contextMenu.articleType == 3) {
-                _this.getQuoteDocumentInfor(_this.contextMenu.docId);
+            if (this.contextMenu.docId) {
+              if (this.contextMenu.articleType == 3) {
+                this.getQuoteDocumentInfor(this.contextMenu.docId);
               } else {
-                _this.getDocumentInfor(_this.contextMenu.docId);
+                this.getDocumentInfor(this.contextMenu.docId);
               }
             } else {
               // 扩展字段必填触发updateForm
               this.$nextTick(() => {
-                _this.docInfor = {
+                this.docInfor = {
                   hiddenFlag: "0",
                   topFlag: "0",
                   publishTime: new Date()
@@ -274,38 +272,50 @@ export default {
           });
       });
     },
+    // formItem去重
+    removeRepet(originList, extendsList) {
+      console.log(extendsList, "extendsList");
+      let ext = originList[0].items.map(ele => {
+        return ele.name;
+      });
+      extendsList.forEach(ele => {
+        if (ext.indexOf(ele.name) === -1) {
+          originList[0].items.push(ele);
+        }
+      });
+      return originList;
+    },
     getDocumentInfor(id) {
-      var _this = this;
       return new Promise((resolve, reject) => {
         documentInfor(id)
           .then(response => {
-            _this.docInfor = response.data.result;
-            if (_this.docInfor.contentBody) {
-              _this.docInfor.contentBody = _this.docInfor.contentBody.replace(
+            this.docInfor = response.data.result;
+            if (this.docInfor.contentBody) {
+              this.docInfor.contentBody = this.docInfor.contentBody.replace(
                 /!important/g,
                 ""
               );
             }
-            _this.typeForm.articleType = response.data.result.articleType
+            this.typeForm.articleType = response.data.result.articleType
               ? response.data.result.articleType
               : 0;
-            if (_this.typeForm.articleType == 4) {
-              _this.typeForm.articleType = 0;
+            if (this.typeForm.articleType == 4) {
+              this.typeForm.articleType = 0;
             }
             if (
-              _this.docInfor.extFieldsList &&
-              _this.docInfor.extFieldsList.length
+              this.docInfor.extFieldsList &&
+              this.docInfor.extFieldsList.length
             ) {
-              _this.docInfor.extFieldsList.forEach(ele => {
+              this.docInfor.extFieldsList.forEach(ele => {
                 if (ele.fieldValue === "true") {
                   ele.fieldValue = true;
                 }
-                _this.docInfor[ele.label] = ele.fieldValue;
+                this.docInfor[ele.label] = ele.fieldValue;
               });
             }
             console.log(
-              _this.docInfor.extFieldsList,
-              "_this.docInfor.extFieldsList"
+              this.docInfor.extFieldsList,
+              "this.docInfor.extFieldsList"
             );
             resolve();
           })
@@ -316,20 +326,19 @@ export default {
     },
     // 获取引用文章详情
     getQuoteDocumentInfor(id) {
-      var _this = this;
       return new Promise((resolve, reject) => {
         documentQuoteInfor(id)
           .then(response => {
-            _this.docInfor = response.data.result;
-            _this.typeForm.articleType = response.data.result.articleType
+            this.docInfor = response.data.result;
+            this.typeForm.articleType = response.data.result.articleType
               ? response.data.result.articleType
               : 0;
             if (
-              _this.docInfor.extFieldsList &&
-              _this.docInfor.extFieldsList.length
+              this.docInfor.extFieldsList &&
+              this.docInfor.extFieldsList.length
             ) {
-              _this.docInfor.extFieldsList.forEach(ele => {
-                _this.docInfor[ele.label] = ele.fieldValue;
+              this.docInfor.extFieldsList.forEach(ele => {
+                this.docInfor[ele.label] = ele.fieldValue;
               });
             }
             resolve();
@@ -340,8 +349,7 @@ export default {
       });
     },
     fetchDict() {
-      var _this = this;
-      _this.sourceList = [];
+      this.sourceList = [];
       return new Promise((resolve, reject) => {
         fetchDictByDictName("文稿来源")
           .then(response => {
@@ -349,23 +357,23 @@ export default {
               response.data.result.details &&
               response.data.result.details.length
             ) {
-              _this.sourceList = response.data.result.details.map(ele => {
+              this.sourceList = response.data.result.details.map(ele => {
                 return {
                   label: ele.dictDetailName,
                   value: ele.dictDetailName,
                   combinName: ele.combinName
                 };
               });
-              // _this.sourceList = testSource.map(ele => {
+              // this.sourceList = testSource.map(ele => {
               //   return {
               //     label: ele.dictDetailName,
               //     value: ele.dictDetailName,
               //     combinName: ele.combinName
               //   };
               // });
-              _this.imagesSeting[0].items[2].options = _this.sourceList;
-              _this.reproduceSetting[0].items[2].options = _this.sourceList;
-              _this.articleLinkSetting[0].items[2].options = _this.sourceList;
+              this.imagesSeting[0].items[2].options = this.sourceList;
+              this.reproduceSetting[0].items[2].options = this.sourceList;
+              this.articleLinkSetting[0].items[2].options = this.sourceList;
             }
             resolve();
           })

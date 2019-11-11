@@ -426,7 +426,6 @@ export default {
           this.getDocInformation.baseInfor
         );
         resoultObj.coverImagesList = this.getDocInformation.coverImagesList;
-        console.log(resoultObj, "resoultObj");
         if (!resoultObj.articleTitle && resoultObj.articleType !== 2) {
           this.$message.warning("正文标题不能为空");
           return;
@@ -443,11 +442,7 @@ export default {
           this.$message.warning("文章来源不能为空");
           return;
         }
-        if (
-          resoultObj.extFieldsList &&
-          resoultObj.extFieldsList.length &&
-          resoultObj.articleType == 0
-        ) {
+        if (resoultObj.extFieldsList && resoultObj.extFieldsList.length) {
           for (let i = 0; i < resoultObj.extFieldsList.length; i++) {
             if (
               resoultObj.extFieldsList[i].required &&
