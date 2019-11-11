@@ -1,11 +1,17 @@
 import router from './router'
 import store from './store'
-import { Message } from 'element-ui'
+import {
+  Message
+} from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-import { getAuth } from '@/utils/auth' // getAuth from cookie
+import {
+  getAuth
+} from '@/utils/auth' // getAuth from cookie
 
-NProgress.configure({ showSpinner: false }) // NProgress Configuration
+NProgress.configure({
+  showSpinner: false
+}) // NProgress Configuration
 
 // permission judge function
 function hasPermission(authorities, permissionRole) {
@@ -24,7 +30,9 @@ router.beforeEach((to, from, next) => {
     // determine if there has token
     /* has token*/
     if (to.path === '/login') {
-      next({ path: '/' })
+      next({
+        path: '/'
+      })
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
       if (store.getters.authorities.length === 0) {
@@ -34,19 +42,25 @@ router.beforeEach((to, from, next) => {
           .then((res) => {
             // 拉取user_info
             console.log("拉取user_info")
-            console.log(res)
             const authorities = res.user_authorities.permissionCodeList // note: authorities must be a array! such as: ['editor','develop']
 
-            store.dispatch('GenerateRoutes', { authorities }).then(() => {
+            store.dispatch('GenerateRoutes', {
+              authorities
+            }).then(() => {
               // 根据authorities权限生成可访问的路由表
               router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
-              next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+              next({
+                ...to,
+                replace: true
+              }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
             })
           })
           .catch((err) => {
             store.dispatch('FedLogOut').then(() => {
               Message.error(err || 'Verification failed, please login again')
-              next({ path: '/' })
+              next({
+                path: '/'
+              })
             })
           })
       } else {
@@ -55,7 +69,13 @@ router.beforeEach((to, from, next) => {
         if (hasPermission(store.getters.authorities, to.meta.role)) {
           next()
         } else {
-          next({ path: '/401', replace: true, query: { noGoBack: true }})
+          next({
+            path: '/401',
+            replace: true,
+            query: {
+              noGoBack: true
+            }
+          })
         }
         // 可删 ↑
         // next()

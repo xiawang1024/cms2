@@ -2,7 +2,7 @@
   <div class="images">
     <v-form
       ref="form"
-      :form-settings="imagesSetting"
+      :form-settings="otherSetting"
       :form-data="formData"
       label-width="80px"
       :show-button="false"
@@ -44,8 +44,6 @@
       </template>
     </v-form>
     <div class="images-btn">
-      <!-- <el-button type = "primary" size="small" @click = "goBack">预览</el-button> -->
-      <!-- <el-button type = "primary" size="mini" @click = "save('docContentForm', '0', 'saveOnly')">保存</el-button> -->
       <el-button size="mini" @click="goBack">返回</el-button>
       <el-button
         :disabled="Boolean(contextMenu.docId) && (docInfor.articleStatus ==1) && (baseInfor.userName !== docInfor.createUser)"
@@ -94,7 +92,7 @@ export default {
       },
       type: Array
     },
-    imagesSetting: {
+    otherSetting: {
       default: () => {
         return [];
       },
@@ -254,6 +252,35 @@ export default {
           });
         });
       }
+      // 获取扩展字段的值
+      let extendsFields = [];
+      // 扩展字段时间处理
+      if (this.extendsList.length) {
+        extendsFields = this.extendsList.map(ele => {
+          if (ele.type == "datetime") {
+            if (resoultObj[ele.label]) {
+              return {
+                label: ele.label,
+                fieldValue: handleDate(resoultObj[ele.label]),
+                required: ele.required
+              };
+            } else {
+              return {
+                label: ele.label,
+                fieldValue: resoultObj[ele.label],
+                required: ele.required
+              };
+            }
+          } else {
+            return {
+              label: ele.label,
+              fieldValue: resoultObj[ele.label],
+              required: ele.required
+            };
+          }
+        });
+      }
+      resoultObj.extFieldsList = extendsFields;
       resoultObj.tagIdsList = chooseTags;
       resoultObj.articleType = this.articleType;
       delete resoultObj.set;
@@ -274,37 +301,9 @@ export default {
         if (!data) {
           return;
         }
-        let resoultObj = Object.assign(
-          this.$refs.form.formModel,
-          this.adddocSet
-        );
+        let resoultObj = this.getSubmitData();
         resoultObj.channelId = this.channelId;
         resoultObj.articleStatus = publishType;
-        // 标签字段处理
-        let chooseTags = [];
-        if (resoultObj.tagIds) {
-          resoultObj.tagIds.forEach(ele => {
-            this.tagList.forEach(son => {
-              if (ele == son.value) {
-                chooseTags.push({
-                  tagId: son.value,
-                  tagName: son.label
-                });
-              }
-            });
-          });
-        }
-        resoultObj.tagIdsList = chooseTags;
-        resoultObj.articleType = this.articleType;
-        delete resoultObj.set;
-        delete resoultObj.tagIds;
-        delete resoultObj.btn;
-        if (!resoultObj.contentBody) {
-          resoultObj.contentBody = "";
-        }
-        if (resoultObj.publishTime) {
-          resoultObj.publishTime = handleDate(resoultObj.publishTime);
-        }
         // 编辑文章
         if (this.contextMenu.docId) {
           if (

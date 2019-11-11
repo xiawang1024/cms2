@@ -294,11 +294,7 @@ export default {
           this.$message.warning("文章来源不能为空");
           return;
         }
-        if (
-          params.extFieldsList &&
-          params.extFieldsList.length &&
-          params.articleType == 0
-        ) {
+        if (params.extFieldsList && params.extFieldsList.length) {
           for (let i = 0; i < params.extFieldsList.length; i++) {
             if (
               params.extFieldsList[i].required &&
