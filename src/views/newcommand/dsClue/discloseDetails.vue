@@ -185,7 +185,7 @@ import {
   discloseClassify,
   discloseInfor,
   addOprate
-} from "@/api/newsCommand/disclose.js";
+} from "@/api/newsCommand/dsDisclose.js";
 export default {
   name: "DisclosDetails",
   data() {

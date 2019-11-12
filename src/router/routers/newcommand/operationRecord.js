@@ -26,7 +26,7 @@ const operationRecord = {
       icon: 'docSource',
       role: 'newsCommand:operationsRecord'
     },
-    redirect: '/newCommand/manageClue/discloseList', 
+    redirect: '/newCommand/dsClue/dsClueList', 
     hidden:true
   }]
 }

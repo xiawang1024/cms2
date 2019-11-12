@@ -27,7 +27,7 @@ const webSite = {
         icon: 'liveClue',
         role: 'newsCommand:liveClue'
       },
-      redirect: '/newCommand/manageClue/discloseList', 
+      redirect: '/newCommand/dsClue/dsClueList', 
     }
   ]
 }

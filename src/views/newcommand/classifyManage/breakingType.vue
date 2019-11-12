@@ -39,6 +39,7 @@ export default {
       tableData: [],
       handleType: "添加",
       type: "",
+      formData:{},
       formSettings: [
         {
           items: [

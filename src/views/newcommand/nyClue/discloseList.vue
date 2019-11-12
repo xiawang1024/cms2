@@ -213,7 +213,7 @@ import {
   discloseClassify,
   batchQueryUser,
   getZzjgList
-} from "@/api/newsCommand/disclose.js";
+} from "@/api/newsCommand/nyDisclose.js";
 import { deleteColumn } from "@/api/cms/columnManage";
 import mixins from "@/components/cms/mixins";
 
@@ -534,7 +534,7 @@ export default {
       if (handelType == "addDisclose" || handelType == "columnAddEdit") {
         this.$router.push({
           path:
-            "/newCommand/manageClue/addDisclose?Disclose=" +
+            "/newCommand/nyClue/addDisclose?Disclose=" +
             handelType +
             "&discloseId=" +
             id
@@ -545,7 +545,7 @@ export default {
       ) {
         this.$router.push({
           path:
-            "/newCommand/manageClue/discloseDetails?Disclose=" +
+            "/newCommand/nyClue/discloseDetails?Disclose=" +
             handelType +
             "&discloseId=" +
             id

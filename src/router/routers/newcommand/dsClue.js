@@ -3,27 +3,27 @@ import {
   newcommandPath
 } from '@/router/routers/config'
 // 组件所在位置
-const path = `views/${newcommandPath}/manageClue`
+const path = `views/${newcommandPath}/dsClue`
 console.log(path)
 // TODO:左侧菜单 线索管理
-const manageClue = {
-  path: `/${newcommandPath}/manageClue`,
+const dsClue = {
+  path: `/${newcommandPath}/dsClue`,
   component: Layout,
   meta: {
-    title: 'manageClue',
+    title: 'dsClueList',
     icon: 'manageClue',
     role: 'newsCommand:dsbaoliao'
   },
-  name: 'manageClue',
+  name: 'dsClueList',
   children: [{
       /**
        * 爆料列表
        */
-      path: 'discloseList',
+      path: 'dsClueList',
       component: () => import(`@/${path}/discloseList`),
-      name: 'discloseList',
+      name: 'dsClueList',
       meta: {
-        title: 'discloseList',
+        title: 'dsClueList',
         icon: 'discloseList',
         role: 'newsCommand:dsbaoliao'
       }
@@ -50,7 +50,7 @@ const manageClue = {
   }
   ]
 }
-export default manageClue
+export default dsClue
   /**
 {
    *

@@ -134,7 +134,7 @@ import {
   discloseList,
   discloseState,
   discloseClassify
-} from "@/api/newsCommand/disclose.js";
+} from "@/api/newsCommand/dsDisclose.js";
 import { deleteColumn } from "@/api/cms/columnManage";
 import mixins from "@/components/cms/mixins";
 export default {

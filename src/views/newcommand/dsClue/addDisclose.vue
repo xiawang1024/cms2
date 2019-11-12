@@ -63,7 +63,7 @@ import {
   editDisclose,
   discloseInfor,
   // discloseClassify
-} from "@/api/newsCommand/disclose.js";
+} from "@/api/newsCommand/dsDisclose.js";
 export default {
   name: "ColumnHandel",
   data() {
