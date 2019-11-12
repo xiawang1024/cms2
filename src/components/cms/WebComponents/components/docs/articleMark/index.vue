@@ -20,11 +20,11 @@
         slot-scope="scope"
       >
         <el-select
-          v-model="scope.model[ele.selectName]"
+          v-model="markFormData[index].author"
           multiple
           placeholder="请选择"
           v-if="ele.reporterLists && ele.reporterLists.length"
-          :key="ele.selectName"
+          :key="ele.reporterName"
         >
           <el-option
             v-for="item in ele.reporterLists"
@@ -33,7 +33,7 @@
             :value="item.value"
           />
         </el-select>
-        <el-radio-group v-model="scope.model[ele.name]" :key="ele.name">
+        <el-radio-group v-model="markFormData[index].score" :key="ele.scoreName">
           <el-radio
             v-for="(item,index) in ele.radioList"
             :key="index"
@@ -52,75 +52,13 @@
         >
           <i slot="reference" class="el-icon-delete clearRadio" @click="clearRadio(ele.name)" />
         </el-popover>
-        <div class="input-score" :key="ele.defineScoreName">
+        <div class="input-score" :key="ele.defineName">
           <i class="el-icon-edit" style="color:#409EFF" />
-          <el-input-number
-            v-model="scope.model[ele.defineScoreName]"
-            size="mini"
-            :controls="false"
-          />
+          <el-input-number v-model="markFormData[index].extraScore" size="mini" :controls="false" />
           <span>分</span>
         </div>
       </template>
     </v-form>
-    <!-- <v-form
-      v-if="showCheck"
-      ref="mark"
-      :form-settings="markFormSettings"
-      :form-data="formData"
-      label-width="80px"
-      :show-button="showButton"
-    >
-      <template
-        v-for="(ele, index) in markFormSettings[0].items"
-        :slot="ele.name"
-        slot-scope="scope"
-      >
-        <el-select
-          v-model="scope.model[ele.selectName]"
-          multiple
-          placeholder="请选择"
-          v-if="ele.reporterLists && ele.reporterLists.length"
-          :key="ele.selectName"
-        >
-          <el-option
-            v-for="item in ele.reporterLists"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-        <el-radio-group v-model="scope.model[ele.radioName]" :key="ele.radioName">
-          <el-radio
-            v-for="(item,index) in ele.radioList"
-            :key="index"
-            :label="item.label"
-          >{{ item.value }}</el-radio>
-        </el-radio-group>
-
-        <el-popover
-          popper-class="poperclass"
-          placement="top-start"
-          title
-          width="10"
-          trigger="hover"
-          content="清空单选"
-          :key="index"
-        >
-          <i slot="reference" class="el-icon-delete clearRadio" @click="clearRadio(ele.radioName)" />
-        </el-popover>
-        <div class="input-score" :key="ele.defineScoreName">
-          <i class="el-icon-edit" style="color:#409EFF" />
-          <el-input-number
-            v-model="scope.model[ele.defineScoreName]"
-            size="mini"
-            :controls="false"
-          />
-          <span>分</span>
-        </div>
-      </template>
-    </v-form>-->
-    <!-- <check-mark ref="checkMark" :form-data="formData" v-if="showCheck" /> -->
     <dx-mark ref="dxMark" :form-data="formData" v-if="scorePro.authorityType === 'articleScore'" />
     <span slot="footer" class="dialog-footer">
       <el-button @click="$emit('update:dialogVisible', false)" size="mini">取 消</el-button>
@@ -130,18 +68,16 @@
 </template>
 <script>
 import dxMark from "./components/dxMark";
-import checkMark from "./components/checkMark";
 import {
   getManuscriptScore,
-  // getMarkScore,
+  getMarkScore,
   getMarkJson,
   postManuscriptScore,
   postMarkScore
 } from "@/api/cms/article";
 export default {
   components: {
-    dxMark,
-    checkMark
+    dxMark
   },
   props: {
     dialogVisible: {
@@ -157,242 +93,35 @@ export default {
   },
   data() {
     return {
-      formData: {
-        // blogExtraScore: "",
-        // blogScore: "",
-        // liveExtraScore: "",
-        // liveScore: "",
-        // videoPictureExtraScore: "",
-        // videoPictureScore: ""
-        // editorNum: 123,
-        // blogExtraScore: 3,
-        // blogScore: "3",
-        // liveExtraScore: 1,
-        // liveScore: "1",
-        // videoPictureExtraScore: 2,
-        // videoPictureScore: "2",
-        // editorDefineMark: 1,
-        // editorMark: "1",
-        // liveReporter: "1",
-        // pictureReporter: "1",
-        // videoCut: "1",
-        // videoShoot: "1",
-        // wordReporter: "1",
-        // editorRadio: "1",
-        // liveDefineMark: 3,
-        // liveRadio: "1",
-        // pictureDefineMark: 4,
-        // pictureRadio: "1",
-        // videoCutDefineMark: 6,
-        // videoDefineMark: 5,
-        // videoRadio: "1",
-        // vodeoCutRadio: "1",
-        // wordDefineMark: "122",
-        // wordRadio: "1",
-        // wordselect: ["选项1"]
-      },
+      markFormData: [],
+      formData: {},
       showButton: false,
-      markFormSettings: [
-        // {
-        //   items: [
-        //     {
-        //       label: "编辑打分",
-        //       name: "editorMark",
-        //       defineScoreName: "editorDefineMark",
-        //       selectName: "editorselect",
-        //       radioName: "editorRadio",
-        //       type: "slot",
-        //       radioList: [
-        //         {
-        //           label: "1",
-        //           value: "深度稿"
-        //         },
-        //         {
-        //           label: "2",
-        //           value: "整合稿"
-        //         },
-        //         {
-        //           label: "3",
-        //           value: "记者稿"
-        //         },
-        //         {
-        //           label: "4",
-        //           value: "外稿"
-        //         },
-        //         {
-        //           label: "5",
-        //           value: "直播"
-        //         }
-        //       ]
-        //     },
-        //     {
-        //       label: "文字记者",
-        //       name: "wordReporter",
-        //       type: "slot",
-        //       defineScoreName: "wordDefineMark",
-        //       selectName: "wordselect",
-        //       radioName: "wordRadio",
-        //       reporterLists: [
-        //         {
-        //           value: "选项1",
-        //           label: "黄金糕"
-        //         },
-        //         {
-        //           value: "选项2",
-        //           label: "双皮奶"
-        //         }
-        //       ],
-        //       radioList: [
-        //         {
-        //           label: "1",
-        //           value: "特稿"
-        //         },
-        //         {
-        //           label: "2",
-        //           value: "重点稿"
-        //         },
-        //         {
-        //           label: "3",
-        //           value: "现场稿"
-        //         },
-        //         {
-        //           label: "4",
-        //           value: "一般稿"
-        //         },
-        //         {
-        //           label: "5",
-        //           value: "通稿"
-        //         }
-        //       ]
-        //     },
-        //     {
-        //       label: "直播记者",
-        //       name: "liveReporter",
-        //       type: "slot",
-        //       defineScoreName: "liveDefineMark",
-        //       selectName: "liveselect",
-        //       radioName: "liveRadio",
-        //       reporterLists: [
-        //         {
-        //           value: "选项1",
-        //           label: "黄金糕"
-        //         },
-        //         {
-        //           value: "选项2",
-        //           label: "双皮奶"
-        //         }
-        //       ],
-        //       radioList: [
-        //         {
-        //           label: "1",
-        //           value: "2小时内"
-        //         },
-        //         {
-        //           label: "2",
-        //           value: "2小时外"
-        //         }
-        //       ]
-        //     },
-        //     {
-        //       label: "图片记者",
-        //       name: "pictureReporter",
-        //       type: "slot",
-        //       defineScoreName: "pictureDefineMark",
-        //       selectName: "pictureselect",
-        //       radioName: "pictureRadio",
-        //       reporterLists: [
-        //         {
-        //           value: "选项1",
-        //           label: "黄金糕"
-        //         },
-        //         {
-        //           value: "选项2",
-        //           label: "双皮奶"
-        //         }
-        //       ],
-        //       radioList: [
-        //         {
-        //           label: "1",
-        //           value: "单图"
-        //         },
-        //         {
-        //           label: "2",
-        //           value: "多图"
-        //         },
-        //         {
-        //           label: "3",
-        //           value: "图集"
-        //         }
-        //       ]
-        //     },
-        //     {
-        //       label: "视频拍摄",
-        //       name: "videoShoot",
-        //       type: "slot",
-        //       defineScoreName: "videoDefineMark",
-        //       selectName: "videoselect",
-        //       radioName: "videoRadio",
-        //       reporterLists: [
-        //         {
-        //           value: "选项1",
-        //           label: "黄金糕"
-        //         },
-        //         {
-        //           value: "选项2",
-        //           label: "双皮奶"
-        //         }
-        //       ],
-        //       radioList: [
-        //         {
-        //           label: "1",
-        //           value: "精品"
-        //         },
-        //         {
-        //           label: "2",
-        //           value: "一般"
-        //         },
-        //         {
-        //           label: "3",
-        //           value: "及格"
-        //         }
-        //       ]
-        //     },
-        //     {
-        //       label: "视频剪辑",
-        //       name: "videoCut",
-        //       type: "slot",
-        //       defineScoreName: "videoCutDefineMark",
-        //       selectName: "videoCutselect",
-        //       radioName: "vodeoCutRadio",
-        //       reporterLists: [
-        //         {
-        //           value: "选项1",
-        //           label: "黄金糕"
-        //         },
-        //         {
-        //           value: "选项2",
-        //           label: "双皮奶"
-        //         }
-        //       ],
-        //       radioList: [
-        //         {
-        //           label: "1",
-        //           value: "创意"
-        //         },
-        //         {
-        //           label: "2",
-        //           value: "普通"
-        //         },
-        //         {
-        //           label: "3",
-        //           value: "及格"
-        //         }
-        //       ]
-        //     }
-        //   ]
-        // }
-      ]
-      // showCheck: true
+      markFormSettings: []
+      // 数据模板
+      // formModel: [
+      //   {
+      //     items: [
+      //       {
+      //         label: "文字记者",
+      //         name: "wordReporter",
+      //         type: "slot",
+      //         reporterLists: [
+      //           {
+      //             value: "选项2",
+      //             label: "双皮奶"
+      //           }
+      //         ],
+      //         radioList: [
+      //           {
+      //             label: "1",
+      //             value: "特稿"
+      //           }
+      //         ]
+      //       }
+      //     ]
+      //   }
+      // ],
+      // showCheck: true,
     };
   },
   watch: {
@@ -409,57 +138,76 @@ export default {
       }
     }
   },
-  mounted() {
-    // this.$nextTick(() => {
-    //   this.formData = {
-    //     editorNum: 123,
-    //     blogExtraScore: 3,
-    //     blogScore: "3",
-    //     liveExtraScore: 1,
-    //     liveScore: "1",
-    //     videoPictureExtraScore: 2,
-    //     videoPictureScore: "2",
-    //     editorDefineMark: 1,
-    //     editorMark: "1",
-    //     liveReporter: "1",
-    //     pictureReporter: "1",
-    //     videoCut: "1",
-    //     videoShoot: "1",
-    //     wordReporter: "1",
-    //     editorRadio: "1",
-    //     liveDefineMark: 3,
-    //     liveRadio: "1",
-    //     pictureDefineMark: 4,
-    //     pictureRadio: "1",
-    //     videoCutDefineMark: 6,
-    //     videoDefineMark: 5,
-    //     videoRadio: "1",
-    //     vodeoCutRadio: "1",
-    //     wordDefineMark: "122",
-    //     wordRadio: "1",
-    //     wordselect: ["选项1"]
-    //   };
-    // });
-  },
+  mounted() {},
   methods: {
     getMarkJson() {
-      console.log(3333);
+      // this.markFormData = [];
       return new Promise((resolve, reject) => {
-        getMarkJson(this.scorePro.articleId)
-          .then(response => {
-            // let dataOrigin = response.data.result.markFormSettings;
-
+        getMarkJson()
+          .then(async response => {
             this.markFormSettings = response.data.result.markFormSettings;
             this.markFormSettings[0].items.forEach(ele => {
               ele.reporterName = `${ele.name}-reporter`;
               ele.scoreName = `${ele.name}-score`;
               ele.defineName = `${ele.name}-define`;
+              this.markFormData.push({
+                score: "",
+                extraScore: 0,
+                author: [],
+                name: ele.name
+              });
             });
-            console.log(this.markFormSettings, "6666");
-            // this.markFormSettings[0].items = dataOrigin.forEach((ele) => {
-            //   ele.
-            // })
+            const markScore = await this.getMarkScore();
+            // this.markFormData = markScore.data.result.item;
+            console.log(
+              markScore.data.result.item,
+              "markScore.data.result.item"
+            );
+            this.markFormData = [
+              { score: "1", extraScore: 1, author: [], name: "editorMark" },
+              {
+                score: "2",
+                extraScore: 2,
+                author: ["zhaojinpeng"],
+                name: "wordReporter"
+              },
+              {
+                score: "2",
+                extraScore: 3,
+                author: ["hnr1"],
+                name: "liveReporter"
+              },
+              {
+                score: "2",
+                extraScore: 4,
+                author: ["liukai"],
+                name: "pictureReporter"
+              },
+              {
+                score: "3",
+                extraScore: 5,
+                author: ["liukai"],
+                name: "videoShoot"
+              },
+              {
+                score: "3",
+                extraScore: 6,
+                author: ["liukai"],
+                name: "videoCut"
+              }
+            ];
             resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+    getMarkScore() {
+      return new Promise((resolve, reject) => {
+        getMarkScore(this.scorePro.articleId)
+          .then(response => {
+            resolve(response);
           })
           .catch(error => {
             reject(error);
@@ -491,10 +239,13 @@ export default {
           });
       });
     },
+    // 考核打分
     postMarkScore(data) {
       return new Promise((resolve, reject) => {
         postMarkScore(data)
           .then(response => {
+            this.$message.success("打分成功");
+            this.$emit("update:dialogVisible", false);
             resolve();
           })
           .catch(error => {
@@ -502,27 +253,10 @@ export default {
           });
       });
     },
-    // getMarkScore() {
-    //   return new Promise((resolve, reject) => {
-    //     getMarkScore(this.scorePro.articleId)
-    //       .then(response => {
-    //         resolve();
-    //       })
-    //       .catch(error => {
-    //         reject(error);
-    //       });
-    //   });
-    // },
     clearRadio(name) {
       this.$refs.mark.formModel[name] = null;
     },
     save() {
-      //console.log(this.$refs.dxMark.$refs.vForm.formModel, "dxMark");
-      console.log(this.$refs.dxMark.$refs.vForm.formModel, "checkMark");
-      // this.formData.editorNum = 666;
-      // this.$refs.mark.formModel.editorDefineMark = 666;
-      // 考核打分
-      console.log(this.scorePro.authorityType, "this.scorePro.authorityType");
       if (this.scorePro.authorityType === "articleScore") {
         let resData = Object.assign(
           {},
@@ -531,7 +265,13 @@ export default {
         );
         this.postManuscriptScore(resData);
       } else {
-        // 稿件打分
+        // 考核打分
+        let markData = {
+          articleId: this.scorePro.articleId,
+          item: this.markFormData
+        };
+        console.log(this.markFormData);
+        this.postMarkScore(markData);
       }
     },
     handleClose() {
@@ -544,6 +284,9 @@ export default {
 .dialog-mark-dialog {
   .el-dialog__header {
     border-bottom: 1px solid #ebeef5;
+  }
+  .el-dialog__body {
+    min-height: 192px;
   }
   .input-score {
     display: inline-block;

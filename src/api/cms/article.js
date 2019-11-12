@@ -355,10 +355,13 @@ export function markAuthority() {
 }
 
 // 获取打分json
-export function getMarkJson(articleId) {
+export function getMarkJson() {
   return request({
-    url: `/cms/score/getCheckScoreJsonDTO/${articleId}`,
-    method: 'get'
+    url: `/cms/score/getCheckScoreJsonDTO`,
+    method: 'get',
+    loadingConfig: {
+      noLoading: true
+    }
   })
 }
 
@@ -366,7 +369,10 @@ export function getMarkJson(articleId) {
 export function getManuscriptScore(articleId) {
   return request({
     url: `/cms/score/getArticleScoreDTO/${articleId}`,
-    method: 'get'
+    method: 'get',
+    loadingConfig: {
+      target: '.el-dialog__body'
+    }
   })
 }
 
@@ -374,7 +380,10 @@ export function getManuscriptScore(articleId) {
 export function getMarkScore(articleId) {
   return request({
     url: `/cms/score/getCheckScoreDTO/${articleId}`,
-    method: 'get'
+    method: 'get',
+    loadingConfig: {
+      target: '.el-dialog__body'
+    }
   })
 }
 // 提交稿件打分
@@ -382,7 +391,10 @@ export function postManuscriptScore(data) {
   return request({
     url: `/cms/score/saveArticleScore`,
     method: 'post',
-    data
+    data,
+    loadingConfig: {
+      target: '.el-dialog__body'
+    }
   })
 }
 // 提交考核打分
@@ -390,6 +402,9 @@ export function postMarkScore(data) {
   return request({
     url: `/cms/score/saveCheckScore`,
     method: 'post',
-    data
+    data,
+    loadingConfig: {
+      target: '.el-dialog__body'
+    }
   })
 }
