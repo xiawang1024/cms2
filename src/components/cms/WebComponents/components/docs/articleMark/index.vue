@@ -3,7 +3,7 @@
     :title="scorePro.authorityType === 'articleScore'?'大象号稿件打分': '考核打分'"
     class="dialog-mark-dialog"
     :visible.sync="dialogVisible"
-    width="710px"
+    :width="scorePro.authorityType === 'articleScore'?'550px': '710px'"
     :before-close="handleClose"
   >
     <v-form
