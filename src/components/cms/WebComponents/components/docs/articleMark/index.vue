@@ -1,9 +1,11 @@
 <template>
   <el-dialog
-    :title="scorePro.authorityType === 'articleScore'?'大象号稿件打分': '考核打分'"
+    :title="
+      scorePro.authorityType === 'articleScore' ? '大象号稿件打分' : '考核打分'
+    "
     class="dialog-mark-dialog"
     :visible.sync="dialogVisible"
-    :width="scorePro.authorityType === 'articleScore'?'550px': '710px'"
+    :width="scorePro.authorityType === 'articleScore' ? '550px' : '710px'"
     :before-close="handleClose"
   >
     <v-form
@@ -23,22 +25,26 @@
           v-model="markFormData[index].author"
           multiple
           placeholder="请选择"
-          v-if="ele.reporterLists && ele.reporterLists.length"
+          v-if="ele.reporterList && ele.reporterList.length"
           :key="ele.reporterName"
         >
           <el-option
-            v-for="item in ele.reporterLists"
+            v-for="item in ele.reporterList"
             :key="item.value"
             :label="item.label"
             :value="item.value"
           />
         </el-select>
-        <el-radio-group v-model="markFormData[index].score" :key="ele.scoreName">
+        <el-radio-group
+          v-model="markFormData[index].score"
+          :key="ele.scoreName"
+        >
           <el-radio
-            v-for="(item,index) in ele.radioList"
+            v-for="(item, index) in ele.radioList"
             :key="index"
-            :label="item.label"
-          >{{ item.value }}</el-radio>
+            :label="item.value"
+          >{{ item.label }}</el-radio
+          >
         </el-radio-group>
 
         <el-popover
@@ -50,18 +56,32 @@
           content="清空单选"
           :key="index"
         >
-          <i slot="reference" class="el-icon-delete clearRadio" @click="clearRadio(ele.name)" />
+          <i
+            slot="reference"
+            class="el-icon-delete clearRadio"
+            @click="clearRadio(ele.name)"
+          />
         </el-popover>
         <div class="input-score" :key="ele.defineName">
           <i class="el-icon-edit" style="color:#409EFF" />
-          <el-input-number v-model="markFormData[index].extraScore" size="mini" :controls="false" />
+          <el-input-number
+            v-model="markFormData[index].extraScore"
+            size="mini"
+            :controls="false"
+          />
           <span>分</span>
         </div>
       </template>
     </v-form>
-    <dx-mark ref="dxMark" :form-data="formData" v-if="scorePro.authorityType === 'articleScore'" />
+    <dx-mark
+      ref="dxMark"
+      :form-data="formData"
+      v-if="scorePro.authorityType === 'articleScore'"
+    />
     <span slot="footer" class="dialog-footer">
-      <el-button @click="$emit('update:dialogVisible', false)" size="mini">取 消</el-button>
+      <el-button @click="$emit('update:dialogVisible', false)" size="mini"
+      >取 消</el-button
+      >
       <el-button type="primary" size="mini" @click="save">确 定</el-button>
     </span>
   </el-dialog>
@@ -158,44 +178,7 @@ export default {
               });
             });
             const markScore = await this.getMarkScore();
-            // this.markFormData = markScore.data.result.item;
-            console.log(
-              markScore.data.result.item,
-              "markScore.data.result.item"
-            );
-            this.markFormData = [
-              { score: "1", extraScore: 1, author: [], name: "editorMark" },
-              {
-                score: "2",
-                extraScore: 2,
-                author: ["zhaojinpeng"],
-                name: "wordReporter"
-              },
-              {
-                score: "2",
-                extraScore: 3,
-                author: ["hnr1"],
-                name: "liveReporter"
-              },
-              {
-                score: "2",
-                extraScore: 4,
-                author: ["liukai"],
-                name: "pictureReporter"
-              },
-              {
-                score: "3",
-                extraScore: 5,
-                author: ["liukai"],
-                name: "videoShoot"
-              },
-              {
-                score: "3",
-                extraScore: 6,
-                author: ["liukai"],
-                name: "videoCut"
-              }
-            ];
+            this.markFormData = markScore.data.result.item;
             resolve();
           })
           .catch(error => {
