@@ -54,6 +54,7 @@
           <span v-if="scope.row.state==3">{{ scope.row.vodStream|createUrl }}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="fileLength" width="150" label="时长" :formatter="timeFormate" />
       <el-table-column label="操作" width="230" fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -100,6 +101,7 @@
         label-width="80px"
         @selectChange="typeChange"
         @selectChanges="selectChanges"
+        :btn-loading="isUploading"
       />
     </el-dialog>
     <el-dialog :visible.sync="dialogVideo" title="预览"
@@ -431,7 +433,9 @@ export default {
         fileType:'',
           createUser:'',
           title:'',
-          state:''
+          state:'',
+          isUploading:false,
+         
     };
   },
   created() {
@@ -478,6 +482,23 @@ export default {
       }
       return data;
     },
+    timeFormate(param){
+      let data = "";
+      let val=param.fileLength;
+      if(val){
+         let min = Math.floor(val % 3600);
+        let time =
+          (Math.floor(val / 3600)<10?('0'+Math.floor(val / 3600)):Math.floor(val / 3600)) +
+          ":" +
+          (Math.floor(min / 60)<10?('0'+Math.floor(min / 60)):Math.floor(min / 60)) +
+          ":" +
+          (val % 60).toFixed(0);
+       
+        data=time
+      }
+     
+      return data;
+    },
     //分页处理
     handleSizeChange(val) {
       this.pageSize = val;
@@ -491,6 +512,7 @@ export default {
       this.dialogVisible = true;
     },
     submitSave(val) {
+      this.isUploading=true;
       var _this = this;
       let data = {};
       if (val.fileType == 0) {
@@ -551,11 +573,14 @@ export default {
       return new Promise((resolve, reject) => {
         addTranscode(data)
           .then(res => {
+            _this.isUploading=false;
             if (res.data.code == 0) {
               this.$message({
                 type: "success",
                 message: res.data.msg
               });
+        _this.$refs.vform.updateForm();
+
               _this.initTable();
             } else {
               this.$message({
