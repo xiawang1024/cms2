@@ -59,7 +59,7 @@
           <i
             slot="reference"
             class="el-icon-delete clearRadio"
-            @click="clearRadio(ele.name)"
+            @click="clearRadio(index)"
           />
         </el-popover>
         <div class="input-score" :key="ele.defineName">
@@ -236,8 +236,9 @@ export default {
           });
       });
     },
-    clearRadio(name) {
-      this.$refs.mark.formModel[name] = null;
+    clearRadio(index) {
+      this.markFormData[index].score = "";
+      // this.$refs.mark.formModel[name] = null;
     },
     save() {
       if (this.scorePro.authorityType === "articleScore") {
