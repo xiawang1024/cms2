@@ -1058,6 +1058,7 @@ export default {
         this.removeCallbacks = tmpRemoveCallback;
         this.beforeUploadCallbacks = tmpBeforeUploadCallback;
         this.defineHttpRequest = tempHttpRequest;
+        console.log(this.formModel, "this.formModel");
         this.updateRule();
       }
     },

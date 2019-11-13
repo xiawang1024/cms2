@@ -27,9 +27,9 @@
           <span v-else>禁用</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100">
+      <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleAlter(scope.row)">权限设置</el-button>
+          <el-button size="mini" type="primary" @click="handleAlter(scope.row)">用户标签设置</el-button>
           <!-- <el-button size="mini" type="success" @click="handleSource(scope.row)">来源权限</el-button> -->
         </template>
       </el-table-column>

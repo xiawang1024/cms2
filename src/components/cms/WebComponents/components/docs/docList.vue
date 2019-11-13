@@ -27,7 +27,9 @@
           <i
             class="el-icon-picture-outline"
             title="正文有图"
-            v-if="scope.row.contentImagesList && scope.row.contentImagesList.length"
+            v-if="
+              scope.row.contentImagesList && scope.row.contentImagesList.length
+            "
           />
           <i
             class="el-icon-folder-opened"
@@ -35,7 +37,7 @@
             v-if="documentHasImg(scope.row.articleAttachmentsList)"
           />
           <i class="el-icon-top" title="置顶" v-if="scope.row.topFlag == 1" />
-          <i class="iconfont iconlink" title="引用" v-if="scope.row.articleType ==3" />
+          <i class="iconfont iconlink" title="引用" v-if="scope.row.articleType == 3" />
         </template>
       </el-table-column>
 
@@ -66,7 +68,11 @@
           <span v-if="scope.row.articleType == 2" style="cursor:default">拼条</span>
           <span
             v-if="scope.row.articleType == 3"
-            :title="scope.row.referArticleParentChannelNames ? '引用自：' + scope.row.referArticleParentChannelNames : ''"
+            :title="
+              scope.row.referArticleParentChannelNames
+                ? '引用自：' + scope.row.referArticleParentChannelNames
+                : ''
+            "
             style="cursor:default"
           >引用</span>
           <span v-if="scope.row.articleType == 4" style="cursor:default">转载</span>
@@ -88,13 +94,25 @@
       </el-table-column>
       <!-- <el-table-column prop="mark" label="标记" width="100"/> -->
       <el-table-column prop="tagIdsList" label="标记" width="100" show-overflow-tooltip>
-        <template slot-scope="scope">{{ tagsChange(scope.row.tagIdsList) }}</template>
+        <template slot-scope="scope">
+          {{
+            tagsChange(scope.row.tagIdsList)
+          }}
+        </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="155" show-overflow-tooltip>
-        <template slot-scope="scope">{{ scope.row.createTime|timeFilter }}</template>
+        <template slot-scope="scope">
+          {{
+            scope.row.createTime | timeFilter
+          }}
+        </template>
       </el-table-column>
       <el-table-column prop="publishTime" label="发布时间" width="155" show-overflow-tooltip>
-        <template slot-scope="scope">{{ scope.row.publishTime|timeFilter }}</template>
+        <template slot-scope="scope">
+          {{
+            scope.row.publishTime | timeFilter
+          }}
+        </template>
       </el-table-column>
       <el-table-column prop="createUser" label="撰稿人" width="70" show-overflow-tooltip />
       <el-table-column prop="clickNum" label="点击" width="70" show-overflow-tooltip />
@@ -131,11 +149,22 @@
             size="small"
             @click.stop="deleteConfiorm(scope.row.articleId)"
           >删除</el-button>
+          <el-button
+            v-if="scorePro.authorityType"
+            type="text"
+            size="mini"
+            @click.stop="articleMark(scope.row.articleId)"
+          >打分</el-button>
         </template>
       </el-table-column>
     </el-table>
     <review-dialog :dialog-visible.sync="dialogVisible" :article="documentInfor" />
     <step-dialog :dialog-visible.sync="stepVisible" :process-data="processData" />
+    <mark-dialog
+      :dialog-visible.sync="markVisible"
+      :process-data="processData"
+      :score-pro="scorePro"
+    />
   </div>
 </template>
 
@@ -145,17 +174,20 @@ import {
   topDocument,
   untopDocument,
   articalSort,
-  articleUrl
+  articleUrl,
+  markAuthority
 } from "@/api/cms/article";
 import { getProcess } from "@/api/cms/articleCheck";
 import reviewDialog from "./review";
 import stepDialog from "./step";
+import markDialog from "./articleMark";
 import Sortable from "sortablejs";
 import { mapGetters } from "vuex";
 export default {
   components: {
     reviewDialog,
-    stepDialog
+    stepDialog,
+    markDialog
   },
   props: {
     tableData: {
@@ -187,7 +219,9 @@ export default {
       oldList: [],
       newList: [],
       stepVisible: false,
-      processData: []
+      markVisible: false,
+      processData: [],
+      scorePro: {}
     };
   },
   computed: {
@@ -200,13 +234,33 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      console.log(this.checkAuth("cms:article:nodrag"), "nodrag");
       if (!this.checkAuth("cms:article:nodrag")) {
         this.setSort();
       }
     });
+    this.getMarkAuthor();
   },
   methods: {
+    // 获取打分权限
+    getMarkAuthor() {
+      return new Promise((resolve, reject) => {
+        markAuthority()
+          .then(response => {
+            this.scorePro = {
+              authorityType: response.data.result
+            };
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+    // 打分
+    articleMark(id) {
+      this.scorePro.articleId = id;
+      this.markVisible = true;
+    },
     // 查看审核进度
     checkProcess(row) {
       return new Promise((resolve, reject) => {
@@ -527,4 +581,3 @@ $color-blue: #3498db;
   // }
 }
 </style>
-

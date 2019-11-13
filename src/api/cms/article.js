@@ -344,3 +344,67 @@ export function articleUrl(articleId) {
     method: 'get'
   })
 }
+/** 文章打分 */
+
+// 判断打分权限
+export function markAuthority() {
+  return request({
+    url: `/cms/score/getScoreAuthority`,
+    method: 'get'
+  })
+}
+
+// 获取打分json
+export function getMarkJson() {
+  return request({
+    url: `/cms/score/getCheckScoreJsonDTO`,
+    method: 'get',
+    loadingConfig: {
+      noLoading: true
+    }
+  })
+}
+
+// 获取稿件打分详情
+export function getManuscriptScore(articleId) {
+  return request({
+    url: `/cms/score/getArticleScoreDTO/${articleId}`,
+    method: 'get',
+    loadingConfig: {
+      target: '.el-dialog__body'
+    }
+  })
+}
+
+// 获取考核打分详情
+export function getMarkScore(articleId) {
+  return request({
+    url: `/cms/score/getCheckScoreDTO/${articleId}`,
+    method: 'get',
+    loadingConfig: {
+      target: '.el-dialog__body'
+    }
+  })
+}
+// 提交稿件打分
+export function postManuscriptScore(data) {
+  return request({
+    url: `/cms/score/saveArticleScore`,
+    method: 'post',
+    data,
+    loadingConfig: {
+      target: '.el-dialog__body'
+    }
+  })
+}
+// 提交考核打分
+export function postMarkScore(data) {
+  return request({
+    url: `/cms/score/saveCheckScore`,
+    method: 'post',
+    data,
+    loadingConfig: {
+      target: '.el-dialog__body'
+    }
+  })
+}
