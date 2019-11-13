@@ -12,7 +12,7 @@
     </div>
 
     <el-table :data="tableData" style="width: 100%" stripe>
-      <el-table-column label="部门" prop="departmentName" width="200" />
+      <!-- <el-table-column label="部门" prop="departmentName" width="200" /> -->
       <el-table-column label="来源" prop="origin" width="150" />
       <el-table-column label="ID序号" width="200" prop="id" />
       <el-table-column label="标题" prop="title" />
