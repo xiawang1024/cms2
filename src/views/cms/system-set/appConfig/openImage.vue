@@ -113,6 +113,7 @@ export default {
               limit: 1,
               disabled: false,
               placeholder: "请上传启动页图片",
+              maxSize:1024,
               rule: [
                 {
                   required: true,
@@ -128,6 +129,7 @@ export default {
               limit: 1,
               disabled: false,
               placeholder: "请上传启动页图片",
+              maxSize:1024,
               rule: [
                 {
                   required: true,
@@ -143,6 +145,7 @@ export default {
               limit: 1,
               disabled: false,
               placeholder: "请上传启动页图片",
+              maxSize:1024,
               rule: [
                 {
                   required: true,
@@ -158,6 +161,7 @@ export default {
               limit: 1,
               disabled: false,
               placeholder: "请上传启动页图片",
+              maxSize:1024,
               rule: [
                 {
                   required: true,
