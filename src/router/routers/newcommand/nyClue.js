@@ -12,20 +12,20 @@ const nyClue = {
   meta: {
     title: 'nyClueList',
     icon: 'manageClue',
-    role: 'newsCommand:dsbaoliao'
+    role: 'newsCommand:nybaoliao'
   },
   name: 'nyClueList',
   children: [{
       /**
        * 爆料列表
        */
-      path: 'nyClueList',
+      path: 'discloseList',
       component: () => import(`@/${path}/discloseList`),
       name: 'nyClueList',
       meta: {
         title: 'nyClueList',
         icon: 'discloseList',
-        role: 'newsCommand:dsbaoliao'
+        role: 'newsCommand:nybaoliao'
       }
     },
     {

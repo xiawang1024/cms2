@@ -224,9 +224,6 @@ export default {
       dialogVisible: false
     };
   },
-  computed: {
-    // ...mapGetters(['discloseClassify'])
-  },
   mounted() {
     this.discloseId = this.$route.query.discloseId;
     this.discloseInfor(this.discloseId);

@@ -130,7 +130,7 @@ export default {
             }, { 
               label: "上传",
               name: "videoUrl",
-              type: "file",
+              type: "file"
               // acceptFile:{accept:['.mp4','.jpg','.png','.jpeg']}
 
             }
@@ -161,7 +161,7 @@ export default {
     }
     if (this.isEdit) {
       this.discloseId = this.$route.query.discloseId;
-      this.discloseInfor(this.discloseId);
+      this.getdiscloseInfor(this.discloseId);
     }
 
   
@@ -224,7 +224,7 @@ export default {
     //   });
     // },
     // 爆料详情
-    discloseInfor(res) {
+    getdiscloseInfor(res) {
       var _this=this;
       return new Promise((resolve, reject) => {
         discloseInfor(res)
@@ -238,7 +238,8 @@ export default {
 
                 item.name=item.dataUrl.split("/").reverse()[0]
               })
-              console.log( _this.formData.videoUrl,'回显数据')
+            }else{
+               _this.formData.videoUrl=[]
             }
             resolve();
           })
@@ -254,12 +255,12 @@ export default {
           if (context.isActive(context.$route)) {
             const latestView = visitedViews.slice(-1)[0];
             if (latestView) {
-              if (latestView.path == "/newCommand/manageClue/discloseList") {
+              if (latestView.path == "/newCommand/dsClue/discloseList") {
                 context.$router.push(latestView);
               } else {
                 this.$router.replace({
                   path:
-                    "/newCommand/manageClue/discloseList?time=" +
+                    "/newCommand/dsClue/discloseList?time=" +
                     new Date().getTime()
                 });
               }
@@ -305,8 +306,6 @@ export default {
       this.tijiaodata = formData1;
       this.isLoading = true;
       if (this.isEdit) {
-        
-
         return new Promise((resolve, reject) => {
           let newformData1 = formData1;
           newformData1.id = _this.discloseId;

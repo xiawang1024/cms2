@@ -62,7 +62,7 @@ import {
   createDisclose,
   editDisclose,
   discloseInfor,
-  // discloseClassify
+  discloseClassify
 } from "@/api/newsCommand/nyDisclose.js";
 export default {
   name: "ColumnHandel",
@@ -127,12 +127,6 @@ export default {
                   value:1
                 }
               ]
-            }, { 
-              label: "上传",
-              name: "videoUrl",
-              type: "file",
-              // acceptFile:{accept:['.mp4','.jpg','.png','.jpeg']}
-
             }
           ]
         }
@@ -153,7 +147,7 @@ export default {
     
   },
   mounted() {
-    // this.discloseClassify();
+    this.discloseClassify();
     if (this.$route.query.Disclose == "addDisclose") {
       this.isEdit = false;
     } else {
@@ -208,21 +202,21 @@ export default {
       });
     },
     // 搜索分类接口
-    // discloseClassify() {
-    //   var _this = this;
-    //   return new Promise((resolve, reject) => {
-    //     discloseClassify().then(response => {
-    //       _this.formSettings[0].items[1].options = response.data.result.map(
-    //         ele => {
-    //           return {
-    //             label: ele.typeName,
-    //             value: ele.numberNo
-    //           };
-    //         }
-    //       );
-    //     });
-    //   });
-    // },
+    discloseClassify() {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        discloseClassify().then(response => {
+          _this.formSettings[0].items[1].options = response.data.result.map(
+            ele => {
+              return {
+                label: ele.typeName,
+                value: ele.numberNo
+              };
+            }
+          );
+        });
+      });
+    },
     // 爆料详情
     discloseInfor(res) {
       var _this=this;
@@ -230,16 +224,7 @@ export default {
         discloseInfor(res)
           .then(response => {
             this.formData = response.data.result;
-            if (response.data.result.videoUrl) {
-              _this.formImgVide = response.data.result.videoUrl;
-              //数据回显
-              _this.formData.videoUrl.forEach((item,index)=>{
-                item.url=item.dataUrl
-
-                item.name=item.dataUrl.split("/").reverse()[0]
-              })
-              console.log( _this.formData.videoUrl,'回显数据')
-            }
+            
             resolve();
           })
           .catch(error => {
@@ -254,12 +239,12 @@ export default {
           if (context.isActive(context.$route)) {
             const latestView = visitedViews.slice(-1)[0];
             if (latestView) {
-              if (latestView.path == "/newCommand/manageClue/discloseList") {
+              if (latestView.path == "/newCommand/nyClue/discloseList") {
                 context.$router.push(latestView);
               } else {
                 this.$router.replace({
                   path:
-                    "/newCommand/manageClue/discloseList?time=" +
+                    "/newCommand/nyClue/discloseList?time=" +
                     new Date().getTime()
                 });
               }
@@ -313,14 +298,6 @@ export default {
           newformData1.newsOrigin = _this.formData.newsOrigin;
           //处理修改后的数据格式
            let data=JSON.parse((JSON.stringify(newformData1)))
-          data.videoUrl.forEach((item,index)=>{
-           let boliaoUrl=item.url;
-            data.videoUrl[index]={};
-            data['videoUrl[' + index +'].dataUrl'] = boliaoUrl;
-          })
-          // let hnrToken = JSON.parse(localStorage.getItem("hnDt_token"));
-          // hnrToken = hnrToken.access_token;
-          // newformData1.hnrToken = hnrToken;
           editDisclose(data)
             .then(response => {
               _this.$message({
@@ -338,12 +315,6 @@ export default {
       } else {
           //处理保存数据url 格式为后台格式
           let data=JSON.parse((JSON.stringify(formData1)))
-          data.videoUrl.forEach((item,index)=>{
-           let boliaoUrl=item.url;
-            data.videoUrl[index]={};
-            data['videoUrl[' + index +'].dataUrl'] = boliaoUrl;
-          })
-
         return new Promise((resolve, reject) => {
           // let hnrToken = JSON.parse(localStorage.getItem("hnDt_token"));
           // hnrToken = hnrToken.access_token;

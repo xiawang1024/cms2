@@ -19,7 +19,7 @@ const dsClue = {
       /**
        * 爆料列表
        */
-      path: 'dsClueList',
+      path: 'discloseList',
       component: () => import(`@/${path}/discloseList`),
       name: 'dsClueList',
       meta: {
