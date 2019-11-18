@@ -144,7 +144,7 @@ export default {
     this.searchSettings[0].options = this.columnAll.length
       ? this.columnAll
       : store.get("columnsAll");
-
+    this.searchSettings[2].value='7';
    this.searchItem({quckTime:7,columnId:this.searchSettings[0].value});
 
   },
