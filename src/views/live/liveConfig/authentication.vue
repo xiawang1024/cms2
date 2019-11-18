@@ -22,7 +22,7 @@
       <el-table-column prop="pullStream" label="直播流地址" />
       <el-table-column prop="pushiStream" label="推流地址" />
       <el-table-column prop="vodPullStream" label="点播流地址" />
-      <el-table-column label="操作" width="180">
+      <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <!-- 分享 -->
           <el-popover placement="top" title="分享" width="400" trigger="click">
@@ -80,6 +80,11 @@
               @click="handleShare(scope.$index, scope.row)"
             >分享</el-button>
           </el-popover>
+          <el-button
+            size="mini"
+            type="primary"
+            @click="handleView(scope.$index, scope.row)"
+          >播放</el-button>
 
           <el-button
             size="mini"
@@ -102,6 +107,20 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
+    <el-dialog
+      title="视频合并"
+      :visible.sync="playVisible"
+      width="860px"
+      :before-close="handleClose"
+    >
+      <video :src="shareStream" style="width:100%" controls ref="streamVideo"/>
+        
+
+    </el-dialog>
+
+
+
+
   </div>
 </template>
 <script>
@@ -110,6 +129,7 @@ import {
   childrenStreamAdressfile,
   deleteSource,
 } from "@/api/live/steamAdressManage.js";
+import Hls from 'hls.js'
 export default {
   data() {
     return {
@@ -130,6 +150,8 @@ export default {
         visible: true,
         type: 'text'
       }],
+      playVisible:false,
+      shareStream:'',
     };
   },
   created() {
@@ -304,6 +326,28 @@ export default {
           });
       });
     },
+    handleView(index,row){
+      this.shareStream=row.shareStream;
+      this.streamPlayer();
+      this.playVisible=true;
+
+    },
+    handleClose(done){
+      this.$refs.streamVideo.pause();
+       done();
+    },
+    streamPlayer(){
+      var node =this.$refs.streamVideo;
+      if(Hls.isSupported){
+        let hls=new Hls();
+        //地址处理
+        hls.loadSource(this.shareStream);
+        hls.attachMedia(node);
+        hls.on(Hls.Events.MANIFEST_PARSED,function(){
+          video.play()
+        })
+      }
+    }
   }
 };
 </script>
