@@ -108,7 +108,7 @@
       @current-change="handleCurrentChange"
     />
     <el-dialog
-      title="视频合并"
+      title="预览"
       :visible.sync="playVisible"
       width="860px"
       :before-close="handleClose"
