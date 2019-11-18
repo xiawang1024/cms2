@@ -183,6 +183,10 @@ export default {
       
       // console.log(this.beginTime, this.endTime,columnId, "time");
       if(flag){
+        this.pageSize=10;
+        this.pageNo=1;
+        this.total=0;
+        this.tableData=[];
       this.initTableList(this.channelId)
 
       }
