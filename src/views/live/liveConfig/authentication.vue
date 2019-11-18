@@ -344,7 +344,7 @@ export default {
         hls.loadSource(this.shareStream);
         hls.attachMedia(node);
         hls.on(Hls.Events.MANIFEST_PARSED,function(){
-          video.play()
+          node.play()
         })
       }
     }
