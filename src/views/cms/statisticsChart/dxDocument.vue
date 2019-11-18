@@ -3,7 +3,7 @@
     <div class="v-search-header">
       <el-row>
         <el-col :span="24">
-          <v-search :search-settings="searchSettings" @search="searchItem" ref="vserch" />
+          <v-search :search-settings="searchSettings" @search="searchItem" @reset="reset" ref="vserch" />
         </el-col>
         <el-col :span="2">
           <el-button class="exportBtn" type="primary" size="mini" @click="handleExport" :disabled="tableData.length==0">一键导出</el-button>
@@ -21,6 +21,18 @@
       <el-table-column label="编辑" width="100" prop="createUser" />
       <el-table-column label="点击" width="200" prop="clickNumInt" />
     </el-table>
+    <el-pagination
+      class="fenyeDiv"
+      :current-page="pageNo"
+      :page-sizes="[10,30,60,100]"
+      :page-size="pageSize"
+      :total="total"
+      background
+      layout="total, sizes, prev, pager, next, jumper"
+      style="float: right"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 <script>
@@ -79,7 +91,7 @@ export default {
           name: "quckTime",
           type: "select",
           visible: true,
-          value:'7',
+          value:'',
           options: [
             { label: "7天", value: "7" },
             {
@@ -109,7 +121,11 @@ export default {
       endTime: "",
       // sortBy:'clickNumInt',
       origin:'',
-      tableData: []
+      tableData: [],
+      pageNo:1,
+      pageSize:10,
+      total:0,
+      tenantId:'',
     };
   },
   computed: {
@@ -145,7 +161,9 @@ export default {
       //      this.$message.error("请选择栏目");
       //   return false;
       // }
-      this.timeDeail(val);
+      let flag=this.timeDeail(val);
+
+      
       if(val.columnId){
         let columnId=JSON.parse(JSON.stringify(val.columnId)).reverse()[0]
         this.channelId=columnId;
@@ -164,7 +182,10 @@ export default {
        }
       
       // console.log(this.beginTime, this.endTime,columnId, "time");
+      if(flag){
       this.initTableList(this.channelId)
+
+      }
     },
     timeDeail(val) {
       
@@ -174,6 +195,7 @@ export default {
         this.beginTime = dayjs()
           .subtract(val.quckTime, "day")
           .format("YYYY-MM-DD 00:00:00");
+          return true;
       } else {
         if (val.beginTime && val.endTime) {
           // 发送请求
@@ -184,6 +206,7 @@ export default {
             this.beginTime = dayjs(val.beginTime).format("YYYY-MM-DD HH:mm:ss");
             this.endTime = dayjs(val.endTime).format("YYYY-MM-DD HH:mm:ss");
           }
+          return true;
         } else if (val.beginTime == ""||val.beginTime==undefined) {
           this.$message.error("请选择开始时间");
           return false;
@@ -200,17 +223,29 @@ export default {
       let data = {
         beginTime: this.beginTime,
         endTime: this.endTime,
-        channelId:val,
+        channelId:this.channelId,
         // sortBy:this.sortBy,
         origin:this.origin,
+        pageNo:this.pageNo,
+        pageSize:this.pageSize,
+        tenantId:this.tenantId
       };
       return new Promise((resolve, reject) => {
         getdxDocumentStatistics(data)
           .then(res => {
             if (res.data.code == 0) {
-              this.tableData = res.data.result;
+              if(res.data.result.total>5000){
+                this.$message.error("查询数据量超过5000条，请缩短时间范围！")
+              }else{
+                 this.tableData = res.data.result.content;
+              this.total=res.data.result.total
+
+              }
+             
             } else {
               this.$message.error(res.data.msg);
+              this.total=0;
+              this.tableData=[];
             }
           })
           .catch(err => {
@@ -227,8 +262,13 @@ export default {
         //  sortBy:this.sortBy,
         origin:this.origin,
       };
-     
+      if(this.total>5000){
+        this.$message.error("导出数据量不能超过5000条！")
+      }else{
         downdxDocumentStatistics(data)
+
+      }
+     
         
       
     },
@@ -279,6 +319,7 @@ export default {
     // }
     //获取来源列表
        fetchDict() {
+         this.tenantId=JSON.parse(localStorage.getItem('BaseInfor')).clientLicenseId;
       var _this = this;
       return new Promise((resolve, reject) => {
         fetchDictByDictName("文稿来源")
@@ -303,6 +344,26 @@ export default {
           });
       });
     },
+    reset(){
+      this.beginTime='';
+      this.endTime='';
+      this.searchSettings[2].value='';
+      this.pageNo=1;
+      this.pageSize10;
+      this.tableData=[];
+      this.total=0;
+
+    },
+    //分页处理
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.initTableList();
+    },
+    handleCurrentChange(val) {
+      this.pageNo = val;
+      this.initTableList();
+     
+    }
   }
 };
 </script>

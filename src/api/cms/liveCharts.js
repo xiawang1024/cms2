@@ -216,9 +216,10 @@ export function articleTrend(channelId) {
     });
   }
    //频道发稿统计（大象）
+   
    export function getdxDocumentStatistics(data) {
     return request({
-      url:Cpath+`/cms/article/queryarticleclickbytenantidandchannelidandtime?channelId=${data.channelId}&beginTime=${data.beginTime}&endTime=${data.endTime}&removeReferFlag=true&origin=${data.origin}&sortBy=origin,clickNumInt&order=desc`,
+      url:Cpath+`/cms/article/queryarticleclickbytenantidandchannelidandtimebypage?tenantId=${data.tenantId}&channelId=${data.channelId}&origin=${data.origin}&beginTime=${data.beginTime}&endTime=${data.endTime}&removeReferFlag=true&sortBy=origin,clickNumInt&order=desc&pageNo=${data.pageNo}&pageSize=${data.pageSize}`,
       method: "post"
     });
 
