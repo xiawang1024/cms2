@@ -41,7 +41,7 @@ const systemSet = {
     },
     {
       /**
-       * 文稿来源
+       * 来源分类
        */
       path: 'sourceClass',
       component: () => import(`@/${path}/sourceClass`),
@@ -49,7 +49,7 @@ const systemSet = {
       meta: {
         title: 'sourceClass',
         icon: 'docSource',
-        role: 'cms'
+        role: 'cms:docSourceClass'
       }
     },
     {

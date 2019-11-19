@@ -1,5 +1,7 @@
 import Layout from '@/views/layout/Layout'
-import { cmsPath } from '../config'
+import {
+  cmsPath
+} from '../config'
 const path = `views/${cmsPath}/check`
 // TODO:左侧菜单 人员和权限
 const personAndAuthor = {
@@ -9,17 +11,20 @@ const personAndAuthor = {
   meta: {
     title: 'check',
     icon: 'personAndAuthor',
-    role: 'cms'
+    role: 'cms:checkSetting'
   },
-  children: [
-    {
+  children: [{
       /**
        * 权限分组
        */
       path: 'checkSetting',
       component: () => import(`@/${path}/checkSetting`),
       name: 'checkSetting',
-      meta: { title: 'checkSetting', icon: 'permissionGroup', role: '' }
+      meta: {
+        title: 'checkSetting',
+        icon: 'permissionGroup',
+        role: 'cms:checkSetting'
+      }
     },
     // {
     //   /**
