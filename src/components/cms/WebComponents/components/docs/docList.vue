@@ -11,18 +11,29 @@
       :row-class-name="tableRowClassName"
     >
       <el-table-column type="selection" width="50" />
-      <el-table-column prop="articleId" label="ID/序号" width="70" show-overflow-tooltip>
+      <el-table-column
+        prop="articleId"
+        label="ID/序号"
+        width="70"
+        show-overflow-tooltip
+      >
         <template slot-scope="scope">
           <span class="article-id">{{ scope.row.articleId }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="articleTitle" label="标题" min-width="400" show-overflow-tooltip>
+      <el-table-column
+        prop="articleTitle"
+        label="标题"
+        min-width="400"
+        show-overflow-tooltip
+      >
         <template slot-scope="scope">
           <span
             v-if="checkAuth('cms:article:edit')"
             class="titleClick"
             @click="editDoc(scope.row)"
-          >{{ scope.row.articleTitle }}</span>
+          >{{ scope.row.articleTitle }}</span
+          >
           <span v-else>{{ scope.row.articleTitle }}</span>
           <i
             class="el-icon-picture-outline"
@@ -37,7 +48,11 @@
             v-if="documentHasImg(scope.row.articleAttachmentsList)"
           />
           <i class="el-icon-top" title="置顶" v-if="scope.row.topFlag == 1" />
-          <i class="iconfont iconlink" title="引用" v-if="scope.row.articleType == 3" />
+          <i
+            class="iconfont iconlink"
+            title="引用"
+            v-if="scope.row.articleType == 3"
+          />
         </template>
       </el-table-column>
 
@@ -63,9 +78,15 @@
       </el-table-column>
       <el-table-column prop="articleType" label="类型" width="50">
         <template slot-scope="scope">
-          <span v-if="scope.row.articleType == 0" style="cursor:default">图文</span>
-          <span v-if="scope.row.articleType == 1" style="cursor:default">图集</span>
-          <span v-if="scope.row.articleType == 2" style="cursor:default">拼条</span>
+          <span v-if="scope.row.articleType == 0" style="cursor:default"
+          >图文</span
+          >
+          <span v-if="scope.row.articleType == 1" style="cursor:default"
+          >图集</span
+          >
+          <span v-if="scope.row.articleType == 2" style="cursor:default"
+          >拼条</span
+          >
           <span
             v-if="scope.row.articleType == 3"
             :title="
@@ -74,72 +95,118 @@
                 : ''
             "
             style="cursor:default"
-          >引用</span>
-          <span v-if="scope.row.articleType == 4" style="cursor:default">转载</span>
-          <span v-if="scope.row.articleType == 5" style="cursor:default">外链</span>
+          >引用</span
+          >
+          <span v-if="scope.row.articleType == 4" style="cursor:default"
+          >转载</span
+          >
+          <span v-if="scope.row.articleType == 5" style="cursor:default"
+          >外链</span
+          >
         </template>
       </el-table-column>
       <el-table-column prop="articleStatus" label="状态" width="80">
         <template slot-scope="scope">
           <div class="docunmnt-status">
-            <span v-if="scope.row.articleStatus == 0" style="color:#909399">新稿</span>
-            <span v-if="scope.row.articleStatus == 1" style="color:#3498db">提交审核</span>
-            <span v-if="scope.row.articleStatus == 2" style="color:#f67a61">审核未通过</span>
-            <span v-if="scope.row.articleStatus == 3" style="color:#E6A23C">已撤</span>
-            <span v-if="scope.row.articleStatus == 4" style="color:#F56C6C">已删</span>
-            <span v-if="scope.row.articleStatus == 10" style="color:#409EFF">待发布</span>
-            <span v-if="scope.row.articleStatus == 11" style="color:#67C23A">已发布</span>
+            <span v-if="scope.row.articleStatus == 0" style="color:#909399"
+            >新稿</span
+            >
+            <span v-if="scope.row.articleStatus == 1" style="color:#3498db"
+            >提交审核</span
+            >
+            <span v-if="scope.row.articleStatus == 2" style="color:#f67a61"
+            >审核未通过</span
+            >
+            <span v-if="scope.row.articleStatus == 3" style="color:#E6A23C"
+            >已撤</span
+            >
+            <span v-if="scope.row.articleStatus == 4" style="color:#F56C6C"
+            >已删</span
+            >
+            <span v-if="scope.row.articleStatus == 10" style="color:#409EFF"
+            >待发布</span
+            >
+            <span v-if="scope.row.articleStatus == 11" style="color:#67C23A"
+            >已发布</span
+            >
           </div>
         </template>
       </el-table-column>
       <!-- <el-table-column prop="mark" label="标记" width="100"/> -->
-      <el-table-column prop="tagIdsList" label="标记" width="100" show-overflow-tooltip>
+      <el-table-column
+        prop="tagIdsList"
+        label="标记"
+        width="100"
+        show-overflow-tooltip
+      >
         <template slot-scope="scope">
-          {{
-            tagsChange(scope.row.tagIdsList)
-          }}
+          {{ tagsChange(scope.row.tagIdsList) }}
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="创建时间" width="155" show-overflow-tooltip>
+      <el-table-column
+        prop="createTime"
+        label="创建时间"
+        width="155"
+        show-overflow-tooltip
+      >
         <template slot-scope="scope">
-          {{
-            scope.row.createTime | timeFilter
-          }}
+          {{ scope.row.createTime | timeFilter }}
         </template>
       </el-table-column>
-      <el-table-column prop="publishTime" label="发布时间" width="155" show-overflow-tooltip>
+      <el-table-column
+        prop="publishTime"
+        label="发布时间"
+        width="155"
+        show-overflow-tooltip
+      >
         <template slot-scope="scope">
-          {{
-            scope.row.publishTime | timeFilter
-          }}
+          {{ scope.row.publishTime | timeFilter }}
         </template>
       </el-table-column>
-      <el-table-column prop="createUser" label="撰稿人" width="70" show-overflow-tooltip />
-      <el-table-column prop="clickNum" label="点击" width="70" show-overflow-tooltip />
+      <el-table-column
+        prop="createUser"
+        label="撰稿人"
+        width="70"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        prop="clickNum"
+        label="点击"
+        width="70"
+        show-overflow-tooltip
+      />
       <el-table-column fixed="right" label="操作" width="200">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click.stop="checkProcess(scope.row)">审核进度</el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click.stop="checkProcess(scope.row)"
+          >审核进度</el-button
+          >
           <el-button
             :disabled="scope.row.articleStatus == 1"
             v-if="checkAuth('cms:article:stick') && scope.row.topFlag == 1"
             type="text"
             size="small"
             @click.stop="setUntop(scope.row.articleId)"
-          >取消置顶</el-button>
+          >取消置顶</el-button
+          >
           <el-button
             :disabled="scope.row.articleStatus == 1"
             v-if="checkAuth('cms:article:stick') && scope.row.topFlag !== 1"
             type="text"
             size="small"
             @click.stop="setTop(scope.row.articleId)"
-          >置顶</el-button>
+          >置顶</el-button
+          >
           <el-button
             :disabled="scope.row.articleStatus == 1"
             v-if="checkAuth('cms:article:edit')"
             type="text"
             size="small"
             @click.stop="editDoc(scope.row)"
-          >编辑</el-button>
+          >编辑</el-button
+          >
           <!-- <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">撤销</el-button>
           <el-button v-if="checkAuth('cms:article:delete')" type="text" size="small" @click.stop="deleteConfiorm(scope.row.articleId)">审核</el-button>-->
           <el-button
@@ -148,18 +215,26 @@
             type="text"
             size="small"
             @click.stop="deleteConfiorm(scope.row.articleId)"
-          >删除</el-button>
+          >删除</el-button
+          >
           <el-button
             v-if="scorePro.authorityType"
             type="text"
             size="mini"
             @click.stop="articleMark(scope.row.articleId)"
-          >打分</el-button>
+          >打分</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
-    <review-dialog :dialog-visible.sync="dialogVisible" :article="documentInfor" />
-    <step-dialog :dialog-visible.sync="stepVisible" :process-data="processData" />
+    <review-dialog
+      :dialog-visible.sync="dialogVisible"
+      :article="documentInfor"
+    />
+    <step-dialog
+      :dialog-visible.sync="stepVisible"
+      :process-data="processData"
+    />
     <mark-dialog
       :dialog-visible.sync="markVisible"
       :process-data="processData"

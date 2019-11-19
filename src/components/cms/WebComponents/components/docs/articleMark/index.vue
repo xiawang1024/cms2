@@ -147,7 +147,9 @@ export default {
   watch: {
     dialogVisible(val) {
       if (val) {
+        console.log(this.scorePro.authorityType, "this.scorePro.authorityType");
         // 考核打分
+        this.getMarkJson()
         if (this.scorePro.authorityType === "checkScore") {
           // this.getMarkScore();
           this.getMarkJson();
