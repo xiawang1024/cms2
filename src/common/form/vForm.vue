@@ -637,7 +637,7 @@ export default {
         testChunks: true,
         simultaneousUploads: 1,
         //后端约定值20M （勿改）
-        chunkSize: 10 * 1024 * 1024,
+        chunkSize: 200 * 1024 * 1024,
         // 服务器分片校验函数，秒传及断点续传基础
         checkChunkUploadedByResponse: function(chunk, message) {
           let objMessage = JSON.parse(message);
