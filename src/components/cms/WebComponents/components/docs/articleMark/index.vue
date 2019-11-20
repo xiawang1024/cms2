@@ -35,13 +35,17 @@
             :value="item.value"
           />
         </el-select>
-        <el-radio-group v-model="markFormData[index].score" :key="ele.scoreName">
+        <el-radio-group
+          v-model="markFormData[index].score"
+          :key="ele.scoreName"
+        >
           <el-radio
             v-for="item in ele.radioList"
             :key="item.value"
             :label="item.value"
             @change="radioChange(index, item.label)"
-          >{{ item.label }}</el-radio>
+          >{{ item.label }}</el-radio
+          >
         </el-radio-group>
 
         <el-popover
@@ -53,11 +57,19 @@
           content="清空单选"
           :key="index"
         >
-          <i slot="reference" class="el-icon-delete clearRadio" @click="clearRadio(index)" />
+          <i
+            slot="reference"
+            class="el-icon-delete clearRadio"
+            @click="clearRadio(index)"
+          />
         </el-popover>
         <div class="input-score" :key="ele.defineName">
           <i class="el-icon-edit" style="color:#409EFF" />
-          <el-input-number v-model="markFormData[index].extraScore" size="mini" :controls="false" />
+          <el-input-number
+            v-model="markFormData[index].extraScore"
+            size="mini"
+            :controls="false"
+          />
           <span>分</span>
         </div>
       </template>
@@ -68,7 +80,9 @@
       v-if="scorePro.scoreType === 'DXNewsArticleScore'"
     />
     <span slot="footer" class="dialog-footer">
-      <el-button @click="$emit('update:dialogVisible', false)" size="mini">取 消</el-button>
+      <el-button @click="$emit('update:dialogVisible', false)" size="mini"
+      >取 消</el-button
+      >
       <el-button type="primary" size="mini" @click="save">确 定</el-button>
     </span>
   </el-dialog>
@@ -76,10 +90,10 @@
 <script>
 import dxMark from "./components/dxMark";
 import {
-  getManuscriptScore,
+  // getManuscriptScore,
   getMarkScore,
   getMarkJson,
-  postManuscriptScore,
+  // postManuscriptScore,
   postMarkScore
 } from "@/api/cms/article";
 export default {
@@ -185,9 +199,10 @@ export default {
           });
       });
     },
+    // 获取考核打分
     getMarkScore() {
       return new Promise((resolve, reject) => {
-        getMarkScore(this.scorePro.articleId)
+        getMarkScore(this.scorePro.articleId, "0")
           .then(response => {
             resolve(response);
           })
@@ -196,37 +211,12 @@ export default {
           });
       });
     },
+    // 获取稿件打分
     getManuscriptScore() {
-      // this.articleFormData = [
-      //   {
-      //     extraScore: 10,
-      //     itemName: "直播",
-      //     labelName: "A",
-      //     name: "liveScore",
-      //     score: 1,
-      //     scoreType: 1
-      //   },
-      //   {
-      //     extraScore: 20,
-      //     itemName: "视频、图文",
-      //     labelName: "B",
-      //     name: "videoPictureScore",
-      //     score: 2,
-      //     scoreType: 1
-      //   },
-      //   {
-      //     extraScore: 30,
-      //     itemName: "播客",
-      //     labelName: "C",
-      //     name: "blogScore",
-      //     score: 3,
-      //     scoreType: 1
-      //   }
-      // ];
       return new Promise((resolve, reject) => {
-        getManuscriptScore(this.scorePro.articleId)
+        getMarkScore(this.scorePro.articleId, "1")
           .then(response => {
-            this.articleFormData = response.data.result;
+            this.articleFormData = response.data.result.item;
             resolve();
           })
           .catch(error => {
@@ -234,9 +224,10 @@ export default {
           });
       });
     },
+    // 稿件打分
     postManuscriptScore(data) {
       return new Promise((resolve, reject) => {
-        postManuscriptScore(data)
+        postMarkScore(data)
           .then(response => {
             this.$message.success("打分成功");
             this.$emit("update:dialogVisible", false);
@@ -267,11 +258,11 @@ export default {
     save() {
       //稿件打分
       if (this.scorePro.scoreType === "DXNewsArticleScore") {
-        // console.log(this.$refs.dxMark.formDataCopy, "articleData");
-        let resData = Object.assign({}, this.$refs.dxMark.formDataCopy, {
-          articleId: this.scorePro.articleId
-        });
-        this.postManuscriptScore(resData);
+        let markData = {
+          articleId: this.scorePro.articleId,
+          item: this.$refs.dxMark.formDataCopy
+        };
+        this.postManuscriptScore(markData);
       } else {
         // 考核打分
         let markData = {

@@ -6,14 +6,22 @@
       label-width="100px"
       :show-button="showButton"
     >
-      <template v-for="(ele, index) in dxFormSettings[0].items" :slot="ele.name" slot-scope="scope">
-        <el-radio-group v-model="formDataCopy[index].score" :key="ele.radioName">
+      <template
+        v-for="(ele, index) in dxFormSettings[0].items"
+        :slot="ele.name"
+        slot-scope="scope"
+      >
+        <el-radio-group
+          v-model="formDataCopy[index].score"
+          :key="ele.radioName"
+        >
           <el-radio
-            v-for="(item,index) in ele.radioList"
+            v-for="(item, index) in ele.radioList"
             :key="index"
             :label="item.label"
             @change="radioChange(index, item.value)"
-          >{{ item.value }}</el-radio>
+          >{{ item.value }}</el-radio
+          >
         </el-radio-group>
 
         <el-popover
@@ -34,7 +42,11 @@
         </el-popover>
         <div class="input-score" :key="ele.defineScoreName" v-if="ele.label">
           <i class="el-icon-edit" style="color:#409EFF" />
-          <el-input-number v-model="formDataCopy[index].extraScore" size="mini" :controls="false" />
+          <el-input-number
+            v-model="formDataCopy[index].extraScore"
+            size="mini"
+            :controls="false"
+          />
           <span>分</span>
         </div>
       </template>
@@ -151,7 +163,7 @@ export default {
               name: ele.name,
               labelName: "",
               itemName: ele.label,
-              scoreType: 1
+              scoreType: "1"
             };
           });
         }
