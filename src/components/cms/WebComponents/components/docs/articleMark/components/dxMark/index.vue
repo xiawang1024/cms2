@@ -3,16 +3,16 @@
     <v-form
       ref="vForm"
       :form-settings="dxFormSettings"
-      :form-data="formDatas"
       label-width="100px"
       :show-button="showButton"
     >
       <template v-for="(ele, index) in dxFormSettings[0].items" :slot="ele.name" slot-scope="scope">
-        <el-radio-group v-model="scope.model[ele.name]" :key="ele.radioName">
+        <el-radio-group v-model="formDataCopy[index].score" :key="ele.radioName">
           <el-radio
             v-for="(item,index) in ele.radioList"
             :key="index"
             :label="item.label"
+            @change="radioChange(index, item.value)"
           >{{ item.value }}</el-radio>
         </el-radio-group>
 
@@ -28,17 +28,13 @@
           <i
             slot="reference"
             class="el-icon-delete clearRadio"
-            @click="clearRadio(ele.name)"
+            @click="clearRadio(index)"
             v-if="ele.label"
           />
         </el-popover>
         <div class="input-score" :key="ele.defineScoreName" v-if="ele.label">
           <i class="el-icon-edit" style="color:#409EFF" />
-          <el-input-number
-            v-model="scope.model[ele.defineScoreName]"
-            size="mini"
-            :controls="false"
-          />
+          <el-input-number v-model="formDataCopy[index].extraScore" size="mini" :controls="false" />
           <span>分</span>
         </div>
       </template>
@@ -49,17 +45,15 @@
 export default {
   props: {
     formData: {
-      type: Object,
+      type: Array,
       default: () => {
-        return {};
+        return [];
       }
     }
   },
   data() {
     return {
-      formDatas: {
-        liveExtraScore: ""
-      },
+      formDataCopy: [],
       showButton: false,
       dxFormSettings: [
         {
@@ -123,22 +117,22 @@ export default {
                   value: "C"
                 }
               ]
-            },
-            {
-              label: "",
-              name: "liveExtraScore",
-              hidden: true
-            },
-            {
-              label: "",
-              name: "videoPictureExtraScore",
-              hidden: true
-            },
-            {
-              label: "",
-              name: "blogExtraScore",
-              hidden: true
             }
+            // {
+            //   label: "",
+            //   name: "liveExtraScore",
+            //   hidden: true
+            // },
+            // {
+            //   label: "",
+            //   name: "videoPictureExtraScore",
+            //   hidden: true
+            // },
+            // {
+            //   label: "",
+            //   name: "blogExtraScore",
+            //   hidden: true
+            // }
           ]
         }
       ]
@@ -148,19 +142,29 @@ export default {
     formData: {
       immediate: true,
       handler(val) {
-        this.formDatas = val;
-        // this.formDatas.liveExtraScore = 123;
+        this.formDataCopy = val;
+        if (val && !val.length) {
+          this.formDataCopy = this.dxFormSettings[0].items.map(ele => {
+            return {
+              score: "",
+              extraScore: 0,
+              name: ele.name,
+              labelName: "",
+              itemName: ele.label,
+              scoreType: 1
+            };
+          });
+        }
       }
     }
   },
-  mounted() {
-    // this.$refs.vForm.formModel = this.formData;
-    // console.log("mountes");
-    // console.log(this.formDatas, "mounte11111s");
-  },
+  mounted() {},
   methods: {
-    clearRadio(name) {
-      this.$refs.vForm.formModel[name] = null;
+    clearRadio(index) {
+      this.formDataCopy[index].score = null;
+    },
+    radioChange(index, label) {
+      this.formDataCopy[index].labelName = label;
     }
   }
 };

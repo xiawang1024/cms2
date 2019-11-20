@@ -218,10 +218,10 @@
           >删除</el-button
           >
           <el-button
-            v-if="scorePro.authorityType"
+            v-if="scorePro.authorityType && scope.row.scoreType"
             type="text"
             size="mini"
-            @click.stop="articleMark(scope.row.articleId)"
+            @click.stop="articleMark(scope.row)"
           >打分</el-button
           >
         </template>
@@ -332,8 +332,9 @@ export default {
       });
     },
     // 打分
-    articleMark(id) {
-      this.scorePro.articleId = id;
+    articleMark(row) {
+      this.scorePro.articleId = row.articleId;
+      this.scorePro.scoreType = row.scoreType;
       this.markVisible = true;
     },
     // 查看审核进度
