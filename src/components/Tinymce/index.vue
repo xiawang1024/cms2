@@ -1,5 +1,8 @@
 <template>
-  <div :class="{fullscreen:fullscreen}" class="tinymce-container editor-container">
+  <div
+    :class="{ fullscreen: fullscreen }"
+    class="tinymce-container editor-container"
+  >
     <textarea :id="tinymceId" class="tinymce-textarea" />
 
     <!-- <div class="editor-custom-btn-container">
@@ -146,9 +149,7 @@ export default {
           window.tinymce
             .get(_this.tinymceId)
             .insertContent(
-              `<img class="wscnph" src="${_this.downURL}${
-                res.data.result.filePath
-              }" >`
+              `<img class="wscnph" src="${_this.downURL}${res.data.result.filePath}" >`
             );
         },
         init_instance_callback: editor => {
@@ -193,7 +194,7 @@ export default {
             };
             xhr.onerror = function() {
               //根据自己的需要添加代码
-              alert(xhr.status);
+              // alert(xhr.status);
               return;
             };
             xhr.onload = function() {
@@ -246,22 +247,14 @@ export default {
       arr.forEach(v => {
         if (v.type.split("/")[0] == "video") {
           window.tinymce.get(_this.tinymceId).insertContent(`<p>
-               <span class="mce-preview-object mce-object-video" contenteditable="false" data-mce-object="video" data-mce-p-allowfullscreen="allowfullscreen" data-mce-p-frameborder="no" data-mce-p-scrolling="no" data-mce-p-src=${
-                 v.url
-               } data-mce-html="%10">
-                 <video src=${
-                   v.url
-                 } width="100%" height="200" controls="controls"></video>
+               <span class="mce-preview-object mce-object-video" contenteditable="false" data-mce-object="video" data-mce-p-allowfullscreen="allowfullscreen" data-mce-p-frameborder="no" data-mce-p-scrolling="no" data-mce-p-src=${v.url} data-mce-html="%10">
+                 <video src=${v.url} width="100%" height="200" controls="controls"></video>
                </span>
             </p>`);
         } else if (v.type.split("/")[0] == "audio") {
           window.tinymce.get(_this.tinymceId).insertContent(`<p>
-               <span class="mce-preview-object"  data-mce-object="audio" data-mce-p-frameborder="no" data-mce-p-scrolling="no" data-mce-p-src=${
-                 v.url
-               } data-mce-html="%10">
-                 <audio class="wscnph" src=${
-                   v.url
-                 } width="100%" height="200" controls="controls"></audio>
+               <span class="mce-preview-object"  data-mce-object="audio" data-mce-p-frameborder="no" data-mce-p-scrolling="no" data-mce-p-src=${v.url} data-mce-html="%10">
+                 <audio class="wscnph" src=${v.url} width="100%" height="200" controls="controls"></audio>
                </span>
             </p>`);
         } else if (v.type.split("/")[0] == "image") {
@@ -281,4 +274,3 @@ export default {
   }
 }
 </style>
-
