@@ -29,8 +29,8 @@
               trigger="hover"
               :key="index"
             >
-              <div>{{ item.value }}分</div>
-              <span slot="reference">{{ item.label }}</span>
+              <div>{{ item.label }}分</div>
+              <span slot="reference">{{ item.value }}</span>
             </el-popover>
           </el-radio>
         </el-radio-group>
@@ -88,15 +88,15 @@ export default {
               type: "slot",
               radioList: [
                 {
-                  label: 1,
+                  label: 100,
                   value: "A"
                 },
                 {
-                  label: 2,
+                  label: 40,
                   value: "B"
                 },
                 {
-                  label: 3,
+                  label: 20,
                   value: "C"
                 }
               ]
@@ -108,15 +108,15 @@ export default {
               type: "slot",
               radioList: [
                 {
-                  label: 1,
+                  label: 20,
                   value: "A"
                 },
                 {
-                  label: 2,
+                  label: 10,
                   value: "B"
                 },
                 {
-                  label: 3,
+                  label: 5,
                   value: "C"
                 }
               ]
@@ -128,15 +128,15 @@ export default {
               type: "slot",
               radioList: [
                 {
-                  label: 1,
+                  label: 10,
                   value: "A"
                 },
                 {
-                  label: 2,
+                  label: 6,
                   value: "B"
                 },
                 {
-                  label: 3,
+                  label: 4,
                   value: "C"
                 }
               ]
@@ -200,7 +200,7 @@ export default {
   font-size: 12px;
 }
 .poperclass-title-dx {
-  min-width: 45px;
+  min-width: 55px;
   line-height: 1;
   padding: 8px 10px;
   font-size: 12px;
