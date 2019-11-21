@@ -20,12 +20,23 @@
             :key="index"
             :label="item.label"
             @change="radioChange(index, item.value)"
-          >{{ item.value }}</el-radio
           >
+            <el-popover
+              popper-class="poperclass-title-dx"
+              placement="top-start"
+              title
+              width="10"
+              trigger="hover"
+              :key="index"
+            >
+              <div>{{ item.value }}分</div>
+              <span slot="reference">{{ item.label }}</span>
+            </el-popover>
+          </el-radio>
         </el-radio-group>
 
         <el-popover
-          popper-class="poperclass"
+          popper-class="poperclass-empty-dx"
           placement="top-start"
           title
           width="10"
@@ -181,3 +192,17 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.poperclass-empty-dx {
+  min-width: 70px;
+  line-height: 1;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+.poperclass-title-dx {
+  min-width: 45px;
+  line-height: 1;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+</style>

@@ -39,17 +39,35 @@
           v-model="markFormData[index].score"
           :key="ele.scoreName"
         >
+          <!-- <el-radio
+            v-for="item in ele.radioList"
+            :key="item.value"
+            :label="item.value"
+            @change="radioChange(index, item.label)"
+            >{{ item.label }}</el-radio
+          > -->
           <el-radio
             v-for="item in ele.radioList"
             :key="item.value"
             :label="item.value"
             @change="radioChange(index, item.label)"
-          >{{ item.label }}</el-radio
           >
+            <el-popover
+              popper-class="poperclass-title"
+              placement="top-start"
+              title
+              width="10"
+              trigger="hover"
+              :key="index"
+            >
+              <div style="width:50px">{{ item.value }}分</div>
+              <span slot="reference">{{ item.label }}</span>
+            </el-popover>
+          </el-radio>
         </el-radio-group>
 
         <el-popover
-          popper-class="poperclass"
+          popper-class="poperclass-empty"
           placement="top-start"
           title
           width="10"
@@ -310,8 +328,14 @@ export default {
     margin-left: 10px;
   }
 }
-.poperclass {
+.poperclass-empty {
   min-width: 70px;
+  line-height: 1;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+.poperclass-title {
+  min-width: 40px;
   line-height: 1;
   padding: 8px 10px;
   font-size: 12px;
