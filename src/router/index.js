@@ -58,8 +58,9 @@ const programRouterMap = [channel, class1, column, compere, program]
 /**
  * 新闻指挥
  */
-import manageClue from './routers/newCommand/manageClue'
+import dsClue from './routers/newCommand/dsClue'
 import dxClue from './routers/newCommand/dxClue'
+import nyClue from './routers/newCommand/nyClue'
 import commandDispatch from './routers/newCommand/commandDispatch'
 import manuscriptClue from './routers/newCommand/manuscriptClue'
 import fileClue from './routers/newCommand/fileClue'
@@ -68,7 +69,7 @@ import operationRecord from './routers/newCommand/operationRecord'
 import classifyManage from './routers/newCommand/classifyManage'
 import newCommandPermission from './routers/newCommand/dataPermission1'
 
-const newscommandRouterMap = [manageClue, dxClue, commandDispatch, manuscriptClue, fileClue, liveClue, operationRecord, classifyManage, newCommandPermission]
+const newscommandRouterMap = [dsClue, dxClue,nyClue,commandDispatch, manuscriptClue, fileClue, liveClue, operationRecord, classifyManage, newCommandPermission]
 
 /**
  * 直播

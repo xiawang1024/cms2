@@ -185,7 +185,7 @@ import {
   discloseClassify,
   discloseInfor,
   addOprate
-} from "@/api/newsCommand/disclose.js";
+} from "@/api/newsCommand/nyDisclose.js";
 export default {
   name: "DisclosDetails",
   data() {
@@ -223,9 +223,6 @@ export default {
       addData: {},
       dialogVisible: false
     };
-  },
-  computed: {
-    // ...mapGetters(['discloseClassify'])
   },
   mounted() {
     this.discloseId = this.$route.query.discloseId;

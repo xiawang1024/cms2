@@ -9,7 +9,7 @@ console.log(path)
 const webSite = {
   path: `/${newcommandPath}/fileClue`,
   component: Layout,
-  redirect: '/newCommand/manageClue/discloseList', 
+  redirect: '/newCommand/dsClue/dsClueList', 
   meta: {
     title: 'filesClue',
     icon: 'filesClue',
@@ -27,7 +27,7 @@ const webSite = {
       icon: 'filesClue',
       role: 'newsCommand:filesClue'
     },
-    redirect: '/newCommand/manageClue/discloseList', 
+    redirect: '/newCommand/dsClue/dsClueList', 
     hidden: true
   }
 ]

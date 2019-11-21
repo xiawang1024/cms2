@@ -1,32 +1,49 @@
 <template>
-
   <div class="column-manages">
-
     <div class="auditBtn">
       <div
-        @click="auditBtnsClik(0,$event)"
-        :class="[activeClass0 == 0 ? 'activeClass0':'','auditBtns','auditBtnAll']"
+        @click="auditBtnsClik(0, $event)"
+        :class="[
+          activeClass0 == 0 ? 'activeClass0' : '',
+          'auditBtns',
+          'auditBtnAll'
+        ]"
       >
         全部申请(
-        <span class="auditBtnSpan">{{ discloseStatenum[0]+discloseStatenum[1]+discloseStatenum[2] }}</span> )
+        <span class="auditBtnSpan">{{
+          discloseStatenum[0] + discloseStatenum[1] + discloseStatenum[2]
+        }}</span>
+        )
       </div>
       <div
-        @click="auditBtnsClik(1,$event)"
-        :class="[activeClass0 == 1 ? 'activeClass0':'','auditBtns','auditBtnOrder']"
+        @click="auditBtnsClik(1, $event)"
+        :class="[
+          activeClass0 == 1 ? 'activeClass0' : '',
+          'auditBtns',
+          'auditBtnOrder'
+        ]"
       >
         待审核(
         <span class="auditBtnSpan">{{ discloseStatenum[0] }}</span> )
       </div>
       <div
-        @click="auditBtnsClik(2,$event)"
-        :class="[activeClass0 == 2 ? 'activeClass0':'','auditBtns','auditBtnOrder']"
+        @click="auditBtnsClik(2, $event)"
+        :class="[
+          activeClass0 == 2 ? 'activeClass0' : '',
+          'auditBtns',
+          'auditBtnOrder'
+        ]"
       >
         已通过(
         <span class="auditBtnSpan">{{ discloseStatenum[1] }}</span> )
       </div>
       <div
-        @click="auditBtnsClik(3,$event)"
-        :class="[activeClass0 == 3 ? 'activeClass0':'','auditBtns','auditBtnOrder']"
+        @click="auditBtnsClik(3, $event)"
+        :class="[
+          activeClass0 == 3 ? 'activeClass0' : '',
+          'auditBtns',
+          'auditBtnOrder'
+        ]"
       >
         已拒绝(
         <span class="auditBtnSpan">{{ discloseStatenum[2] }}</span> )
@@ -44,36 +61,18 @@
       <el-button
         type="primary"
         v-if="checkAuth('newcommond:baoliao:add')"
-        @click="columnAddEdit('addDisclose','')"
+        @click="columnAddEdit('addDisclose', '')"
         size="mini"
-      >添加爆料</el-button>
-      <el-button
-        type="primary"
-        v-if="checkAuth('newcommond:baoliao:public')"
-        @click="handleSeparate(1)"
-        size="mini"
-        :disabled="!multipleSelection.length>0"
-      >批量公开</el-button>
-      <el-button
-        type="primary"
-        v-if="checkAuth('newcommond:baoliao:public')"
-        @click="handleSeparate(0)"
-        size="mini"
-        :disabled="!multipleSelection.length>0"
-
-      >批量不公开</el-button>
+      >添加爆料</el-button
+      >
     </div>
     <el-table
       ref="multipleTable"
-      :header-cell-style="{color:'#000'}"
+      :header-cell-style="{ color: '#000' }"
       :data="tableData"
       style="width: 100%"
       size="mini"
-      @selection-change="handleSelectionChange"
     >
-      <el-table-column
-        type="selection"
-        width="55"/>
       <el-table-column
         min-width="300"
         align="left"
@@ -115,57 +114,45 @@
         label="处理状态"
       >
         <template slot-scope="scope">
-          <span
-            class="colyellow"
-            v-if="scope.row.auditStatus == 0"
-          >待处理</span>
-          <span
-            class="colgreen"
-            v-if="scope.row.auditStatus == 1"
-          >已通过</span>
-          <span
-            class="colred"
-            v-if="scope.row.auditStatus == 2"
-          >已拒绝</span>
+          <span class="colyellow" v-if="scope.row.auditStatus == 0"
+          >待处理</span
+          >
+          <span class="colgreen" v-if="scope.row.auditStatus == 1">已通过</span>
+          <span class="colred" v-if="scope.row.auditStatus == 2">已拒绝</span>
         </template>
       </el-table-column>
-      <el-table-column
-        min-width="200"
-        align="left"
-        prop="zzjgName"
-        label="对机构"
-        :formatter="viewjg"
-      />
       <el-table-column
         min-width="220"
         align="left"
         prop="breakingTime"
         label="爆料时间"
       />
-      <el-table-column
-        min-width="220"
-        align="left"
-        label="操作"
-      >
+      <el-table-column min-width="220" align="left" label="操作">
         <template slot-scope="scope">
           <div style="text-align:left">
             <el-button
               type="success"
               size="mini"
-              @click="columnAddEdit('discloseView',scope.row.id)"
-            >查看</el-button>
+              @click="columnAddEdit('discloseView', scope.row.id)"
+            >查看</el-button
+            >
             <el-button
               type="primary"
               size="mini"
               v-if="checkAuth('newcommond:baoliao:editor')"
-              @click="columnAddEdit('columnAddEdit',scope.row.id)"
-            >编辑</el-button>
+              @click="columnAddEdit('columnAddEdit', scope.row.id)"
+            >编辑</el-button
+            >
             <el-button
-              v-if="scope.row.auditStatus==0 && checkAuth('newcommond:baoliao:audit')"
-              @click="columnAddEdit('discloseAudit',scope.row.id)"
+              v-if="
+                scope.row.auditStatus == 0 &&
+                  checkAuth('newcommond:baoliao:audit')
+              "
+              @click="columnAddEdit('discloseAudit', scope.row.id)"
               type="danger"
               size="mini"
-            >审核</el-button>
+            >审核</el-button
+            >
           </div>
         </template>
       </el-table-column>
@@ -182,27 +169,6 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-    <el-dialog
-      title="对机构"
-      :visible.sync="dialogVisible"
-      width="520px"
-    >
-      <el-row>
-        <el-select style="width:100%" v-model="zzjgName" filterable placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.display"
-            :value="item.value"/>
-        </el-select>
-      </el-row>
-
-      <span slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="dialogVisible = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="handleSubmit">确 定</el-button>
-      </span>
-    </el-dialog>
-
   </div>
 </template>
 <script>
@@ -210,10 +176,10 @@
 import {
   discloseList,
   discloseState,
-  discloseClassify,
-  batchQueryUser,
-  getZzjgList
-} from "@/api/newsCommand/disclose.js";
+  discloseClassify
+  // batchQueryUser,
+  // getZzjgList
+} from "@/api/newsCommand/nyDisclose.js";
 import { deleteColumn } from "@/api/cms/columnManage";
 import mixins from "@/components/cms/mixins";
 
@@ -222,11 +188,10 @@ export default {
   mixins: [mixins],
   data() {
     return {
-      dialogVisible:false,
-       options:[],
-       zzjgName:'',
+      options: [],
+      zzjgName: "",
       allchoose: false,
-      multipleSelection:[],
+      multipleSelection: [],
       options1: [
         {
           value: "选项1",
@@ -358,8 +323,7 @@ export default {
     this.discloseState(1);
     this.discloseState(2);
     //把分类保存在公共状态，便于添加时调用
-    this.$store.dispatch('getClassifyList');
-    this.requestGetZzjgList();
+    this.$store.dispatch("getClassifyList");
   },
   created() {},
   methods: {
@@ -524,7 +488,7 @@ export default {
         breakingName: "",
         startTime: "",
         endTime: "",
-        auditStatus:this.uplistdata.auditStatus,
+        auditStatus: this.uplistdata.auditStatus,
         pageNo: this.pageNum,
         pageSize: this.pageSize
       };
@@ -534,7 +498,7 @@ export default {
       if (handelType == "addDisclose" || handelType == "columnAddEdit") {
         this.$router.push({
           path:
-            "/newCommand/manageClue/addDisclose?Disclose=" +
+            "/newCommand/nyClue/addDisclose?Disclose=" +
             handelType +
             "&discloseId=" +
             id
@@ -545,81 +509,17 @@ export default {
       ) {
         this.$router.push({
           path:
-            "/newCommand/manageClue/discloseDetails?Disclose=" +
+            "/newCommand/nyClue/discloseDetails?Disclose=" +
             handelType +
             "&discloseId=" +
             id
         });
       }
-    },
-     handleSelectionChange(val) {
-        this.multipleSelection = val;
-        console.log(val,'val')
-      },
-    handleSeparate(val){
-      //0 不公开   1 公开
-      this.dialogVisible=true;
-    },
-    handleSubmit(){
-
-       let url='';
-        this.multipleSelection.forEach((item,index)=>{
-          url=url+'userIdList='+item.id+'&'
-        })
-      let data={
-        list:url,
-        zzjgName:this.zzjgName
-      }
-      return new Promise((resolve,reject)=>{
-          batchQueryUser(data)
-          .then(res=>{
-            if(res.data.code==0){
-            this.$message.success(res.data.result)
-            this.dialogVisible=false;
-            this.zzjgName='';
-            this.$refs.multipleTable.clearSelection();
-            this.columnList();
-            }else{
-            this.$message.error(res.data.result)
-
-            }
-            resolve();
-            })
-            .catch(err=>{
-              reject(err)
-            })
-        })
-    },
-
-    //获取机构列表
-    requestGetZzjgList(){
-      return new Promise((resolve,reject)=>{
-      getZzjgList()
-      .then(res=>{
-        if(res.data.code==0){
-          this.options=res.data.result
-        }
-      })
-      .catch(err=>{
-        reject(err)
-      })
-
-      })
-    },
-    viewjg(val){
-      let data='无'
-      this.options.forEach((item,index)=>{
-      if(val.zzjgName==item.value){
-        data=item.display
-      }
-
-      })
-      return data
     }
   }
 };
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .column-manages {
   .confirm {
     height: 28px;

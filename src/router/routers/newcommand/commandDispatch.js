@@ -22,7 +22,7 @@ const commandDispatch = {
       path: 'allTask',
       component: () => import(`@/${path}/allTask`),
       name: 'allTask',
-      redirect: '/newCommand/manageClue/discloseList', 
+      redirect: '/newCommand/dsClue/dsClueList', 
       meta: {
         title: 'allTask',
         icon: 'allTask',
@@ -36,7 +36,7 @@ const commandDispatch = {
       path: 'myTask',
       component: () => import(`@/${path}/myTask`),
       name: 'myTask',
-      redirect: '/newCommand/manageClue/discloseList', 
+      redirect: '/newCommand/dsClue/dsClueList', 
       meta: {
         title: 'myTask',
         icon: 'myTask',

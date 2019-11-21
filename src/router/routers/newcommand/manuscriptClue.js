@@ -27,7 +27,7 @@ const manuscriptClue = {
         icon: 'myManuscript',
         role: 'newsCommand:myManuscript'
       },
-      redirect: '/newCommand/manageClue/discloseList', 
+      redirect: '/newCommand/dsClue/dsClueList', 
     },
     {
       /**
@@ -41,7 +41,7 @@ const manuscriptClue = {
         icon: 'pendingManuscript',
         role: 'newsCommand:pendingManuscript'
       },
-      redirect: '/newCommand/manageClue/discloseList', 
+      redirect: '/newCommand/dsClue/dsClueList', 
     },
     {
       /**
@@ -55,7 +55,7 @@ const manuscriptClue = {
         icon: 'commonManuscript',
         role: 'newsCommand:commonManuscript'
       },
-      redirect: '/newCommand/manageClue/discloseList', 
+      redirect: '/newCommand/dsClue/dsClueList', 
     },
   ]
 }

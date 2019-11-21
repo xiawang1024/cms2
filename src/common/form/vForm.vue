@@ -636,7 +636,7 @@ export default {
         target: baseUrl.SIMPLE_UPLOAD_URL,
         testChunks: true,
         simultaneousUploads: 1,
-        //后端约定值20M （勿改）
+        //后端约定值200M （勿改）
         chunkSize: 200 * 1024 * 1024,
         // 服务器分片校验函数，秒传及断点续传基础
         checkChunkUploadedByResponse: function(chunk, message) {
