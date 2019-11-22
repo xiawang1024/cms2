@@ -16,8 +16,8 @@
           :key="ele.radioName"
         >
           <el-radio
-            v-for="(item, index) in ele.radioList"
-            :key="index"
+            v-for="item in ele.radioList"
+            :key="item.label"
             :label="item.label"
             @change="radioChange(index, item.value)"
           >
@@ -96,7 +96,7 @@ export default {
                   value: "B"
                 },
                 {
-                  label: "C--20",
+                  label: "C--20.0",
                   value: "C"
                 }
               ]
@@ -187,7 +187,9 @@ export default {
       this.formDataCopy[index].score = null;
     },
     radioChange(index, label) {
+      console.log(label, "label");
       this.formDataCopy[index].labelName = label;
+      console.log(this.formDataCopy, "this.formDataCopy");
     }
   }
 };
