@@ -29,7 +29,7 @@
               trigger="hover"
               :key="index"
             >
-              <div>{{ item.label }}分</div>
+              <div>{{ item.label.split("--")[1] }}分</div>
               <span slot="reference">{{ item.value }}</span>
             </el-popover>
           </el-radio>
@@ -88,15 +88,15 @@ export default {
               type: "slot",
               radioList: [
                 {
-                  label: 100,
+                  label: "A--100.0",
                   value: "A"
                 },
                 {
-                  label: 40,
+                  label: "B--40.0",
                   value: "B"
                 },
                 {
-                  label: 20,
+                  label: "C--20",
                   value: "C"
                 }
               ]
@@ -108,15 +108,15 @@ export default {
               type: "slot",
               radioList: [
                 {
-                  label: 20,
+                  label: "A--20.0",
                   value: "A"
                 },
                 {
-                  label: 10,
+                  label: "B--10.0",
                   value: "B"
                 },
                 {
-                  label: 5,
+                  label: "C--5.0",
                   value: "C"
                 }
               ]
@@ -128,15 +128,15 @@ export default {
               type: "slot",
               radioList: [
                 {
-                  label: 10,
+                  label: "A--10.0",
                   value: "A"
                 },
                 {
-                  label: 6,
+                  label: "B--6.0",
                   value: "B"
                 },
                 {
-                  label: 4,
+                  label: "C--4.0",
                   value: "C"
                 }
               ]
@@ -200,7 +200,7 @@ export default {
   font-size: 12px;
 }
 .poperclass-title-dx {
-  min-width: 55px;
+  min-width: 70px;
   line-height: 1;
   padding: 8px 10px;
   font-size: 12px;
