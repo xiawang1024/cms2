@@ -49,14 +49,17 @@ export default {
         tenantId: store.get("BaseInfor").clientLicenseId,
         hnrToken: "bearer " + this.$store.getters.token.access_token,
         url: "",
-        hnrVersion: 1
+        hnrVersion: 1,
+        downText: "大象内核考核"
       };
       if (this.formInline.type === "getCheckScoreExport") {
         //考核打分（内部考核）
         baseUrl = "/cms/score/getCheckScoreExport";
+        params.downText = "大象内核考核";
       } else {
         // 稿件打分
         baseUrl = "/cms/score/getArticleScoreExport";
+        params.downText = "大象号考核";
       }
       (params.url = `${baseUrl}?tenantId=${
         store.get("BaseInfor").clientLicenseId

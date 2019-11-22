@@ -34,8 +34,8 @@ function postAjax(data) {
       }
     })
     .then(res => {
-      download('文章打分.xlsx', res.data)
-      Message.success('下载成功')
+      download(`${data.downText}.xlsx`, res.data)
+      Message.success('导出成功')
     })
     .catch(error => {
       Message.warning(error.msg ? error.msg : '导出失败')
