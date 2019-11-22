@@ -35,7 +35,10 @@
             :value="item.value"
           />
         </el-select>
-        <el-radio-group v-model="markFormData[index].score" :key="ele.scoreName">
+        <el-radio-group
+          v-model="markFormData[index].score"
+          :key="ele.scoreName"
+        >
           <!-- <el-radio
             v-for="item in ele.radioList"
             :key="item.value"
@@ -72,11 +75,19 @@
           content="清空单选"
           :key="index"
         >
-          <i slot="reference" class="el-icon-delete clearRadio" @click="clearRadio(index)" />
+          <i
+            slot="reference"
+            class="el-icon-delete clearRadio"
+            @click="clearRadio(index)"
+          />
         </el-popover>
         <div class="input-score" :key="ele.defineName">
           <i class="el-icon-edit" style="color:#409EFF" />
-          <el-input-number v-model="markFormData[index].extraScore" size="mini" :controls="false" />
+          <el-input-number
+            v-model="markFormData[index].extraScore"
+            size="mini"
+            :controls="false"
+          />
           <span>分</span>
         </div>
       </template>
@@ -87,7 +98,9 @@
       v-if="scorePro.scoreType === 'DXNewsArticleScore'"
     />
     <span slot="footer" class="dialog-footer">
-      <el-button @click="$emit('update:dialogVisible', false)" size="mini">取 消</el-button>
+      <el-button @click="$emit('update:dialogVisible', false)" size="mini"
+      >取 消</el-button
+      >
       <el-button type="primary" size="mini" @click="save">确 定</el-button>
     </span>
   </el-dialog>
@@ -171,31 +184,31 @@ export default {
       this.markFormData[index].labelName = label;
     },
     getMarkJson() {
-      // this.markFormData = [];
       return new Promise((resolve, reject) => {
         getMarkJson()
           .then(async response => {
             this.markFormSettings = [];
-            // this.markFormData = [];
             this.markFormSettings = response.data.result.markFormSettings;
-            console.log("getData");
             this.markFormSettings[0].items.forEach(ele => {
               // 绑定for循环key值， 无实际意义
               ele.reporterName = `${ele.name}-reporter`;
               ele.scoreName = `${ele.name}-score`;
               ele.defineName = `${ele.name}-define`;
-
-              this.markFormData.push({
-                score: "",
-                extraScore: 0,
-                author: [],
-                name: ele.name,
-                labelName: "",
-                itemName: ele.label,
-                scoreType: 0
-              });
+              if (
+                this.markFormData.length !==
+                this.markFormSettings[0].items.length
+              ) {
+                this.markFormData.push({
+                  score: "",
+                  extraScore: 0,
+                  author: [],
+                  name: ele.name,
+                  labelName: "",
+                  itemName: ele.label,
+                  scoreType: 0
+                });
+              }
             });
-            console.log(this.markFormData, "this.markFormData666");
             const markScore = await this.getMarkScore();
             if (
               markScore.data.result.item &&
