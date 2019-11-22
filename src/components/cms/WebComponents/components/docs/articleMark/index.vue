@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :title="
-      scorePro.scoreType === 'DXNewsCheckScore' ? '考核' : '大象号稿件打分'
+      scorePro.scoreType === 'DXNewsCheckScore' ? '考核打分' : '大象号稿件打分'
     "
     class="dialog-mark-dialog"
     :visible.sync="dialogVisible"
@@ -35,17 +35,14 @@
             :value="item.value"
           />
         </el-select>
-        <el-radio-group
-          v-model="markFormData[index].score"
-          :key="ele.scoreName"
-        >
+        <el-radio-group v-model="markFormData[index].score" :key="ele.scoreName">
           <!-- <el-radio
             v-for="item in ele.radioList"
             :key="item.value"
             :label="item.value"
             @change="radioChange(index, item.label)"
             >{{ item.label }}</el-radio
-          > -->
+          >-->
           <el-radio
             v-for="item in ele.radioList"
             :key="item.value"
@@ -60,7 +57,7 @@
               trigger="hover"
               :key="index"
             >
-              <div style="width:50px">{{ item.value }}分</div>
+              <div style="width:50px">{{ item.value.split("--")[1] }}分</div>
               <span slot="reference">{{ item.label }}</span>
             </el-popover>
           </el-radio>
@@ -75,19 +72,11 @@
           content="清空单选"
           :key="index"
         >
-          <i
-            slot="reference"
-            class="el-icon-delete clearRadio"
-            @click="clearRadio(index)"
-          />
+          <i slot="reference" class="el-icon-delete clearRadio" @click="clearRadio(index)" />
         </el-popover>
         <div class="input-score" :key="ele.defineName">
           <i class="el-icon-edit" style="color:#409EFF" />
-          <el-input-number
-            v-model="markFormData[index].extraScore"
-            size="mini"
-            :controls="false"
-          />
+          <el-input-number v-model="markFormData[index].extraScore" size="mini" :controls="false" />
           <span>分</span>
         </div>
       </template>
@@ -98,9 +87,7 @@
       v-if="scorePro.scoreType === 'DXNewsArticleScore'"
     />
     <span slot="footer" class="dialog-footer">
-      <el-button @click="$emit('update:dialogVisible', false)" size="mini"
-      >取 消</el-button
-      >
+      <el-button @click="$emit('update:dialogVisible', false)" size="mini">取 消</el-button>
       <el-button type="primary" size="mini" @click="save">确 定</el-button>
     </span>
   </el-dialog>
@@ -184,15 +171,20 @@ export default {
       this.markFormData[index].labelName = label;
     },
     getMarkJson() {
+      // this.markFormData = [];
       return new Promise((resolve, reject) => {
         getMarkJson()
           .then(async response => {
+            this.markFormSettings = [];
+            // this.markFormData = [];
             this.markFormSettings = response.data.result.markFormSettings;
+            console.log("getData");
             this.markFormSettings[0].items.forEach(ele => {
               // 绑定for循环key值， 无实际意义
               ele.reporterName = `${ele.name}-reporter`;
               ele.scoreName = `${ele.name}-score`;
               ele.defineName = `${ele.name}-define`;
+
               this.markFormData.push({
                 score: "",
                 extraScore: 0,
@@ -203,6 +195,7 @@ export default {
                 scoreType: 0
               });
             });
+            console.log(this.markFormData, "this.markFormData666");
             const markScore = await this.getMarkScore();
             if (
               markScore.data.result.item &&
@@ -249,6 +242,7 @@ export default {
           .then(response => {
             this.$message.success("打分成功");
             this.$emit("update:dialogVisible", false);
+            // this.markFormData = [];
             resolve();
           })
           .catch(error => {
@@ -263,6 +257,7 @@ export default {
           .then(response => {
             this.$message.success("打分成功");
             this.$emit("update:dialogVisible", false);
+            // this.markFormData = [];
             resolve();
           })
           .catch(error => {
@@ -292,6 +287,7 @@ export default {
       }
     },
     handleClose() {
+      // this.markFormData = [];
       this.$emit("update:dialogVisible", false);
     }
   }
@@ -335,7 +331,7 @@ export default {
   font-size: 12px;
 }
 .poperclass-title {
-  min-width: 40px;
+  min-width: 50px;
   line-height: 1;
   padding: 8px 10px;
   font-size: 12px;
