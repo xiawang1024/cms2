@@ -3,14 +3,8 @@
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="类型">
         <el-select v-model="formInline.type" placeholder="请选择">
-          <el-option
-            label="大象内部考核"
-            value="getCheckScoreExport"
-          />
-          <el-option
-            label="大象号考核"
-            value="getArticleScoreExport"
-          />
+          <el-option label="大象内部考核" value="getCheckScoreExport" />
+          <el-option label="大象号考核" value="getArticleScoreExport" />
         </el-select>
       </el-form-item>
       <el-form-item label="日期">
@@ -48,7 +42,7 @@ export default {
         this.$message.warning("请选择日期范围");
         return;
       }
-      let baseUrl = "/cms/score/getArticleScoreExport";
+      let baseUrl = "/cms/score/getCheckScoreExport";
       let params = {
         beginPublishTime: handleDate(this.formInline.dateDuring[0], "time"),
         endPublishTime: handleDate(this.formInline.dateDuring[1], "time"),
@@ -59,10 +53,10 @@ export default {
       };
       if (this.formInline.type === "getCheckScoreExport") {
         //考核打分（内部考核）
-        baseUrl = "/cms/score/getArticleScoreExport";
+        baseUrl = "/cms/score/getCheckScoreExport";
       } else {
         // 稿件打分
-        baseUrl = "/cms/score/getArticleScoreResult";
+        baseUrl = "/cms/score/getArticleScoreExport";
       }
       (params.url = `${baseUrl}?tenantId=${
         store.get("BaseInfor").clientLicenseId
