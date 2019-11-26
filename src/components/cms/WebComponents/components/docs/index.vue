@@ -11,6 +11,7 @@
       ref="documentList"
       @handelSuccess="handelSuccess"
       @multipleChoose="multipleChoose"
+      @refrashTable="refrashTable" 
       :page-num="pageNum"
       :page-size="pageSize"
       :search-data="searchData"
@@ -50,7 +51,8 @@ export default {
       searchData: {},
       channelId: "",
       multipleList: [],
-      sourceList: []
+      sourceList: [],
+      username:'',
     };
   },
   computed: {
@@ -68,6 +70,7 @@ export default {
     }
   },
   created() {
+    this.username=JSON.parse(localStorage.getItem('BaseInfor')).userName
     if (this.contextMenu.id == "0") {
       if (this.treeTags && this.treeTags.length) {
         this.pageNum = this.contextMenu.pageNum ? this.contextMenu.pageNum : 1;
@@ -131,6 +134,7 @@ export default {
     documentList() {
       var _this = this;
       _this.searchData.channelId = this.channelId;
+      _this.searchData.loginUserName=this.username;
       return new Promise((resolve, reject) => {
         documentList(_this.searchData, _this.pageNum, _this.pageSize)
           .then(response => {
@@ -144,6 +148,11 @@ export default {
             reject(error);
           });
       });
+    },
+    refrashTable(){
+      //刷新列表
+      console.log('刷新列表')
+      this.documentList();
     }
   }
 };

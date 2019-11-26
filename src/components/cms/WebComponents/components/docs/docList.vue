@@ -218,12 +218,17 @@
           >删除</el-button
           >
           <el-button
-            v-if="scorePro.authorityType && scope.row.scoreType"
+            v-if="scope.row.scoreType"
             type="text"
             size="mini"
             @click.stop="articleMark(scope.row)"
-          >打分</el-button
           >
+            <span v-if="scope.row.scoreType==&quot;DXNewsCheckScore&quot;" >打分</span>
+            <span v-if="scope.row.scoreType==&quot;DXNewsArticleScore&quot;" style="color:#67C23A">打分</span>
+            <span v-if="scope.row.scoreType==&quot;DXNewsCheckScoreDone&quot;" >已打分</span>
+            <span v-if="scope.row.scoreType==&quot;DXNewsArticleScoreDone&quot;" style="color:#67C23A">已打分</span>
+          </el-button >
+
         </template>
       </el-table-column>
     </el-table>
@@ -239,6 +244,7 @@
       :dialog-visible.sync="markVisible"
       :process-data="processData"
       :score-pro="scorePro"
+      @refrashTable="refrashTable"
     />
   </div>
 </template>
@@ -250,7 +256,7 @@ import {
   untopDocument,
   articalSort,
   articleUrl,
-  markAuthority
+  // markAuthority
 } from "@/api/cms/article";
 import { getProcess } from "@/api/cms/articleCheck";
 import reviewDialog from "./review";
@@ -313,24 +319,24 @@ export default {
         this.setSort();
       }
     });
-    this.getMarkAuthor();
+    // this.getMarkAuthor();
   },
   methods: {
     // 获取打分权限
-    getMarkAuthor() {
-      return new Promise((resolve, reject) => {
-        markAuthority()
-          .then(response => {
-            this.scorePro = {
-              authorityType: response.data.result
-            };
-            resolve();
-          })
-          .catch(error => {
-            reject(error);
-          });
-      });
-    },
+    // getMarkAuthor() {
+    //   return new Promise((resolve, reject) => {
+    //     markAuthority()
+    //       .then(response => {
+    //         this.scorePro = {
+    //           authorityType: response.data.result
+    //         };
+    //         resolve();
+    //       })
+    //       .catch(error => {
+    //         reject(error);
+    //       });
+    //   });
+    // },
     // 打分
     articleMark(row) {
       this.scorePro.articleId = row.articleId;
@@ -596,6 +602,9 @@ export default {
       };
       this.$store.dispatch("setContextMenu", select);
       this.$store.dispatch("setAttachmentsList", []);
+    },
+    refrashTable(){
+       this.$emit("refrashTable");
     }
   }
 };

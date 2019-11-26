@@ -1,11 +1,11 @@
 <template>
   <el-dialog
     :title="
-      scorePro.scoreType === 'DXNewsCheckScore' ? '考核打分' : '大象号稿件打分'
+      (scorePro.scoreType === 'DXNewsCheckScore'||scorePro.scoreType === 'DXNewsCheckScoreDone') ? ' 大象内部考核' : '大象号稿件打分'
     "
     class="dialog-mark-dialog"
     :visible.sync="dialogVisible"
-    :width="scorePro.scoreType === 'DXNewsCheckScore' ? '710px' : '550px'"
+    :width="(scorePro.scoreType === 'DXNewsCheckScore'||scorePro.scoreType === 'DXNewsCheckScoreDone')? '710px' : '550px'"
     :before-close="handleClose"
     center
   >
@@ -15,12 +15,14 @@
       :form-data="formData"
       label-width="80px"
       :show-button="showButton"
-      v-if="scorePro.scoreType === 'DXNewsCheckScore' && markFormSettings[0]"
+      v-if="((scorePro.scoreType === 'DXNewsCheckScore'&& markFormSettings[0])||(scorePro.scoreType === 'DXNewsCheckScoreDone'&& markFormSettings[0]))"
     >
       <template
         v-for="(ele, index) in markFormSettings[0].items"
         :slot="ele.name"
         slot-scope="scope"
+        v-if="markFormData.length>0"
+
       >
         <el-select
           v-model="markFormData[index].author"
@@ -96,7 +98,7 @@
     <dx-mark
       ref="dxMark"
       :form-data="articleFormData"
-      v-if="scorePro.scoreType === 'DXNewsArticleScore'"
+      v-if="(scorePro.scoreType === 'DXNewsArticleScore')||(scorePro.scoreType ==='DXNewsArticleScoreDone')"
     />
     <span slot="footer" class="dialog-footer">
       <el-button @click="$emit('update:dialogVisible', false)" size="mini"
@@ -168,15 +170,17 @@ export default {
   watch: {
     dialogVisible(val) {
       if (val) {
-        if (this.scorePro.scoreType === "DXNewsCheckScore") {
+        if ((this.scorePro.scoreType === "DXNewsCheckScore")||(this.scorePro.scoreType === "DXNewsCheckScoreDone") ){
           console.log("考核");
           this.getMarkJson();
           // 稿件打分
-        } else if (this.scorePro.scoreType === "DXNewsArticleScore") {
+        } else if (this.scorePro.scoreType === "DXNewsArticleScore"||this.scorePro.scoreType === "DXNewsArticleScoreDone") {
           console.log("稿件");
           this.getManuscriptScore();
         }
       }
+
+
     }
   },
   mounted() {},
@@ -185,6 +189,7 @@ export default {
       this.markFormData[index].labelName = label;
     },
     getMarkJson() {
+            this.markFormData = [];
       return new Promise((resolve, reject) => {
         getMarkJson()
           .then(async response => {
@@ -216,6 +221,7 @@ export default {
               markScore.data.result.item.length
             ) {
               this.markFormData = markScore.data.result.item;
+              // this.$refs.vForm.updateForm();
             }
             resolve();
           })
@@ -256,6 +262,8 @@ export default {
           .then(response => {
             this.$message.success("打分成功");
             this.$emit("update:dialogVisible", false);
+            this.$emit("refrashTable");
+
             // this.markFormData = [];
             resolve();
           })
@@ -271,6 +279,7 @@ export default {
           .then(response => {
             this.$message.success("打分成功");
             this.$emit("update:dialogVisible", false);
+            this.$emit("refrashTable");
             // this.markFormData = [];
             resolve();
           })
@@ -281,10 +290,11 @@ export default {
     },
     clearRadio(index) {
       this.markFormData[index].score = null;
+       this.markFormData[index].labelName = null;
     },
     save() {
       //稿件打分
-      if (this.scorePro.scoreType === "DXNewsArticleScore") {
+      if (this.scorePro.scoreType === "DXNewsArticleScore"||this.scorePro.scoreType === "DXNewsArticleScoreDone") {
         let markData = {
           articleId: this.scorePro.articleId,
           item: this.$refs.dxMark.formDataCopy
