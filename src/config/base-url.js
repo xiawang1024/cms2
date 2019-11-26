@@ -17,11 +17,11 @@ if (process.env.NODE_ENV) {
     SIMPLE_MERGE_URL = 'http://fupload.test.dianzhenkeji.com'
     STREAM_URL='http://172.20.5.4:8080'
   } else if (process.env.NODE_ENV == 'production') {
-    BASE_URL = 'http://gw.dianzhenkeji.com' // 正式地址
-    UP_URL = 'http://fupload.dianzhenkeji.com/basefile/upload?fileRefId='
-    DOWN_URL = 'http://cmsres.dianzhenkeji.com'
-    SIMPLE_UPLOAD_URL = 'http://fupload.dianzhenkeji.com/chunk/chunk'
-    SIMPLE_MERGE_URL = 'http://fupload.dianzhenkeji.com'
+    BASE_URL = 'https://gw.dianzhenkeji.com' // 正式地址
+    UP_URL = 'https://fupload.dianzhenkeji.com/basefile/upload?fileRefId='
+    DOWN_URL = 'https://cmsres.dianzhenkeji.com'
+    SIMPLE_UPLOAD_URL = 'https://fupload.dianzhenkeji.com/chunk/chunk'
+    SIMPLE_MERGE_URL = 'https://fupload.dianzhenkeji.com'
     STREAM_URL='http://vod.stream2.hndt.com'
 
   } else if (process.env.NODE_ENV == 'sit') {
