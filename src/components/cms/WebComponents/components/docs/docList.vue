@@ -175,7 +175,7 @@
         width="70"
         show-overflow-tooltip
       />
-      <el-table-column fixed="right" label="操作" width="200">
+      <el-table-column fixed="right" label="操作" width="240">
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -223,10 +223,10 @@
             size="mini"
             @click.stop="articleMark(scope.row)"
           >
-            <span v-if="scope.row.scoreType==&quot;DXNewsCheckScore&quot;" >打分</span>
-            <span v-if="scope.row.scoreType==&quot;DXNewsArticleScore&quot;" style="color:#67C23A">打分</span>
-            <span v-if="scope.row.scoreType==&quot;DXNewsCheckScoreDone&quot;" >已打分</span>
-            <span v-if="scope.row.scoreType==&quot;DXNewsArticleScoreDone&quot;" style="color:#67C23A">已打分</span>
+            <span v-if="scope.row.scoreType==&quot;DXNewsCheckScore&quot;" >内部打分</span>
+            <span v-if="scope.row.scoreType==&quot;DXNewsArticleScore&quot;">大象号打分</span>
+            <span v-if="scope.row.scoreType==&quot;DXNewsCheckScoreDone&quot;" >已打分(内)</span>
+            <span v-if="scope.row.scoreType==&quot;DXNewsArticleScoreDone&quot;" >已打分(号)</span>
           </el-button >
 
         </template>

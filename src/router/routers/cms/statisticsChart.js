@@ -16,7 +16,6 @@ const statisticsChart = {
     icon: 'tongji',
     role: 'cms:statisticCharts'
   },
-  // meta: { title: 'statisticsChart', icon: 'tongji', role: 'cms' },
   name: 'statisticsChart',
   children: [
 
@@ -32,7 +31,6 @@ const statisticsChart = {
         icon: 'apponly',
         role: 'cms:mobileCharts'
       }
-      // meta: { title: 'mobileCharts', icon: 'apponly', role: 'cms' }
     },
     {
       /**
@@ -46,7 +44,6 @@ const statisticsChart = {
         icon: 'pc',
         role: 'cms:pcSiteCharts',
       }
-      // meta: { title: 'pcSiteCharts', icon: 'pc', role: 'cms', }
     },
     {
       /**
@@ -60,7 +57,6 @@ const statisticsChart = {
         icon: 'pindao',
         role: 'cms:articleBychanel',
       }
-      // meta: { title: 'ArticleStatisticsByChanel', icon: 'pindao', role: 'cms', }
     },
 
     {
@@ -75,7 +71,6 @@ const statisticsChart = {
         icon: 'zuozhe',
         role: 'cms:articleByAuthor',
       }
-      // meta: { title: 'ArticleStatisticsByAuthor', icon: 'zuozhe', role: 'cms', }
     },
 
     {
@@ -90,7 +85,6 @@ const statisticsChart = {
         icon: 'wangzhan',
         role: 'cms:articleByTenantId',
       }
-      // meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms', }
     },
     {
       /**
@@ -104,7 +98,6 @@ const statisticsChart = {
         icon: 'commonManuscript',
         role: 'cms:articleClickByTenantId',
       }
-      // meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms', }
     },
     {
       /**
@@ -118,7 +111,6 @@ const statisticsChart = {
         icon: 'commonManuscript',
         role: 'cms:articleClickByAuthor'
       },
-      // meta: { title: 'ArticleStatisticsByTenantId', icon: 'wangzhan', role: 'cms', },
       hidden: true
     },
     {
@@ -132,8 +124,7 @@ const statisticsChart = {
         title: 'dxDocument',
         icon: '32-elephant',
         role: 'cms:dxDocumentStatistics'
-      },
-      // meta: { title: 'dxDocument', icon: '32-elephant', role: 'cms', }
+      }
 
     },
     {
@@ -147,8 +138,7 @@ const statisticsChart = {
         title: 'departmentStatistics',
         icon: 'department',
         role: 'cms:departmentStatistics'
-      },
-      // meta: { title: 'departmentStatistics', icon: 'department', role: 'cms', }
+      }
 
     }, {
       /**
@@ -161,8 +151,7 @@ const statisticsChart = {
         title: 'dxCreateUser',
         icon: 'zuozhe',
         role: 'cms:dxCreateUser'
-      },
-      // meta: { title: 'dxCreateUser', icon: 'zuozhe', role: 'cms', }
+      }
 
     },
     {
@@ -175,9 +164,8 @@ const statisticsChart = {
       meta: {
         title: 'articleMark',
         icon: 'clipboard',
-        role: 'cms'
-      },
-      // meta: { title: 'dxCreateUser', icon: 'zuozhe', role: 'cms', }
+        role: 'cms:dxnewsScoreDownload'
+      }
 
     },
     {
@@ -192,7 +180,6 @@ const statisticsChart = {
         icon: 'dxCheck',
         role: 'cms:dxCreateUserCheck'
       },
-      // meta: { title: 'dxCreateUserCheck', icon: 'dxCheck', role: 'cms', }
       hidden: true
     },
 
