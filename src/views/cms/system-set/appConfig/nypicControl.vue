@@ -200,7 +200,7 @@ export default {
         }
         if(this.handleType=='编辑'){
             data.id=this.currentId;
-            this.$confirm('该操作可能会导致在APP中使用的图片出现问题，是否继续操作?', '提示', {
+            this.$confirm('将会替换APP中使用的图片，是否继续操作?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
