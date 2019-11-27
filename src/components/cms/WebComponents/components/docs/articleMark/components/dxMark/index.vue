@@ -102,9 +102,29 @@ export default {
               ]
             },
             {
-              label: "视频、图文",
-              name: "videoPictureScore",
-              defineScoreName: "videoPictureExtraScore",
+              label: "视频",
+              name: "videoScore",
+              defineScoreName: "videoExtraScore",
+              type: "slot",
+              radioList: [
+                {
+                  label: "A--20.0",
+                  value: "A"
+                },
+                {
+                  label: "B--10.0",
+                  value: "B"
+                },
+                {
+                  label: "C--5.0",
+                  value: "C"
+                }
+              ]
+            },
+            {
+              label: "图文",
+              name: "PictureScore",
+              defineScoreName: "PictureExtraScore",
               type: "slot",
               radioList: [
                 {
