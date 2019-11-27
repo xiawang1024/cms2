@@ -74,6 +74,7 @@ export default {
               limit: 1,
               disabled: false,
               placeholder: "请上传图片",
+              maxSize:1024,
               rule: [
                 {
                   required: true,
@@ -89,6 +90,7 @@ export default {
               limit: 1,
               disabled: false,
               placeholder: "请上传图片",
+              maxSize:1024,
               rule: [
                 {
                   required: true,
@@ -104,6 +106,7 @@ export default {
               limit: 1,
               disabled: false,
               required: true,
+              maxSize:1024,
               placeholder: "请上传图片"
             },
             {
@@ -113,6 +116,7 @@ export default {
               limit: 1,
               disabled: false,
               required: true,
+              maxSize:1024,
               placeholder: "请上传图片"
             },
             {
@@ -130,6 +134,7 @@ export default {
               limit: 1,
               disabled: false,
               required: true,
+              maxSize:1024,
               placeholder: "请上传图片"
             },
             {
@@ -139,6 +144,7 @@ export default {
               limit: 1,
               disabled: false,
               required: true,
+              maxSize:1024,
               placeholder: "请上传图片"
             },
             {
@@ -156,6 +162,7 @@ export default {
               limit: 1,
               disabled: false,
               required: true,
+              maxSize:1024,
               placeholder: "请上传图片"
             },
             {
@@ -165,6 +172,7 @@ export default {
               limit: 1,
               disabled: false,
               required: true,
+              maxSize:1024,
               placeholder: "请上传图片"
             },
             {
@@ -182,6 +190,7 @@ export default {
               limit: 1,
               disabled: false,
               required: true,
+              maxSize:1024,
               placeholder: "请上传图片"
             },
             {
@@ -191,6 +200,7 @@ export default {
               limit: 1,
               disabled: false,
               required: true,
+              maxSize:1024,
               placeholder: "请上传图片"
             },
             {
@@ -208,6 +218,7 @@ export default {
               limit: 1,
               disabled: false,
               required: true,
+              maxSize:1024,
               placeholder: "请上传图片"
             },
             {
@@ -217,6 +228,7 @@ export default {
               limit: 1,
               disabled: false,
               required: true,
+              maxSize:1024,
               placeholder: "请上传图片"
             },
             {

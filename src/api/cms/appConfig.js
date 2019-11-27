@@ -300,3 +300,58 @@ export function startforbidden(data) {
     }
   });
 }
+
+
+//app模块图片
+
+//查询
+
+export function selectAppModule(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/appConfig/apppic?tenantId=${data.tenantId}&appId=${data.appId}`,
+    method: "get",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+
+//新增
+/**
+ * 
+ * @param data {
+ *  
+  "appId": "string",
+  "code": "string",
+  "description": "string",
+  "id": "string",
+  "tenantId": "string",
+  "url": "string"
+
+ * }
+ */
+export function addAppModule(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/appConfig/apppic`,
+    method: "post",
+    data,
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+
+//修改
+export function updateAppModule(data) {
+  return request({
+    url:
+      Dpath +`/autoconfig/appConfig/apppic`,
+    method: "put",
+    data,
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}

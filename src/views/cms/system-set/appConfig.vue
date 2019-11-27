@@ -3,27 +3,32 @@
     <div class="tool-bar">
       <el-button size="mini" type="primary" @click="backFoword" v-show="!pageFlag">返回</el-button>
       <el-button size="mini" type="primary" @click="searchAppConfig">检索</el-button>
-      <el-button size="mini" type="primary" v-if="checkAuth('cms:appSettingConfig:edit')" @click="addAppConfig">新增</el-button>
+      <el-button
+        size="mini"
+        type="primary"
+        v-if="checkAuth('cms:appSettingConfig:edit')"
+        @click="addAppConfig"
+      >新增</el-button>
     </div>
 
     <el-table :data="fullApp">
-      <el-table-column prop="name" label="app名字"/>
-      <el-table-column prop="version" label="Android版本"/>
-      <el-table-column prop="versionIOS" label="IOS版本"/>
-      <el-table-column prop="description" label="描述"/>
+      <el-table-column prop="name" label="app名字" />
+      <el-table-column prop="version" label="Android版本" />
+      <el-table-column prop="versionIOS" label="IOS版本" />
+      <el-table-column prop="description" label="描述" />
       <el-table-column prop="startingImage" label="分享图标">
         <template slot-scope="scope">
-          <img :src="scope.row.startingImage" class="icon">
+          <img :src="scope.row.startingImage" class="icon" >
         </template>
       </el-table-column>
       <el-table-column prop="icon" label="APP图标">
         <template slot-scope="scope">
-          <img :src="scope.row.icon" class="icon">
+          <img :src="scope.row.icon" class="icon" >
         </template>
       </el-table-column>
-      <el-table-column prop="iosurl" label="苹果下载链接"/>
-      <el-table-column prop="androidURL" label="安卓下载链接"/>
-      <el-table-column prop="sort" label="排序"/>
+      <el-table-column prop="iosurl" label="苹果下载链接" />
+      <el-table-column prop="androidURL" label="安卓下载链接" />
+      <el-table-column prop="sort" label="排序" />
       <el-table-column prop="createTime" label="时间" width="190" :formatter="formatDate">
         <template slot-scope="scope1">
           <span>创建: {{ scope1.row.createTime }}</span>
@@ -32,8 +37,26 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" v-if="checkAuth('cms:appSettingConfig:edit')" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="text" @click="handleDetail(scope.row.id,scope.row)">皮肤管理</el-button>
+          <el-row>
+            <el-button
+              size="mini"
+              type="text"
+              v-if="checkAuth('cms:appSettingConfig:edit')"
+              @click="handleEdit(scope.$index, scope.row)"
+            >编辑</el-button>
+          </el-row>
+          <!-- <el-row>
+            <el-button size="mini" type="text" @click="handleDetail(scope.row.id,scope.row)">皮肤管理</el-button>
+          </el-row> -->
+          <el-row>
+            <el-button size="mini" type="text" v-if="checkAuth('cms:appSettingConfig:startPicture')" @click="handleStart(scope.row.id,scope.row)">启动图管理</el-button>
+          </el-row>
+          <el-row>
+            <el-button size="mini" type="text" v-if="checkAuth('cms:appSettingConfig:themControl')" @click="handleThem(scope.row.id,scope.row)">主题管理</el-button>
+          </el-row>
+          <el-row>
+            <el-button size="mini" type="text" v-if="checkAuth('cms:appSettingConfig:pictureControl')" @click="handlePicture(scope.row.id,scope.row)">图片管理</el-button>
+          </el-row>
         </template>
       </el-table-column>
     </el-table>
@@ -46,8 +69,6 @@
         label-width="130px"
         :btn-loading="isLoading"
       />
-     
-
     </el-dialog>
     <el-pagination
       class="fenyeDiv"
@@ -85,7 +106,7 @@ export default {
       }
     };
     return {
-      currentUser: '',
+      currentUser: "",
       currentId: "",
       searchApp: "",
       fullApp: [],
@@ -458,18 +479,18 @@ export default {
   },
   created() {
     //请求app列表数据
-    this.currentUser=JSON.parse(localStorage.getItem("BaseInfor")).clientLicenseId;
+    this.currentUser = JSON.parse(
+      localStorage.getItem("BaseInfor")
+    ).clientLicenseId;
     this.getAppList(this.pageNo, this.pageSize, { tenantId: this.currentUser });
   },
-  mounted(){
-
-  },
+  mounted() {},
   methods: {
-    checkAuth (authKey) {
+    checkAuth(authKey) {
       if (this.$store.getters.authorities.indexOf(authKey) === -1) {
-        return false
+        return false;
       } else {
-        return true
+        return true;
       }
     },
     formatDate(row) {
@@ -488,9 +509,34 @@ export default {
       this.formSettings = this.addData;
       this.dialogVisible = true;
     },
-    handleDetail(row) {
+    // handleDetail(row) {
+    //   this.$router.push({
+    //     path: "appTabList",
+    //     query: {
+    //       appId: row
+    //     }
+    //   });
+    // },
+    handleStart(row) {
       this.$router.push({
-        path: "appTabList",
+        path:'startControl',
+        query: {
+          appId: row
+        }
+      });
+    },
+
+    handlePicture(row) {
+      this.$router.push({
+        path: "nyPictureControl",
+        query: {
+          appId: row
+        }
+      });
+    },
+    handleThem(row){
+      this.$router.push({
+        path: "themControl",
         query: {
           appId: row
         }
@@ -513,7 +559,7 @@ export default {
         startingImage: [{ url: row.startingImage }],
         tenantId: row.tenantId,
         version: row.version,
-        versionIOS:row.versionIOS
+        versionIOS: row.versionIOS
       };
       this.formSettings = this.editData;
 
@@ -586,7 +632,7 @@ export default {
         data.icon = res.icon[0].url;
         data.startingImage = res.startingImage[0].url;
         data.androidURL = res.androidURL[0].url;
-        data.name=res.appName
+        data.name = res.appName;
         this.addApp(data);
       } else if (this.handleType == "edit") {
         let data = res;
@@ -595,7 +641,7 @@ export default {
         data.icon = res.icon[0].url;
         data.startingImage = res.startingImage[0].url;
         data.androidURL = res.androidURL[0].url;
-        console.log(data,'data')
+        console.log(data, "data");
         this.updateAPP(data);
       } else if (this.handleType == "search") {
         //获取数据
@@ -604,7 +650,7 @@ export default {
           tenantId: this.currentUser,
           ...res
         };
-        console.log(this.searchData,'aaaa')
+        console.log(this.searchData, "aaaa");
         this.seracrAppList(this.pageNo, this.pageSize, this.searchData);
       }
       this.dialogVisible = false;
@@ -779,7 +825,6 @@ export default {
 </script>
 <style scoped>
 .box {
- 
 }
 .tool-bar {
   text-align: right;

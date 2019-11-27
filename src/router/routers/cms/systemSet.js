@@ -225,13 +225,43 @@ const systemSet = {
     },
     {
       /**
-       * 导航列表
+       * 图片管理
        */
-      path: 'appTabList',
-      component: () => import(`@/${path}/appConfig/appList`),
-      name: 'appTabList',
+      path: 'nyPictureControl',
+      component: () => import(`@/${path}/appConfig/nypicControl`),
+      name: 'nyPictureControl',
       meta: {
-        title: 'appTabList',
+        title: 'nyPictureControl',
+        icon: 'appConfig',
+        role: 'cms:appSettingConfig'
+      },
+      hidden: true
+
+    },
+    {
+      /**
+       * 主题管理
+       */
+      path: 'themControl',
+      component: () => import(`@/${path}/appConfig/themControl`),
+      name: 'themControl',
+      meta: {
+        title: 'themControl',
+        icon: 'appConfig',
+        role: 'cms:appSettingConfig'
+      },
+      hidden: true
+
+    },
+    {
+      /**
+       * 启动图管理
+       */
+      path: 'startControl',
+      component: () => import(`@/${path}/appConfig/startControl`),
+      name: 'startControl',
+      meta: {
+        title: 'startControl',
         icon: 'appConfig',
         role: 'cms:appSettingConfig'
       },
