@@ -172,16 +172,11 @@ const statisticsChart = {
       /**
        * 大象内部编辑考核
        */
-      path: 'dxCreateUserCheck',
+      path: 'DxCreateUserCheck',
       component: () => import(`@/${path}/dxCreateUserCheck`),
-      name: 'dxCreateUserCheck',
-      meta: {
-        title: 'dxCreateUserCheck',
-        icon: 'dxCheck',
-        role: 'cms:dxCreateUserCheck'
-      },
-      hidden: true
-    },
+      name: 'DxCreateUserCheck',
+      meta: { title: 'DxCreateUserCheck', icon: 'dxCheck', role: 'cms:dxCreateUserCheck',noCache:false}
+    }
 
 
   ]
