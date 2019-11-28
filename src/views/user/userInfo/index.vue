@@ -22,9 +22,9 @@
     </div>
     <el-table :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" />
-      <el-table-column prop="icon" label="图像">
+      <el-table-column prop="icon" label="图像" width="80px">
         <template slot-scope="scope">
-          <img :src="scope.row.icon" alt style="width:60px" >
+          <img :src="scope.row.icon" style="width:60px;marginTop:5px" >
         </template>
       </el-table-column>
       <el-table-column prop="description" label="用户名" min-width="150px" />
@@ -38,11 +38,11 @@
       </el-table-column>
       <el-table-column prop="mobile" label="手机" min-width="120px" />
       <el-table-column prop="inviteCode" label="邀请码" />
-      <el-table-column prop="description" label="分组" />
+      <el-table-column prop="orgId" label="分组" :formatter="groupDeal"/>
       <el-table-column prop="fansCount" label="赞扬数" />
       <el-table-column prop="favoriteCount" label="最喜欢数" />
       <el-table-column prop="fansCount" label="粉丝数" />
-      <el-table-column prop="origin" label="来源" min-width="160px" />
+      <el-table-column prop="origin" label="来源" min-width="200px" />
       <el-table-column prop="createtime" label="创建时间" min-width="160px" :formatter="timeHandle" />
       <el-table-column
         prop="firstLogonTime"
@@ -55,11 +55,11 @@
       <el-table-column prop="birthday" label="生日" min-width="120px" />
       <el-table-column prop="country" label="国家" />
       <el-table-column prop="city" label="城市" />
-      <el-table-column label="操作">
+      <!-- <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleEdite(scope.$index, scope.row)">编辑</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <el-pagination
       class="fenyeDiv"
@@ -131,7 +131,8 @@ export default {
             }
           ]
         }
-      ]
+      ],
+      groupList:[],
     };
   },
   created() {
@@ -174,6 +175,7 @@ export default {
                 item.value = item.id;
               });
               this.formSettings[0].items[0].options = data;
+              this.groupList=data;
               console.log(res.data.result, "aaa");
             } else {
               this.$message.error(res.data.msg);
@@ -189,6 +191,19 @@ export default {
       let time = "";
       if (val.createtime) {
         return (time = dayjs(val.createtime).format("YYYY-MM-DD HH:mm:ss"));
+      }
+    },
+    groupDeal(val){
+      let group='';
+      if(val.orgId){
+        this.groupList.forEach((item,index)=>{
+          console.log(item.id,val.orgId,'id');
+          
+          if(item.id===val.orgId){
+            group=item.groupName;
+          }
+        })
+        return group;
       }
     },
     searchItem(val) {
