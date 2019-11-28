@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="v-search-header">
-      <v-search :search-settings="searchSettings" @search="searchItem"/>
+      <v-search :search-settings="searchSettings" @search="searchItem" />
     </div>
     <el-row>
       <el-col :span="2">
@@ -37,7 +37,7 @@
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column prop="title" width="250" label="标题" show-overflow-tooltip/>
+      <el-table-column prop="title" width="250" label="标题" show-overflow-tooltip />
       <el-table-column prop="createUser" width="100" label="创建人" />
       <el-table-column prop="fileType" width="80" label="文件类型" :formatter="typeFormate" />
       <el-table-column prop="state" width="120" label="转码状态">
@@ -104,15 +104,12 @@
         :btn-loading="isUploading"
       />
     </el-dialog>
-    <el-dialog :visible.sync="dialogVideo" title="预览"
-               :before-close="handleShutdown"
-    >
+    <el-dialog :visible.sync="dialogVideo" title="预览" :before-close="handleShutdown">
       <el-row>
         <el-col :span="24">
           <video ref="viewVideo" v-if="viewtype==0" style="width:100%" :src="videoSource" controls />
-          <audio ref="viewAudio" v-if="viewtype==1" style="width:100%" :src="videoSource" controls/>
+          <audio ref="viewAudio" v-if="viewtype==1" style="width:100%" :src="videoSource" controls />
           <!-- <audio  src="https://np01-sycdn.kuwo.cn/3591a98480253ad009e6dd93b18d8097/5d8c9807/resource/n2/88/97/2816282324.mp3" controls></audio> -->
-
         </el-col>
       </el-row>
     </el-dialog>
@@ -131,64 +128,68 @@ export default {
   filters: {
     createUrl(val) {
       let data = "无";
-      if(val!=null){
-      data = baseUrl.STREAM_URL + val;
-
-      } 
+      if (val != null) {
+        data = baseUrl.STREAM_URL + val;
+      }
       return data;
     }
   },
   data() {
     return {
-       searchSettings: [{
-        label: '转码状态',
-        name: 'state',
-        visible: true,
-       type: 'select',
-        options:[
-          {
-            label:'成功',
-            value:3
-          },
-           {
-            label:'失败',
-            value:2
-          },
-           {
-            label:'转码中',
-            value:1
-          },
-           {
-            label:'未转码',
-            value:0
-          }
-        ]
-      },{
-        label: '标题',
-        name: 'title',
-        visible: true,
-        type: 'text'
-      },{
-        label: '创建者',
-        name: 'createUser',
-        visible: true,
-        type: 'text'
-      },{
-        label: '文件类型',
-        name: 'fileType',
-        visible: true,
-        type: 'select',
-        options:[
-          {
-            label:'视频',
-            value:0
-          },
-           {
-            label:'音频',
-            value:1
-          }
-        ]
-      }],
+      searchSettings: [
+        {
+          label: "转码状态",
+          name: "state",
+          visible: true,
+          type: "select",
+          options: [
+            {
+              label: "成功",
+              value: 3
+            },
+            {
+              label: "失败",
+              value: 2
+            },
+            {
+              label: "转码中",
+              value: 1
+            },
+            {
+              label: "未转码",
+              value: 0
+            }
+          ]
+        },
+        {
+          label: "标题",
+          name: "title",
+          visible: true,
+          type: "text"
+        },
+        {
+          label: "创建者",
+          name: "createUser",
+          visible: true,
+          type: "text"
+        },
+        {
+          label: "文件类型",
+          name: "fileType",
+          visible: true,
+          type: "select",
+          options: [
+            {
+              label: "视频",
+              value: 0
+            },
+            {
+              label: "音频",
+              value: 1
+            }
+          ]
+        }
+      ],
       tableValue: [],
       videoSource: "",
       dialogVideo: false,
@@ -405,7 +406,19 @@ export default {
               required: true,
               limit: 1,
               hidden: false,
-              acceptFile: { accept: [".mp4", ".rmvb", ".mkv", ".wmv", ".flv",".mov",".avi",".swf",".mod"] }
+              acceptFile: {
+                accept: [
+                  ".mp4",
+                  ".rmvb",
+                  ".mkv",
+                  ".wmv",
+                  ".flv",
+                  ".mov",
+                  ".avi",
+                  ".swf",
+                  ".mod"
+                ]
+              }
             },
             {
               label: "上传资源",
@@ -415,7 +428,7 @@ export default {
               limit: 1,
               hidden: true,
               acceptFile: {
-                accept: ['.cda','.wav','.aac','.mp3']
+                accept: [".cda", ".wav", ".aac", ".mp3"]
               }
             },
             {
@@ -429,13 +442,12 @@ export default {
       ],
       formData: {},
       clientLicenseId: "",
-      viewtype:'',
-        fileType:'',
-          createUser:'',
-          title:'',
-          state:'',
-          isUploading:false,
-         
+      viewtype: "",
+      fileType: "",
+      createUser: "",
+      title: "",
+      state: "",
+      isUploading: false
     };
   },
   created() {
@@ -451,10 +463,10 @@ export default {
           pageNo: this.pageNo,
           pageSize: this.pageSize,
           tanentId: this.clientLicenseId,
-          fileType:this.fileType,
-          createUser:this.createUser,
-          title:this.title,
-          state:this.state
+          fileType: this.fileType,
+          createUser: this.createUser,
+          title: this.title,
+          state: this.state
         })
           .then(res => {
             console.log(res, "res");
@@ -482,21 +494,27 @@ export default {
       }
       return data;
     },
-    timeFormate(param){
+    timeFormate(param) {
       let data = "";
-      let val=param.fileLength;
-      if(val){
-         let min = Math.floor(val % 3600);
+      let val = param.fileLength;
+      if (val) {
+        let min = Math.floor(val % 3600);
+        let s = (val % 60).toFixed(0);
+        s = s < 10 ? "0" + s : s;
         let time =
-          (Math.floor(val / 3600)<10?('0'+Math.floor(val / 3600)):Math.floor(val / 3600)) +
+          (Math.floor(val / 3600) < 10
+            ? "0" + Math.floor(val / 3600)
+            : Math.floor(val / 3600)) +
           ":" +
-          (Math.floor(min / 60)<10?('0'+Math.floor(min / 60)):Math.floor(min / 60)) +
+          (Math.floor(min / 60) < 10
+            ? "0" + Math.floor(min / 60)
+            : Math.floor(min / 60)) +
           ":" +
-          (val % 60).toFixed(0);
-       
-        data=time
+          s;
+
+        data = time;
       }
-     
+
       return data;
     },
     //分页处理
@@ -512,7 +530,7 @@ export default {
       this.dialogVisible = true;
     },
     submitSave(val) {
-      this.isUploading=true;
+      this.isUploading = true;
       var _this = this;
       let data = {};
       if (val.fileType == 0) {
@@ -528,30 +546,30 @@ export default {
           data.audioCode = val.VaudioCode;
         }
         if (val.inputFilePath[0].url) {
-        //截掉url域名
-        let url = val.inputFilePath[0].url;
-        data.inputFilePath = url.split(baseUrl.DOWN_URL)[1];
-      } else {
-        this.$message({
-          type: "error",
-          message: "请在文件上传结束后进行操作"
-        });
-        return false;
-      }
+          //截掉url域名
+          let url = val.inputFilePath[0].url;
+          data.inputFilePath = url.split(baseUrl.DOWN_URL)[1];
+        } else {
+          this.$message({
+            type: "error",
+            message: "请在文件上传结束后进行操作"
+          });
+          return false;
+        }
       } else if (val.fileType == 1) {
         data.audioCode = val.audioCode;
         data.audioBitRate = val.audioBitRate;
         if (val.auidoFilePath[0].url) {
-        //截掉url域名
-        let url = val.auidoFilePath[0].url;
-        data.inputFilePath = url.split(baseUrl.DOWN_URL)[1];
-      } else {
-        this.$message({
-          type: "error",
-          message: "请在文件上传结束后进行操作"
-        });
-        return false;
-      }
+          //截掉url域名
+          let url = val.auidoFilePath[0].url;
+          data.inputFilePath = url.split(baseUrl.DOWN_URL)[1];
+        } else {
+          this.$message({
+            type: "error",
+            message: "请在文件上传结束后进行操作"
+          });
+          return false;
+        }
       }
       (data.clientLicenseId = JSON.parse(
         localStorage.getItem("BaseInfor")
@@ -563,7 +581,7 @@ export default {
       data.fileType = val.fileType;
 
       //未获得文件地址拦截操作
-      
+
       if (data.audioCode == "静音") {
         data.audioCode = "";
       }
@@ -573,13 +591,13 @@ export default {
       return new Promise((resolve, reject) => {
         addTranscode(data)
           .then(res => {
-            _this.isUploading=false;
+            _this.isUploading = false;
             if (res.data.code == 0) {
               this.$message({
                 type: "success",
                 message: res.data.msg
               });
-        _this.$refs.vform.updateForm();
+              _this.$refs.vform.updateForm();
 
               _this.initTable();
             } else {
@@ -726,45 +744,45 @@ export default {
     //预览
     handleReview(index, row) {
       this.dialogVideo = true;
-      this.viewtype=row.fileType;
-      this.videoSource = baseUrl.STREAM_URL + "/transdownload" + row.outputFilePath;
+      this.viewtype = row.fileType;
+      this.videoSource =
+        baseUrl.STREAM_URL + "/transdownload" + row.outputFilePath;
     },
-    handleCopy(index, row) {
-
-    },
+    handleCopy(index, row) {},
     handleDownload(index, row) {
-      let downUrl = (baseUrl.STREAM_URL + "/transdownload" + row.outputFilePath).toString();
-      let saveTitle=row.title||new Date().getTime()
+      let downUrl = (
+        baseUrl.STREAM_URL +
+        "/transdownload" +
+        row.outputFilePath
+      ).toString();
+      let saveTitle = row.title || new Date().getTime();
       let FileSaver = require("file-saver");
       if (row.fileType == 0) {
-        FileSaver.saveAs(downUrl, saveTitle+".mp4");
+        FileSaver.saveAs(downUrl, saveTitle + ".mp4");
       }
       if (row.fileType == 1) {
-        FileSaver.saveAs(downUrl, saveTitle+".mp3");
+        FileSaver.saveAs(downUrl, saveTitle + ".mp3");
       }
     },
-    searchItem(val){
-      this.username=val.username;
-       this.pageNo=1,
-      this.pageSize=10,
-      this.totalCount=0,
-      this.fileType=val.fileType==undefined?'':val.fileType,
-          this.createUser=val.createUser||'',
-          this.title=val.title||'',
-          this.state=val.state==undefined?'':val.state
+    searchItem(val) {
+      this.username = val.username;
+      (this.pageNo = 1),
+        (this.pageSize = 10),
+        (this.totalCount = 0),
+        (this.fileType = val.fileType == undefined ? "" : val.fileType),
+        (this.createUser = val.createUser || ""),
+        (this.title = val.title || ""),
+        (this.state = val.state == undefined ? "" : val.state);
       this.initTable();
     },
-    handleShutdown(done){
-      if(this.viewtype==0){
-       this.$refs.viewVideo.pause();
-
-      } 
-      if(this.viewtype==1){
-       this.$refs.viewAudio.pause();
-
+    handleShutdown(done) {
+      if (this.viewtype == 0) {
+        this.$refs.viewVideo.pause();
       }
-       done();
-    
+      if (this.viewtype == 1) {
+        this.$refs.viewAudio.pause();
+      }
+      done();
     }
   }
 };
@@ -786,15 +804,15 @@ export default {
   color: #409eff;
 }
 .demo-table-expand {
-    font-size: 0;
-  }
-  .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
-  }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 100%;
-  }
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 100%;
+}
 </style>
