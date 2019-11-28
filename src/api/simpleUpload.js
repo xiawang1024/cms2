@@ -15,6 +15,7 @@ export function needMerge(data) {
     loadingConfig: {
       noLoading: true
     },
-    timeout: 60000
+    //运维网卡限速，合并请求超时等待时间调整为2min;
+    timeout: 120000
   });
 }

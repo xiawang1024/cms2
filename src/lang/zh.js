@@ -109,6 +109,7 @@ export default {
     dataPermission: '用户标签',
     dxCreateUser: '大象个人统计',
     DxCreateUserCheck: '大象编辑考核',
+    articleMark: '大象新闻打分',
     departmentStatistics: '部门排行',
     systemStatus: '系统状态',
     logs: '日志',

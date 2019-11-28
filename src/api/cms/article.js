@@ -377,9 +377,9 @@ export function getManuscriptScore(articleId) {
 }
 
 // 获取考核打分详情
-export function getMarkScore(articleId) {
+export function getMarkScore(articleId, type) {
   return request({
-    url: `/cms/score/getCheckScoreDTO/${articleId}`,
+    url: `/cms/score/getCheckScoreDTO/${articleId}/${type}`,
     method: 'get',
     loadingConfig: {
       target: '.el-dialog__body'

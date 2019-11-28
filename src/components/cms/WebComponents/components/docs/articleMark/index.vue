@@ -1,12 +1,13 @@
 <template>
   <el-dialog
     :title="
-      scorePro.authorityType === 'articleScore' ? '大象号稿件打分' : '考核打分'
+      (scorePro.scoreType === 'DXNewsCheckScore'||scorePro.scoreType === 'DXNewsCheckScoreDone') ? ' 大象内部考核' : '大象号稿件打分'
     "
     class="dialog-mark-dialog"
     :visible.sync="dialogVisible"
-    :width="scorePro.authorityType === 'articleScore' ? '550px' : '710px'"
+    :width="(scorePro.scoreType === 'DXNewsCheckScore'||scorePro.scoreType === 'DXNewsCheckScoreDone')? '710px' : '550px'"
     :before-close="handleClose"
+    center
   >
     <v-form
       ref="vForm"
@@ -14,12 +15,14 @@
       :form-data="formData"
       label-width="80px"
       :show-button="showButton"
-      v-if="scorePro.authorityType === 'checkScore' && markFormSettings[0]"
+      v-if="((scorePro.scoreType === 'DXNewsCheckScore'&& markFormSettings[0])||(scorePro.scoreType === 'DXNewsCheckScoreDone'&& markFormSettings[0]))"
     >
       <template
         v-for="(ele, index) in markFormSettings[0].items"
         :slot="ele.name"
         slot-scope="scope"
+        v-if="markFormData.length>0"
+
       >
         <el-select
           v-model="markFormData[index].author"
@@ -39,16 +42,35 @@
           v-model="markFormData[index].score"
           :key="ele.scoreName"
         >
-          <el-radio
-            v-for="(item, index) in ele.radioList"
-            :key="index"
+          <!-- <el-radio
+            v-for="item in ele.radioList"
+            :key="item.value"
             :label="item.value"
-          >{{ item.label }}</el-radio
+            @change="radioChange(index, item.label)"
+            >{{ item.label }}</el-radio
+          >-->
+          <el-radio
+            v-for="item in ele.radioList"
+            :key="item.value"
+            :label="item.value"
+            @change="radioChange(index, item.label)"
           >
+            <el-popover
+              popper-class="poperclass-title"
+              placement="top-start"
+              title
+              width="10"
+              trigger="hover"
+              :key="index"
+            >
+              <div style="width:50px">{{ item.value.split("--")[1] }}分</div>
+              <span slot="reference">{{ item.label }}</span>
+            </el-popover>
+          </el-radio>
         </el-radio-group>
 
         <el-popover
-          popper-class="poperclass"
+          popper-class="poperclass-empty"
           placement="top-start"
           title
           width="10"
@@ -75,8 +97,8 @@
     </v-form>
     <dx-mark
       ref="dxMark"
-      :form-data="formData"
-      v-if="scorePro.authorityType === 'articleScore'"
+      :form-data="articleFormData"
+      v-if="(scorePro.scoreType === 'DXNewsArticleScore')||(scorePro.scoreType ==='DXNewsArticleScoreDone')"
     />
     <span slot="footer" class="dialog-footer">
       <el-button @click="$emit('update:dialogVisible', false)" size="mini"
@@ -89,10 +111,10 @@
 <script>
 import dxMark from "./components/dxMark";
 import {
-  getManuscriptScore,
+  // getManuscriptScore,
   getMarkScore,
   getMarkJson,
-  postManuscriptScore,
+  // postManuscriptScore,
   postMarkScore
 } from "@/api/cms/article";
 export default {
@@ -114,6 +136,7 @@ export default {
   data() {
     return {
       markFormData: [],
+      articleFormData: [],
       formData: {},
       showButton: false,
       markFormSettings: []
@@ -147,38 +170,59 @@ export default {
   watch: {
     dialogVisible(val) {
       if (val) {
-        // 考核打分
-        if (this.scorePro.authorityType === "checkScore") {
-          // this.getMarkScore();
+        if ((this.scorePro.scoreType === "DXNewsCheckScore")||(this.scorePro.scoreType === "DXNewsCheckScoreDone") ){
+          console.log("考核");
           this.getMarkJson();
           // 稿件打分
-        } else if (this.scorePro.authorityType === "articleScore") {
+        } else if (this.scorePro.scoreType === "DXNewsArticleScore"||this.scorePro.scoreType === "DXNewsArticleScoreDone") {
+          console.log("稿件");
           this.getManuscriptScore();
         }
       }
+
+
     }
   },
   mounted() {},
   methods: {
+    radioChange(index, label) {
+      this.markFormData[index].labelName = label;
+    },
     getMarkJson() {
-      // this.markFormData = [];
+            this.markFormData = [];
       return new Promise((resolve, reject) => {
         getMarkJson()
           .then(async response => {
+            this.markFormSettings = [];
             this.markFormSettings = response.data.result.markFormSettings;
             this.markFormSettings[0].items.forEach(ele => {
+              // 绑定for循环key值， 无实际意义
               ele.reporterName = `${ele.name}-reporter`;
               ele.scoreName = `${ele.name}-score`;
               ele.defineName = `${ele.name}-define`;
-              this.markFormData.push({
-                score: "",
-                extraScore: 0,
-                author: [],
-                name: ele.name
-              });
+              if (
+                this.markFormData.length !==
+                this.markFormSettings[0].items.length
+              ) {
+                this.markFormData.push({
+                  score: "",
+                  extraScore: 0,
+                  author: [],
+                  name: ele.name,
+                  labelName: "",
+                  itemName: ele.label,
+                  scoreType: 0
+                });
+              }
             });
             const markScore = await this.getMarkScore();
-            this.markFormData = markScore.data.result.item;
+            if (
+              markScore.data.result.item &&
+              markScore.data.result.item.length
+            ) {
+              this.markFormData = markScore.data.result.item;
+              // this.$refs.vForm.updateForm();
+            }
             resolve();
           })
           .catch(error => {
@@ -186,9 +230,10 @@ export default {
           });
       });
     },
+    // 获取考核打分
     getMarkScore() {
       return new Promise((resolve, reject) => {
-        getMarkScore(this.scorePro.articleId)
+        getMarkScore(this.scorePro.articleId, "0")
           .then(response => {
             resolve(response);
           })
@@ -197,11 +242,12 @@ export default {
           });
       });
     },
+    // 获取稿件打分
     getManuscriptScore() {
       return new Promise((resolve, reject) => {
-        getManuscriptScore(this.scorePro.articleId)
+        getMarkScore(this.scorePro.articleId, "1")
           .then(response => {
-            this.formData = response.data.result;
+            this.articleFormData = response.data.result.item;
             resolve();
           })
           .catch(error => {
@@ -209,12 +255,16 @@ export default {
           });
       });
     },
+    // 稿件打分
     postManuscriptScore(data) {
       return new Promise((resolve, reject) => {
-        postManuscriptScore(data)
+        postMarkScore(data)
           .then(response => {
             this.$message.success("打分成功");
             this.$emit("update:dialogVisible", false);
+            this.$emit("refrashTable");
+
+            // this.markFormData = [];
             resolve();
           })
           .catch(error => {
@@ -229,6 +279,8 @@ export default {
           .then(response => {
             this.$message.success("打分成功");
             this.$emit("update:dialogVisible", false);
+            this.$emit("refrashTable");
+            // this.markFormData = [];
             resolve();
           })
           .catch(error => {
@@ -237,17 +289,17 @@ export default {
       });
     },
     clearRadio(index) {
-      this.markFormData[index].score = "";
-      // this.$refs.mark.formModel[name] = null;
+      this.markFormData[index].score = null;
+       this.markFormData[index].labelName = null;
     },
     save() {
-      if (this.scorePro.authorityType === "articleScore") {
-        let resData = Object.assign(
-          {},
-          this.$refs.dxMark.$refs.vForm.formModel,
-          { articleId: this.scorePro.articleId }
-        );
-        this.postManuscriptScore(resData);
+      //稿件打分
+      if (this.scorePro.scoreType === "DXNewsArticleScore"||this.scorePro.scoreType === "DXNewsArticleScoreDone") {
+        let markData = {
+          articleId: this.scorePro.articleId,
+          item: this.$refs.dxMark.formDataCopy
+        };
+        this.postManuscriptScore(markData);
       } else {
         // 考核打分
         let markData = {
@@ -259,6 +311,7 @@ export default {
       }
     },
     handleClose() {
+      // this.markFormData = [];
       this.$emit("update:dialogVisible", false);
     }
   }
@@ -295,8 +348,14 @@ export default {
     margin-left: 10px;
   }
 }
-.poperclass {
+.poperclass-empty {
   min-width: 70px;
+  line-height: 1;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+.poperclass-title {
+  min-width: 50px;
   line-height: 1;
   padding: 8px 10px;
   font-size: 12px;
