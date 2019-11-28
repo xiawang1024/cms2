@@ -24,7 +24,7 @@
       <el-table-column type="selection" width="55" />
       <el-table-column prop="icon" label="图像" width="80px">
         <template slot-scope="scope">
-          <img :src="scope.row.icon" style="width:60px;marginTop:5px" >
+          <img :src="scope.row.icon" style="height:20px;marginTop:5px" >
         </template>
       </el-table-column>
       <el-table-column prop="description" label="用户名" min-width="150px" />
@@ -64,7 +64,7 @@
     <el-pagination
       class="fenyeDiv"
       :current-page="pageNo"
-      :page-sizes="[10,30,60,100]"
+      :page-sizes="[10,20,50,100]"
       :page-size="pageSize"
       :total="total"
       background
@@ -96,7 +96,7 @@ export default {
   data() {
     return {
       pageNo: 1,
-      pageSize: 15,
+      pageSize:10,
       mobile: "",
       nickname: "",
       total: 0,
@@ -208,7 +208,7 @@ export default {
     },
     searchItem(val) {
       this.pageNo = 1;
-      this.pageSize = 15;
+      this.pageSize = 10;
       this.total = 0;
       this.tableData = [];
       console.log(val, "val");
