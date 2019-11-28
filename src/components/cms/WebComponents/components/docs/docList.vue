@@ -223,10 +223,10 @@
             size="mini"
             @click.stop="articleMark(scope.row)"
           >
-            <span v-if="scope.row.scoreType==&quot;DXNewsCheckScore&quot;" >内部打分</span>
-            <span v-if="scope.row.scoreType==&quot;DXNewsArticleScore&quot;">大象号打分</span>
-            <span v-if="scope.row.scoreType==&quot;DXNewsCheckScoreDone&quot;" >已打分(内)</span>
-            <span v-if="scope.row.scoreType==&quot;DXNewsArticleScoreDone&quot;" >已打分(号)</span>
+            <span v-if="scope.row.scoreType==&quot;DXNewsCheckScore&quot;&&scope.row.articleStatus == 11" >内部打分</span>
+            <span v-if="scope.row.scoreType==&quot;DXNewsArticleScore&quot;&&scope.row.articleStatus == 11">大象号打分</span>
+            <span v-if="scope.row.scoreType==&quot;DXNewsCheckScoreDone&quot;&&scope.row.articleStatus == 11" >已打分(内)</span>
+            <span v-if="scope.row.scoreType==&quot;DXNewsArticleScoreDone&quot;&&scope.row.articleStatus == 11" >已打分(号)</span>
           </el-button >
 
         </template>
