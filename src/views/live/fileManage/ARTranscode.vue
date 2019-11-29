@@ -37,7 +37,14 @@
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column prop="title" width="250" label="标题" show-overflow-tooltip />
+      <el-table-column prop="title" width="250" label="标题" show-overflow-tooltip>
+        <template slot-scope="scope">
+          <i v-if="scope.row.fileType==0" class="el-icon-video-camera colorInfo"/>
+          <i v-if="scope.row.fileType==1" class="el-icon-headset colorInfo"/>
+          <i v-if="scope.row.fileType==2" class="el-icon-picture-outline colorInfo"/>
+          <span >{{ scope.row.title }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="createUser" width="100" label="创建人" />
       <el-table-column prop="fileType" width="80" label="文件类型" :formatter="typeFormate" />
       <el-table-column prop="state" width="120" label="转码状态">
@@ -236,12 +243,8 @@ export default {
               name: "audioCode",
               type: "radio",
               required: true,
-              value: "aac",
+              value: "mp3",
               options: [
-                {
-                  label: "aac",
-                  value: "aac"
-                },
                 {
                   label: "mp3",
                   value: "mp3"
@@ -484,15 +487,6 @@ export default {
             reject(err);
           });
       });
-    },
-    typeFormate(val) {
-      let data = "";
-      if (val.fileType == 0) {
-        data = "视频";
-      } else if (val.fileType == 1) {
-        data = "音频";
-      }
-      return data;
     },
     timeFormate(param) {
       let data = "";
