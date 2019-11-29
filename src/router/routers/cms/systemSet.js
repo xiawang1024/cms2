@@ -180,6 +180,7 @@ const systemSet = {
         icon: 'bee',
         role: 'cms:bee'
       },
+      hidden:true
     },
     {
       /**
