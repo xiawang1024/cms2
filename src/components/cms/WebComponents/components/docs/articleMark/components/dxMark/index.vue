@@ -108,15 +108,15 @@ export default {
               type: "slot",
               radioList: [
                 {
-                  label: "A--20.0",
+                  label: "A--10.0",
                   value: "A"
                 },
                 {
-                  label: "B--10.0",
+                  label: "B--5.0",
                   value: "B"
                 },
                 {
-                  label: "C--5.0",
+                  label: "C--0.0",
                   value: "C"
                 }
               ]
@@ -128,15 +128,15 @@ export default {
               type: "slot",
               radioList: [
                 {
-                  label: "A--20.0",
+                  label: "A--10.0",
                   value: "A"
                 },
                 {
-                  label: "B--10.0",
+                  label: "B--5.0",
                   value: "B"
                 },
                 {
-                  label: "C--5.0",
+                  label: "C--0.0",
                   value: "C"
                 }
               ]
@@ -148,15 +148,15 @@ export default {
               type: "slot",
               radioList: [
                 {
-                  label: "A--10.0",
+                  label: "A--6.0",
                   value: "A"
                 },
                 {
-                  label: "B--6.0",
+                  label: "B--3.0",
                   value: "B"
                 },
                 {
-                  label: "C--4.0",
+                  label: "C--0.0",
                   value: "C"
                 }
               ]
