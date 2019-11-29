@@ -59,13 +59,37 @@
       <el-table-column label="查看" width="50">
         <template slot-scope="scope">
           <i
+            slot="reference"
             class="el-icon-share"
             style="cursor:pointer"
             @click.stop="openWindow(scope.row.articleId)"
           />
         </template>
       </el-table-column>
-
+      <el-table-column prop="articleId" label="扫码查看" width="80">
+        <template slot-scope="scope">
+          <el-popover
+            placement="bottom"
+            width="200"
+            trigger="click"
+            :disabled="scope.$index!=currentrow"
+          >
+            <el-row>
+              <el-col>
+                <div style="backgroundColor:#eee;height:174px">
+                  <qrcode :show-qrcode="showQRcode" />
+                </div>
+              </el-col>
+            </el-row>
+            <i
+              slot="reference"
+              class="el-icon-mobile"
+              style="cursor:pointer"
+              @click.stop="phoneView(scope.row.articleId,scope.$index)"
+            />
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="预览" width="50">
         <template slot-scope="scope">
           <i
@@ -262,13 +286,15 @@ import { getProcess } from "@/api/cms/articleCheck";
 import reviewDialog from "./review";
 import stepDialog from "./step";
 import markDialog from "./articleMark";
+import qrcode from "./QRcode";
 import Sortable from "sortablejs";
 import { mapGetters } from "vuex";
 export default {
   components: {
     reviewDialog,
     stepDialog,
-    markDialog
+    markDialog,
+    qrcode
   },
   props: {
     tableData: {
@@ -302,7 +328,9 @@ export default {
       stepVisible: false,
       markVisible: false,
       processData: [],
-      scorePro: {}
+      scorePro: {},
+      showQRcode:'',
+      currentrow:-1,
     };
   },
   computed: {
@@ -591,6 +619,28 @@ export default {
           });
       });
     },
+    /**
+     * 扫码查看
+     */
+    phoneView(id,index) {
+     
+      return new Promise((resolve, reject) => {
+        articleUrl(id)
+          .then(response => {
+            if (response.data.result) {
+              this.showQRcode="https://" + response.data.result;
+              this.currentrow=index;
+            } else {
+              this.$message.warning("该文章暂无链接");
+            }
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+
     editDoc(row) {
       const select = {
         id: "1",
