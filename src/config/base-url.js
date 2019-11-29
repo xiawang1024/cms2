@@ -25,7 +25,7 @@ if (process.env.NODE_ENV) {
     SIMPLE_UPLOAD_URL = 'https://fupload.dianzhenkeji.com/chunk/chunk'
     SIMPLE_MERGE_URL = 'https://fupload.dianzhenkeji.com'
     STREAM_URL='http://vod.stream2.hndt.com'
-    STREAM_TV_BRODCAST='http://prog.dianzhenkeji.com'
+    STREAM_TV_BRODCAST='https://prog.dianzhenkeji.com'
   } else if (process.env.NODE_ENV == 'sit') {
     BASE_URL = 'http://gw.c1.dxhmt.cn' //白沙地址
     UP_URL = 'http://fupload.c1.dxhmt.cn:55030/basefile/upload?fileRefId='
