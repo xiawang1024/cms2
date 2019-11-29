@@ -223,10 +223,10 @@
             size="mini"
             @click.stop="articleMark(scope.row)"
           >
-            <span v-if="scope.row.scoreType==&quot;DXNewsCheckScore&quot;&&scope.row.articleStatus == 11&&scope.row.articleType == 0" >内部打分</span>
-            <span v-if="scope.row.scoreType==&quot;DXNewsArticleScore&quot;&&scope.row.articleStatus == 11&&scope.row.articleType == 0">大象号打分</span>
-            <span v-if="scope.row.scoreType==&quot;DXNewsCheckScoreDone&quot;&&scope.row.articleStatus == 11&&scope.row.articleType == 0" >已打分(内)</span>
-            <span v-if="scope.row.scoreType==&quot;DXNewsArticleScoreDone&quot;&&scope.row.articleStatus == 11&&scope.row.articleType == 0" >已打分(号)</span>
+            <span v-if="scope.row.scoreType==&quot;DXNewsCheckScore&quot;&&scope.row.articleStatus == 11&&(scope.row.articleType == 0||scope.row.articleType == 4)" >内部打分</span>
+            <span v-if="scope.row.scoreType==&quot;DXNewsArticleScore&quot;&&scope.row.articleStatus == 11&&(scope.row.articleType == 0||scope.row.articleType == 4)">大象号打分</span>
+            <span v-if="scope.row.scoreType==&quot;DXNewsCheckScoreDone&quot;&&scope.row.articleStatus == 11&&(scope.row.articleType == 0||scope.row.articleType == 4)" >已打分(内)</span>
+            <span v-if="scope.row.scoreType==&quot;DXNewsArticleScoreDone&quot;&&scope.row.articleStatus == 11&&(scope.row.articleType == 0||scope.row.articleType == 4)" >已打分(号)</span>
           </el-button >
 
         </template>
@@ -580,7 +580,7 @@ export default {
         articleUrl(id)
           .then(response => {
             if (response.data.result) {
-              window.open("http://" + response.data.result);
+              window.open("https://" + response.data.result);
             } else {
               this.$message.warning("该文章暂无链接");
             }
