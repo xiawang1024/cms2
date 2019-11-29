@@ -1,4 +1,5 @@
 import request from "@/utils/request";
+import baseUrl from "@/config/base-url"
 let Cpath = "/live-stream";
 //直播流地址管理
 
@@ -149,3 +150,17 @@ export function deletRelay(id) {
     }
   });
 }
+
+
+//直播流地址
+//type: 1 电台  , 11电视台
+export function TVStream(type) {
+  return request({
+    url: baseUrl.STREAM_TV_BRODCAST+`/program/get/live/class/program/${type}`,
+    method: "get",
+    loadingConfig: {
+      noLoading: true
+    }
+  });
+}
+
