@@ -46,7 +46,6 @@
         </template>
       </el-table-column>
       <el-table-column prop="createUser" width="100" label="创建人" />
-      <el-table-column prop="fileType" width="80" label="文件类型" :formatter="typeFormate" />
       <el-table-column prop="state" width="120" label="转码状态">
         <template slot-scope="scope">
           <span v-if="scope.row.state==3" class="colorSuccess">成功</span>

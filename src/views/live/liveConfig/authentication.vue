@@ -80,12 +80,11 @@
               @click="handleShare(scope.$index, scope.row)"
             >分享</el-button>
           </el-popover>
-          <el-button
+          <!-- <el-button
             size="mini"
             type="primary"
             @click="handleView(scope.$index, scope.row)"
-          >播放</el-button>
-
+          >播放</el-button> -->
           <el-button
             size="mini"
             type="danger"
@@ -107,20 +106,6 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-    <el-dialog
-      title="预览"
-      :visible.sync="playVisible"
-      width="860px"
-      :before-close="handleClose"
-    >
-      <video :src="shareStream" style="width:100%" controls ref="streamVideo"/>
-        
-
-    </el-dialog>
-
-
-
-
   </div>
 </template>
 <script>
@@ -150,8 +135,8 @@ export default {
         visible: true,
         type: 'text'
       }],
-      playVisible:false,
-      shareStream:'',
+      // playVisible:false,
+      // shareStream:'',
     };
   },
   created() {
@@ -325,29 +310,8 @@ export default {
             reject(error);
           });
       });
-    },
-    handleView(index,row){
-      this.shareStream=row.shareStream;
-      this.streamPlayer();
-      this.playVisible=true;
-
-    },
-    handleClose(done){
-      this.$refs.streamVideo.pause();
-       done();
-    },
-    streamPlayer(){
-      var node =this.$refs.streamVideo;
-      if(Hls.isSupported){
-        let hls=new Hls();
-        //地址处理
-        hls.loadSource(this.shareStream);
-        hls.attachMedia(node);
-        hls.on(Hls.Events.MANIFEST_PARSED,function(){
-          node.play()
-        })
-      }
     }
+    
   }
 };
 </script>
