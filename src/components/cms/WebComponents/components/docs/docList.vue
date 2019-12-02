@@ -69,15 +69,15 @@
       <el-table-column prop="articleId" label="扫码查看" width="80">
         <template slot-scope="scope">
           <el-popover
-            placement="bottom"
-            width="200"
+            placement="right"
+            width="150"
             trigger="click"
             :disabled="scope.$index!=currentrow"
           >
             <el-row>
               <el-col>
-                <div style="backgroundColor:#eee;height:174px">
-                  <qrcode :show-qrcode="showQRcode" />
+                <div style="backgroundColor:#eee;height:124px">
+                  <qrcode :show-qrcode="showQRcode[scope.$index]" />
                 </div>
               </el-col>
             </el-row>
@@ -329,7 +329,7 @@ export default {
       markVisible: false,
       processData: [],
       scorePro: {},
-      showQRcode:'',
+      showQRcode:[],
       currentrow:-1,
     };
   },
@@ -623,13 +623,12 @@ export default {
      * 扫码查看
      */
     phoneView(id,index) {
-     
       return new Promise((resolve, reject) => {
         articleUrl(id)
           .then(response => {
             if (response.data.result) {
-              this.showQRcode="https://" + response.data.result;
               this.currentrow=index;
+              this.showQRcode[index]="https://" + response.data.result;
             } else {
               this.$message.warning("该文章暂无链接");
             }
