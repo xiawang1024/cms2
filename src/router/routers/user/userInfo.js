@@ -11,8 +11,8 @@ const userInfo = {
   meta: {
     title: 'userInfo',
     icon: 'userInfo',
-    role: 'userCenter'
-    // role: 'userCenter:userInfo'
+    // role: 'userCenter'
+    role: 'userCenter:userInfo'
 
   },
   children: [{
@@ -22,7 +22,8 @@ const userInfo = {
     meta: {
       title: 'userInfo',
       icon: 'userInfo',
-      role: 'userCenter'
+      // role: 'userCenter'
+      role: 'userCenter:userInfo'
     }
   }]
 }
