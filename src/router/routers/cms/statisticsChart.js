@@ -152,11 +152,19 @@ const statisticsChart = {
         icon: 'zuozhe',
         role: 'cms:dxCreateUser'
       }
-
     },
     {
       /**
-       * 文章打分统计
+       * 大象内部编辑考核
+       */
+      path: 'DxCreateUserCheck',
+      component: () => import(`@/${path}/dxCreateUserCheck`),
+      name: 'DxCreateUserCheck',
+      meta: { title: 'DxCreateUserCheck', icon: 'dxCheck', role: 'cms:dxCreateUserCheck',noCache:false}
+    },
+    {
+      /**
+       * 大象新闻打分
        */
       path: 'articleMark',
       component: () => import(`@/${path}/articleMark`),
@@ -167,15 +175,6 @@ const statisticsChart = {
         role: 'cms:dxnewsScoreDownload'
       }
 
-    },
-    {
-      /**
-       * 大象内部编辑考核
-       */
-      path: 'DxCreateUserCheck',
-      component: () => import(`@/${path}/dxCreateUserCheck`),
-      name: 'DxCreateUserCheck',
-      meta: { title: 'DxCreateUserCheck', icon: 'dxCheck', role: 'cms:dxCreateUserCheck',noCache:false}
     }
 
 
