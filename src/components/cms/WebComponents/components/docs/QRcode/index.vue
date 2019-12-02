@@ -21,15 +21,18 @@ export default {
     };
   },
   watch: {
-    showQrcode(val,old) {
+    showQrcode(val) {
       //容器格式化
-      let childs = this.node.childNodes;
+      let childs =  this.$refs.qrcode.childNodes;
       for (var i = childs.length - 1; i >= 0; i--) {
         this.node.removeChild(childs[i]);
       }
       this.makeqrcode();
     },
-    immediate:false
+    
+  },  
+  mounted(){
+      this.makeqrcode();
   },
   mounted() {
     this.node = this.$refs.qrcode;

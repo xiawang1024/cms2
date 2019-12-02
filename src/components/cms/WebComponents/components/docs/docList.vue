@@ -66,28 +66,14 @@
           />
         </template>
       </el-table-column>
-      <el-table-column prop="articleId" label="扫码查看" width="80">
+      <el-table-column prop="articleId" label="扫码查看" width="80" align="center">
         <template slot-scope="scope">
-          <el-popover
-            placement="right"
-            width="150"
-            trigger="click"
-            :disabled="scope.$index!=currentrow"
-          >
-            <el-row>
-              <el-col>
-                <div style="backgroundColor:#eee;height:124px">
-                  <qrcode :show-qrcode="showQRcode[scope.$index]" />
-                </div>
-              </el-col>
-            </el-row>
-            <i
-              slot="reference"
-              class="el-icon-mobile"
-              style="cursor:pointer"
-              @click.stop="phoneView(scope.row.articleId,scope.$index)"
-            />
-          </el-popover>
+          <i
+            slot="reference"
+            class="el-icon-mobile"
+            style="cursor:pointer"
+            @click.stop="phoneView(scope.row.articleId)"
+          />
         </template>
       </el-table-column>
       <el-table-column label="预览" width="50">
@@ -270,6 +256,15 @@
       :score-pro="scorePro"
       @refrashTable="refrashTable"
     />
+    <el-dialog :visible.sync="dialogQRcode" width="0" custom-class="visibleStyle" :modal="true">
+      <el-row>
+        <el-col>
+          <div style="backgroundColor:#eee;height:144px;padding:10px">
+            <qrcode :show-qrcode="showQRcode" />
+          </div>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -327,10 +322,10 @@ export default {
       newList: [],
       stepVisible: false,
       markVisible: false,
+      dialogQRcode:false,
       processData: [],
       scorePro: {},
-      showQRcode:[],
-      currentrow:-1,
+      showQRcode:null,
     };
   },
   computed: {
@@ -622,13 +617,15 @@ export default {
     /**
      * 扫码查看
      */
-    phoneView(id,index) {
+    phoneView(id) {
       return new Promise((resolve, reject) => {
         articleUrl(id)
           .then(response => {
             if (response.data.result) {
-              this.currentrow=index;
-              this.showQRcode[index]="https://" + response.data.result;
+               this.dialogQRcode=true;
+               this.$nextTick(()=>{
+              this.showQRcode="https://" + response.data.result;
+               })
             } else {
               this.$message.warning("该文章暂无链接");
             }
@@ -658,7 +655,7 @@ export default {
   }
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 $color-maintain: #34dcf0;
 $color-purple: #950bff;
 $color-yellow: #ffcb02;
@@ -714,4 +711,10 @@ $color-blue: #3498db;
   //   }
   // }
 }
+/deep/ .visibleStyle{
+  // background-color: rgba(0,0,0,0.4) ;
+  display: flex;
+    justify-content: center;
+    align-items: center;
+} 
 </style>
