@@ -72,7 +72,7 @@
             slot="reference"
             class="el-icon-mobile"
             style="cursor:pointer"
-            @click.stop="phoneView(scope.row.articleId,scope.$index)"
+            @click.stop="phoneView(scope.row.articleId)"
           />
         </template>
       </el-table-column>
@@ -260,7 +260,7 @@
       <el-row>
         <el-col>
           <div style="backgroundColor:#eee;height:144px;padding:10px">
-            <qrcode :show-qrcode="showQRcode[this.currentrow]" />
+            <qrcode :show-qrcode="showQRcode" />
           </div>
         </el-col>
       </el-row>
@@ -325,8 +325,7 @@ export default {
       dialogQRcode:false,
       processData: [],
       scorePro: {},
-      showQRcode:[],
-      currentrow:-1,
+      showQRcode:null,
     };
   },
   computed: {
@@ -618,14 +617,15 @@ export default {
     /**
      * 扫码查看
      */
-    phoneView(id,index) {
+    phoneView(id) {
       return new Promise((resolve, reject) => {
         articleUrl(id)
           .then(response => {
             if (response.data.result) {
-              this.dialogQRcode=true;
-              this.currentrow=index;
-              this.showQRcode[index]="https://" + response.data.result;
+               this.dialogQRcode=true;
+               this.$nextTick(()=>{
+              this.showQRcode="https://" + response.data.result;
+               })
             } else {
               this.$message.warning("该文章暂无链接");
             }
