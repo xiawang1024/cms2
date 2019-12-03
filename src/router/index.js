@@ -38,7 +38,10 @@ import permission from './routers/user/permission'
 import permissiongroup from './routers/user/permissiongroup'
 import operation from './routers/user/operation'
 import application from './routers/user/application'
-const userRouterMap = [userDemo, operation, application, organization, department, user, role, permissiongroup, permission]
+import userInfo from './routers/user/userInfo'
+
+
+const userRouterMap = [userInfo,userDemo, operation, application, organization, department, user, role, permissiongroup, permission]
 
 /**
  * 互动中心

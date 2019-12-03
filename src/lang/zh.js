@@ -133,6 +133,7 @@ export default {
     statistics: '综合统计',
     acqSource: '采集源配置',
     department: '部门管理',
+    userInfo:'用户中心',
     user: '用户管理',
     role: '角色管理',
     operation: '平台操作管理',
