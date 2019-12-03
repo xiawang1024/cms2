@@ -27,7 +27,6 @@
           <img :src="scope.row.icon" style="height:20px;marginTop:5px" >
         </template>
       </el-table-column>
-      <el-table-column prop="description" label="用户名" min-width="150px" />
       <el-table-column prop="nickname" label="昵称" min-width="180px" />
       <el-table-column prop="email" label="邮箱" min-width="160px" />
       <el-table-column prop="gender" label="性别">
