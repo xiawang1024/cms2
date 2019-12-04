@@ -140,6 +140,19 @@ const statisticsChart = {
         role: 'cms:departmentStatistics'
       }
 
+    },{
+      /**
+       * 部门统计2
+       */
+      path: 'departmentStatistics2',
+      component: () => import(`@/${path}/departmentStatistics2`),
+      name: 'departmentStatistics2',
+      meta: {
+        title: 'departmentStatistics2',
+        icon: 'department',
+        role: 'cms:departmentStatistics'
+      }
+
     }, {
       /**
        * 大象个人统计

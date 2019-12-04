@@ -289,6 +289,31 @@ export function downdxhStatistics(data) {
   }
 }
 
+
+//下载部门统计2
+
+export function downdxhStatistics2(data) {
+postAjax(data)
+function postAjax (data) {
+  axios({
+    method: 'get',
+    url: baseUrl.BASE_URL +`/cms/statisticsManage/queryOriginByChannelAndDateDistanceExport?beginTime=${data.beginTime}&endTime=${data.endTime}`,
+    responseType: 'blob',
+    headers: {
+      // 'Content-Type': 'application/json;charset=utf-8',
+      'Authorization': data.accessToken
+    }
+  })
+    .then(res => {
+      download('template.xlsx', res.data)
+      Message.success('下载成功')
+    })
+    .catch(error => {
+      Message.warning(error.msg ? error.msg : '导出失败')
+    })
+}
+}
+
 //大象个人统计
 export function getdxCreateUser(pageNo,pageSize,data) {
   return request({

@@ -111,6 +111,7 @@ export default {
     DxCreateUserCheck: '大象编辑考核',
     articleMark: '大象新闻打分',
     departmentStatistics: '部门排行',
+    departmentStatistics2: '部门排行二',
     systemStatus: '系统状态',
     logs: '日志',
     backTask: '后台任务',
