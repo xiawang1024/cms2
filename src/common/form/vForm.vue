@@ -797,7 +797,9 @@ export default {
           type: file.type
         })
           .then(response => {
-            file.result = response.data.result;
+            if(response.data.code==0){
+              this.$message.success('成功');
+              file.result = response.data.result;
             let fileInfor = {
               name: response.data.result.fileName,
               url: baseUrl.DOWN_URL + response.data.result.filePath,
@@ -809,6 +811,10 @@ export default {
             };
             this.formModel[file.uploaderName].push(fileInfor);
             file.cancel();
+            }else{
+              this.$message.error(res.data.msg)
+            }
+            
             resolve();
           })
           .catch(error => {
