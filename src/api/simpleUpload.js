@@ -12,9 +12,9 @@ export function needMerge(data) {
     method: "post",
     data: QS.stringify(data),
 
-    loadingConfig: {
-      noLoading: true
-    },
+    // loadingConfig: {
+    //   noLoading: true
+    // },
     //运维网卡限速，合并请求超时等待时间调整为2min;
     timeout: 120000
   });

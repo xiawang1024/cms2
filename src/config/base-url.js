@@ -22,8 +22,8 @@ if (process.env.NODE_ENV) {
     BASE_URL = 'https://gw.dianzhenkeji.com' // 正式地址
     UP_URL = 'https://fupload.dianzhenkeji.com/basefile/upload?fileRefId='
     DOWN_URL = 'https://cmsres.dianzhenkeji.com'
-    SIMPLE_UPLOAD_URL = 'https://fupload.dianzhenkeji.com/chunk/chunk'
-    SIMPLE_MERGE_URL = 'https://fupload.dianzhenkeji.com'
+    SIMPLE_UPLOAD_URL = 'https://fuploadlocal.dianzhenkeji.com/chunk/chunk'
+    SIMPLE_MERGE_URL = 'https://fuploadlocal.dianzhenkeji.com'
     STREAM_URL='http://vod.stream2.hndt.com'
     STREAM_TV_BRODCAST='https://prog.dianzhenkeji.com'
   } else if (process.env.NODE_ENV == 'sit') {
