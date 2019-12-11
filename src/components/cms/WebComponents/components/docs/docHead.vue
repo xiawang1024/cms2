@@ -91,7 +91,14 @@ export default {
         [];
       },
       type: Array
+    },
+    editorList: {
+      default: () => {
+        [];
+      },
+      type: Array
     }
+
   },
   data() {
     return {
@@ -104,7 +111,8 @@ export default {
         articleOrigin: "",
         articleType: "",
         articleStatus: "",
-        articleTitleLike: ""
+        articleTitleLike: "",
+        createUser: ''
       },
       centerDialogVisible: false,
       dialogVisible: false,
@@ -127,10 +135,19 @@ export default {
           type: "select"
         },
         {
+          label: "撰稿人",
+          name: "createUser",
+          placeholder: "请选择",
+          visible: true,
+          options: [],
+          type: "select",
+          filterable: true
+        },
+        {
           label: "关键字",
           name: "seoKeywordsLike",
           placeholder: "请输入关键字",
-          visible: true,
+          visible: false,
           type: "text"
         },
         {
@@ -161,6 +178,11 @@ export default {
       if (val) {
         this.sourceCopyList = val;
         this.searchSettings[1].options = val;
+      }
+    },
+    editorList(val) {
+      if (val) {
+        this.searchSettings[2].options = val;
       }
     }
   },
