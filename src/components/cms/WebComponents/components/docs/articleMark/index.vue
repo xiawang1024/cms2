@@ -262,7 +262,8 @@ export default {
           .then(response => {
             this.$message.success("打分成功");
             this.$emit("update:dialogVisible", false);
-            this.$emit("refrashTable");
+            // this.$emit("refrashTable");
+            this.$emit('editStatus',1);
 
             // this.markFormData = [];
             resolve();
@@ -279,7 +280,8 @@ export default {
           .then(response => {
             this.$message.success("打分成功");
             this.$emit("update:dialogVisible", false);
-            this.$emit("refrashTable");
+            // this.$emit("refrashTable");
+            this.$emit('editStatus',2);
             // this.markFormData = [];
             resolve();
           })
