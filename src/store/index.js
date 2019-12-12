@@ -9,6 +9,8 @@ import getters from './getters'
 import newCommand from './modules/newCommand'
 import live from './modules/live'
 import cms from './modules/cms'
+import library from './modules/library'
+
 
 Vue.use(Vuex)
 
@@ -21,7 +23,9 @@ const store = new Vuex.Store({
     user,
     cms,
     newCommand,
-    live
+    live,
+    library
+
   },
   getters
 })

@@ -25,6 +25,10 @@ const sysType = [{
   {
     type: 'systemSet',
     value: '系统设置 '
+  },
+  {
+    type: 'library',
+    value: '稿库'
   }
 ]
 // {

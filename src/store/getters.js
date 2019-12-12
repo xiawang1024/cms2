@@ -56,11 +56,19 @@ const newCommand = {
 const live = {
 
 }
+/**
+ * library
+ */
+const library = {
+  selectLibraryArticleList:(state)=>state.library.selectLibraryArticleList,
+}
 const getters = {
   ...app,
   ...userInfo,
   ...cms,
   ...newCommand,
-  ...live
+  ...live,
+  ...library
+
 }
 export default getters

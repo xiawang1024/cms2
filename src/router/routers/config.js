@@ -8,3 +8,5 @@ export const programPath = 'program'
 export const newcommandPath = 'newcommand'
 export const livePath = 'live'
 export const systemSetPath = 'systemSet'
+export const documentPath = 'documentLibrary'
+

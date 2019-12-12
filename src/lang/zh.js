@@ -193,7 +193,9 @@ export default {
     fileManage: '文件管理',
     ARTranscode: '音视频转码',
     imageTanscode: '图片处理',
-
+    //---------稿库-----------------------------
+    searchSpider:'搜索',
+    searchList:'搜索结果'
 
 
   },
