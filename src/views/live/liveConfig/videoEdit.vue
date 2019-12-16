@@ -273,7 +273,13 @@ export default {
 
       //数据校验不过拒绝保存，
       if(this.hanleRow==index){
+        if((this.tableValue[index].beginTime.indexOf('N')>-1)||(this.tableValue[index].endTime.indexOf('N')>-1)||(this.tableValue[index].duration.toString().indexOf('N')>-1)){
+          this.$message.error('输入值非法')
+        }else{
       this.hanleRow = -1;
+
+        }
+
       }
     },
     handlePreview(index){
