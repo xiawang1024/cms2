@@ -269,7 +269,20 @@ const systemSet = {
       hidden: true
 
     },
+    {
+      /**
+       * 播客配置
+       */
+      path: 'podcast',
+      component: () => import(`@/${path}/podcast`),
+      name: 'podcast',
+      meta: {
+        title: 'podcast',
+        icon: 'podcast',
+        role: 'cms'
+      }
 
+    },
     // {
     //   /**
     //    * app顶部列表
