@@ -297,7 +297,7 @@ export default {
           myvideo.pause();
           setTimeout(() => {
           this.currentTime=_this.tableValue[index].time;
-
+          myvideo.ontimeupdate=null;
           }, 500);
           return false
           }
