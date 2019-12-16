@@ -109,7 +109,7 @@ export default {
 
   destroyed() {
     if (this.isRetain) {
-      alert('请确保已经保存编辑器文档内容')
+      // alert('请确保已经保存编辑器文档内容')
     }
     this.destroyTinymce();
   },
