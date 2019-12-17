@@ -15,7 +15,6 @@
       :check-on-click-node="true"
       :filter-node-method="filterNode"
       @node-click="handleNodeClick"
-      @node-contextmenu="handleNodeContextmenu"
       :default-expanded-keys="expandedKeys"
       :default-checked-keys="defaultChecked"
       node-key="id"
@@ -81,7 +80,7 @@ export default {
         this.treeData.forEach((ele) => {
           this.expandedKeys.push(ele.id)
         })
-        if(this.treeTags && this.treeTags.length) {
+        if (this.treeTags && this.treeTags.length) {
           this.treeTags.forEach((ele) => {
             this.expandedKeys.push(ele.id)
           })
@@ -102,20 +101,20 @@ export default {
       this.menuVisible = false
       this.webSitTags = []
       this.generateTags(node, 'left', element)
-      if((object.parentChannelId == -1 || !object.parentChannelId) && object.children) {
+      if ((object.parentChannelId == -1 || !object.parentChannelId) && object.children) {
         this.isCreate = false
       } else {
-         this.isCreate = true
+        this.isCreate = true
       }
     },
-    // TODO:右键点击
+    // TODO:右键点击   @node-contextmenu="handleNodeContextmenu"
     handleNodeContextmenu(event, object, node, element) {
       // console.log(object.pubArticleFlag, 'object')
       this.allowDoc = object.pubArticleFlag
-      if((object.parentChannelId == -1 || !object.parentChannelId) && object.children) {
+      if ((object.parentChannelId == -1 || !object.parentChannelId) && object.children) {
         this.isCreate = false
       } else {
-         this.isCreate = true
+        this.isCreate = true
       }
       const { clientWidth, clientHeight, nodeName } = event.target
       if (nodeName.toLowerCase() === 'span') {
@@ -144,15 +143,15 @@ export default {
      */
     generateTags(node, direct, element) {
       this.$nextTick(() => {
-        if(this.treeData && this.treeData.length) {
-          if(this.treeData[0].children) {
-            if(node.data.channelId == this.treeData[0].children[0].channelId) {
+        if (this.treeData && this.treeData.length) {
+          if (this.treeData[0].children) {
+            if (node.data.channelId == this.treeData[0].children[0].channelId) {
               document.querySelectorAll('.el-tree-node')[1].classList.add('is-current')
             } else {
               document.querySelectorAll('.el-tree-node')[1].classList.remove('is-current')
             }
           } else {
-            if(node.data.channelId == this.treeData[0].channelId) {
+            if (node.data.channelId == this.treeData[0].channelId) {
               document.querySelectorAll('.el-tree-node')[0].classList.add('is-current')
             } else {
               document.querySelectorAll('.el-tree-node')[0].classList.remove('is-current')
@@ -172,7 +171,7 @@ export default {
         nodeVal.id = node.data.id
         nodeVal.label = node.data.label
         nodeVal.channelCode = node.data.channelCode,
-        nodeVal.isCreate = this.isCreate
+          nodeVal.isCreate = this.isCreate
         nodeVal.pubArticleFlag = node.data.pubArticleFlag
         this.webSitTags.push(nodeVal)
       } else {
@@ -207,8 +206,8 @@ export default {
     height: 36px;
     line-height: 36px;
   }
-  .el-tree--highlight-current{
-    padding-bottom:80px;
+  .el-tree--highlight-current {
+    padding-bottom: 80px;
   }
 }
 </style>
