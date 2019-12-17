@@ -4,6 +4,7 @@
 
     <el-table :data="tableData">
       <el-table-column prop="tagName" label="标签名" />
+      <el-table-column prop="order" label="排序" />
       <el-table-column prop="url" label="图片">
         <template slot-scope="scope">
           <img :src="scope.row.url" class="icon" >
@@ -51,7 +52,20 @@ export default {
                rule: [
                 {
                   required: true,
-                  trigger: "blur"
+                  trigger: "blur",
+                  message:'请上传图片'
+                }
+              ]
+            },{
+              name:'order',
+              type: 'number',
+              label: "序号",
+              limit:1,
+               rule: [
+                {
+                  required: true,
+                  trigger: "blur",
+                   message: '请输入数字',
                 }
               ]
             }
@@ -79,16 +93,20 @@ export default {
       });
     },
 
-    handleEdit(id) {
-      this.formData = {};
+    handleEdit(id,row) {
+      this.formData = {
+       url:[{uid:row.url,url:row.url}],
+       order:row.order
+      };
       this.dialogVisible = true;
       this.currentId = id;
     },
     submitSave(val) {
       this.isLoading = true;
       let url = val.url[0].url;
+      let order=val.order;
       return new Promise((resolve,reject)=>{
-        editTags(this.currentId, url)
+        editTags(this.currentId, url,order)
         .then(res => {
           if (res.data.code == 0) {
             this.$message.success(res.data.msg);

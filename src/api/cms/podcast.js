@@ -14,10 +14,10 @@ export function tagsList() {
 }
 
 //编辑标签对应的图片
-export function editTags(id, url) {
+export function editTags(id, url,order) {
     return request({
         url:
-            Dpath + `/autoconfig/appConfig/update?id=${id}&url=${url}`,
+            Dpath + `/autoconfig/appConfig/update?id=${id}&url=${url}&order=${order}`,
         method: "put",
         loadingConfig: {
             noLoading: true
