@@ -2,10 +2,10 @@ import request from '@/utils/request'
 
 let Dpath = '';
 //获取标签列表
-export function tagsList() {
+export function tagsList(tenantId) {
     return request({
         url:
-            Dpath + `/autoconfig/appConfig/tags`,
+            Dpath + `/sht/channel/tagruls?tenantId=${tenantId}`,
         method: "get",
         loadingConfig: {
             noLoading: true
@@ -17,7 +17,7 @@ export function tagsList() {
 export function editTags(id, url,order) {
     return request({
         url:
-            Dpath + `/autoconfig/appConfig/update?id=${id}&url=${url}&order=${order}`,
+            Dpath + `/sht/channel/update?id=${id}&url=${url}&order=${order}`,
         method: "put",
         loadingConfig: {
             noLoading: true

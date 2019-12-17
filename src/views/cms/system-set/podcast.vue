@@ -41,6 +41,7 @@ export default {
       dialogTitle: "编辑",
       isLoading: false,
       formData: {},
+      tenantId:'',
       formSettings: [
         {
           items: [
@@ -75,12 +76,14 @@ export default {
     };
   },
   created() {
+    this.tenantId=JSON.parse(localStorage.getItem("BaseInfor")).clientLicenseId
     this.init();
   },
   methods: {
+
     init() {
       return new Promise((resolve, reject) => {
-        tagsList()
+        tagsList(this.tenantId)
           .then(res => {
             if (res.data.code == 0) {
               this.tableData = res.data.result;
