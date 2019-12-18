@@ -38,12 +38,12 @@
         </template>
       </el-table-column>
       <el-table-column prop="seqNo" label="排序" />
-      <!-- <el-table-column prop="parentChannelId" label="是否根节点" width="100">
+      <el-table-column prop="parentChannelId" label="是否根节点" width="100">
         <template slot-scope="scope">
           <span v-if="scope.row.parentChannelId == '-1'">是</span>
           <span v-else>否</span>
         </template>
-      </el-table-column>-->
+      </el-table-column>
       <el-table-column label="设置" width="250">
         <template slot-scope="scope">
           <el-button
