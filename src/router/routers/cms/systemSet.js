@@ -279,7 +279,7 @@ const systemSet = {
       meta: {
         title: 'podcast',
         icon: 'podcast',
-        role: 'cms'
+        role: 'cms:podcast'
       }
 
     },

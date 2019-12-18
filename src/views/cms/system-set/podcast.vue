@@ -4,7 +4,7 @@
 
     <el-table :data="tableData">
       <el-table-column prop="tagName" label="标签名" />
-      <el-table-column prop="order" label="排序" />
+      <el-table-column prop="sqNo" label="排序" />
       <el-table-column prop="url" label="图片">
         <template slot-scope="scope">
           <img :src="scope.row.url" class="icon" >
@@ -58,7 +58,7 @@ export default {
                 }
               ]
             },{
-              name:'order',
+              name:'sqNo',
               type: 'number',
               label: "序号",
               limit:1,
@@ -99,7 +99,7 @@ export default {
     handleEdit(id,row) {
       this.formData = {
        url:[{uid:row.url,url:row.url}],
-       order:row.order
+       sqNo:row.sqNo
       };
       this.dialogVisible = true;
       this.currentId = id;
@@ -107,9 +107,9 @@ export default {
     submitSave(val) {
       this.isLoading = true;
       let url = val.url[0].url;
-      let order=val.order;
+      let sqNo=val.sqNo;
       return new Promise((resolve,reject)=>{
-        editTags(this.currentId, url,order)
+        editTags(this.currentId, url,sqNo)
         .then(res => {
           if (res.data.code == 0) {
             this.$message.success(res.data.msg);
