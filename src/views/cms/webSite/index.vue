@@ -11,20 +11,14 @@
     >
       <template slot="paneL">
         <div class="left-container">
-          <el-scrollbar
-            wrap-class="scrollbar-wrapper"
-            style="height:100%;"
-          >
+          <el-scrollbar wrap-class="scrollbar-wrapper" style="height:100%;">
             <tree />
           </el-scrollbar>
         </div>
       </template>
       <template slot="paneR">
         <div class="right-container">
-          <el-scrollbar
-            wrap-class="scrollbar-wrapper"
-            style="height:100%;"
-          >
+          <el-scrollbar wrap-class="scrollbar-wrapper" style="height:100%;">
             <WebComponents :component-type="contextMenu.id" />
             {{ contextMenu }}
           </el-scrollbar>
@@ -61,7 +55,7 @@ export default {
     next()
   },
   beforeRouteLeave(to, from, next) {
-    console.log(from)
+    // console.log(from)
     const { path } = from
     if (path === '/website/doc') {
       this.$store.dispatch('setViewTypeShow', false)
@@ -73,7 +67,7 @@ export default {
   },
   methods: {
     resize() {
-      console.log('resize')
+      // console.log('resize')
     }
   }
 }

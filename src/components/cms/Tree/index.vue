@@ -76,7 +76,7 @@ export default {
     },
     treeData(val) {
       if (val.length) {
-        console.log(this.treeTags, 'val')
+        // console.log(this.treeTags, 'val')
         this.treeData.forEach((ele) => {
           this.expandedKeys.push(ele.id)
         })
@@ -164,7 +164,7 @@ export default {
       this.findParentNode(node)
     },
     findParentNode(node) {
-      console.log(node, 'node')
+      // console.log(node, 'node')
       if (node.parent) {
         this.findParentNode(node.parent)
         const nodeVal = {}
