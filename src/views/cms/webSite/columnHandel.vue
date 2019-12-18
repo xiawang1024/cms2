@@ -111,7 +111,7 @@ export default {
               label: '栏目排序',
               name: 'seqNo',
               type: 'text',
-              placeholder: '请输入栏目排序',
+              placeholder: '请输入栏目排序(序号越大排序越靠上)',
 
             }, {
               label: '栏目类型',
