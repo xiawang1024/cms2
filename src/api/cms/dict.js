@@ -24,6 +24,16 @@ export function fetchDictByDictName(dictName) {
     }
   })
 }
+// 编辑员列表http://gw.test.dianzhenkeji.com/cms/article/queryAllTenantId
+export function getEditorList(dictName) {
+  return request({
+    url: '/cms/article/queryAllTenantId',
+    method: 'post',
+    loadingConfig: {
+      noLoading: true
+    }
+  })
+}
 // 获取全部来源
 export function fetchDictAllByDictName(dictName) {
   return request({

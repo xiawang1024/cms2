@@ -1,9 +1,12 @@
 <template>
   <div class="docs-wrap">
+    <!-- {{ contextMenu }}
+    {{ treeTags }}-->
     <DocHead
       @searchList="searchList"
       :multiple-list="multipleList"
       :source-list="sourceList"
+      :editor-list="editorList"
       @handelSuccess="handelSuccess"
     />
     <doc-list
@@ -11,7 +14,7 @@
       ref="documentList"
       @handelSuccess="handelSuccess"
       @multipleChoose="multipleChoose"
-      @refrashTable="refrashTable" 
+      @refrashTable="refrashTable"
       :page-num="pageNum"
       :page-size="pageSize"
       :search-data="searchData"
@@ -33,7 +36,7 @@ import DocList from "./docList";
 import DocFoot from "./docFoot";
 import { mapGetters } from "vuex";
 import { documentList } from "@/api/cms/article";
-import { fetchDictByDictName } from "@/api/cms/dict";
+import { fetchDictByDictName, getEditorList } from "@/api/cms/dict";
 export default {
   name: "DocsWrap",
   components: {
@@ -52,7 +55,8 @@ export default {
       channelId: "",
       multipleList: [],
       sourceList: [],
-      username:'',
+      editorList: [],
+      username: '',
     };
   },
   computed: {
@@ -70,7 +74,7 @@ export default {
     }
   },
   created() {
-    this.username=JSON.parse(localStorage.getItem('BaseInfor')).userName
+    this.username = JSON.parse(localStorage.getItem('BaseInfor')).userName
     if (this.contextMenu.id == "0") {
       if (this.treeTags && this.treeTags.length) {
         this.pageNum = this.contextMenu.pageNum ? this.contextMenu.pageNum : 1;
@@ -85,6 +89,7 @@ export default {
       }
     }
     this.fetchDict();
+    this.fetcheditor();
   },
   methods: {
     // 文章来源
@@ -101,6 +106,30 @@ export default {
                 };
               });
             }
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
+    },
+    // 编辑员列表
+    fetcheditor() {
+      var _this = this;
+      return new Promise((resolve, reject) => {
+        getEditorList()
+          .then(response => {
+            console.log(response.data.result, '编辑员列表获取');
+            if (response.data.result && response.data.result.content.length) {
+              _this.editorList = response.data.result.content.map(ele => {
+                return {
+                  label: ele.userName,
+                  value: ele.userName
+                };
+              });
+            }
+
+
             resolve();
           })
           .catch(error => {
@@ -134,7 +163,7 @@ export default {
     documentList() {
       var _this = this;
       _this.searchData.channelId = this.channelId;
-      _this.searchData.loginUserName=this.username;
+      _this.searchData.loginUserName = this.username;
       return new Promise((resolve, reject) => {
         documentList(_this.searchData, _this.pageNum, _this.pageSize)
           .then(response => {
@@ -149,7 +178,7 @@ export default {
           });
       });
     },
-    refrashTable(){
+    refrashTable() {
       //刷新列表
       console.log('刷新列表')
       this.documentList();
