@@ -87,6 +87,11 @@ const liveRouterMap = [livePage,fileManage]
  */
 import dataPermission from './routers/systemSet/dataPermission'
 const systemSetRouterMap = [dataPermission]
+/**
+ * 稿库
+ */
+import searchIndex from './routers/document/searchIndex'
+const documentRouterMap = [searchIndex]
 
 /**
  * 路由map
@@ -119,6 +124,10 @@ export const routerMap = [{
   {
     type: 'systemSet',
     route: systemSetRouterMap
+  },
+  {
+    type: 'library',
+    route: documentRouterMap
   }
 
 ]

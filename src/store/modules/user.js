@@ -75,7 +75,9 @@ const defaultSysList = [
   "program",
   "newsCommand",
   "live",
-  "systemSet"
+  "systemSet",
+  "library"
+
 ];
 const user = {
   state: {
