@@ -97,6 +97,7 @@ export default {
     appTabList: 'app导航配置',
     appTopList: 'app顶部列表',
     appPages: 'app页面配置',
+    podcast:'播客配置',
     statisticsChart: '统计报表',
     mobileCharts: '移动端统计',
     pcSiteCharts: 'PC端统计',
