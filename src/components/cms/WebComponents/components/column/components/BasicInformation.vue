@@ -1,6 +1,14 @@
 <template>
   <div class="colunm-add-edit">
-    <v-form ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" :show-return="showReturn" :btn-loading = "isLoading" @onReturn = "onReturn">
+    <v-form
+      ref="vform"
+      :form-settings="formSettings"
+      :form-data="formData"
+      @save="submitSave"
+      :show-return="showReturn"
+      :btn-loading="isLoading"
+      @onReturn="onReturn"
+    >
       <template slot="isScale">
         <div>
           <el-checkbox v-model="imageSetting.isScaleChecked">是否缩放</el-checkbox>
@@ -63,6 +71,12 @@ export default {
               type: 'text',
               valueType: 'string',
               disabled: true
+            }, {
+              label: '栏目名称',
+              name: 'channelName',
+              type: 'text',
+              placeholder: '请输入栏目名称',
+              required: true,
             },
             {
               label: '栏目编码',
@@ -88,13 +102,13 @@ export default {
               name: 'domainName',
               type: 'text',
               placeholder: '请输入访问域名'
-            },{
+            }, {
               label: '创建人员',
               name: 'createUser',
               type: 'text',
               placeholder: '请输入创建人员',
               disabled: true
-            },{
+            }, {
               label: '正常显示',
               name: 'hiddenFlag',
               activeValue: 0,
@@ -126,17 +140,11 @@ export default {
               name: 'extra',
               type: 'textarea',
               placeholder: '请输入其他数据'
-            },{
-              label:'管理人员',
+            }, {
+              label: '管理人员',
               name: 'managerUser',
-              type:'text',
+              type: 'text',
               placeholder: '请输入管理员'
-            },{
-              label:'栏目名称',
-              name:'channelName',
-              type:'text',
-              placeholder: '请输入栏目名称',
-              required: true,
             },
             {
               label: '栏目类型',
@@ -151,17 +159,17 @@ export default {
               type: 'img',
               limit: 1,
               tip: '建议图片大小：1080*1642，图片大小不超过100K'
-           },
-           {
-              label:'关键字',
-              name:'keywordName',
-              type:'text',
+            },
+            {
+              label: '关键字',
+              name: 'keywordName',
+              type: 'text',
               placeholder: '请输入关键字'
-           },{
-              label:'栏目描述',
-              name:'descriptionRemark',
-              type:'textarea',
-               placeholder: '请输入栏目描述'
+            }, {
+              label: '栏目描述',
+              name: 'descriptionRemark',
+              type: 'textarea',
+              placeholder: '请输入栏目描述'
             }
           ]
         }
@@ -181,7 +189,7 @@ export default {
   },
   watch: {
     activeName(val) {
-      if(val === 'information') {
+      if (val === 'information') {
         this.getColumns()
         this.getColumnInfor()
       }
@@ -198,14 +206,14 @@ export default {
         return callback(new Error('请输入栏目编码'))
       }
       let columnCode = this.$refs.vform.getData('channelCode')
-      if(columnCode == this.formData.channelCode) {
+      if (columnCode == this.formData.channelCode) {
         callback()
       } else {
         return new Promise((resolve, reject) => {
           isColumnRepet(columnCode)
             .then((response) => {
               // _this.componentList = response.data.result.content
-              if(response.data.result) {
+              if (response.data.result) {
                 callback()
               } else {
                 callback(new Error('栏目编码不能重复'))
@@ -244,12 +252,12 @@ export default {
       return new Promise((resolve, reject) => {
         columnInfor(_this.channelId)
           .then((response) => {
-            if(this.contextMenu.label == '建立子栏目') {
+            if (this.contextMenu.label == '建立子栏目') {
               _this.$refs.vform.setData('parentChannelNames', response.data.result.channelName)
               _this.$refs.vform.setData('parentChannelId', response.data.result.channelId)
             } else {
               _this.formData = response.data.result
-              if(_this.formData.iconUrl) {
+              if (_this.formData.iconUrl) {
                 _this.formData.iconUrl = [{
                   url: _this.formData.iconUrl
                 }]
@@ -268,7 +276,7 @@ export default {
       this.isLoading = true
       var _this = this
       let iconUrlArray = []
-      if(formData.iconUrl.length) {
+      if (formData.iconUrl.length) {
         formData.iconUrl.forEach(ele => {
           iconUrlArray.push(ele.url)
         })
@@ -281,7 +289,7 @@ export default {
         formData.templateIds = _this.formData.templateIds
         formData.extFieldsList = _this.formData.extFieldsList
         formData.parentChannelId = _this.formData.parentChannelId
-        if(this.contextMenu.label == '建立子栏目') {
+        if (this.contextMenu.label == '建立子栏目') {
           // 新建子栏目
           formData.parentChannelId = _this.channelId
           delete formData.channelId
@@ -314,7 +322,7 @@ export default {
               resolve()
             })
             .catch((error) => {
-               _this.isLoading = false
+              _this.isLoading = false
               reject(error)
             })
         }

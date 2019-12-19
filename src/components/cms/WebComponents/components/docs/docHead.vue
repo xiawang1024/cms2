@@ -23,7 +23,7 @@
           >{{ item.label }}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-dropdown
+      <!-- <el-dropdown
         size="small"
         v-if="checkAuth('cms:article:channel')"
         @command="handleColumn"
@@ -40,7 +40,7 @@
             :command="item.id"
           >{{ item.label }}</el-dropdown-item>
         </el-dropdown-menu>
-      </el-dropdown>
+      </el-dropdown>-->
       <el-button
         v-if="checkAuth('cms:article:add')"
         type="primary"
@@ -205,64 +205,60 @@ export default {
       console.log(val, "val");
       this.$emit("searchList", val);
     },
-    handleColumn(command) {
-      // if(command == 3) {
-      //   const select = { id: '4', label: '修改栏目' }
-      //   this.$store.dispatch('setContextMenu', select)
-      // }
-      switch (command) {
-        case "2":
-          this.$store.dispatch("setContextMenu", {
-            id: "5",
-            label: "建立子栏目"
-          });
-          break;
-        case "3":
-          this.$store.dispatch("setContextMenu", {
-            id: "4",
-            label: "修改栏目"
-          });
-          break;
-        case "4":
-          this.$store.dispatch("setContextMenu", {
-            id: "11",
-            label: "栏目图片"
-          });
-          break;
-        case "5":
-          this.$store.dispatch("setContextMenu", {
-            id: "12",
-            label: "文档列表"
-          });
-          break;
-        case "6":
-          this.$store.dispatch("setContextMenu", {
-            id: "10",
-            label: "栏目水印"
-          });
-          break;
-        case "7":
-          this.$store.dispatch("setContextMenu", { id: "15", label: "模板" });
-          break;
-        case "8":
-          this.$store.dispatch("setContextMenu", {
-            id: "16",
-            label: "评论管理"
-          });
-          break;
-        case "9":
-          this.$store.dispatch("setContextMenu", { id: "14", label: "废件箱" });
-          break;
-        case "10":
-          this.$store.dispatch("setContextMenu", {
-            id: "17",
-            label: "发稿和浏览统计"
-          });
-          break;
-        default:
-          break;
-      }
-    },
+    // handleColumn(command) {
+    //   switch (command) {
+    //     case "2":
+    //       this.$store.dispatch("setContextMenu", {
+    //         id: "5",
+    //         label: "建立子栏目"
+    //       });
+    //       break;
+    //     case "3":
+    //       this.$store.dispatch("setContextMenu", {
+    //         id: "4",
+    //         label: "修改栏目"
+    //       });
+    //       break;
+    //     case "4":
+    //       this.$store.dispatch("setContextMenu", {
+    //         id: "11",
+    //         label: "栏目图片"
+    //       });
+    //       break;
+    //     case "5":
+    //       this.$store.dispatch("setContextMenu", {
+    //         id: "12",
+    //         label: "文档列表"
+    //       });
+    //       break;
+    //     case "6":
+    //       this.$store.dispatch("setContextMenu", {
+    //         id: "10",
+    //         label: "栏目水印"
+    //       });
+    //       break;
+    //     case "7":
+    //       this.$store.dispatch("setContextMenu", { id: "15", label: "模板" });
+    //       break;
+    //     case "8":
+    //       this.$store.dispatch("setContextMenu", {
+    //         id: "16",
+    //         label: "评论管理"
+    //       });
+    //       break;
+    //     case "9":
+    //       this.$store.dispatch("setContextMenu", { id: "14", label: "废件箱" });
+    //       break;
+    //     case "10":
+    //       this.$store.dispatch("setContextMenu", {
+    //         id: "17",
+    //         label: "发稿和浏览统计"
+    //       });
+    //       break;
+    //     default:
+    //       break;
+    //   }
+    // },
     handleCommand(command) {
       this.documentIds = [];
       if (!this.multipleList.length) {
