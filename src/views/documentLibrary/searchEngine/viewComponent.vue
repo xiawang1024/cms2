@@ -173,7 +173,7 @@ export default {
     color: #333;
     font-size: 30px;
     font-weight: 700;
-    text-align: center;
+    text-align: left;
     margin-bottom: 40px;
     margin-top: 40px;
     width: 100%;
@@ -187,6 +187,7 @@ export default {
     }
   }
   .article-content {
+    line-height: 1.7rem;
     img {
       max-width: 100%;
     }

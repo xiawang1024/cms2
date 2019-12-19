@@ -186,7 +186,7 @@ export default {
         deleteKeyWord(val.id)
           .then(res => {
             if (res.data.code == 0) {
-              this.$message.success(res.data.msg);
+              this.$message.success(`删除关键词“${val.keyWord}”成功`);
               this.keywordsList.splice(index, 1);
             } else {
               this.$message.error(res.data.msg);
@@ -206,6 +206,7 @@ export default {
 .moretext {
   text-align: right;
   margin-right: 15px;
+  color: #409EFF;
 }
 .qweqwer {
   color: red;
