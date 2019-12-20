@@ -112,7 +112,7 @@ export default {
         editTags(this.currentId, url,sqNo)
         .then(res => {
           if (res.data.code == 0) {
-            this.$message.success(res.data.msg);
+            this.$message.success('修改成功');
           } else {
             this.$message.error(res.data.msg);
           }
