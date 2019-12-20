@@ -14,7 +14,7 @@
         <span v-if="documentInfor.createUser">{{ documentInfor.createUser }}</span>-->
         <el-row :gutter="20">
           <el-col :span="19">
-            <div class="article-content-left">
+            <div v-if="dialogVisible" class="article-content-left">
               <video
                 :src="videolist[0].url"
                 controls="controls"
@@ -122,7 +122,7 @@ export default {
     }
   },
   methods: {
-    articleTypeChange() {},
+    articleTypeChange() { },
     openLink(val) {
       window.open(val);
     },
