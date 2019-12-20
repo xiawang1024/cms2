@@ -5,7 +5,7 @@ let Dpath = '';
 export function tagsList(tenantId) {
     return request({
         url:
-            Dpath + `/sht/channel/tagruls?tenantId=${tenantId}`,
+            Dpath + `/sht/user/tagruls?tenantId=${tenantId}`,
         method: "get",
         loadingConfig: {
             noLoading: true
@@ -17,7 +17,7 @@ export function tagsList(tenantId) {
 export function editTags(id, url,sqNo) {
     return request({
         url:
-            Dpath + `/sht/channel/update?id=${id}&url=${url}&sqNo=${sqNo}`,
+            Dpath + `/sht/user/update?id=${id}&url=${url}&sqNo=${sqNo}`,
         method: "put",
         loadingConfig: {
             noLoading: true
