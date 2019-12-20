@@ -24,6 +24,16 @@ export function fetchDictByDictName(dictName) {
     }
   })
 }
+
+export function fetchEnableDictsourceMatrixId(sourceMatrixId) {
+  return request({
+    url: `/cms/dict/getOriginNameBySourceMatrixId?sourceMatrixId=${sourceMatrixId}`,
+    method: 'get'
+    
+  })
+}
+
+
 // 编辑员列表http://gw.test.dianzhenkeji.com/cms/article/queryAllTenantId
 export function getEditorList(dictName) {
   return request({
