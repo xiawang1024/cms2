@@ -4,7 +4,7 @@
 //advlist anchor autolink autosave code codesample colorpicker colorpicker contextmenu directionality emoticons fullscreen hr image imagetools insertdatetime link lists media nonbreaking noneditable pagebreak paste preview print save searchreplace spellchecker tabfocus table template textcolor textpattern visualblocks visualchars wordcount charmap'
 // save 插件： ctrl+s时会触发页面刷新
 const plugins = [
-  'lists advlist bdmap anchor autolink code image axupimgs indent2em codesample colorpicker colorpicker contextmenu directionality emoticons fullscreen hr  imagetools insertdatetime link  media nonbreaking noneditable pagebreak paste preview print searchreplace  tabfocus table template textcolor textpattern visualblocks visualchars wordcount template toc autosave movehang'
+  'lists advlist   autolink  image axupimgs indent2em codesample colorpicker colorpicker contextmenu directionality emoticons fullscreen hr  imagetools  link  media nonbreaking noneditable pagebreak paste preview print   tabfocus table template textcolor textpattern visualblocks visualchars wordcount template  autosave movehang code'
 ]
 
 export default plugins

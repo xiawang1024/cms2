@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import editorImage from "./components/editorImage";
+// import editorImage from "./components/editorImage";
 import plugins from "./plugins";
 import toolbar from "./toolbar";
 import baseUrl from "@/config/base-url";
@@ -13,7 +13,7 @@ import baseUrl from "@/config/base-url";
 import "@/common/editor-upload";
 export default {
   name: "Tinymce",
-  components: { editorImage },
+  // components: { editorImage },
   props: {
     id: {
       type: String,
@@ -117,23 +117,21 @@ export default {
     initTinymce() {
       const _this = this;
       window.tinymce.init({
-        // language: this.language,
-        // readonly: this.readOnly,
+        // media_dimensions: false,//显示隐藏宽高尺寸输入框
+        media_alt_source: false,//显示隐藏资源备用地址输入框
         language: "zh_CN",
+        // inline: true,
 
-        // skin: 'oxide-dark',
         branding: false, //隐藏右下角技术支持
-        // skin: "bootstrap",       // Name of the skin
-        // content_css: "bootstrap", // Name of the content skin
-        //  icons: 'material',      // Name of icon pack
+
         selector: `#${this.tinymceId}`,
         height: this.height,
         body_class: "panel-body ",
         // 是否可以缩放图片
         // object_resizing: false,
         toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
-        // toolbar: 'imageupload',
-        menubar: this.menubar,
+        draggable_modal: true,
+        menubar: false,
         plugins: plugins,
         autosave_interval: '20s',
         autosave_prefix: 'tinymce-autosave',
@@ -142,15 +140,16 @@ export default {
           { title: '闲谈类模板', description: '编辑可直接用此类模板插入到编辑器,只需修改关键的标题/图片等 无需再重新排版,', content: '<p class=\"ql-align-center\">对不少人来说，终其一生，</p>\n<p class=\"ql-align-center\">可能都没乘坐过救护车，陌生而神秘！</p>\n<div class=\"pgc-img\"><img src=\"http://p1.pstatp.com/large/pgc-image/5fc52de1979a47398af59765b5f0d708\" data-image_ids=\"[]\" />\n<p class=\"pgc-img-caption\">但你知道吗？</p>\n</div>\n<p class=\"ql-align-center\">在中原这片土地上，</p>\n<p class=\"ql-align-center\">每天，</p>\n<p class=\"ql-align-center\">平均有<strong>3000辆救护车</strong>奔走在接诊的路上，</p>\n<p class=\"ql-align-center\">为至少<strong>30000人</strong>带来生命的希望！</p>\n<div class=\"pgc-img\"><img src=\"http://p9.pstatp.com/large/pgc-image/3c1c5e6a592143448ef64cdbd7584f40\" data-image_ids=\"[]\" />\n<p class=\"pgc-img-caption\">&nbsp;</p>\n</div>\n<p class=\"ql-align-center\">对不少人来说，</p>\n<p class=\"ql-align-center\">医生是一群高冷到看穿生死的人类，</p>\n<p class=\"ql-align-center\">惊心动魄、刀光剑影、鲜血淋漓&hellip;&hellip;</p>\n<p class=\"ql-align-center\">与温情绝缘！</p>\n<p class=\"ql-align-justify\">&nbsp;</p>\n<p class=\"ql-align-center\">&nbsp;</p>\n<div class=\"pgc-img\"><img src=\"http://p3.pstatp.com/large/pgc-image/e091acbf87e944058ec960c1112ca614\" data-image_ids=\"[]\" />\n<p class=\"pgc-img-caption\">&nbsp;</p>\n</div>\n<p class=\"ql-align-center\">但你知道吗？</p>\n<p class=\"ql-align-center\">在中原这片土地上，</p>\n<p class=\"ql-align-center\">每天，有<strong>7000位医生</strong>忙碌在手术台旁，</p>\n<p class=\"ql-align-center\">让至少<strong>15000人</strong>重新获得健康！</p>\n<div class=\"pgc-img\"><img src=\"http://p1.pstatp.com/large/pgc-image/9817060ca058461fbe9a905e505a5c87\" data-image_ids=\"[]\" />\n<p class=\"pgc-img-caption\">&nbsp;</p>\n</div>\n<p class=\"ql-align-center\">对不少人来说，</p>\n<p class=\"ql-align-center\">茫茫人海，</p>\n<p class=\"ql-align-center\">若能偶遇一个和自己同年同月同日出生的人，</p>\n<p class=\"ql-align-center\">总会感叹缘分奇妙，好惊喜！</p>\n<div class=\"pgc-img\"><img src=\"http://p1.pstatp.com/large/pgc-image/ebfcb58a416d4260aee40e7e9251e33d\" data-image_ids=\"[]\" />\n<p class=\"pgc-img-caption\">&nbsp;</p>\n</div>\n<p class=\"ql-align-center\">但你知道吗？</p>\n<p class=\"ql-align-center\">仅在中原这片土地上，</p>\n<p class=\"ql-align-center\">每天，平均就有<strong>3400名婴儿</strong>出生，</p>\n<p class=\"ql-align-center\">大家都是有缘人！</p>\n<div class=\"pgc-img\"><img src=\"http://p3.pstatp.com/large/pgc-image/1e259baf087b47c6ae258cb11f07b01e\" data-image_ids=\"[]\" />\n<p class=\"pgc-img-caption\">&nbsp;</p>\n</div>\n<p class=\"ql-align-center\">对不少人来说，</p>\n<p class=\"ql-align-center\">熟知的医院只有那么几家，</p>\n<p class=\"ql-align-center\">接触过的大夫也就那么多&hellip;&hellip;</p>\n<p class=\"ql-align-center\">但你知道吗？</p>\n<p class=\"ql-align-center\">在中原这片土地上，</p>\n<p class=\"ql-align-center\">每天，</p>\n<p class=\"ql-align-center\">平均有<strong>150万人</strong>走进<strong>7万所医疗卫生机构</strong>，</p>\n<p class=\"ql-align-center\">他们身后，</p>\n<p class=\"ql-align-center\">有中原<strong>50万白衣天使</strong>在保驾护航。</p>\n<div class=\"pgc-img\"><img src=\"http://p3.pstatp.com/large/pgc-image/7f1aed1a20cf40e4a7f8e514fbee5560\" data-image_ids=\"[]\" />\n<p class=\"pgc-img-caption\">&nbsp;</p>\n</div>\n<p class=\"ql-align-center\"><strong>医生究竟是一个什么样的群体？</strong></p>\n<p class=\"ql-align-center\"><strong>医生每天都是怎么工作的？</strong></p>\n<p class=\"ql-align-center\"><strong>医生为什么会让人觉得高冷？</strong></p>\n<p class=\"ql-align-center\"><strong>他们温情的一面是什么样？</strong></p>\n<p class=\"ql-align-center\"><strong>&hellip;&hellip;&hellip;&hellip;</strong></p>\n<p class=\"ql-align-justify\">&nbsp;</p>\n<p class=\"ql-align-justify\">带着对&ldquo;医生&rdquo;、对&ldquo;急救&rdquo;的好奇，也为了让更多人更全面的认识医生，走进医生真实的日常，<strong>河南卫视携手河南省卫生健康委员会，会同省内多家知名医院，策划出了大型医疗急救纪实专题《生命进行时》。</strong></p>\n<p class=\"ql-align-justify\"><strong><video controls=\"controls\" width=\"300\" height=\"150\">\n<source src=\"http://cmsres.dianzhenkeji.com/anonymous/2019/7/16/1151070906328682496.mp4\" type=\"video/mp4\" /></video></strong></p>\n<p class=\"ql-align-justify\"><strong>《生命进行时》本季预计共推出13集，每集50分钟。&nbsp;</strong>打造《生命进行时》，节目组将镜头聚焦于河南省13家知名医院，全程跟拍医疗急救全过程，记录发生在急救车、急诊室和抢救室中生与死的故事；同时，节目团队也将深度关注医护人员面临&ldquo;急难险重&rdquo;患者时，争分夺秒抢救生命的全过程，以完全纪实的手法，讲述在生命遭遇危难的时刻，急救小组克服如何重重险阻，给弱者以抚慰，给生命以关怀，给病患以温暖的动人故事，力争为观众呈现真实、立体、温暖、生动、美丽的&ldquo;生命进行时&rdquo;。</p>\n<p class=\"ql-align-center\">&nbsp;</p>\n<div class=\"pgc-img\"><img src=\"http://p1.pstatp.com/large/pgc-image/cd30c6cff8ba4323aec401bb55fb5b6e\" data-image_ids=\"[]\" />\n<p class=\"pgc-img-caption\">&nbsp;</p>\n</div>\n<p>《生命进行时》预计在2019年第四季度，登陆河南卫视晚间黄金档，大家一起拭目以待吧！更多有关《生命进行时》的信息，也请大家关注我们的官方微信平台，我们将第一时间与大家分享拍摄故事、制作进程。</p>' },
           { title: '更多模板', description: '更多模板敬请期待', content: '' }
         ],
-        // plugins: 'imageupload',
+
         end_container_on_empty_block: true,
         powerpaste_word_import: "clean",
         code_dialog_height: 450,
         code_dialog_width: 1000,
-        advlist_bullet_styles: "square",
-        advlist_number_styles: "default",
+
+        advlist_bullet_styles: 'circle,disc,square',
+        advlist_number_styles: 'lower-alpha,lower-roman,upper-alpha,upper-roman',
         imagetools_cors_hosts: ["a.weixin.hndt.com", "wpimg.wallstcn.com"],
-        // imagetools_proxy: "proxy.php",
+
         default_link_target: "_blank",
         link_title: false,
         fontsize_formats: "12px 14px 16px 18px 24px 36px 48px 56px 72px",
@@ -161,8 +160,7 @@ export default {
           "rotateleft rotateright | flipv fliph | editimage imageoptions",
         // 新加
         imageupload_url: this.upURL,
-        // 自动保存时间
-        //autosave_interval: "10s",
+
         // 新的多图上传插件
         images_upload_handler: function (blobInfo, succFun, failFun) {
           var xhr, formData;
@@ -296,6 +294,9 @@ export default {
 };
 </script>
 <style lang="scss">
+.tox .tox-dialog__body-nav-item:nth-of-type(2) {
+  display: none !important;
+}
 .tinymce-container {
   .mce-fullscreen {
     z-index: 1001;

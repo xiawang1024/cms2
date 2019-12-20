@@ -107,7 +107,7 @@
                 label-width="80px"
                 :show-button="showButton"
               >
-                <template slot="set">
+                <!-- <template slot="set">
                   <div class="set">
                     <el-checkbox
                       true-label="1"
@@ -127,7 +127,7 @@
                       :disabled="contextMenu.articleType == 3"
                     />
                   </div>
-                </template>
+                </template>-->
               </v-form>
             </div>
           </el-card>

@@ -7,14 +7,14 @@
       label-width="80px"
       :show-button="false"
     >
-      <template slot="set">
+      <!-- <template slot="set">
         <div class="set">
           <el-checkbox true-label="1" false-label="0" v-model="adddocSet.topFlag">置顶</el-checkbox>
           <el-checkbox true-label="1" false-label="0" v-model="adddocSet.hiddenFlag">隐身</el-checkbox>
           <span class="extractCode">提取码</span>
           <el-input v-model="adddocSet.extractCode" />
         </div>
-      </template>
+      </template>-->
       <template slot="preview">
         <div>
           <el-button type="primary" size="mini" @click="lookPreview">预览</el-button>
