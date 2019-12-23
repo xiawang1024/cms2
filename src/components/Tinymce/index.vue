@@ -117,7 +117,7 @@ export default {
     initTinymce() {
       const _this = this;
       window.tinymce.init({
-        // media_dimensions: false,//显示隐藏宽高尺寸输入框
+        media_dimensions: false,//显示隐藏宽高尺寸输入框
         media_alt_source: false,//显示隐藏资源备用地址输入框
         language: "zh_CN",
         // inline: true,
