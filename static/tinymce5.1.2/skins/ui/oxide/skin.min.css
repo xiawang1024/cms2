@@ -2734,7 +2734,7 @@ body.tox-dialog__disable-scroll {
   color: #222f3e;
   display: flex;
   flex: 0 0 auto;
-  font-size: 12px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
   height: 34px;
@@ -2889,7 +2889,8 @@ body.tox-dialog__disable-scroll {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 4em
+  width: 5em;
+  text-align: center;
 }
 
 .tox .tox-split-button {
