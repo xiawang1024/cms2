@@ -651,4 +651,7 @@ $color-blue: #3498db;
   justify-content: center;
   align-items: center;
 }
+/deep/ .top-row {
+  background: #f0f9eb;
+}
 </style>
