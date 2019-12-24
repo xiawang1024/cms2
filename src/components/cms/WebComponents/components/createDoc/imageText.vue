@@ -225,11 +225,11 @@ export default {
         {
           items: [
             {
-              label: "关键词",
-              name: "seoKeywords",
+              label: "作者",
+              name: "articleAuthor",
               type: "text",
               valueType: "string",
-              placeholder: "请输入关键词"
+              placeholder: "请输入作者"
             },
             {
               label: "来源",
@@ -239,11 +239,11 @@ export default {
               required: true
             },
             {
-              label: "作者",
-              name: "articleAuthor",
+              label: "关键词",
+              name: "seoKeywords",
               type: "text",
               valueType: "string",
-              placeholder: "请输入作者"
+              placeholder: "请输入关键词"
             },
             {
               label: "摘要",

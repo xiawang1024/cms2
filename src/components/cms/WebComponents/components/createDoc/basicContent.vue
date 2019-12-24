@@ -152,7 +152,7 @@ export default {
     if (
       JSON.parse(localStorage.getItem("BaseInfor")).clientLicenseId == "DXNews"
     ) {
-      this.otherSettings[0].items[4].required = true;
+      this.otherSettings[0].items[1].required = true;
     }
   },
   mounted() {

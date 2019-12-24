@@ -29,37 +29,39 @@ export const otherSettings = [{
     hidden: false
   },
   {
-    label: '点击量',
-    name: 'clickNum',
-    type: 'number',
-    placeholder: '请输入点击量',
-    value: 0
-  },
-  {
-    label: '发布时间',
-    name: 'publishTime',
-    type: 'datetime',
-    clearable: false
-    // required: true,
-  },
-  // {
-  //   label: '设置',
-  //   name: 'set',
-  //   type: 'slot',
-  // },
-  {
-    label: '排序号',
-    name: 'seqNo',
-    type: 'number',
-    value: 0
-  },
-  {
     label: '展现形式',
     name: 'articleShowStyle',
     type: 'select',
     // required: true,
     options: articleShowType
   },
+
+  {
+    label: '发布时间',
+    name: 'publishTime',
+    type: 'datetime',
+    clearable: false
+    // required: true,
+  }, {
+    label: '点击量',
+    name: 'clickNum',
+    type: 'number',
+    placeholder: '请输入点击量',
+    value: 0
+  }, {
+    label: '排序号',
+    name: 'seqNo',
+    type: 'number',
+    value: 0
+  },
+  {
+    label: '设置',
+    name: 'set',
+    type: 'slot',
+    hidden: true
+  },
+
+
   ]
 }]
 export const defultItems = [{
@@ -68,6 +70,18 @@ export const defultItems = [{
   type: 'checkbox',
   options: [],
   hidden: false
+}, {
+  label: '展现形式',
+  name: 'articleShowStyle',
+  type: 'select',
+  // required: true,
+  options: articleShowType
+}, {
+  label: '发布时间',
+  name: 'publishTime',
+  type: 'datetime',
+  clearable: false
+  // required: true
 },
 {
   label: '点击量',
@@ -77,30 +91,19 @@ export const defultItems = [{
   value: 0
 },
 {
-  label: '发布时间',
-  name: 'publishTime',
-  type: 'datetime',
-  clearable: false
-  // required: true
-},
-// {
-//   label: '设置',
-//   name: 'set',
-//   type: 'slot',
-// },
-{
   label: '排序号',
   name: 'seqNo',
   type: 'number',
   value: 0
 },
 {
-  label: '展现形式',
-  name: 'articleShowStyle',
-  type: 'select',
-  // required: true,
-  options: articleShowType
-}
+  label: '设置',
+  name: 'set',
+  type: 'slot',
+  hidden: true
+},
+
+
 ]
 export const imagesSeting = [{
   items: [{
@@ -165,11 +168,12 @@ export const imagesSeting = [{
     clearable: false
     // required: true,
   },
-  // {
-  //   label: '设置',
-  //   name: 'set',
-  //   type: 'slot',
-  // },
+  {
+    label: '设置',
+    name: 'set',
+    type: 'slot',
+    hidden: true
+  },
   {
     label: '排序号',
     name: 'seqNo',
@@ -226,11 +230,12 @@ export const reproduceSetting = [{
     options: [],
     hidden: false
   },
-  // {
-  //   label: '设置',
-  //   name: 'set',
-  //   type: 'slot'
-  // },
+  {
+    label: '设置',
+    name: 'set',
+    type: 'slot',
+    hidden: true
+  },
   {
     label: '排序号',
     name: 'seqNo',
@@ -286,11 +291,12 @@ export const articleLinkSetting = [{
     options: [],
     hidden: false
   },
-  // {
-  //   label: '设置',
-  //   name: 'set',
-  //   type: 'slot'
-  // },
+  {
+    label: '设置',
+    name: 'set',
+    type: 'slot',
+    hidden: true
+  },
   {
     label: '排序号',
     name: 'seqNo',
@@ -314,11 +320,12 @@ export const splicingSetting = [{
     placeholder: "请输入html代码",
     required: true
   },
-  // {
-  //   label: "设置",
-  //   name: "set",
-  //   type: "slot"
-  // },
+  {
+    label: "设置",
+    name: "set",
+    type: "slot",
+    hidden: true
+  },
   {
     label: "排序号",
     name: "seqNo",
