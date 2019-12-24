@@ -255,7 +255,7 @@ export default {
     ...mapGetters(["treeTags", "contextMenu"])
   },
   watch: {
-    tableData: function(val) {
+    tableData: function (val) {
       this.newList = val.slice();
     }
   },
@@ -330,7 +330,7 @@ export default {
       )[0];
       this.sortable = Sortable.create(el, {
         // ghostClass: 'sortable-ghost',
-        onUpdate: function(event) {
+        onUpdate: function (event) {
           var newIndex = event.newIndex,
             oldIndex = event.oldIndex,
             $li = el.children[newIndex],
@@ -444,7 +444,7 @@ export default {
         .then(() => {
           this.setTopConform(id);
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     // 取消置顶
     setUntop(id) {
@@ -456,7 +456,7 @@ export default {
         .then(() => {
           this.setUntopConform(id);
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     // 取消置顶
     setUntopConform(id) {
@@ -498,7 +498,7 @@ export default {
         .then(() => {
           this.handleClickDel(id);
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     // 删除单个
     handleClickDel(id) {
@@ -650,5 +650,8 @@ $color-blue: #3498db;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+/deep/ .top-row {
+  background: #f0f9eb;
 }
 </style>
