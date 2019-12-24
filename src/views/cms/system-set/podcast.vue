@@ -4,8 +4,8 @@
 
     <el-table :data="tableData">
       <el-table-column prop="tagName" label="标签名" />
-      <el-table-column prop="sqNo" label="排序" />
-      <el-table-column prop="url" label="图片">
+      <el-table-column prop="sqNo" label="标签排序号" />
+      <el-table-column prop="url" label="标签图">
         <template slot-scope="scope">
           <img :src="scope.row.url" class="icon" >
         </template>
@@ -34,6 +34,44 @@
 import { tagsList, editTags } from "@/api/cms/podcast.js";
 export default {
   data() {
+    var podcastPicture = (rule, value, callback) => {
+      let pic = new Image();
+      if (value[0]) {
+        pic.src = value[0].url;
+        let imgType = value[0].url
+          .split(".")
+          .reverse()[0]
+          .toLowerCase();
+          console.log(imgType,'imgType')
+        if (imgType === "png"||imgType === "jpg"||imgType === "gif"||imgType === "jpeg") {
+          if (value[0].size>1*1024*1024) {
+            callback(new Error("请上传一张1M以内的jpg、png或gif格式图片"));
+          } else {
+            callback();
+          }
+        } else {
+          callback(new Error("请上传一张1M以内的jpg、png或gif格式图片"));
+        }
+      } else {
+        callback(new Error("请上传一张1M以内的jpg、png或gif格式图片"));
+      }
+    };
+    var sortNumber = (rule, value, callback) => {
+      let num=value;
+      if (num) {
+        if(num.toString().indexOf('.')>-1){
+          callback(new Error('请输入整数'));
+        }else{
+          callback();
+        }
+      } else {
+        if(num===0){
+          callback();
+        }
+        callback(new Error("请输入整数"));
+      }
+    };
+
     return {
       tableData: [],
       currentId: "",
@@ -48,25 +86,27 @@ export default {
             {
               name:'url',
               type: 'img',
-              label: "url",
+              label: "标签图",
               limit:1,
+              tip:'请上传一张1M以内的jpg、png或gif格式图片',
                rule: [
                 {
                   required: true,
                   trigger: "blur",
-                  message:'请上传图片'
+                  validator:podcastPicture
                 }
               ]
             },{
               name:'sqNo',
               type: 'number',
-              label: "序号",
+              label: "标签排序号",
               limit:1,
+              describe:'(标签排序号越大排序越靠前)',
                rule: [
                 {
                   required: true,
                   trigger: "blur",
-                   message: '请输入数字',
+                    validator:sortNumber
                 }
               ]
             }
@@ -97,10 +137,16 @@ export default {
     },
 
     handleEdit(id,row) {
-      this.formData = {
-       url:[{uid:row.url,url:row.url}],
+       if(row.url){
+           this.formData = {
+          url:[{uid:row.id,url:row.url}],
+          sqNo:row.sqNo
+          };
+      }else{
+        this.formData = {
        sqNo:row.sqNo
       };
+      }
       this.dialogVisible = true;
       this.currentId = id;
     },
