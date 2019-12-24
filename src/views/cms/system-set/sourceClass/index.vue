@@ -104,7 +104,7 @@ export default {
     return {
       sourceMatrixId:'',
       dialogVisible: false,
-      sourceList: [],
+      sourceList: {},
       searchSettings: [{
         label: '栏目名称',
         name: 'channelId',
@@ -214,18 +214,14 @@ export default {
       });
     },
     getSource(sourceMatrixId) {
+        let params=''
+      if(sourceMatrixId){params=`?sourceMatrixId=${sourceMatrixId}`}
       return new Promise((resolve, reject) => {
-        fetchEnableDictsourceMatrixId(sourceMatrixId)
+        fetchEnableDictsourceMatrixId(params)
           .then(res => {
             if(res.data.code==0){
-              this.sourceList=[];
-              let obj=res.data.result;
-              Object.keys(obj).forEach(item=>{
-                this.sourceList.push({
-                  label:obj[item],
-                  value:item
-                })
-              })
+              this.sourceList=res.data.result;
+             
               
             }else{
               this.$message.error(res.data.msg)

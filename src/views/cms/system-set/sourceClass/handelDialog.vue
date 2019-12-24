@@ -28,9 +28,9 @@ export default {
     },
     sourceList: {
       default: ()=> {
-        return []
+        return {}
       },
-      type: Array
+      type: Object
     }
   },
   data() {
@@ -106,13 +106,21 @@ export default {
   watch: {
     dialogVisible(val) {
       if(val) {
-        this.formSettings[0].items[2].options = this.sourceList
+        this.formSettings[0].items[2].options = this.sourceList.allList
+        if(this.sourceList.allList && this.sourceList.allList.length) {
+          this.formSettings[0].items[2].options = this.sourceList.allList.map((ele) => {
+            return {
+              label:ele.originName,
+              value:ele.originId
+            }
+          })
+        }
       }
       if(this.handelTpye.type === 'edit') {
         this.formData = this.handelTpye.row
-        if(this.handelTpye.row.details && this.handelTpye.row.details.length) {
-          this.formData.sourceIdsList = this.handelTpye.row.details.map((ele) => {
-            return ele.dictDetailSourceId
+        if(this.sourceList.exist && this.sourceList.exist.length) {
+          this.formData.sourceIdsList = this.sourceList.exist.map((ele) => {
+            return ele.originId
           })
         }
       } else {

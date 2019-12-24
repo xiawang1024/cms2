@@ -77,9 +77,9 @@
 import {
   downloadCheck,
   getArticleScoreByOrigin,
-  getArticleScoreDetailByPage
+  getArticleScoreDetailByPage,
+  getOriginNameByUserId
 } from "@/api/cms/articleMarkStatistics";
-import { fetchDictByDictName } from "@/api/cms/dict";
 import { handleDate } from "@/utils/date-filter";
 import store from "store";
 
@@ -119,25 +119,23 @@ export default {
     },
     fetchDict() {
       //获取来源列表
-
-      var _this = this;
+      var _this=this;
       return new Promise((resolve, reject) => {
-        fetchDictByDictName("文稿来源")
-          .then(response => {
-            if (
-              response.data.result.details &&
-              response.data.result.details.length
-            ) {
-              let result = response.data.result.details.map(ele => {
-                return {
-                  label: ele.dictDetailName,
-                  value: ele.dictDetailName
-                };
-              });
-              _this.sourceGroup = result;
-              //初始化默认全部来源
-              _this.handleSource();
+        getOriginNameByUserId()
+          .then(res => {
+            if(res.data.code===0){
+              this.sourceGroup=[];
+              let obj=res.data.result;
+              Object.keys(obj).forEach(item=>{
+                this.sourceGroup.push({
+                  label:obj[item],
+                  value:item
+                })
+              })
+            }else{
+              this.$message.error(res.data.msg)
             }
+          _this.handleSource();
             resolve();
           })
           .catch(error => {

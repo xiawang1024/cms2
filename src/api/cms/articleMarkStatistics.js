@@ -62,3 +62,17 @@ export function getCheckScoreResultByPage(data){
     method:'get'
   })
 }
+
+
+/**
+ * 
+ * 查询用户关联的全部来源,且来源关联的部门不为空
+ * 
+ */
+
+export function getOriginNameByUserId(){
+  return request({
+    url:`/cms/dict/getOriginNameByUserId`,
+    method:'get'
+  })
+}
