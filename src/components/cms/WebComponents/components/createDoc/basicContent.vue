@@ -87,20 +87,19 @@ export default {
           label: "图文"
         },
         {
-          value: 1,
-          label: "图集"
-        },
-        {
-          value: 2,
-          label: "拼条"
-        },
-        {
           value: 4,
           label: "转载"
         },
         {
           value: 5,
           label: "外链"
+        },
+        {
+          value: 1,
+          label: "图集"
+        }, {
+          value: 2,
+          label: "拼条"
         }
       ],
       otherSettings: otherSettings,
@@ -153,7 +152,7 @@ export default {
     if (
       JSON.parse(localStorage.getItem("BaseInfor")).clientLicenseId == "DXNews"
     ) {
-      this.otherSettings[0].items[5].required = true;
+      this.otherSettings[0].items[1].required = true;
     }
   },
   mounted() {
@@ -168,8 +167,8 @@ export default {
     }
   },
   methods: {
-    handleSave() {},
-    handleSaveAddRelease() {},
+    handleSave() { },
+    handleSaveAddRelease() { },
     goBack() {
       this.$store.dispatch("setContextMenu", {
         id: "0",
