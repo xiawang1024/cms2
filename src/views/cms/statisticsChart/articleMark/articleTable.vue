@@ -7,7 +7,7 @@
           <el-option
             v-for="(item,index) in sourceGroup"
             :label="item.label"
-            :value="item.value"
+            :value="item.label"
             :key="index"
           />
         </el-select>

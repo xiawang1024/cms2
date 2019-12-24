@@ -118,8 +118,8 @@ export default {
       }
       if(this.handelTpye.type === 'edit') {
         this.formData = this.handelTpye.row
-        if(this.sourceList.exist && this.sourceList.exist.length) {
-          this.formData.sourceIdsList = this.sourceList.exist.map((ele) => {
+        if(this.sourceList.existList && this.sourceList.existList.length) {
+          this.formData.sourceIdsList = this.sourceList.existList.map((ele) => {
             return ele.originId
           })
         }
