@@ -5,7 +5,10 @@
     </el-row>
     <el-row>
       <el-col>
-        <el-button @click="handleAdd" icon="el-icon-plus" size="small">{{ keyword }}</el-button>
+        <el-tooltip class="item" effect="dark" content="点击添加关键词" placement="right-end">
+          <el-button @click="handleAdd" icon="el-icon-plus" size="small">{{ keyword }}</el-button>
+        </el-tooltip>
+       
       </el-col>
     </el-row>
     <el-row>
@@ -138,7 +141,7 @@ export default {
           addKeyWord(this.baseInfo.userId, this.baseInfo.userName, this.keyword)
             .then(res => {
               if (res.data.code == 0) {
-                this.$message.success(res.data.msg);
+                this.$message.success('添加“'+this.keyword+'”关键词成功');
               } else {
                 this.$message.error(res.data.msg);
               }

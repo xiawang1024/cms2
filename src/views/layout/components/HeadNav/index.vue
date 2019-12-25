@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar">
+  <div class="navbar" :style="envType==='development'?'background: #F56C6C;':''">
 
     <div class="logo-wrap">
       <!-- <img
@@ -114,11 +114,20 @@ export default {
     LangSelect,
     ThemePicker
   },
+  data(){
+    return{
+    envType:''
+
+    }
+  },
   computed: {
     ...mapGetters(['sidebar', 'name', 'avatar', 'device', 'siteName', 'currentInfor']),
     baseInfor() {
       return store.get('BaseInfor') 
     }
+  },
+  created(){
+    this.envType = process.env.NODE_ENV;
   },
   mounted() {
     this.fetchDict()

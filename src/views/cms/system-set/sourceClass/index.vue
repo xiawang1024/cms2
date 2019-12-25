@@ -79,7 +79,7 @@
 // import { fetchDictByDictName } from '@/api/cms/dict'
 // import { columnList, deleteColumn } from '@/api/cms/columnManage'
 // import mixins from '@/components/cms/mixins'
-import { fetchDictByDictName } from "@/api/cms/dict";
+import { fetchEnableDictsourceMatrixId } from "@/api/cms/dict";
 import { searchClass, deleteClass } from "@/api/cms/sourceClass";
 // import store from 'store'
 import { mapGetters } from 'vuex'
@@ -102,8 +102,9 @@ export default {
   // mixins: [mixins],
   data() {
     return {
+      sourceMatrixId:'',
       dialogVisible: false,
-      sourceList: [],
+      sourceList: {},
       searchSettings: [{
         label: '栏目名称',
         name: 'channelId',
@@ -212,16 +213,20 @@ export default {
           });
       });
     },
-    getSource() {
+    getSource(sourceMatrixId) {
+        let params=''
+      if(sourceMatrixId){params=`?sourceMatrixId=${sourceMatrixId}`}
       return new Promise((resolve, reject) => {
-        fetchDictByDictName('文稿来源')
-          .then(response => {
-            this.sourceList = response.data.result.details.map((ele) => {
-                return {
-                  label: ele.dictDetailName,
-                  value: ele.dictDetailId
-                }
-              })
+        fetchEnableDictsourceMatrixId(params)
+          .then(res => {
+            if(res.data.code==0){
+              this.sourceList=res.data.result;
+             
+              
+            }else{
+              this.$message.error(res.data.msg)
+            }
+
             resolve();
           })
           .catch(error => {
@@ -231,14 +236,18 @@ export default {
     },
     // 节点操作
     handelSource(type, row) {
-      this.dialogVisible = true
-      this.handelTpye.type = type
-      this.handelTpye.row = row
-      if(row) {
-        this.$nextTick(() => {
-          this.$refs.tree.setCurrentKey(row.sourceMatrixId)
-        })
-      }
+      //清除来源
+      this.getSource(row?row.sourceMatrixId:'').then(res=>{
+        this.dialogVisible = true
+        this.handelTpye.type = type
+        this.handelTpye.row = row
+        if(row) {
+          this.$nextTick(() => {
+            this.$refs.tree.setCurrentKey(row.sourceMatrixId)
+          })
+        }
+      });
+      
     },
     marginWidth(level) {
       // :style="{ marginLeft: marginWidth(data.parentChannelIds) + 'px'}"
