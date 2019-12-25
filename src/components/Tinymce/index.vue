@@ -229,6 +229,7 @@ export default {
         image_caption: true,
         // //上传文件
         file_picker_callback: function (callback, value, meta) {
+
           var input = document.createElement("input");
           input.setAttribute("type", "file");
           // input.setAttribute('multiple', 'multiple')
@@ -238,24 +239,34 @@ export default {
             let xhr, formData;
             xhr = new XMLHttpRequest();
             xhr.open("POST", _this.upURL);
+            const loading = _this.$loading({
+              lock: true,
+              text: '视频上传中',
+              spinner: 'el-icon-loading',
+              background: 'rgba(0, 0, 0, 0.7)'
+            });
             xhr.withCredentials = false;
             xhr.upload.onprogress = function (e) {
               // 进度(e.loaded / e.total * 100)
             };
             xhr.onerror = function () {
               //根据自己的需要添加代码
-              // alert(xhr.status);
+              alert(xhr.status);
+              loading.close()
               return;
             };
             xhr.onload = function () {
               let json;
               if (xhr.status < 200 || xhr.status >= 300) {
                 alert("HTTP 错误: " + xhr.status);
+                loading.close()
                 return;
               }
               json = JSON.parse(xhr.responseText);
               //假设接口返回JSON数据为{status: 0, msg: "上传成功", data: {location: "/localImgs/1546434503854.mp4"}}
               if (json.code == 0) {
+                loading.close()
+                // alert("接口返回的文件保存地址")
                 //接口返回的文件保存地址
                 let mediaLocation = _this.downURL + json.result.filePath;
                 //cb()回调函数，将mediaLocation显示在弹框输入框中
