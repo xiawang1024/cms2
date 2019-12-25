@@ -45,15 +45,15 @@ export default {
           console.log(imgType,'imgType')
         if (imgType === "png"||imgType === "jpg"||imgType === "gif"||imgType === "jpeg") {
           if (value[0].size>1*1024*1024) {
-            callback(new Error("请上传一张1M以内的jpg、png或gif格式图片"));
+            callback(new Error("请上传一张1M以内的jpg或png格式图片"));
           } else {
             callback();
           }
         } else {
-          callback(new Error("请上传一张1M以内的jpg、png或gif格式图片"));
+          callback(new Error("请上传一张1M以内的jpg或png格式图片"));
         }
       } else {
-        callback(new Error("请上传一张1M以内的jpg、png或gif格式图片"));
+        callback(new Error("请上传一张1M以内的jpg或png格式图片"));
       }
     };
     var sortNumber = (rule, value, callback) => {
@@ -88,7 +88,7 @@ export default {
               type: 'img',
               label: "标签图",
               limit:1,
-              tip:'请上传一张1M以内的jpg、png或gif格式图片',
+              tip:'请上传一张1M以内的jpg或png格式图片',
                rule: [
                 {
                   required: true,
