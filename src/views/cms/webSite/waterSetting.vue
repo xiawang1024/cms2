@@ -1,6 +1,13 @@
 <template>
   <div class="water-setting">
-    <v-form label-width="80px" ref="vform" :form-settings="formSettings" :form-data="formData" @save="submitSave" :btn-loading = "isLoading">
+    <v-form
+      label-width="80px"
+      ref="vform"
+      :form-settings="formSettings"
+      :form-data="formData"
+      @save="submitSave"
+      :btn-loading="isLoading"
+    >
       <template slot="coner">
         <div class="location-box">
           <el-button
@@ -83,7 +90,7 @@
   </div>
 </template>
 <script>
-import Upload from '@/components/cms/Upload/upload'
+import Upload from '@/components/cms/Upload/Upload'
 import { columnInfor, editColumn } from '@/api/cms/columnManage'
 export default {
   name: 'ImageWatermarking',
@@ -109,7 +116,7 @@ export default {
       formSettings: [
         {
           items: [
-             {
+            {
               label: '水印位置',
               name: 'coner',
               type: 'slot'
@@ -123,7 +130,7 @@ export default {
               label: '',
               name: 'isScale',
               type: 'slot'
-           },
+            },
           ]
         }
       ],
@@ -150,7 +157,7 @@ export default {
           .then((response) => {
             _this.formData = response.data.result
             _this.watermarkingForm.chooseLocation = response.data.result.stampSetting ? parseInt(response.data.result.stampSetting.coner) : 5
-            if(_this.formData.stampSetting && _this.formData.stampSetting.url) {
+            if (_this.formData.stampSetting && _this.formData.stampSetting.url) {
               _this.formData.url = [{
                 url: _this.formData.stampSetting.url
               }]
@@ -169,7 +176,7 @@ export default {
       this.isLoading = true
       var _this = this
       let iconUrlArray = []
-      if(formData.url.length) {
+      if (formData.url.length) {
         formData.url.forEach(ele => {
           iconUrlArray.push(ele.url)
         })
@@ -179,7 +186,7 @@ export default {
         _this.formData.channelId = this.columnRow.channelId
         _this.formData.stampSetting = {
           coner: formData.coner,
-          url: formData.url 
+          url: formData.url
         }
         editColumn(_this.formData)
           .then((response) => {
@@ -197,9 +204,8 @@ export default {
 }
 </script>
 <style lang="scss">
-
 .water-setting {
-  .el-form{
+  .el-form {
     .el-input-group__prepend {
       padding: 0 10px;
     }
@@ -224,6 +230,5 @@ export default {
     width: 30%;
   }
 }
-
 </style>
 

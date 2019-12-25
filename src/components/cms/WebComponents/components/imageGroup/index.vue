@@ -1,56 +1,18 @@
 <template>
   <div class="imageGroup-wrap">
-    <div >
-      <el-button
-        size="mini"
-        type="primary"
-        @click="handleGroup('add')"
-      >新增</el-button>
+    <div>
+      <el-button size="mini" type="primary" @click="handleGroup('add')">新增</el-button>
     </div>
-    <el-table
-      :data="imageGroupList"
-      style="width: 100%"
-      highlight-current-row
-    >
-      <el-table-column
-        prop="picGroupName"
-        min-width="150px"
-        show-overflow-tooltip
-        label="名称"
-      />
-      <el-table-column
-        prop="picGroupRemark"
-        show-overflow-tooltip
-        min-width="150px"
-        label="描述"
-      />
-      <el-table-column
-        prop="picCount"
-        label="图片数量"
-      />
-      <el-table-column
-        prop="createUser"
-        label="创建人"
-      />
-      <el-table-column
-        width="200px"
-        prop="createTime"
-        label="创建时间"
-      />
-      <el-table-column label="操作"
-                       width="150px"
-      >
+    <el-table :data="imageGroupList" style="width: 100%" highlight-current-row>
+      <el-table-column prop="picGroupName" min-width="150px" show-overflow-tooltip label="名称" />
+      <el-table-column prop="picGroupRemark" show-overflow-tooltip min-width="150px" label="描述" />
+      <el-table-column prop="picCount" label="图片数量" />
+      <el-table-column prop="createUser" label="创建人" />
+      <el-table-column width="200px" prop="createTime" label="创建时间" />
+      <el-table-column label="操作" width="150px">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="primary"
-            @click="handleEdit(scope.row)"
-          >编辑</el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.row)"
-          >删除</el-button>
+          <el-button size="mini" type="primary" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -62,26 +24,43 @@
     >
       <el-row :gutter="20">
         <el-col :xs="24" :sm="12" :md="12" :lg="14" :xl="14">
-          <v-form ref="vform" :form-settings="formSettings" :form-data="formData" :show-preview="showPreview" label-width="80px" @fileDetail="fileDetail" @removeFile="removeFile" @save="submitSave"/>
+          <v-form
+            ref="vform"
+            :form-settings="formSettings"
+            :form-data="formData"
+            :show-preview="showPreview"
+            label-width="80px"
+            @fileDetail="fileDetail"
+            @removeFile="removeFile"
+            @save="submitSave"
+          />
         </el-col>
         <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8" :offset="1">
           <div v-if="rightCardShow" class="image-setting">
             <el-card class="box-card">
-              <v-form ref="formSetting" :form-settings="fileSettings" :form-data="singleData" label-width="80px" :show-button = "false">
+              <v-form
+                ref="formSetting"
+                :form-settings="fileSettings"
+                :form-data="singleData"
+                label-width="80px"
+                :show-button="false"
+              >
                 <template slot="information">
                   <div class="file-infor">
                     <div class="file-img">
-                      <img :src="filedetail.url" alt="">
+                      <img :src="filedetail.url" alt >
                     </div>
                     <div class="desc">
                       <div>{{ filedetail.name }}</div>
-                      <div v-if="filedetail.createTime">{{ parseInt(filedetail.createTime)|timeFilter }}</div>
+                      <div
+                        v-if="filedetail.createTime"
+                      >{{ parseInt(filedetail.createTime)|timeFilter }}</div>
                       <div v-if="filedetail.size">{{ Math.floor(filedetail.size / 1024) }} kb</div>
                     </div>
                   </div>
                 </template>
                 <template slot="btn">
-                  <el-button type="primary" size="small" @click ="setFile">保存</el-button>
+                  <el-button type="primary" size="small" @click="setFile">保存</el-button>
                   <el-button size="small" @click="colseSet">关闭</el-button>
                 </template>
               </v-form>
@@ -89,15 +68,12 @@
           </div>
         </el-col>
       </el-row>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      />
+      <div slot="footer" class="dialog-footer" />
     </el-dialog>
   </div>
 </template>
 <script>
-import Upload from '@/components/cms/Upload/uploadBtn'
+import Upload from '@/components/cms/Upload/UploadBtn'
 import { columnInfor } from '@/api/cms/columnManage'
 import { columnImageList, createImageList, getImageListInfor, editImageList, deleteImageList } from '@/api/cms/article'
 import { mapGetters } from 'vuex'
@@ -154,7 +130,7 @@ export default {
             required: false,
             // hasTextInput: true,
             hidden: false,
-            maxSize: 1024*5
+            maxSize: 1024 * 5
           }
         ]
       }],
@@ -208,13 +184,13 @@ export default {
     submitSave(data) {
       data.channelId = this.treeTags[this.treeTags.length - 1].id
       console.log(data, 'data1')
-      if(data.details && data.details.length) {
+      if (data.details && data.details.length) {
         data.details.forEach((ele) => {
           ele.picUrl = ele.url,
-          ele.picName = ele.name
+            ele.picName = ele.name
         })
       }
-      if(this.title == '新增') {
+      if (this.title == '新增') {
         return new Promise((resolve, reject) => {
           createImageList(data)
             .then((response) => {
@@ -275,9 +251,9 @@ export default {
         columnInfor(this.treeTags[this.treeTags.length - 1].id)
           .then((response) => {
             _this.tagList = []
-            if(response.data.result.tagRule) {
+            if (response.data.result.tagRule) {
               Object.keys(response.data.result.tagRule).forEach((ele) => {
-                if(response.data.result.tagRule[ele]) {
+                if (response.data.result.tagRule[ele]) {
                   _this.tagList.push({
                     label: response.data.result.tagRule[ele],
                     value: ele
@@ -296,7 +272,7 @@ export default {
     // 获取栏目图片组
     getColumnImage() {
       return new Promise((resolve, reject) => {
-        columnImageList({ channelId:this.treeTags[this.treeTags.length - 1].id }, this.pageNum, this.pageSize)
+        columnImageList({ channelId: this.treeTags[this.treeTags.length - 1].id }, this.pageNum, this.pageSize)
           .then((response) => {
             this.imageGroupList = response.data.result.content ? response.data.result.content : []
             this.getColumnInfor()
@@ -316,7 +292,7 @@ export default {
           .then((response) => {
             this.formData = response.data.result
             this.formData.tagIdsList = response.data.result.tagIdsList ? response.data.result.tagIdsList : []
-            if(this.formData.details && this.formData.details.length) {
+            if (this.formData.details && this.formData.details.length) {
               this.formData.details.forEach((ele) => {
                 ele.url = ele.picUrl
                 ele.name = ele.picName
@@ -334,7 +310,7 @@ export default {
     handleClean() {
       this.addImageGroupVisible = false
     },
-    handleSave() {},
+    handleSave() { },
     handleDelete(row) {
       this.$confirm('确定删除该图片组吗？', '提示', {
         confirmButtonText: '确定',
@@ -342,7 +318,7 @@ export default {
         type: 'warning'
       }).then(() => {
         return new Promise((resolve, reject) => {
-          deleteImageList({picGroupId: row.picGroupId})
+          deleteImageList({ picGroupId: row.picGroupId })
             .then((response) => {
               this.$message.success('删除成功')
               this.getColumnImage()
@@ -352,32 +328,33 @@ export default {
               reject(error)
             })
         })
-      }).catch(() => {      
+      }).catch(() => {
       })
     }
   },
 }
 </script>
 <style lang="scss">
-.imageGroup-wrap{
+.imageGroup-wrap {
   // .tool-bar{
   //   margin-bottom:20px;
   // }
-  .image-setting{
-    .form-section{
-      border-bottom:none;
+  .image-setting {
+    .form-section {
+      border-bottom: none;
     }
-    .el-card{
-      margin-top:16px;
+    .el-card {
+      margin-top: 16px;
       .el-card__body {
-        padding:0px;
+        padding: 0px;
       }
     }
   }
   .v-form {
     .form-section {
       overflow: visible;
-      .upload-img, .upload-file{
+      .upload-img,
+      .upload-file {
         .el-upload-list {
           li {
             margin-bottom: 26px;
@@ -387,22 +364,22 @@ export default {
       .upload-file {
         .el-upload-list {
           li {
-            border: 1px solid #c0ccda;;
+            border: 1px solid #c0ccda;
           }
         }
       }
       .file-img {
         height: 100px;
-        img{
+        img {
           width: auto;
-          height:100%;
+          height: 100%;
         }
       }
       .file-infor {
         .desc {
-          margin-top:10px;
+          margin-top: 10px;
           div {
-            color: #C0C4CC;
+            color: #c0c4cc;
             line-height: 16px;
           }
         }

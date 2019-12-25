@@ -43,7 +43,7 @@
 </template>
 
 <script>
-const Upload = _ => import('@/components/cms/Upload/upload')
+const Upload = _ => import('@/components/cms/Upload/Upload')
 import { columnInfor, editColumn, isColumnRepet, addColumn } from '@/api/cms/columnManage'
 import { fetchDictAllByDictName } from '@/api/cms/dict'
 import { mapGetters } from 'vuex'
